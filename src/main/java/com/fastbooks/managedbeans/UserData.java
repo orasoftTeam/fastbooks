@@ -175,6 +175,7 @@ public class UserData implements Serializable {
            System.out.println(loggedUser.toString());
            loggedUser.setCias(userFacade.getUserCompaniasById(loggedUser.getIdUsuario()));
            System.err.println("cias: " + loggedUser.getCias().toString());*/
+           loggedUser = user;
            this.email = "";
            this.pass = "";
            
