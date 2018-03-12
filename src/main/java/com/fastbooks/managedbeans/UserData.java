@@ -10,13 +10,16 @@ import com.fastbooks.forms.CompaniaForm;
 import com.fastbooks.forms.UserForm;
 import com.fastbooks.modelo.Country;
 import com.fastbooks.modelo.FbCompania;
+import com.fastbooks.modelo.FbPerfilXUsuario;
 import com.fastbooks.modelo.FbPerfiles;
 import com.fastbooks.modelo.FbUsuario;
+import com.fastbooks.modelo.FbUsuarioXCia;
 import com.fastbooks.util.ValidationBean;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -47,12 +50,21 @@ public class UserData implements Serializable {
     
     private FbUsuario loggedUser;
     private FbCompania currentCia;
+    private BigDecimal idcia;
     private FbPerfiles perfil;
     private String email;
     private String pass;
 
     public String getEmail() {
         return email;
+    }
+
+    public BigDecimal getIdcia() {
+        return idcia;
+    }
+
+    public void setIdcia(BigDecimal idcia) {
+        this.idcia = idcia;
     }
 
     public void setEmail(String email) {
@@ -187,7 +199,7 @@ public class UserData implements Serializable {
                }else{
                    //redirect to chooseCompany and set id_cia and profile with the selected
                    System.out.println("show com list");
-                   validationBean.redirecionar("/view/chooseCompany.xhtml");
+                   validationBean.redirecionar("/view/chooseCompany.xhtml?faces-redirect=true");
                }
            
            }else{
@@ -200,6 +212,38 @@ public class UserData implements Serializable {
        }
    
    
+   }
+   
+   
+   
+   public void selectCom(){
+       try {
+           for (FbUsuarioXCia com : loggedUser.getFbUsuarioXCiaList()) {
+           if (com.getFbCompania().getIdCia().equals(this.idcia)) {
+               currentCia = com.getFbCompania();
+               
+           }
+       }
+       
+       for (FbPerfilXUsuario per : loggedUser.getFbPerfilXUsuarioList()) {
+           if (per.getFbPerfilXUsuarioPK().getIdCia().equals(new BigInteger(String.valueOf(idcia)))) {
+               perfil = per.getFbPerfiles();
+           }
+       }
+       
+       validationBean.redirecionar("/view/dashboard.xhtml");
+       } catch (Exception e) {
+           validationBean.lanzarMensaje("error", "mustSelectCom", "loginfaildesc");
+       }
+   }
+   
+   
+   public void logout(){
+       loggedUser = null;
+       currentCia = null;
+       idcia = null;
+       perfil = null;
+   validationBean.redirecionar("/index.xhtml");
    }
    
 
