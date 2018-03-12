@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <f:view locale="#{ userData.locale}"/>
+    <h:head>
+        <title>Facelet Title</title>
+        
+
+    </h:head>
+    <h:body>
+
+        <h3 id="msj"  >Bundle message:<h:outputText value = "#{messages['greeting']}" /></h3>
+
+
+        <h:form>
+
+
+            <h:panelGrid columns = "2"> 
+                Language : 
+                <h:selectOneMenu  value = "#{userData.locale}" onchange="submit()"
+                                  valueChangeListener="#{userData.localeChanged}">
+
+                    <f:selectItems value = "#{userData.list}" var="country" itemValue="#{country.lanInitials}"
+                                   itemLabel="#{country.language}"/> 
+                </h:selectOneMenu> 
+            </h:panelGrid> 
+
+        </h:form>
+          <!--<h:outputLink value="welcomePrimefaces.xhtml"  >welcomeprimefaces</h:outputLink>-->
+        <h:outputLink value="faces/registrarEmpresa.xhtml">#{messages.signup}</h:outputLink>
+        <br />
+        <h:outputLink value="login.xhtml">#{messages.signin}</h:outputLink>  
+    </h:body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--<h:selectOneMenu  value = "#{userData.locale}" onchange = "submit()"
+                      valueChangeListener = "">-->
+    </html>
+
