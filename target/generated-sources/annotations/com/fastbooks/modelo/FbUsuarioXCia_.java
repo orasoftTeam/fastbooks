@@ -8,14 +8,14 @@ import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2018-03-13T13:41:43")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2018-03-13T15:47:16")
 @StaticMetamodel(FbUsuarioXCia.class)
 public class FbUsuarioXCia_ { 
 
-    public static volatile SingularAttribute<FbUsuarioXCia, FbUsuario> fbUsuario;
-    public static volatile SingularAttribute<FbUsuarioXCia, FbUsuarioXCiaPK> fbUsuarioXCiaPK;
-    public static volatile SingularAttribute<FbUsuarioXCia, String> estado;
-    public static volatile SingularAttribute<FbUsuarioXCia, Date> fechaCreacion;
     public static volatile SingularAttribute<FbUsuarioXCia, FbCompania> fbCompania;
+    public static volatile SingularAttribute<FbUsuarioXCia, String> estado;
+    public static volatile SingularAttribute<FbUsuarioXCia, FbUsuario> fbUsuario;
+    public static volatile SingularAttribute<FbUsuarioXCia, Date> fechaCreacion;
+    public static volatile SingularAttribute<FbUsuarioXCia, FbUsuarioXCiaPK> fbUsuarioXCiaPK;
 
 }

@@ -9,16 +9,16 @@ import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2018-03-13T13:41:43")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2018-03-13T15:47:16")
 @StaticMetamodel(FbPerfiles.class)
 public class FbPerfiles_ { 
 
-    public static volatile SingularAttribute<FbPerfiles, BigDecimal> idPerfil;
-    public static volatile SingularAttribute<FbPerfiles, String> nombre;
-    public static volatile SingularAttribute<FbPerfiles, String> estado;
-    public static volatile ListAttribute<FbPerfiles, FbPerfilXUsuario> fbPerfilXUsuarioList;
     public static volatile SingularAttribute<FbPerfiles, String> descripcion;
+    public static volatile SingularAttribute<FbPerfiles, String> estado;
+    public static volatile SingularAttribute<FbPerfiles, BigDecimal> idPerfil;
+    public static volatile ListAttribute<FbPerfiles, FbPerfilXUsuario> fbPerfilXUsuarioList;
     public static volatile ListAttribute<FbPerfiles, FbModuloXPerfil> fbModuloXPerfilList;
     public static volatile SingularAttribute<FbPerfiles, Date> fechaCreacion;
+    public static volatile SingularAttribute<FbPerfiles, String> nombre;
 
 }

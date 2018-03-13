@@ -7,16 +7,16 @@ import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2018-03-13T13:41:43")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2018-03-13T15:47:16")
 @StaticMetamodel(FbDireccion.class)
 public class FbDireccion_ { 
 
-    public static volatile SingularAttribute<FbDireccion, String> urbanizacion;
-    public static volatile SingularAttribute<FbDireccion, BigDecimal> idDireccion;
-    public static volatile SingularAttribute<FbDireccion, String> apartamento;
-    public static volatile SingularAttribute<FbDireccion, FbCiudad> idCiudad;
     public static volatile SingularAttribute<FbDireccion, String> piso;
-    public static volatile SingularAttribute<FbDireccion, Date> fechaCreacion;
+    public static volatile SingularAttribute<FbDireccion, String> apartamento;
+    public static volatile SingularAttribute<FbDireccion, BigDecimal> idDireccion;
     public static volatile SingularAttribute<FbDireccion, String> avenida;
+    public static volatile SingularAttribute<FbDireccion, String> urbanizacion;
+    public static volatile SingularAttribute<FbDireccion, Date> fechaCreacion;
+    public static volatile SingularAttribute<FbDireccion, FbCiudad> idCiudad;
 
 }

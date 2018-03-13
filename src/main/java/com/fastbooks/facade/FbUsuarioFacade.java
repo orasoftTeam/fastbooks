@@ -82,5 +82,25 @@ public class FbUsuarioFacade extends AbstractFacade<FbUsuario> {
 
         return list;
     }
+    
+    //Lista para obtener usuarios por compania
+    public List<FbUsuario> getUserbyCia (String idCia){
+        List<FbUsuario> listU = new ArrayList<>();
+        try {
+            String sql = "select firstname, lastname, email, telefono from fb_usuario u\n"
+                    + "inner join fb_usuario_x_cia uc\n"
+                    + "on u.id_usuario = uc.id_usuario\n"
+                    + "where uc.id_cia = ?\n";
+            //tambien q muestre el perfil
+            Query q = em.createNativeQuery(sql);
+            q.setParameter(1, idCia);
+            listU = q.getResultList();
+            
+        } catch (Exception e) {
+            System.out.println("reventando...");
+           
+        }
+        return listU; 
+    }
 
 }

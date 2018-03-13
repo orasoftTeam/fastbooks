@@ -8,17 +8,17 @@ import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2018-03-13T13:41:43")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2018-03-13T15:47:16")
 @StaticMetamodel(FbMenu.class)
 public class FbMenu_ { 
 
-    public static volatile SingularAttribute<FbMenu, BigInteger> secuencia;
     public static volatile SingularAttribute<FbMenu, String> nombremenu;
-    public static volatile SingularAttribute<FbMenu, FbModulo> idModulo;
     public static volatile SingularAttribute<FbMenu, String> opcion;
-    public static volatile SingularAttribute<FbMenu, BigDecimal> idMenu;
-    public static volatile SingularAttribute<FbMenu, Date> fechaCreacion;
     public static volatile SingularAttribute<FbMenu, String> estadomenu;
+    public static volatile SingularAttribute<FbMenu, BigDecimal> idMenu;
+    public static volatile SingularAttribute<FbMenu, BigInteger> secuencia;
+    public static volatile SingularAttribute<FbMenu, Date> fechaCreacion;
+    public static volatile SingularAttribute<FbMenu, FbModulo> idModulo;
     public static volatile SingularAttribute<FbMenu, BigInteger> nivel;
 
 }
