@@ -9,11 +9,16 @@ import com.fastbooks.facade.FbCompaniaFacade;
 import com.fastbooks.modelo.FbCompania;
 import com.fastbooks.modelo.FbUsuario;
 import com.fastbooks.util.ValidationBean;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.imageio.ImageIO;
 import javax.inject.Inject;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -30,6 +35,12 @@ public class CompanyController implements Serializable {
     @Inject
     UserData userData;
 
+    String appPath = System.getProperty("user.dir");
+    private final String destination = appPath + File.separator + "logos\\";
+    private UploadedFile archivo;
+    private String nameFileFinal;
+    private String msgFile;
+    private FbCompania company;
     private boolean naturalPerson;
     private String companyComName;
     private String fName;
@@ -42,7 +53,22 @@ public class CompanyController implements Serializable {
     private String tel;
     private String website;
     private String logourl;
-    
+
+    public UploadedFile getArchivo() {
+        return archivo;
+    }
+
+    public String getMsgFile() {
+        return msgFile;
+    }
+
+    public void setMsgFile(String msgFile) {
+        this.msgFile = msgFile;
+    }
+
+    public void setArchivo(UploadedFile archivo) {
+        this.archivo = archivo;
+    }
 
     public String getEmail() {
         return email;
@@ -144,7 +170,7 @@ public class CompanyController implements Serializable {
      * Creates a new instance of CompanyController
      */
     public CompanyController() {
-        
+        System.out.println(destination);
     }
 
     public void register() {
@@ -239,23 +265,58 @@ public class CompanyController implements Serializable {
         this.naturalPerson = false;
         return flag;
     }
-    
-    public void setValues(){
-    try {
-            
-                this.companyComName = userData.getCurrentCia().getNomCom();
-                this.companyLegName = userData.getCurrentCia().getNomLeg();
-                this.email = userData.getCurrentCia().getEmail();
-                this.giro = userData.getCurrentCia().getGiro();
-                this.logourl = userData.getCurrentCia().getLogo();
-                this.tel = userData.getCurrentCia().getTelefono();
-                this.website = userData.getCurrentCia().getWebsite();
-                
-            
+
+    public void setValues() {
+        try {
+
+            this.companyComName = userData.getCurrentCia().getNomCom();
+            this.companyLegName = userData.getCurrentCia().getNomLeg();
+            this.email = userData.getCurrentCia().getEmail();
+            this.giro = userData.getCurrentCia().getGiro();
+            this.logourl = userData.getCurrentCia().getLogo();
+            this.tel = userData.getCurrentCia().getTelefono();
+            this.website = userData.getCurrentCia().getWebsite();
+
         } catch (Exception e) {
             System.out.println("not logged in");
             e.printStackTrace();
         }
+    }
+
+    public void handleFileUpload(FileUploadEvent event) {
+        String name;
+        try {
+            if (archivo == null) {
+                archivo = event.getFile();
+                //BufferedImage img = ImageIO.read(archivo.getInputstream());
+                name = validationBean.generarRandom(archivo.getFileName());
+                File file = new File(destination);
+                file.mkdir();
+                validationBean.copyFile(name, destination, archivo.getInputstream());
+                this.msgFile = validationBean.getMsgBundle("lblFileSuccess");
+                this.logourl = "/logos/"+name;
+                this.nameFileFinal = name;
+            } else {
+                archivo = event.getFile();
+                if (validationBean.deleteFile(destination+nameFileFinal)) {
+                    name = validationBean.generarRandom(archivo.getFileName());
+                    validationBean.copyFile(name, destination, archivo.getInputstream());
+                    this.logourl = "/logos/"+name;
+                    nameFileFinal = name;
+                }
+
+            }
+        } catch (Exception e) {
+            msgFile = validationBean.getMsgBundle("lblFileUploadError");
+            if (archivo != null) {
+                if (validationBean.deleteFile("/logos/"+archivo.getFileName())) {
+                    archivo = null;
+                }
+            }
+            this.logourl = "";
+            e.printStackTrace();
+        }
+
     }
 
 }

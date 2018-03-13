@@ -32,7 +32,8 @@
                 <h:inputText maxlength="100"  value="#{companyController.website}" />
                 
                 <h:outputLabel>Logo Compania</h:outputLabel>
-                <p:fileUpload />
+                <p:fileUpload label="#{messages['lblImageUpload']}" invalidFileMessage="#{messages['lblFileInvalid']}" id="logoCom" fileUploadListener="#{companyController.handleFileUpload}" mode="advanced"
+                                       auto="true" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
                 
                 
                 <h:panelGroup>
