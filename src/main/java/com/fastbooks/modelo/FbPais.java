@@ -13,7 +13,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -55,8 +54,8 @@ public class FbPais implements Serializable {
     @Column(name = "FECHA_CREACION")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPais", fetch = FetchType.EAGER)
-    private List<FbDireccion> fbDireccionList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPais")
+    private List<FbEstado> fbEstadoList;
 
     public FbPais() {
     }
@@ -95,12 +94,12 @@ public class FbPais implements Serializable {
     }
 
     @XmlTransient
-    public List<FbDireccion> getFbDireccionList() {
-        return fbDireccionList;
+    public List<FbEstado> getFbEstadoList() {
+        return fbEstadoList;
     }
 
-    public void setFbDireccionList(List<FbDireccion> fbDireccionList) {
-        this.fbDireccionList = fbDireccionList;
+    public void setFbEstadoList(List<FbEstado> fbEstadoList) {
+        this.fbEstadoList = fbEstadoList;
     }
 
     @Override

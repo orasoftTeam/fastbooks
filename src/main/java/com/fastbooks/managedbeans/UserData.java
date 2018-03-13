@@ -243,8 +243,10 @@ public class UserData implements Serializable {
        currentCia = null;
        idcia = null;
        perfil = null;
-   validationBean.redirecionar("/index.xhtml");
+   validationBean.redirecionar("/faces/index.xhtml");
    }
    
-
+   public void workaround(){
+   validationBean.redirecionar("/faces/index.xhtml");
+   }
 }

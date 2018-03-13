@@ -8,24 +8,20 @@ package com.fastbooks.modelo;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -66,19 +62,9 @@ public class FbDireccion implements Serializable {
     @Column(name = "FECHA_CREACION")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
-    @OneToMany(mappedBy = "idDireccion", fetch = FetchType.EAGER)
-    private List<FbUsuario> fbUsuarioList;
-    @JoinColumn(name = "ID_PAIS", referencedColumnName = "ID_PAIS")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private FbPais idPais;
-    @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private FbEstado idEstado;
     @JoinColumn(name = "ID_CIUDAD", referencedColumnName = "ID_CIUDAD")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false)
     private FbCiudad idCiudad;
-    @OneToMany(mappedBy = "idDireccion", fetch = FetchType.EAGER)
-    private List<FbCompania> fbCompaniaList;
 
     public FbDireccion() {
     }
@@ -135,46 +121,12 @@ public class FbDireccion implements Serializable {
         this.fechaCreacion = fechaCreacion;
     }
 
-    @XmlTransient
-    public List<FbUsuario> getFbUsuarioList() {
-        return fbUsuarioList;
-    }
-
-    public void setFbUsuarioList(List<FbUsuario> fbUsuarioList) {
-        this.fbUsuarioList = fbUsuarioList;
-    }
-
-    public FbPais getIdPais() {
-        return idPais;
-    }
-
-    public void setIdPais(FbPais idPais) {
-        this.idPais = idPais;
-    }
-
-    public FbEstado getIdEstado() {
-        return idEstado;
-    }
-
-    public void setIdEstado(FbEstado idEstado) {
-        this.idEstado = idEstado;
-    }
-
     public FbCiudad getIdCiudad() {
         return idCiudad;
     }
 
     public void setIdCiudad(FbCiudad idCiudad) {
         this.idCiudad = idCiudad;
-    }
-
-    @XmlTransient
-    public List<FbCompania> getFbCompaniaList() {
-        return fbCompaniaList;
-    }
-
-    public void setFbCompaniaList(List<FbCompania> fbCompaniaList) {
-        this.fbCompaniaList = fbCompaniaList;
     }
 
     @Override

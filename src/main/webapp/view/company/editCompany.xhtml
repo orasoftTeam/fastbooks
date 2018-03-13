@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <f:view locale="#{ userData.locale}"/>
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="../../template/template.xhtml">
+
+            <ui:define name="content">
+                #{companyController.setValues()}
+        <h2>Informacion de compania</h2>
+        <h:form>
+            <h:messages showDetail="true" />
+            <h:panelGrid columns="2" >
+                <h:outputLabel>Nombre Comercial</h:outputLabel>
+                <h:inputText  maxlength="50" value="#{companyController.companyComName}" />
+                <h:outputLabel>Nombre Legal</h:outputLabel>
+                <h:inputText maxlength="50" value="#{companyController.companyLegName}" />
+                <h:outputLabel>Giro</h:outputLabel>
+                <h:inputText maxlength="50" value="#{companyController.giro}"  />
+                <h:outputLabel>Telefono</h:outputLabel>
+                <h:inputText maxlength="50" value="#{companyController.tel}" /> 
+                <h:outputLabel>Email de contacto compania</h:outputLabel>
+                <h:inputText  maxlength="50" value="#{companyController.email}"  />
+                <h:outputLabel>Pagina web</h:outputLabel>
+                <h:inputText maxlength="100"  value="#{companyController.website}" />
+                
+                <h:outputLabel>Logo Compania</h:outputLabel>
+                <p:fileUpload />
+                
+                
+                <h:panelGroup>
+                    <h:commandButton value="#{messages.save}" />
+                </h:panelGroup>
+            </h:panelGrid>
+        </h:form>
+            </ui:define>
+
+        </ui:composition>
+        
+        
+        
+        
+        
+    </h:body>
+</html>
+

@@ -37,6 +37,12 @@ public class CompanyController implements Serializable {
     private String pass;
     private String rPass;
     private String email;
+    private String companyLegName;
+    private String giro;
+    private String tel;
+    private String website;
+    private String logourl;
+    
 
     public String getEmail() {
         return email;
@@ -94,10 +100,51 @@ public class CompanyController implements Serializable {
         this.rPass = rPass;
     }
 
+    public String getCompanyLegName() {
+        return companyLegName;
+    }
+
+    public void setCompanyLegName(String companyLegName) {
+        this.companyLegName = companyLegName;
+    }
+
+    public String getGiro() {
+        return giro;
+    }
+
+    public void setGiro(String giro) {
+        this.giro = giro;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public String getLogourl() {
+        return logourl;
+    }
+
+    public void setLogourl(String logourl) {
+        this.logourl = logourl;
+    }
+
     /**
      * Creates a new instance of CompanyController
      */
     public CompanyController() {
+        
     }
 
     public void register() {
@@ -191,6 +238,24 @@ public class CompanyController implements Serializable {
         }
         this.naturalPerson = false;
         return flag;
+    }
+    
+    public void setValues(){
+    try {
+            
+                this.companyComName = userData.getCurrentCia().getNomCom();
+                this.companyLegName = userData.getCurrentCia().getNomLeg();
+                this.email = userData.getCurrentCia().getEmail();
+                this.giro = userData.getCurrentCia().getGiro();
+                this.logourl = userData.getCurrentCia().getLogo();
+                this.tel = userData.getCurrentCia().getTelefono();
+                this.website = userData.getCurrentCia().getWebsite();
+                
+            
+        } catch (Exception e) {
+            System.out.println("not logged in");
+            e.printStackTrace();
+        }
     }
 
 }

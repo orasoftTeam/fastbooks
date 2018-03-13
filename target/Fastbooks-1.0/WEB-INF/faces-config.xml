@@ -16,9 +16,14 @@
             <base-name>/com/fastbooks/messages</base-name>
             <var>messages</var>
         </resource-bundle>
+        
+        
     </application>
     
-    
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/index.xhtml</location>
+    </error-page>
     
     
 </faces-config>

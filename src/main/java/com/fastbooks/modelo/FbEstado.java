@@ -10,11 +10,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -55,8 +55,11 @@ public class FbEstado implements Serializable {
     @Column(name = "FECHA_CREACION")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idEstado", fetch = FetchType.EAGER)
-    private List<FbDireccion> fbDireccionList;
+    @JoinColumn(name = "ID_PAIS", referencedColumnName = "ID_PAIS")
+    @ManyToOne(optional = false)
+    private FbPais idPais;
+    @OneToMany(mappedBy = "idEstado")
+    private List<FbCiudad> fbCiudadList;
 
     public FbEstado() {
     }
@@ -94,13 +97,21 @@ public class FbEstado implements Serializable {
         this.fechaCreacion = fechaCreacion;
     }
 
-    @XmlTransient
-    public List<FbDireccion> getFbDireccionList() {
-        return fbDireccionList;
+    public FbPais getIdPais() {
+        return idPais;
     }
 
-    public void setFbDireccionList(List<FbDireccion> fbDireccionList) {
-        this.fbDireccionList = fbDireccionList;
+    public void setIdPais(FbPais idPais) {
+        this.idPais = idPais;
+    }
+
+    @XmlTransient
+    public List<FbCiudad> getFbCiudadList() {
+        return fbCiudadList;
+    }
+
+    public void setFbCiudadList(List<FbCiudad> fbCiudadList) {
+        this.fbCiudadList = fbCiudadList;
     }
 
     @Override
