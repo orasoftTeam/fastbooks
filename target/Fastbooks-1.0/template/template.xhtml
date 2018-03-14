@@ -8,9 +8,9 @@
 
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-        <link rel="stylesheet" href="../resources/css/default.css" />
-        <link rel="stylesheet" href="../resources/css/cssLayout.css" />
+        
+        <h:outputStylesheet name="css/default.css" />
+        <h:outputStylesheet name="css/cssLayout.css" />
         <title>Fast Books</title>
     </h:head>
 
@@ -22,8 +22,8 @@
 
 
                     <p:menubar>
-                        <p:menuitem url="/faces/index.xhtml" icon="ui-icon-home" />
-                        
+                        <p:menuitem  rendered="#{userData.loggedUser == null}" url="/index.xhtml" icon="ui-icon-home" />
+                        <p:menuitem  rendered="#{userData.loggedUser != null}" url="/view/dashboard.xhtml" icon="ui-icon-home" />
 
                       
 
@@ -33,13 +33,13 @@
 
                         <f:facet name="options">
                             <p:splitButton  rendered="#{userData.loggedUser != null}" icon="ui-icon-gear">
-                                <p:menuitem value="#{messages.manageCompany}"  icon="ui-icon-arrowrefresh-1-w" action="/view/company/editCompany.xhtml" />
+                                <p:menuitem value="#{messages.manageCompany}"  icon="ui-icon-arrowrefresh-1-w" action="/view/company/editCompany.xhtml?faces-redirect=true" />
                                 <p:menuitem value="Delete"  ajax="false" icon="ui-icon-close" />
                                 <p:separator  />
                                 <p:menuitem value="Homepage" url="http://www.primefaces.org" icon="ui-icon-extlink" />
                             </p:splitButton>
-                            <p:commandButton rendered="#{userData.loggedUser == null}" type="link" value="#{messages.signup}" icon="ui-icon-person"  action="registrarEmpresa.xhtml" />
-                            <p:commandButton rendered="#{userData.loggedUser == null}" type="link" value="#{messages.signin}" icon="ui-icon-extlink"  action="login.xhtml" />
+                            <p:commandButton rendered="#{userData.loggedUser == null}" type="link" value="#{messages.signup}" icon="ui-icon-person"  action="registrarEmpresa.xhtml?faces-redirect=true" />
+                            <p:commandButton rendered="#{userData.loggedUser == null}" type="link" value="#{messages.signin}" icon="ui-icon-extlink"  action="login.xhtml?faces-redirect=true" />
                             <p:commandButton rendered="#{userData.loggedUser != null}" type="link" value="#{messages.logout}" icon="ui-icon-extlink"  action="#{userData.logout()}" />
                         </f:facet>
                     </p:menubar>

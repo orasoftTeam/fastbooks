@@ -89,7 +89,7 @@ public class FbCompania implements Serializable {
     @Size(max = 50)
     @Column(name = "GIRO")
     private String giro;
-    @Size(max = 10)
+    @Size(max = 15)
     @Column(name = "TELEFONO")
     private String telefono;
     @Size(max = 100)

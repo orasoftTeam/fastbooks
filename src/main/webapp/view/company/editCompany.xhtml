@@ -15,7 +15,7 @@
             <ui:define name="content">
                 #{companyController.setValues()}
         <h2>Informacion de compania</h2>
-        <h:form>
+        <h:form id="comForm"  >
             <h:messages showDetail="true" />
             <h:panelGrid columns="2" >
                 <h:outputLabel>Nombre Comercial</h:outputLabel>
@@ -25,22 +25,29 @@
                 <h:outputLabel>Giro</h:outputLabel>
                 <h:inputText maxlength="50" value="#{companyController.giro}"  />
                 <h:outputLabel>Telefono</h:outputLabel>
-                <h:inputText maxlength="50" value="#{companyController.tel}" /> 
+                <h:inputText maxlength="15" value="#{companyController.tel}" onkeyup="soloNumeros(this)" /> 
                 <h:outputLabel>Email de contacto compania</h:outputLabel>
                 <h:inputText  maxlength="50" value="#{companyController.email}"  />
                 <h:outputLabel>Pagina web</h:outputLabel>
-                <h:inputText maxlength="100"  value="#{companyController.website}" />
+                <h:inputText maxlength="50"  value="#{companyController.website}" />
                 
                 <h:outputLabel>Logo Compania</h:outputLabel>
-                <p:fileUpload label="#{messages['lblImageUpload']}" invalidFileMessage="#{messages['lblFileInvalid']}" id="logoCom" fileUploadListener="#{companyController.handleFileUpload}" mode="advanced"
-                                       auto="true" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
                 
-                
+                <p:outputLabel id="msgFile" value="#{companyController.msgFile}" />
+                <p:graphicImage value="#{companyController.logourl}" id="showLogo" style="height: 70px;width: 70px" />
                 <h:panelGroup>
-                    <h:commandButton value="#{messages.save}" />
+                    <h:commandButton value="#{messages.save}" action="#{companyController.save()}" />
                 </h:panelGroup>
             </h:panelGrid>
         </h:form>
+        
+        <script type="text/javascript">
+            function soloNumeros(obj) 
+                { 
+                obj.value = (obj.value + '').replace(/[^0-9]/g, '');
+                }
+        </script>
+        
             </ui:define>
 
         </ui:composition>

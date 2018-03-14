@@ -35,11 +35,10 @@ import javax.faces.event.ValueChangeEvent;
 @Named(value = "userData")
 @SessionScoped
 public class UserData implements Serializable {
-    
-    
+
     @EJB
     FbUsuarioFacade userFacade;
-    
+
     @EJB
     ValidationBean validationBean;
 
@@ -47,7 +46,7 @@ public class UserData implements Serializable {
     private String locale = "en";
     private Country lenguage;
     private List<Country> list = new ArrayList<Country>();
-    
+
     private FbUsuario loggedUser;
     private FbCompania currentCia;
     private BigDecimal idcia;
@@ -102,9 +101,8 @@ public class UserData implements Serializable {
     public void setLoggedUser(FbUsuario loggedUser) {
         this.loggedUser = loggedUser;
     }
-    
-    
-   /* private static Map<String,Object> countries;
+
+    /* private static Map<String,Object> countries;
     static {
       
       countries = new LinkedHashMap<String,Object>();
@@ -112,17 +110,12 @@ public class UserData implements Serializable {
       countries.put("French", Locale.FRENCH);
       countries.put("Spanish", new Locale("es"));
    }*/
-    
     /**
      * Creates a new instance of UserData
      */
     public UserData() {
-        list.add(new Country("USA", "English", "en", new Locale("en")));
-        //list.add(new Country("France", "French", "fr", new Locale("fr")));
-        list.add(new Country("El Salvador", "Spanish", "es", new Locale("es")));
-        /*this.locale = "en";
-         FacesContext.getCurrentInstance()
-               .getViewRoot().setLocale((Locale)new Locale("en"));*/
+
+        
     }
 
     public List<Country> getList() {
@@ -141,44 +134,37 @@ public class UserData implements Serializable {
         this.lenguage = lenguage;
     }
 
-    
-    
-    
-    
+    public String getLocale() {
+        return locale;
+    }
 
-   public String getLocale() {
-      return locale;
-   }
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
 
-   public void setLocale(String locale) {
-      this.locale = locale;
-   }
-   
-   
     //value change event listener
-   public void localeChanged(ValueChangeEvent e) {
-      String newLocaleValue = e.getNewValue().toString();
-       System.out.println(newLocaleValue);
-      for (Country entry : list) {
-         
-         if(entry.getLanInitials().equals(newLocaleValue)) {
-             System.out.println(entry.getLanInitials());
-            FacesContext.getCurrentInstance()
-               .getViewRoot().setLocale((Locale)entry.getLocale());         
-         }
-         
-      }
-   }
-   
-   
-   
-   public void login(){
-       FbUsuario user = new FbUsuario();
-       try {
-           user = userFacade.login(email, pass);
-           System.out.println(user.toString());
-           if (!String.valueOf(user.getIdUsuario()).equals("0") ) {
-           /*loggedUser = new UserForm();
+    public void localeChanged(ValueChangeEvent e) {
+        String newLocaleValue = e.getNewValue().toString();
+        System.out.println(newLocaleValue);
+        for (Country entry : list) {
+
+            if (entry.getLanInitials().equals(newLocaleValue)) {
+                System.out.println(entry.getLanInitials());
+                FacesContext.getCurrentInstance()
+                        .getViewRoot().setLocale((Locale) entry.getLocale());
+            }
+
+        }
+        initLangs();
+    }
+
+    public void login() {
+        FbUsuario user = new FbUsuario();
+        try {
+            user = userFacade.login(email, pass);
+            System.out.println(user.toString());
+            if (!String.valueOf(user.getIdUsuario()).equals("0")) {
+                /*loggedUser = new UserForm();
            loggedUser.setIdUsuario(String.valueOf(user.getIdUsuario()));
            loggedUser.setEmail(user.getEmail());
            loggedUser.setPassword(user.getClave());
@@ -187,66 +173,84 @@ public class UserData implements Serializable {
            System.out.println(loggedUser.toString());
            loggedUser.setCias(userFacade.getUserCompaniasById(loggedUser.getIdUsuario()));
            System.err.println("cias: " + loggedUser.getCias().toString());*/
-           loggedUser = user;
-           this.email = "";
-           this.pass = "";
-           
-               if (loggedUser.getFbUsuarioXCiaList().size() == 1) {
-                   //redirect to dashboard and set id_cia and profile
-                   currentCia = loggedUser.getFbUsuarioXCiaList().get(0).getFbCompania();
-                   perfil = loggedUser.getFbPerfilXUsuarioList().get(0).getFbPerfiles();
-                   validationBean.redirecionar("/view/dashboard.xhtml");
-               }else{
-                   //redirect to chooseCompany and set id_cia and profile with the selected
-                   System.out.println("show com list");
-                   validationBean.redirecionar("/view/chooseCompany.xhtml?faces-redirect=true");
-               }
-           
-           }else{
-               System.out.println("Fallo de login");
-               validationBean.lanzarMensaje("error", "loginfail", "loginfaildesc");
-           }
-       } catch (Exception e) {
-           System.out.println("com.fastbooks.managedbeans.UserData.login()");
-           e.printStackTrace();
-       }
+                loggedUser = user;
+                this.email = "";
+                this.pass = "";
+
+                if (loggedUser.getFbUsuarioXCiaList().size() == 1) {
+                    //redirect to dashboard and set id_cia and profile
+                    currentCia = loggedUser.getFbUsuarioXCiaList().get(0).getFbCompania();
+                    perfil = loggedUser.getFbPerfilXUsuarioList().get(0).getFbPerfiles();
+                    validationBean.redirecionar("/view/dashboard.xhtml");
+                } else {
+                    //redirect to chooseCompany and set id_cia and profile with the selected
+                    System.out.println("show com list");
+                    validationBean.redirecionar("/view/chooseCompany.xhtml?faces-redirect=true");
+                }
+
+            } else {
+                System.out.println("Fallo de login");
+                validationBean.lanzarMensaje("error", "loginfail", "loginfaildesc");
+            }
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.UserData.login()");
+            e.printStackTrace();
+        }
+
+    }
+
+    public void selectCom() {
+        try {
+            for (FbUsuarioXCia com : loggedUser.getFbUsuarioXCiaList()) {
+                if (com.getFbCompania().getIdCia().equals(this.idcia)) {
+                    currentCia = com.getFbCompania();
+
+                }
+            }
+
+            for (FbPerfilXUsuario per : loggedUser.getFbPerfilXUsuarioList()) {
+                if (per.getFbPerfilXUsuarioPK().getIdCia().equals(new BigInteger(String.valueOf(idcia)))) {
+                    perfil = per.getFbPerfiles();
+                }
+            }
+
+            validationBean.redirecionar("/view/dashboard.xhtml");
+        } catch (Exception e) {
+            validationBean.lanzarMensaje("error", "mustSelectCom", "loginfaildesc");
+        }
+    }
+
+    public void logout() {
+        loggedUser = null;
+        currentCia = null;
+        idcia = null;
+        perfil = null;
+        validationBean.redirecionar("/index.xhtml?faces-redirect=true");
+    }
+
+    public void workaround() {
+        validationBean.redirecionar("/index.xhtml?faces-redirect=true");
+        this.locale = "en";
+         FacesContext.getCurrentInstance()
+               .getViewRoot().setLocale((Locale)new Locale("en"));
+        initLangs();
+    }
+    
+    
+    public void initLangs(){
+        
+        if (this.locale.isEmpty()) {
+            this.locale = "en";
+         FacesContext.getCurrentInstance()
+               .getViewRoot().setLocale((Locale)new Locale("en"));
+        }
+        
+        list = new ArrayList<>();
+        list.add(new Country("USA", validationBean.getMsgBundle("lblEnglish"), "en", new Locale("en")));
+        //list.add(new Country("France", "French", "fr", new Locale("fr")));
+        list.add(new Country("El Salvador", validationBean.getMsgBundle("lblSpanish"), "es", new Locale("es")));
+    
+    }
+    
    
-   
-   }
-   
-   
-   
-   public void selectCom(){
-       try {
-           for (FbUsuarioXCia com : loggedUser.getFbUsuarioXCiaList()) {
-           if (com.getFbCompania().getIdCia().equals(this.idcia)) {
-               currentCia = com.getFbCompania();
-               
-           }
-       }
-       
-       for (FbPerfilXUsuario per : loggedUser.getFbPerfilXUsuarioList()) {
-           if (per.getFbPerfilXUsuarioPK().getIdCia().equals(new BigInteger(String.valueOf(idcia)))) {
-               perfil = per.getFbPerfiles();
-           }
-       }
-       
-       validationBean.redirecionar("/view/dashboard.xhtml");
-       } catch (Exception e) {
-           validationBean.lanzarMensaje("error", "mustSelectCom", "loginfaildesc");
-       }
-   }
-   
-   
-   public void logout(){
-       loggedUser = null;
-       currentCia = null;
-       idcia = null;
-       perfil = null;
-   validationBean.redirecionar("/faces/index.xhtml");
-   }
-   
-   public void workaround(){
-   validationBean.redirecionar("/faces/index.xhtml");
-   }
 }

@@ -36,7 +36,7 @@ public class CompanyController implements Serializable {
     UserData userData;
 
     String appPath = System.getProperty("user.dir");
-    private final String destination = appPath + File.separator + "logos\\";
+    private final String destination = appPath + File.separator + "logo\\";
     private UploadedFile archivo;
     private String nameFileFinal;
     private String msgFile;
@@ -294,14 +294,20 @@ public class CompanyController implements Serializable {
                 file.mkdir();
                 validationBean.copyFile(name, destination, archivo.getInputstream());
                 this.msgFile = validationBean.getMsgBundle("lblFileSuccess");
-                this.logourl = "/logos/"+name;
+                this.logourl = "/logo/" + name;
+                validationBean.updateComponent("comForm:msgFile");
+                System.out.println(this.logourl);
+                validationBean.updateComponent("comForm:showLogo");
                 this.nameFileFinal = name;
             } else {
                 archivo = event.getFile();
-                if (validationBean.deleteFile(destination+nameFileFinal)) {
+                if (validationBean.deleteFile(destination + nameFileFinal)) {
                     name = validationBean.generarRandom(archivo.getFileName());
                     validationBean.copyFile(name, destination, archivo.getInputstream());
-                    this.logourl = "/logos/"+name;
+                    this.logourl = "/logo/" + name;
+                    validationBean.updateComponent("comForm:msgFile");
+                    System.out.println(this.logourl);
+                    validationBean.updateComponent("comForm:showLogo");
                     nameFileFinal = name;
                 }
 
@@ -309,14 +315,61 @@ public class CompanyController implements Serializable {
         } catch (Exception e) {
             msgFile = validationBean.getMsgBundle("lblFileUploadError");
             if (archivo != null) {
-                if (validationBean.deleteFile("/logos/"+archivo.getFileName())) {
+                if (validationBean.deleteFile("/logo/" + archivo.getFileName())) {
                     archivo = null;
                 }
             }
             this.logourl = "";
+            validationBean.updateComponent("comForm:msgFile");
+            System.out.println("error"+this.logourl);
+            validationBean.updateComponent("comForm:showLogo");
             e.printStackTrace();
         }
 
+    }
+    
+    
+    public boolean editVal(){
+        boolean flag = false;
+        int c = 0;
+        if (!(validationBean.validarCampoVacio(this.email, "error", "valErr", "reqEmail")
+                && validationBean.validarEmail(this.email, "error", "valErr", "reqEmail")
+                && validationBean.validarLongitudCampo(this.email, 8, 80, "error", "valErr", "reqEmail"))) {
+            c++;
+        }
+        if (!(validationBean.validarCampoVacio(this.companyComName, "error", "valErr", "reqNomCom")
+                && validationBean.validarLongitudCampo(this.companyComName, 5, 50, "error", "valErr", "reqNomCom"))) {
+            c++;
+        }
+        
+        if (!(validationBean.validarCampoVacio(this.companyLegName, "error", "valErr", "reqNomLeg")
+                && validationBean.validarLongitudCampo(this.companyLegName, 5, 50, "error", "valErr", "reqNomLeg"))) {
+            c++;
+        }
+        
+        if (!this.website.isEmpty()) {
+            if (!(validationBean.validarURL(this.website, "error", "valErr", "reqWebsite")
+                && validationBean.validarLongitudCampo(this.website, 5, 50, "error", "valErr", "reqNomLeg"))) {
+            c++;
+        }
+        }
+
+        if (c == 0) {
+            flag = true;
+        }
+        this.naturalPerson = false;
+        return flag;
+    
+    
+    }
+    
+    public void save(){
+        if (editVal()) {
+            System.out.println("validation good");
+        }else{
+        System.out.println("validation fail");
+        }
+    
     }
 
 }

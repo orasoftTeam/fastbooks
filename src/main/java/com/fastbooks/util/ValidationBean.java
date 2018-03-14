@@ -73,6 +73,19 @@ public class ValidationBean {
         }
         return flag;
     }
+    
+    public boolean validarURL(String c, String tipoMsg, String tituloMsg, String descMsg) {
+        Pattern patron = Pattern.compile("\\\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
+        Matcher validar = patron.matcher(c);
+        boolean flag;
+        if (validar.find()) {
+            flag = false;
+            lanzarMensaje(tipoMsg, tituloMsg, descMsg);
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
 
     public boolean validarLongitudCampo(String c, int min, int max, String tipoMsg, String tituloMsg, String descMsg) {
         boolean flag;
