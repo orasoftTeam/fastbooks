@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+          <ui:composition template="../../template/template.xhtml">
+
+            <ui:define name="content">
+                   <h:form>
+         <p:growl id="growl" sticky="true" showDetail="true"/>
+ 
+         <p:wizard flowListener="#{userController.onFlowProcess}">
+             
+             <p:tab id="contact" title="Contact">
+            <p:panel header="Added Information">
+                <p:messages />
+                 <p:dataTable var="dtosLista" value="#{userController.usuarioL}">
+                    <p:column headerText="First Name">
+                        <h:outputText value="#{dtosLista.firstname}" />
+                    </p:column>
+
+                    <p:column headerText="Last Name">
+                        <h:outputText value="#{dtosLista.lastname}" />
+                    </p:column>
+
+                    <p:column headerText="Email">
+                        <h:outputText value="#{dtosLista.email}" />
+                    </p:column>
+
+                    <p:column headerText="Telefono">
+                        <h:outputText value="#{dtosLista.telefono}" />
+                    </p:column>
+                     
+                    <p:column headerText="Operaciones">
+                        <p:link outcome="deaDetail" value="deactivate">
+                            <f:param name="deaId" value="10" />
+                        </p:link>
+                         <p:link outcome="editDetail" value="edit">
+                            <f:param name="editId" value="10" />
+                        </p:link>
+                
+                    </p:column>
+                      <h:outputText value="Skip to last: " />
+                      <h:selectBooleanCheckbox value="#{userController.skip}" />
+                </p:dataTable>
+            </p:panel>
+        </p:tab>
+             
+        <p:tab id="personal" title="User Information">
+            <p:panel header="Personal Details">
+                <p:messages />
+                <h:panelGrid columns="2" columnClasses="label, value">
+                    <h:outputText value="First Name: *" />
+                    <p:inputText value="#{userController.usuario.firstname}" required="true" label="Firstname"/>
+ 
+                    <h:outputText value="Last Name: *" />
+                    <p:inputText value="#{userController.usuario.lastname}" required="true" label="Lastname"/>
+ 
+                    <h:outputText value="Email: " />
+                    <p:inputText required="true" value="#{userController.usuario.email}" />
+                    
+                    <h:outputLabel value="Password: " />
+                    <h:inputSecret required="true" label="Password" p:placeholder='#{messages.phPass}' value="#{userData.pass}" />
+                    
+                </h:panelGrid>
+                
+            </p:panel>
+        </p:tab>
+        
+        <p:tab id="address" title="Profile">
+            <p:panel header="Profile Details">
+                <p:messages />
+                <h3 style="margin-top:0">Which profile would you like to select?:</h3>
+                <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                    <p:outputLabel for="profile" value="Profile:" />
+                    <p:selectOneRadio id="profile" value="#{userController.profile}">
+                        <f:selectItem itemLabel="Administrator" itemValue="Xbox One" />
+                        <f:selectItem itemLabel="Custom" itemValue="PS4" />
+                    </p:selectOneRadio>
+                </h:panelGrid>
+              <h:panelGrid>
+                <h:commandButton value="guardar" action="submit"  />
+            </h:panelGrid> 
+            </p:panel>
+        </p:tab>
+ 
+        
+         </p:wizard>
+       </h:form>
+            </ui:define>
+
+        </ui:composition>
+        
+     
+    </h:body>
+</html>
+

@@ -12,6 +12,7 @@ import com.fastbooks.util.ValidationBean;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
@@ -198,7 +199,7 @@ public class CompanyController implements Serializable {
             user.setFirstname(fName);
             user.setLastname(lName);
             user.setClave(pass);
-
+            com.setIdCia(BigDecimal.ZERO);
             String res = comFacade.actCompany(com, user, "A");
             System.out.println("Resultado controller: " + res);
 
@@ -268,7 +269,7 @@ public class CompanyController implements Serializable {
 
     public void setValues() {
         try {
-
+            this.company = userData.getCurrentCia();
             this.companyComName = userData.getCurrentCia().getNomCom();
             this.companyLegName = userData.getCurrentCia().getNomLeg();
             this.email = userData.getCurrentCia().getEmail();
@@ -347,12 +348,7 @@ public class CompanyController implements Serializable {
             c++;
         }
         
-        if (!this.website.isEmpty()) {
-            if (!(validationBean.validarURL(this.website, "error", "valErr", "reqWebsite")
-                && validationBean.validarLongitudCampo(this.website, 5, 50, "error", "valErr", "reqNomLeg"))) {
-            c++;
-        }
-        }
+        
 
         if (c == 0) {
             flag = true;
@@ -365,7 +361,26 @@ public class CompanyController implements Serializable {
     
     public void save(){
         if (editVal()) {
-            System.out.println("validation good");
+            
+            this.company.setEmail(this.email);
+            this.company.setGiro(giro);
+            this.company.setLogo(this.logourl);
+            this.company.setNomCom(this.companyComName);
+            this.company.setNomLeg(this.companyLegName);
+            this.company.setTelefono(tel);
+            this.company.setWebsite(website);
+            String res = comFacade.actCompany(company, new FbUsuario(),"U");
+            System.out.println("Resultado controller: " + res);
+            if (res.equals("0")) {
+                validationBean.lanzarMensaje("info", "modComSuccess", "blank");
+                System.out.println("Exito!");
+            }else if(res.equals("-1")){
+                validationBean.lanzarMensaje("warn", "modComFailRepeat", "blank");
+             System.out.println("Repetido!");
+            }else if(res.equals("-2")){
+                validationBean.lanzarMensaje("error", "unexpectedError", "blank");
+            System.out.println("Error!");
+            }
         }else{
         System.out.println("validation fail");
         }

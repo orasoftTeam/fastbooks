@@ -33,6 +33,7 @@ com\fastbooks\facade\FbCompaniaFacade.class
 com\fastbooks\facade\FbModuloXPerfilFacade.class
 com\fastbooks\modelo\FbUsuarioPref.class
 com\fastbooks\modelo\FbMenu.class
+com\fastbooks\managedbeans\UserController.class
 com\fastbooks\managedbeans\UserData.class
 com\fastbooks\modelo\FbModulo_.class
 com\fastbooks\modelo\FbModuloXPerfil.class
