@@ -33,8 +33,8 @@
 
                         <f:facet name="options">
                             <p:splitButton  rendered="#{userData.loggedUser != null}" icon="ui-icon-gear">
-                                <p:menuitem value="#{messages.manageCompany}"  icon="ui-icon-arrowrefresh-1-w" action="/view/company/editCompany.xhtml?faces-redirect=true" />
-                                <p:menuitem value="Delete"  ajax="false" icon="ui-icon-close" />
+                                <p:menuitem value="#{messages.manageCompany}" rendered="#{userData.currentCia != null}"  icon="ui-icon-arrowrefresh-1-w" action="/view/company/editCompany.xhtml?faces-redirect=true" />
+                                <p:menuitem value="My Info"  icon="ui-icon-arrowrefresh-1-w"  action="/view/users/editUser.xhtml?faces-redirect=true" />
                                 <p:separator  />
                                 <p:menuitem value="Homepage" url="http://www.primefaces.org" icon="ui-icon-extlink" />
                             </p:splitButton>

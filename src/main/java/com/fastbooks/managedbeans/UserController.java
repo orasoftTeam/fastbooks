@@ -11,9 +11,11 @@ import com.fastbooks.util.ValidationBean;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import org.primefaces.event.FlowEvent;
 
 /**
@@ -28,6 +30,8 @@ public class UserController implements Serializable{
     private ValidationBean validationBean;
     @EJB
     private FbUsuarioFacade fbUsuarioFacade;
+    @Inject
+    private UserData userData;
     
 
     FbUsuario usuario = new FbUsuario();
@@ -46,7 +50,10 @@ public class UserController implements Serializable{
     private String clave;
     private String firstName;
     private String lastName;
-    
+    private String bday;
+    private String tel;
+    private String gender;
+    private String rclave;
     
     
     /**
@@ -54,6 +61,38 @@ public class UserController implements Serializable{
      */
     public UserController() {
         
+    }
+
+    public String getRclave() {
+        return rclave;
+    }
+
+    public void setRclave(String rclave) {
+        this.rclave = rclave;
+    }
+
+    public String getBday() {
+        return bday;
+    }
+
+    public void setBday(String bday) {
+        this.bday = bday;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public void getUserxCia(){
@@ -177,4 +216,21 @@ public class UserController implements Serializable{
 
     
     
+    public void setValues(){
+        this.usuario = this.userData.getLoggedUser();
+        this.email = this.usuario.getEmail();
+        this.clave = this.usuario.getClave();
+        this.rclave = this.usuario.getClave();
+        this.gender = this.usuario.getGenero();
+        this.bday = this.usuario.getBDay();
+        this.firstName = this.usuario.getFirstname();
+        this.lastName = this.usuario.getLastname();
+        this.tel = this.usuario.getTelefono();
+    }
+    
+    /*@PostConstruct
+    public void init() {
+    
+    setValues();
+    }*/
 }
