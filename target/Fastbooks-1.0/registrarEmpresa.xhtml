@@ -18,9 +18,11 @@
             </h:panelGroup>
         <h:panelGrid columns="2">
             
-            <h:outputLabel>#{messages.naturalPerson}</h:outputLabel> <h:outputLabel  ><h:selectBooleanCheckbox  value="#{companyController.naturalPerson}"  onclick="toggle('#{requestScope.foo.clientId}');toggle('#{requestScope.fee.clientId}');"   />#{messages.yes}</h:outputLabel>
+            <h:outputLabel>#{messages.naturalPerson}</h:outputLabel> <h:outputLabel  ><h:selectBooleanCheckbox  value="#{companyController.naturalPerson}"  binding="#{showCom}"  >
+                    <f:ajax event="click" render="@form" />
+                </h:selectBooleanCheckbox>#{messages.yes}</h:outputLabel>
             <h:outputLabel>#{messages.email}</h:outputLabel><h:inputText value="#{companyController.email}"  maxlength="80" />
-            <h:outputLabel binding="#{requestScope.fee}"  id="y" style="display: block"  >#{messages.companyName}</h:outputLabel><h:inputText  value="#{companyController.companyComName}"  binding="#{requestScope.foo}"  id="x" style="display: block" maxlength="80"/>
+            <h:outputLabel rendered="#{not showCom.value}"  >#{messages.companyName}</h:outputLabel><h:inputText  value="#{companyController.companyComName}"  rendered="#{not  showCom.value}"  maxlength="80"/>
             <h:outputLabel>#{messages.firstName}</h:outputLabel><h:inputText  value="#{companyController.fName}" maxlength="40" />
             <h:outputLabel>#{messages.lastName}</h:outputLabel><h:inputText value="#{companyController.lName}" maxlength="40"/>
             <h:outputLabel>#{messages.password}</h:outputLabel><h:inputSecret  value="#{companyController.pass}" maxlength="10" />
@@ -33,10 +35,8 @@
             </ui:define>
 
         </ui:composition>
-        
-        
-        <script type="text/javascript">
-            function toggle(id) {
+        <h:outputScript>
+               function toggle(id) {
         var element = document.getElementById(id);
         if(element.style.display == 'block') {
           element.style.display = 'none';
@@ -44,8 +44,9 @@
           element.style.display = 'block'
         }
       }
-            
-        </script>
+        </h:outputScript>
+        
+       
         
     </h:body>
 </html>
