@@ -41,13 +41,14 @@
                 </h:panelGroup>
             </h:panelGrid>
         </h:form>
-        
-        <script type="text/javascript">
-            function soloNumeros(obj) 
+        <h:outputScript>
+             function soloNumeros(obj) 
                 { 
                 obj.value = (obj.value + '').replace(/[^0-9]/g, '');
                 }
-        </script>
+            
+        </h:outputScript>
+       
         
             </ui:define>
 

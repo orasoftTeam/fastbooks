@@ -6,8 +6,12 @@
 package com.fastbooks.facade;
 
 import com.fastbooks.forms.CompaniaForm;
+import com.fastbooks.modelo.FbCompania;
 import com.fastbooks.modelo.FbUsuario;
 import java.math.BigDecimal;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -101,6 +105,40 @@ public class FbUsuarioFacade extends AbstractFacade<FbUsuario> {
            
         }
         return listU; 
+    }
+    
+    /*
+    (pIdUser IN INT,pEmail IN VARCHAR2, pIdCia IN INT,
+    pFname IN VARCHAR2, pLname IN VARCHAR2,pTel IN VARCHAR2,
+            pGenero IN VARCHAR2,pBday IN VARCHAR2,pPass IN VARCHAR2,
+                op IN VARCHAR2,res OUT VARCHAR2)
+    
+    */
+    public String actUser(FbCompania com,FbUsuario user,String op){
+    String res = "";
+        try {
+            Connection cn = em.unwrap(java.sql.Connection.class);
+            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_USUARIO (?,?,?,?,?,?,?,?,?,?,?)}");
+            cs.setInt(1, Integer.parseInt(String.valueOf(user.getIdUsuario())));
+            cs.setString(2, user.getEmail());
+            cs.setInt(3, Integer.parseInt(String.valueOf(com.getIdCia())));
+            cs.setString(4, user.getFirstname());
+            cs.setString(5, user.getLastname());
+            cs.setString(6, user.getTelefono());
+            cs.setString(7, user.getGenero());
+            cs.setString(8, user.getBDay());
+            cs.setString(9, user.getClave());
+            cs.setString(10, op);
+            cs.registerOutParameter(11, Types.VARCHAR);
+            cs.execute();
+            res = cs.getString(11);
+            cs.close();
+        } catch (Exception e) {
+            res = "-2";
+            e.printStackTrace();
+        }
+        System.out.println("Resultado de operacion: " + res);
+        return res;
     }
 
 }
