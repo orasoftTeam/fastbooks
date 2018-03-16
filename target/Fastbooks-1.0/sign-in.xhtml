@@ -58,11 +58,11 @@
                                             <bnu:messages show-detail="true" />
                                             <div class="form-group">
                                                 <label class="mont mont-light">User ID</label>
-                                                <input type="text" class="form-control mont mont-light btn btn-bordered" placeholder='#{messages.phEmail}' name="userid" />
+                                                <h:inputText class="form-control mont mont-light btn btn-bordered" p:placeholder='#{messages.phEmail}' value="#{userData.email}" />
                                             </div>
                                             <div class="form-group">
                                                 <label class="mont mont-light">Password</label>
-                                                <input type="password" class="form-control mont mont-light btn btn-bordered" placeholder='#{messages.phPass}' name="password" />
+                                                <h:inputSecret class="form-control mont mont-light btn btn-bordered" p:placeholder='#{messages.phPass}' value="#{userData.pass}"  />
                                             </div>
                                             <div class="form-group">
                                                 <label class="mont mont-light">
@@ -79,7 +79,7 @@
                                             </h4>
                                             <h4 class="mont mont-light">
                                                 <a href="#">I forgot my user ID or Password</a> New to QuickBooks?
-                                                <a href="#">Sign up</a>
+                                                <a href="register.xhtml">Sign up</a>
                                             </h4>
                                         </h:form>
                                     </div>

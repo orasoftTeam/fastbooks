@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:bnu="http://bootsfaces.net/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
     <f:view locale="#{ userData.locale}"/>
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
@@ -48,31 +49,46 @@
 
                                         <h:form >
                                             <bnu:messages show-detail="true" />
+                                            
                                             <div class="form-group">
-                                                <label class="mont mont-light">User ID</label>
-                                                <input type="text" class="form-control mont mont-light btn btn-bordered" placeholder='#{messages.phEmail}' name="userid" />
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="mont mont-light">Password</label>
-                                                <input type="password" class="form-control mont mont-light btn btn-bordered" placeholder='#{messages.phPass}' name="password" />
+                                                <label class="mont mont-light">#{messages.email}</label>
+                                                <h:inputText class="form-control mont mont-light btn btn-bordered" p:placeholder='#{messages.phEmail}' value="#{companyController.email}"  maxlength="80"  />
                                             </div>
                                             <div class="form-group">
                                                 <label class="mont mont-light">
-                                                    <input type="checkbox" name="remember" /> Remember me</label>
+                                                    <h:selectBooleanCheckbox  value="#{companyController.naturalPerson}"  binding="#{showCom}"   >
+                                                    <f:ajax event="click" render="@form" />
+                                                       </h:selectBooleanCheckbox>
+                                                    #{messages.naturalPerson}</label>
                                             </div>
                                             <div class="form-group">
-                                                <!-- <button type="submit" class="btn btn-success big-btn"   onclick="login()" >{messages.signin}</button>
-                                                 <p:remoteCommand name="login" actionListener="{userData.login()}"/>-->
-
-                                                <h:commandButton value="#{messages.signin}" class="btn btn-success big-btn" style="width: 100%;border-radius: 12px"  action="#{userData.login()}" />
+                                                <h:outputLabel rendered="#{not showCom.value}" class="mont mont-light">#{messages.companyName}</h:outputLabel >
+                                                <h:inputText  value="#{companyController.companyComName}"  rendered="#{not  showCom.value}"  maxlength="80" class="form-control mont mont-light btn btn-bordered" p:placeholder='Company name'  />
                                             </div>
-                                            <h4 class="mont mont-light">By clicking Sign In, you agree to our
+                                            <div class="form-group">
+                                                <label class="mont mont-light">#{messages.firstName}</label>
+                                                <h:inputText class="form-control mont mont-light btn btn-bordered" p:placeholder='Firstname' value="#{companyController.fName}" maxlength="40"  />
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="mont mont-light">#{messages.lastName}</label>
+                                                <h:inputText class="form-control mont mont-light btn btn-bordered" p:placeholder='Lastname' value="#{companyController.lName}" maxlength="40" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="mont mont-light">#{messages.password}</label>
+                                                <h:inputSecret class="form-control mont mont-light btn btn-bordered" p:placeholder='#{messages.password}' value="#{companyController.pass}" maxlength="10" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="mont mont-light">#{messages.repassword}</label>
+                                                <h:inputSecret class="form-control mont mont-light btn btn-bordered" p:placeholder='#{messages.repassword}' value="#{companyController.rPass}" maxlength="10"/>
+                                            </div>
+                                            <div class="form-group">
+                   
+                                                <h:commandButton value="#{messages.signup}" class="btn btn-success big-btn" style="width: 100%;border-radius: 12px"  action="#{companyController.register()}" />
+                                            </div>
+                                            <h4 class="mont mont-light">By clicking Sign Up, you agree to our
                                                 <a href="#">License Agreement.</a>
                                             </h4>
-                                            <h4 class="mont mont-light">
-                                                <a href="#">I forgot my user ID or Password</a> New to QuickBooks?
-                                                <a href="#">Sign up</a>
-                                            </h4>
+                                            
                                         </h:form>
                                     </div>
                                 </div>

@@ -162,9 +162,9 @@ public class UserData implements Serializable {
     public void login() {
         FbUsuario user = new FbUsuario();
         try {
-            HttpServletRequest req = (HttpServletRequest) validationBean.getRequestContext();
+            /*HttpServletRequest req = (HttpServletRequest) validationBean.getRequestContext();
             this.email = req.getParameter("userid");
-            this.pass = req.getParameter("password");
+            this.pass = req.getParameter("password");*/
             user = userFacade.login(email, pass);
             System.out.println(user.toString());
             if (!String.valueOf(user.getIdUsuario()).equals("0")) {
