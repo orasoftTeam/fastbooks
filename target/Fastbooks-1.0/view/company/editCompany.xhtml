@@ -4,7 +4,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:bnu="http://bootsfaces.net/ui">
     <f:view locale="#{ userData.locale}"/>
     <h:head>
         <title>Facelet Title</title>
@@ -16,20 +17,20 @@
                 #{companyController.setValues()}
         <h2>Informacion de compania</h2>
         <h:form id="comForm"  >
-            <h:messages showDetail="true" />
-            <h:panelGrid columns="2" >
-                <h:outputLabel>#{messages.nomCom}</h:outputLabel>
-                <h:inputText  maxlength="50" value="#{companyController.companyComName}" />
-                <h:outputLabel>#{messages.nomLeg}</h:outputLabel>
-                <h:inputText maxlength="50" value="#{companyController.companyLegName}" />
-                <h:outputLabel>#{messages.giro}</h:outputLabel>
-                <h:inputText maxlength="50" value="#{companyController.giro}"  />
-                <h:outputLabel>#{messages.telefono}</h:outputLabel>
-                <h:inputText maxlength="15" value="#{companyController.tel}" onkeyup="soloNumeros(this)" /> 
-                <h:outputLabel>#{messages.emailCom}</h:outputLabel>
-                <h:inputText  maxlength="50" value="#{companyController.email}"  />
-                <h:outputLabel>#{messages.website}</h:outputLabel>
-                <h:inputText maxlength="50"  value="#{companyController.website}" />
+            <bnu:messages showDetail="true" />
+            <h:panelGrid columns="1" >
+               
+                <bnu:inputText  maxlength="50" value="#{companyController.companyComName}" placeholder="#{messages.nomCom}" label="#{messages.nomCom}" size="50" />
+                
+                <bnu:inputText maxlength="50" value="#{companyController.companyLegName}" placeholder="#{messages.nomLeg}" label="#{messages.nomLeg}"  />
+                
+                <bnu:inputText maxlength="50" value="#{companyController.giro}" placeholder="#{messages.giro}" label="#{messages.giro}" />
+                
+                <bnu:inputText maxlength="15" value="#{companyController.tel}" onkeyup="soloNumeros(this)" placeholder="#{messages.telefono}" label="#{messages.telefono}" /> 
+                
+                <bnu:inputText  maxlength="50" value="#{companyController.email}" placeholder="#{messages.emailCom}" label="#{messages.emailCom}" />
+                
+                <bnu:inputText maxlength="50"  value="#{companyController.website}" placeholder="#{messages.website}" label="#{messages.website}" />
                 
                 <h:outputLabel>#{messages.logo}</h:outputLabel>
                 <p:fileUpload label="#{messages['lblImageUpload']}" invalidFileMessage="#{messages['lblFileInvalid']}" id="logoCom" fileUploadListener="#{companyController.handleFileUpload}" mode="advanced"
@@ -37,7 +38,7 @@
                 <p:outputLabel id="msgFile" value="#{companyController.msgFile}" />
                 <p:graphicImage value="#{companyController.logourl}" id="showLogo" style="height: 70px;width: 70px" />
                 <h:panelGroup>
-                    <h:commandButton value="#{messages.save}" action="#{companyController.save()}" />
+                    <bnu:commandButton value="#{messages.save}" action="#{companyController.save()}" />
                 </h:panelGroup>
             </h:panelGrid>
         </h:form>

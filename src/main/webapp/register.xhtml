@@ -19,7 +19,7 @@
         <link href="./fonts/mont.css" rel="stylesheet" type="text/css"></link>
     </h:head>
     <h:body class="page-sign-in home page-template page-template-home page-template-home-php page page-id-6 wp-custom-logo" >
-        
+         #{userData.valLogin()}
         <div id="content" class="site-content bootstrap-wrapper ">
 
             <div class="container mt-large">
@@ -49,11 +49,6 @@
 
                                         <h:form >
                                             <bnu:messages show-detail="true" />
-                                            
-                                            <div class="form-group">
-                                                <label class="mont mont-light">#{messages.email}</label>
-                                                <h:inputText class="form-control mont mont-light btn btn-bordered" p:placeholder='#{messages.phEmail}' value="#{companyController.email}"  maxlength="80"  />
-                                            </div>
                                             <div class="form-group">
                                                 <label class="mont mont-light">
                                                     <h:selectBooleanCheckbox  value="#{companyController.naturalPerson}"  binding="#{showCom}"   >
@@ -61,6 +56,11 @@
                                                        </h:selectBooleanCheckbox>
                                                     #{messages.naturalPerson}</label>
                                             </div>
+                                            <div class="form-group">
+                                                <label class="mont mont-light">#{messages.email}</label>
+                                                <h:inputText class="form-control mont mont-light btn btn-bordered" p:placeholder='#{messages.phEmail}' value="#{companyController.email}"  maxlength="80"  />
+                                            </div>
+                                            
                                             <div class="form-group">
                                                 <h:outputLabel rendered="#{not showCom.value}" class="mont mont-light">#{messages.companyName}</h:outputLabel >
                                                 <h:inputText  value="#{companyController.companyComName}"  rendered="#{not  showCom.value}"  maxlength="80" class="form-control mont mont-light btn btn-bordered" p:placeholder='Company name'  />

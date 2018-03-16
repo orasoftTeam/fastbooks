@@ -5,7 +5,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:bnu="http://bootsfaces.net/ui">
     <f:view locale="#{ userData.locale}"/>
     <h:head>
         <title>Facelet Title</title>
@@ -16,38 +17,39 @@
             <ui:define name="content">
                 #{userController.setValues()}
                 <h:form>
-                    <h:messages showDetail="true" />
-                    <h:panelGrid columns="2">
-                         <h:outputLabel>#{messages.logEmail}</h:outputLabel>
-                         <h:inputText maxlength="100" value="#{userController.email}" />
-                         <h:outputLabel>#{messages.firstName}</h:outputLabel>
-                    <h:inputText maxlength="50" value="#{userController.firstName}" />
-                    <h:outputLabel>#{messages.lastName}</h:outputLabel>
-                    <h:inputText maxlength="50" value="#{userController.lastName}" />
-                    <h:outputLabel>#{messages.telefono}</h:outputLabel>
-                    <h:inputText maxlength="10" value="#{userController.tel}" onkeyup="soloNumeros(this)" />
+                    
+                    <h:panelGrid columns="1">
+                         <bnu:messages showDetail="true" />
+                        <bnu:inputText maxlength="100" value="#{userController.email}" size="50" label="#{messages.logEmail}" placeholder="#{messages.logEmail}" />
+                         
+                        <bnu:inputText maxlength="50" value="#{userController.firstName}" label="#{messages.firstName}" placeholder="#{messages.firstName}" />
+                    
+                        <bnu:inputText maxlength="50" value="#{userController.lastName}" label="#{messages.lastName}" placeholder="#{messages.lastName}" />
+                    
+                        <bnu:inputText maxlength="10" value="#{userController.tel}" onkeyup="soloNumeros(this)" label="#{messages.telefono}" placeholder="#{messages.telefono}" />
                     <h:outputLabel>#{messages.gender}</h:outputLabel>
-                    <h:selectOneRadio value="#{userController.gender}" >
+                    <bnu:radiobutton value="#{userController.gender}">
                         <f:selectItem itemLabel="#{messages.male}" itemValue="M" />
                         <f:selectItem itemLabel="#{messages.female}" itemValue="F" />
-                    </h:selectOneRadio>
+                    </bnu:radiobutton>
+                   
                     <h:outputLabel>#{messages.bday}</h:outputLabel>
-                    <h:panelGroup id="bday" >
-                        <h:inputText id="day" value="#{userController.day}" maxlength="2" size="3"  a:placeholder="#{messages.day}" onkeyup="soloNumeros(this)" />
-                        <h:inputText id="month" value="#{userController.month}" maxlength="2" size="4" a:placeholder="#{messages.month}" onkeyup="soloNumeros(this)" />
-                        <h:selectOneMenu id="year" value="#{userController.year}" >
+                    <h:panelGrid id="bday" columns="3" >
+                        <bnu:inputText id="day" value="#{userController.day}" maxlength="2" size="3"  a:placeholder="#{messages.day}" onkeyup="soloNumeros(this)" />
+                        <bnu:inputText id="month" value="#{userController.month}" maxlength="2" size="4" a:placeholder="#{messages.month}" onkeyup="soloNumeros(this)" />
+                        <bnu:selectOneMenu id="year" value="#{userController.year}"  >
                             <f:selectItem itemValue="" itemLabel="#{messages.year}" />
                             <f:selectItems value="#{userController.years}" var="year" 
                                            itemLabel="#{year}" itemValue="#{year}" />
-                        </h:selectOneMenu>  
-                    </h:panelGroup>
-                    <h:outputLabel>#{messages.password}</h:outputLabel>
-                    <h:inputSecret maxlength="10" value="#{userController.clave}" redisplay="true" />
-                    <h:outputLabel>#{messages.repassword}</h:outputLabel>
-                    <h:inputSecret maxlength="10" value="#{userController.rclave}" redisplay="true" />
+                        </bnu:selectOneMenu>  
+                    </h:panelGrid>
+                    
+                    <bnu:inputSecret maxlength="10" value="#{userController.clave}"  placeholder="#{messages.password}" label="#{messages.password}"   />
+                    
+                    <bnu:inputSecret maxlength="10" value="#{userController.rclave}" placeholder="#{messages.repassword}" label="#{messages.repassword}"/>
                     
                     <h:panelGroup>
-                        <h:commandButton value="#{messages.save}"  action="#{userController.editOwnUser()}" />
+                        <bnu:commandButton value="#{messages.save}"  action="#{userController.editOwnUser()}" />
                     </h:panelGroup>
                     </h:panelGrid>
                     
