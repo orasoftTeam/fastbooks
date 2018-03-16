@@ -19,7 +19,7 @@
 
         <ui:insert name="top">
             <h:form>  
-                <bnu:navBar brand="FastBooks" brandHref="#{request.contextPath}/index.xhtml" inverse="true" fixed="top" fluid="true">
+                <bnu:navBar brand="#{userData.currentCia.nomCom}" brandHref="" inverse="true" fixed="top" fluid="true">
 
                     <bnu:navbarLinks pull="right">
                         <bnu:dropMenu  value="" iconAwesome="fa-cog" rendered="#{userData.loggedUser != null}" >
@@ -33,7 +33,7 @@
                         </bnu:dropMenu>
                         <bnu:navLink rendered="#{userData.loggedUser == null}" value="#{messages.signup}" href="#{request.contextPath}/registrarEmpresa.xhtml?faces-redirect=true"></bnu:navLink>
                         <bnu:navLink rendered="#{userData.loggedUser == null}" value="#{messages.signin}" href="#{request.contextPath}/login.xhtml?faces-redirect=true"></bnu:navLink>
-                        <bnu:navLink rendered="#{userData.loggedUser != null}" value="#{messages.logout}" onclick="ajax:userData.logout();"></bnu:navLink>
+                        <bnu:navLink rendered="#{userData.loggedUser != null}" value="#{messages.logout}" onclick="ajax:userData.logout();"  href="#" ></bnu:navLink>
                         
                     </bnu:navbarLinks>
 
@@ -54,7 +54,7 @@
                     <h:form>
                         <bnu:column col-sm="3" col-md="2" styleClass="sidebar">
                             <bnu:listLinks>
-                                <bnu:navLink header="Dasboard Links" />
+                                <!--<bnu:navLink header="Dasboard Links" />-->
                                 <bnu:navLink href="/Fastbooks/view/dashboard.xhtml" value="Dashboard" active="true"/>
                                 <bnu:navLink href="#" value="Banking" />
                                 <bnu:navLink href="#" value="Sales" />

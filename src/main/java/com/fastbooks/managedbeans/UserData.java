@@ -27,6 +27,7 @@ import javax.ejb.EJB;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -161,6 +162,9 @@ public class UserData implements Serializable {
     public void login() {
         FbUsuario user = new FbUsuario();
         try {
+            HttpServletRequest req = (HttpServletRequest) validationBean.getRequestContext();
+            this.email = req.getParameter("userid");
+            this.pass = req.getParameter("password");
             user = userFacade.login(email, pass);
             System.out.println(user.toString());
             if (!String.valueOf(user.getIdUsuario()).equals("0")) {
@@ -234,6 +238,16 @@ public class UserData implements Serializable {
          FacesContext.getCurrentInstance()
                .getViewRoot().setLocale((Locale)new Locale("en"));
         initLangs();
+    }
+    
+    public void valLogin(){
+        try {
+            if (this.loggedUser != null) {
+                validationBean.redirecionar("/view/dashboard.xhtml");
+            }
+        } catch (Exception e) {
+            System.out.println("not logged");
+        }
     }
     
     

@@ -36,6 +36,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 //import org.apache.commons.codec.binary.Base64;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.UploadedFile;
@@ -457,4 +458,10 @@ public class ValidationBean {
         }
 
     }
+     
+     
+     public HttpServletRequest getRequestContext(){
+     HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+     return req;
+     }
 }
