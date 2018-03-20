@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:bnu="http://bootsfaces.net/ui">
+      
+     <f:view locale="#{ userData.locale}"/>
+  
+     
+     <h:head>
+         <title>Employees</title>
+    </h:head>
+    <h:body>
+        
+       
+         <ui:composition template="../../template/template.xhtml">
+
+            <ui:define name="content">
+                <div class="row" style="background-color: #f5f5f5; display: block; width: 100%;
+                    padding: 0; margin: 0;">
+                    <h1 style="padding-left: 2%">Employees</h1> 
+                </div>
+               
+                <h:form>
+            <h:panelGroup>
+                <h:messages showDetail="true" />
+            </h:panelGroup>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <h:panelGrid style="float:right">
+                        <bnu:button value="Add employee" ></bnu:button>
+                    </h:panelGrid>
+                    <br></br> 
+             <h:panelGroup>
+                 <bnu:inputText placeholder="Filter by name"  tiny-screen="one-fourth" style="font-family: cursive" />
+                    <br></br><br></br><br></br>
+                    
+                    <bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />
+                    <bnu:commandButton value="" iconAwesome="fa-print" style="float: right" />
+
+
+                    <h:dataTable  styleClass="table table-striped" rows="3"  
+                    var="dtosTable" value="#{userController.usuarioPrueba}" >
+                     <h:column >
+                        <f:facet name="header">
+                          <h:outputText value="FIRST NAME" />
+                        </f:facet>
+                          <h:outputText value="#{dtosTable.firstname}" />
+                      </h:column>
+                     <h:column>
+                        <f:facet name="header">
+                          <h:outputText value="PHONE NUMBER" />
+                        </f:facet>
+                         <h:outputText value="#{dtosTable.telefono}" />
+                      </h:column>
+                     <h:column>
+                        <f:facet name="header">
+                          <h:outputText value="EMAIL ADDRESS" />
+                        </f:facet>
+                         <h:outputText value="#{dtosTable.email}" />
+                      </h:column>
+                      <h:column>
+                        <f:facet name="header">
+                          <h:outputText value="ACTION" />
+                        </f:facet>
+                          <bnu:dropButton  value="Edit" look="info">
+                              <bnu:navLink value="Delete" href="#"></bnu:navLink>
+                              <bnu:navLink value="Run Report" href="#"></bnu:navLink>
+                          </bnu:dropButton>
+                          
+                      </h:column>
+                     
+                     
+                </h:dataTable>
+             </h:panelGroup>
+                    <br></br><br></br>
+                    <bnu:jumbotron style="height: 200px">
+
+                    </bnu:jumbotron>
+                    
+                    
+                    
+                 </h:form>
+            </ui:define>
+             
+             
+         
+
+        </ui:composition>
+               
+    </h:body>
+</html>
+

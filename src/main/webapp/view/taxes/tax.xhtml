@@ -1,0 +1,196 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:bnu="http://bootsfaces.net/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        
+       
+         <ui:composition template="../../template/template.xhtml">
+
+            <ui:define name="content">
+                <bnu:button value="Add Tax" style="float: right"></bnu:button>
+                <bnu:dropButton  value="Edit IVA" style="float: right">
+                    <bnu:navLink value="Edit settings" href="#"></bnu:navLink>
+                    <bnu:navLink value="Edit Rates" href="#"></bnu:navLink>
+                </bnu:dropButton>
+                <div class="row" style="background-color: #f5f5f5; display: block; width: 100%;
+                    padding: 0; margin: 0;">
+                    <h1 style="padding-left: 2%">Tax</h1> 
+                  
+                </div>
+                <h:form>
+            <h:panelGroup>
+                <h:messages showDetail="true" />
+            </h:panelGroup>
+                    
+                    <br></br><br></br><br></br>
+                    <bnu:dropButton  value="View reports" style="float: right;">
+                              <bnu:navLink value="Taxable sales summary" href="#"></bnu:navLink>
+                              <bnu:navLink value="Transaction without sales tax" href="#"></bnu:navLink>
+                              <bnu:navLink value="Profit and loss" href="#"></bnu:navLink>
+                    </bnu:dropButton>
+                    
+                            <bnu:tabView activeIndex="2">
+                                <bnu:tab title="Returns">
+                                    <br></br><br></br>
+                                <bnu:dropButton  value="All returns" style="float: left">
+                                <bnu:navLink value="All returns" href="#"></bnu:navLink>
+                                <bnu:navLink value="Open" href="#"></bnu:navLink>
+                                <bnu:navLink value="Filed" href="#"></bnu:navLink>
+                                <bnu:navLink value="Filed and paid" href="#"></bnu:navLink>
+
+                    </bnu:dropButton>
+                    
+                    <bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />
+
+                    <br></br><br></br><br></br><br></br>                     
+         
+                    <bnu:dataTable style="max-width: 100%">
+                        <h:column >
+                        <f:facet name="header">
+                          <h:outputText value="START DATE" />
+                        </f:facet>
+                          <h:outputText value="" />
+                        </h:column>
+                        <h:column >
+                        <f:facet name="header">
+                          <h:outputText value="END DATE" />
+                        </f:facet>
+                          <h:outputText value="" />
+                        </h:column>
+                        <h:column >
+                        <f:facet name="header">
+                          <h:outputText value="FILE DATE" />
+                        </f:facet>
+                          <h:outputText value="" />
+                        </h:column>
+                        <h:column >
+                        <f:facet name="header">
+                          <h:outputText value="AMOUNT DUE" />
+                        </f:facet>
+                          <h:outputText value="" />
+                        </h:column>
+                        <h:column >
+                        <f:facet name="header">
+                          <h:outputText value="PAYMENTS" />
+                        </f:facet>
+                          <h:outputText value="" />
+                        </h:column>
+                        <h:column >
+                        <f:facet name="header">
+                          <h:outputText value="BALANCE" />
+                        </f:facet>
+                          <h:outputText value="" />
+                        </h:column>
+                        <h:column >
+                        <f:facet name="header">
+                          <h:outputText value="STATUS" />
+                        </f:facet>
+                          <h:outputText value="" />
+                        </h:column>
+                        <h:column >
+                        <f:facet name="header">
+                          <h:outputText value="ACTION" />
+                        </f:facet>
+                          <h:outputText value="" />
+                        </h:column>
+                        
+                    </bnu:dataTable>
+                                    
+                       </bnu:tab>
+                                
+                       <bnu:tab title="Payments">
+                       <br></br>
+                       <bnu:button value="Record payment" style="float: right"></bnu:button>
+                       <br></br><br></br>
+                       <bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />
+                       <bnu:dropMenu value="" iconAwesome="fa-filter">
+                           <div>
+                            <section>
+                           <div class="row">
+                               <div class="col-xs-4">
+                                   <h:outputLabel value="Tax Period" ></h:outputLabel>
+                                <bnu:inputText></bnu:inputText>
+                               </div>
+                               <div class="col-md-4">
+                                   <div>
+                                        <h:outputLabel value="From"></h:outputLabel>
+                                            <bnu:inputText></bnu:inputText>
+                                   </div>
+                               </div>
+                               <div class="col-md-4">
+                                   <div>
+                                        <h:outputLabel value="to"></h:outputLabel>
+                                            <bnu:inputText></bnu:inputText>
+                                   </div>
+                               </div>
+                               
+                                </div>
+                           </section>
+                        </div> 
+                           
+                           
+                           
+                       </bnu:dropMenu>
+                       
+                       
+                    <h:dataTable  styleClass="table table-striped" rows="3"  
+                        var="dtosTable" value="" >
+                     <h:column >
+                        <f:facet name="header">
+                          <h:outputText value="DATE" />
+                        </f:facet>
+                          <h:outputText value="" />
+                      </h:column>
+                     <h:column>
+                        <f:facet name="header">
+                          <h:outputText value="TYPE" />
+                        </f:facet>
+                         <h:outputText value="" />
+                      </h:column>
+                     <h:column>
+                        <f:facet name="header">
+                          <h:outputText value="TAX PERIOD" />
+                        </f:facet>
+                         <h:outputText value="" />
+                      </h:column>
+                      <h:column>
+                        <f:facet name="header">
+                          <h:outputText value="AMOUNT" />
+                        </f:facet>
+                      </h:column>
+                       <h:column>
+                        <f:facet name="header">
+                          <h:outputText value="MEMO" />
+                        </f:facet>
+                      </h:column>
+                      <h:column>
+                        <f:facet name="header">
+                          <h:outputText value="ACTION" />
+                        </f:facet>
+                      </h:column>
+                     
+                     
+                </h:dataTable>
+                       
+                       </bnu:tab>
+                </bnu:tabView> 
+                    <br></br>
+                     
+                    
+                 </h:form>
+            </ui:define>
+        
+        </ui:composition>
+               
+                    
+    </h:body>
+</html>
+
