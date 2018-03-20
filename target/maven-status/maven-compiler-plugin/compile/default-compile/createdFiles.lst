@@ -7,6 +7,7 @@ com\fastbooks\modelo\FbCiudad_.class
 com\fastbooks\modelo\FbUsuarioXCia_.class
 com\fastbooks\facade\FbCiudadFacade.class
 com\fastbooks\modelo\FbDireccion_.class
+com\fastbooks\modelo\FbGlCatalogoPK_.class
 com\fastbooks\modelo\FbPais_.class
 com\fastbooks\facade\FbMenuFacade.class
 com\fastbooks\facade\FbPaisFacade.class
@@ -14,6 +15,7 @@ com\fastbooks\facade\FbUsuarioFacade.class
 com\fastbooks\facade\FbUsuarioXCiaFacade.class
 com\fastbooks\modelo\FbPerfilXUsuarioPK_.class
 com\fastbooks\modelo\FbCompania_.class
+com\fastbooks\modelo\FbGlCatalogo_.class
 com\fastbooks\modelo\FbPerfiles_.class
 com\fastbooks\modelo\FbUsuarioXCiaPK.class
 com\fastbooks\facade\FbEstadoFacade.class

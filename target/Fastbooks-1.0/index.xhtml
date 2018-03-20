@@ -18,12 +18,24 @@
         <link href="./fonts/mont.css" rel="stylesheet" type="text/css"></link>
     </h:head>
     <h:body class="home page-template page-template-home page-template-home-php page page-id-6 wp-custom-logo" >
+        #{userData.initLangs()}
         <header>
             <div class="container">
                 <h:panelGroup rendered="#{userData.loggedUser == null}">
                     <ul class="pull-right menu-right navigation">
-                        <li><a href="sign-in.xhtml">Sign In</a></li>
+                        <li><a href="sign-in.xhtml">#{messages.signin}</a></li>
                         <li><a href="small-business.xhtml">Free Trial</a></li>
+                    </ul>
+                    <ul class="pull-right menu-right navigation">
+                        <li>Language : </li>
+                        <li> <h:form>
+                        <h:selectOneMenu  value = "#{userData.locale}" onchange="submit()"
+                                  valueChangeListener="#{userData.localeChanged}">
+
+                    <f:selectItems value = "#{userData.list}" var="country" itemValue="#{country.lanInitials}"
+                                   itemLabel="#{country.language}"/> 
+                </h:selectOneMenu> 
+                            </h:form></li>
                     </ul>
                 </h:panelGroup>
                 <a href="index.xhtml" class="custom-logo-link" rel="home" itemprop="url">

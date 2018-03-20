@@ -5,8 +5,10 @@
  */
 package com.fastbooks.managedbeans;
 
+import com.fastbooks.facade.FbPerfilXUsuarioFacade;
 import com.fastbooks.facade.FbUsuarioFacade;
 import com.fastbooks.modelo.FbCompania;
+import com.fastbooks.modelo.FbPerfilXUsuario;
 import com.fastbooks.modelo.FbUsuario;
 import com.fastbooks.util.ValidationBean;
 import java.io.Serializable;
@@ -34,6 +36,8 @@ public class UserController implements Serializable{
     private ValidationBean validationBean;
     @EJB
     private FbUsuarioFacade fbUsuarioFacade;
+    @EJB
+    private FbPerfilXUsuarioFacade pxuFacade;
     @Inject
     private UserData userData;
     
@@ -41,6 +45,7 @@ public class UserController implements Serializable{
     FbUsuario usuario = new FbUsuario();
     
     List<FbUsuario> usuarioL;
+    @Getter @Setter List<FbPerfilXUsuario>  pxuList = new ArrayList<>();
     
     String idCiaSearch;
     
@@ -327,6 +332,13 @@ public class UserController implements Serializable{
             flag = true;
         }
     return flag;
+    }
+    
+    
+    public void initCrud(){
+        this.pxuList = this.pxuFacade.getUserbyCia(this.userData.getCurrentCia().getIdCia().toString());
+    //usuarioL = this.fbUsuarioFacade.getUserbyCia(this.userData.getCurrentCia().getIdCia().toString());
+    // usuarioL = this.fbUsuarioFacade.getUserbyCia("1");
     }
     
 }

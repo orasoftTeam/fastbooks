@@ -1,6 +1,7 @@
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\modelo\FbEstado.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\facade\FbUsuarioPrefFacade.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\forms\CompaniaForm.java
+C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\modelo\FbGlCatalogo.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\modelo\FbCompania.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\facade\FbModuloXPerfilFacade.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\modelo\FbPerfiles.java
@@ -9,17 +10,19 @@ C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\modelo\F
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\modelo\FbUsuarioXCia.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\modelo\FbUsuarioXCiaPK.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\util\ValidationBean.java
+C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\modelo\FbGlCatalogoPK.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\modelo\FbPais.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\facade\FbPerfilesFacade.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\forms\UserForm.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\facade\FbCiudadFacade.java
+C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\facade\FbGlCatalogoFacade.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\modelo\FbCiudad.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\facade\FbModuloFacade.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\modelo\FbModuloXPerfil.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\modelo\FbModuloXPerfilPK.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\modelo\FbUsuarioPref.java
-C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\managedbeans\CompanyController.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\facade\FbCompaniaFacade.java
+C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\managedbeans\CompanyController.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\modelo\FbModulo.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\modelo\Country.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\facade\FbPaisFacade.java
@@ -34,4 +37,5 @@ C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\modelo\F
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\facade\FbUsuarioXCiaFacade.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\modelo\FbPerfilXUsuario.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\facade\FbEstadoFacade.java
+C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\managedbeans\AccountControler.java
 C:\Users\dell\Documents\fastbooks\Fastbooks\src\main\java\com\fastbooks\facade\FbUsuarioFacade.java
