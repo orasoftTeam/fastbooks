@@ -164,9 +164,10 @@ align-items: center;
     background-blend-mode: multiply;
 }
 .sign-in label {
-    font-size: 17pt;
-    margin-top: 30px;
-    display:block;
+    font-size: 11pt;
+    margin-top: 12px;
+    display: block;
+    font-weight: 800;
 }
 .btn-success{
     background:#6cbe9a;
@@ -215,7 +216,9 @@ ul.lined-list li{
     padding: 10px 0;
     border-bottom: 1px solid #444;
 }
-.google-logo{ width: 48px; height: auto; }
+.google-logo{     width: 30px;
+    height: auto;
+    vertical-align: middle }
 .no-margin{
     margin: 0;
 }
