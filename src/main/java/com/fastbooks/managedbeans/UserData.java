@@ -15,6 +15,7 @@ import com.fastbooks.modelo.FbPerfiles;
 import com.fastbooks.modelo.FbUsuario;
 import com.fastbooks.modelo.FbUsuarioXCia;
 import com.fastbooks.util.ValidationBean;
+import java.io.IOException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -60,6 +61,7 @@ public class UserData implements Serializable {
     
     private @Getter @Setter Integer offset  = 2;
     private @Getter @Setter Integer colmd  = 10;
+    private @Getter @Setter String currentPage = "Dashboard";
 
     public String getEmail() {
         return email;
@@ -164,6 +166,19 @@ public class UserData implements Serializable {
         }
         initLangs();
     }
+    
+    public void changeLocale(String loc) throws IOException{
+    for (Country entry : list) {
+    if (entry.getLanInitials().equals(loc)) {
+        System.out.println(entry.getLanInitials());
+                FacesContext.getCurrentInstance()
+                        .getViewRoot().setLocale((Locale) entry.getLocale());
+                validationBean.reload();
+    }
+    }
+    initLangs();
+    }
+    
 
     public void login() {
         FbUsuario user = new FbUsuario();
@@ -270,6 +285,14 @@ public class UserData implements Serializable {
         //list.add(new Country("France", "French", "fr", new Locale("fr")));
         list.add(new Country("El Salvador", validationBean.getMsgBundle("lblSpanish"), "es", new Locale("es")));
     
+    }
+    
+    public boolean activo(String pag){
+        
+        HttpServletRequest requestContext = validationBean.getRequestContext();
+        //System.out.println( requestContext.getRequestURI()+"  :"+pag + " = " + currentPage);
+        //return this.currentPage.equals(pag);
+        return requestContext.getRequestURI().contains(pag.toLowerCase());
     }
     
    
