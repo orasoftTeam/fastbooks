@@ -12,7 +12,7 @@
 
         <!--<h:outputStylesheet name="css/default.css" />
         <h:outputStylesheet name="css/cssLayout.css" />-->
-        <title>Fast Books</title>
+        <title>FastBooks</title>
     </h:head>
 
     <h:body>
@@ -21,36 +21,40 @@
             <h:form>  
                 <bnu:navBar  brandHref="index.xhtml" inverse="true" fixed="top" fluid="true">
                    <bnu:navbarLinks pull="left" styleClass="hidden-xs hidden-sm logo" >
-                        <bnu:navLink value="" href="#"  >
+                       <bnu:navLink value="" href="#{request.contextPath}/index.xhtml"  >
                             <p:graphicImage name="img/Sin-título-2.png" width="62" height="20" />
                         </bnu:navLink>
                     </bnu:navbarLinks>
                     <bnu:navbarLinks  style="margin-left: 125px" pull="left"  styleClass="hidden-xs hidden-sm btnGrp"   >
                         
-                        <bnu:navLink value="" href="#" iconAwesome="fa-toggle-left" iconSize="lg" onclick="toggleOut()" styleClass="btnOut" />
-                        <bnu:navLink value="" href="#" iconAwesome="fa-toggle-right" iconSize="lg" onclick="toggleIn()" styleClass="btnIn" style="display: none" />
-                        <bnu:navLink value="Orasoft" style="font-weight: bold" ></bnu:navLink>
+                        <bnu:navLink value="" href="#" iconAwesome="align-justify" iconSize="lg" onclick="toggleOut()" styleClass="btnOut" />
+                        <bnu:navLink value="" href="#" iconAwesome="align-justify" iconSize="lg" onclick="toggleIn()" styleClass="btnIn" style="display: none" />
+                        <bnu:navLink value="#{userData.currentCia.nomCom}" style="font-weight: bold" ></bnu:navLink>
                     </bnu:navbarLinks>          
                     <bnu:navbarLinks pull="right">
                         <bnu:dropMenu value="Menu" icon-awesome="" styleClass="hidden-lg hidden-md" >
-                            <bnu:navLink href="/Fastbooks/view/dashboard.xhtml" value="Dashboard" active="true"/>
-                            <bnu:navLink href="#" value="Banking" />
-                            <bnu:navLink href="#" value="Sales" />
-                            <bnu:navLink href="#" value="Expenses" />
+                            <bnu:navLink href="/Fastbooks/view/dashboard.xhtml" value="#{messages.Dashboard}" active="true"/>
+                            <bnu:navLink href="#" value="#{messages.Banking}" />
+                            <bnu:navLink href="#" value="#{messages.Sales}" />
+                            <bnu:navLink href="#" value="#{messages.Expenses}" />
 
-                            <bnu:navLink value="Employees" href="#{request.contextPath}/view/employee/employee.xhtml?faces-redirect=true" ></bnu:navLink>
-                            <bnu:navLink value="Reports" />
-                            <bnu:navLink value="Taxes" href="#{request.contextPath}/view/taxes/tax.xhtml?faces-redirect=true" ></bnu:navLink>
-                            <bnu:navLink value="Accounting" href="/Fastbooks/view/accounting/accounting.xhtml" />
+                            <bnu:navLink value="#{messages.Employees}" />
+                            <bnu:navLink value="#{messages.Reports}" />
+                            <bnu:navLink value="#{messages.Taxes}" />
+                            <bnu:navLink value="#{messages.Accounting}" href="/Fastbooks/view/accounting/accounting.xhtml" />
                         </bnu:dropMenu>
                         <bnu:dropMenu  value="" iconAwesome="fa-cog" rendered="#{userData.loggedUser != null}" styleClass="test" >
-                            <bnu:navLink header="Your Company"></bnu:navLink>
+                            <bnu:navLink header="#{messages.yourCom}"></bnu:navLink>
                             <bnu:navLink value="#{messages.manageCompany}" rendered="#{userData.currentCia != null}" href="#{request.contextPath}/view/company/editCompany.xhtml?faces-redirect=true" ></bnu:navLink>
                             <bnu:navLink value="#{messages.manageUsers}" rendered="#{userData.currentCia != null}" href="#{request.contextPath}/view/users/crudUser.xhtml?faces-redirect=true" ></bnu:navLink>
                             <bnu:navLink></bnu:navLink>
-                            <bnu:navLink header="User"></bnu:navLink>
-                            <bnu:navLink value="My Info"  href="#{request.contextPath}/view/users/editUser.xhtml?faces-redirect=true" ></bnu:navLink>
-
+                            <bnu:navLink header="#{messages.yourUser}"></bnu:navLink>
+                            <bnu:navLink value="#{messages.yourInfo}"  href="#{request.contextPath}/view/users/editUser.xhtml?faces-redirect=true" ></bnu:navLink>
+                            <bnu:dropMenu value="#{messages.yourLan}" iconAwesome="flag" iconAlign="left"  >
+                                <ui:repeat value="#{userData.list}" var="coun">
+                                    <bnu:navLink value="#{coun.language}" onclick="ajax:userData.changeLocale('#{coun.lanInitials}');location.reload();" href="#" ></bnu:navLink>
+                                </ui:repeat>
+                            </bnu:dropMenu>
                         </bnu:dropMenu>
                         <bnu:navLink rendered="#{userData.loggedUser == null}" value="#{messages.signup}" href="#{request.contextPath}/registrarEmpresa.xhtml?faces-redirect=true"></bnu:navLink>
                         <bnu:navLink rendered="#{userData.loggedUser == null}" value="#{messages.signin}" href="#{request.contextPath}/login.xhtml?faces-redirect=true"></bnu:navLink>
@@ -77,15 +81,15 @@
 
                         <bnu:listLinks>
                             <!--<bnu:navLink header="Dasboard Links" />-->
-                            <bnu:navLink href="/Fastbooks/view/dashboard.xhtml" value="Dashboard" active="true"/>
-                            <bnu:navLink href="#" value="Banking" />
-                            <bnu:navLink href="#" value="Sales" />
-                            <bnu:navLink href="#" value="Expenses" />
+                            <bnu:navLink href="/Fastbooks/view/dashboard.xhtml" value="#{messages.Dashboard}" active='#{userData.activo("Dashboard")}' />
+                            <bnu:navLink href="#" value="#{messages.Banking}" active='#{userData.activo("banking")}'  />
+                            <bnu:navLink href="#" value="#{messages.Sales}" active='#{userData.activo("sales")}'  />
+                            <bnu:navLink href="#" value="#{messages.Expenses}" active='#{userData.activo("expenses")}'  />
 
-                            <bnu:navLink value="Employees" href="/Fastbooks/view/employee/employee.xhtml"/>
-                            <bnu:navLink value="Reports" />
-                            <bnu:navLink value="Taxes" href="/Fastbooks/view/taxes/tax.xhtml" />
-                            <bnu:navLink value="Accounting" href="/Fastbooks/view/accounting/accounting.xhtml" />
+                            <bnu:navLink value="#{messages.Employees}" active='#{userData.activo("employees")}'  />
+                            <bnu:navLink value="#{messages.Reports}"  active='#{userData.activo("reports")}'  />
+                            <bnu:navLink value="#{messages.Taxes}"  active='#{userData.activo("taxes")}'  />
+                            <bnu:navLink value="#{messages.Accounting}" href="/Fastbooks/view/accounting/accounting.xhtml" active='#{userData.activo("Accounting")}'  />
 
                         </bnu:listLinks>
 

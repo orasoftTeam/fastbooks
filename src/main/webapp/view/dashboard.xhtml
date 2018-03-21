@@ -17,8 +17,21 @@
                 <h2>Perfil: #{userData.perfil.nombre}</h2>
                 <h3>Cia: #{userData.currentCia.nomCom}</h3>
                 <p:graphicImage value="#{userData.currentCia.logo}" id="showLogo" style="height: 70px;width: 70px" />
-                
-                
+
+                <h:form>
+
+                    #{userData.initLangs()}
+                    <h:panelGrid columns = "2"> 
+                        Language : 
+                        <h:selectOneMenu  value = "#{userData.locale}" onchange="submit()"
+                                          valueChangeListener="#{userData.localeChanged}">
+
+                            <f:selectItems value = "#{userData.list}" var="country" itemValue="#{country.lanInitials}"
+                                           itemLabel="#{country.language}"/> 
+                        </h:selectOneMenu> 
+                    </h:panelGrid> 
+
+                </h:form>
             </ui:define>
 
         </ui:composition>

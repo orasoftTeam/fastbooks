@@ -18,6 +18,7 @@ import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
+import lombok.Getter;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -36,7 +37,7 @@ public class CompanyController implements Serializable {
     @Inject
     UserData userData;
 
-    String appPath = System.getProperty("user.dir");
+    @Getter String appPath = System.getProperty("user.dir");
     private final String destination = appPath + File.separator + "logo\\";
     private UploadedFile archivo;
     private String nameFileFinal;

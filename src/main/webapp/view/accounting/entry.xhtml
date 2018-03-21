@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:bnu="http://bootsfaces.net/ui">
+    <f:view locale="#{ userData.locale}"/>
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="../../template/template.xhtml">
+
+            <ui:define name="content">
+                
+                <h:form >
+                    <bnu:panel>
+                    <h:panelGrid width="100%" columns="2" >
+                        <bnu:inputText disabled="true" value="21/03/2018" label="#{messages.entryDate}" style="width: 120px"  label-style="color:black;" />
+                        <bnu:inputText disabled="true" value="17856" label="#{messages.entryNum}" style="width: 100px" label-style="color:black;" />
+                        <bnu:selectOneMenu label="#{messages.entryType}" style="width: 120px" >
+                        <f:selectItem itemValue="" itemLabel="#{messages.selectOne}"  />
+                        <f:selectItem itemValue="1" itemLabel="Opcion 1" />
+                        <f:selectItem itemValue="2" itemLabel="Opcion 2" />
+                        <f:selectItem itemValue="3" itemLabel="Opcion 3" />
+                        </bnu:selectOneMenu>
+                        <bnu:inputText disabled="true" value="267" label="#{messages.entryCode}" style="width: 100px" label-style="color:black;" />
+                        
+                    </h:panelGrid>
+                        <bnu:inputTextarea placeholder="#{messages.entryConcept}" label="#{messages.entryConcept}"   />
+                </bnu:panel>
+                    <bnu:panel>
+                        <bnu:dataTable 
+                            
+                            >
+                            <bnu:dataTableColumn label="#{messages.detEntrySeq}" ></bnu:dataTableColumn>
+                            <bnu:dataTableColumn label="#{messages.detEntryNumAcc}" ></bnu:dataTableColumn>
+                            <bnu:dataTableColumn label="#{messages.detEntryConcept}" ></bnu:dataTableColumn>
+                            <bnu:dataTableColumn label="#{messages.detEntryCharge}" ></bnu:dataTableColumn>
+                            <bnu:dataTableColumn label="#{messages.detEntryPayment}" ></bnu:dataTableColumn>
+                        </bnu:dataTable>
+                    </bnu:panel>
+                </h:form>
+                
+                
+            </ui:define>
+        </ui:composition>
+        
+    </h:body>
+</html>
+

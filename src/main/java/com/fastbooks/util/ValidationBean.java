@@ -464,4 +464,9 @@ public class ValidationBean {
      HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
      return req;
      }
+     
+     public void reload() throws IOException {
+    ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+    ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+}
 }
