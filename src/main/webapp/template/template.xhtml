@@ -12,7 +12,7 @@
 
         <!--<h:outputStylesheet name="css/default.css" />
         <h:outputStylesheet name="css/cssLayout.css" />-->
-        <title>Fast Books</title>
+        <title>FastBooks</title>
     </h:head>
 
     <h:body>
@@ -21,14 +21,14 @@
             <h:form>  
                 <bnu:navBar  brandHref="index.xhtml" inverse="true" fixed="top" fluid="true">
                    <bnu:navbarLinks pull="left" styleClass="hidden-xs hidden-sm logo" >
-                        <bnu:navLink value="" href="#"  >
+                       <bnu:navLink value="" href="#{request.contextPath}/index.xhtml"  >
                             <p:graphicImage name="img/Sin-título-2.png" width="62" height="20" />
                         </bnu:navLink>
                     </bnu:navbarLinks>
                     <bnu:navbarLinks  style="margin-left: 125px" pull="left"  styleClass="hidden-xs hidden-sm btnGrp"   >
                         
-                        <bnu:navLink value="" href="#" iconAwesome="fa-toggle-left" iconSize="lg" onclick="toggleOut()" styleClass="btnOut" />
-                        <bnu:navLink value="" href="#" iconAwesome="fa-toggle-right" iconSize="lg" onclick="toggleIn()" styleClass="btnIn" style="display: none" />
+                        <bnu:navLink value="" href="#" iconAwesome="align-justify" iconSize="lg" onclick="toggleOut()" styleClass="btnOut" />
+                        <bnu:navLink value="" href="#" iconAwesome="align-justify" iconSize="lg" onclick="toggleIn()" styleClass="btnIn" style="display: none" />
                         <bnu:navLink value="Orasoft" style="font-weight: bold" ></bnu:navLink>
                     </bnu:navbarLinks>          
                     <bnu:navbarLinks pull="right">

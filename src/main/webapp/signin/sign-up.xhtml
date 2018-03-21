@@ -39,7 +39,7 @@
                                 <div class="padder">
                                     <h3 class="mont mt-small">
                                         <strong>
-                                            Register and get started
+                                            #{messages.regAndGetStart}
                                         </strong>
                                     </h3>
                                     
@@ -81,13 +81,10 @@
                                             <div class="form-group">
                                                 <h:commandButton value="#{messages.signup}" class="btn btn-success big-btn" style="width: 100%;border-radius: 12px"  action="#{companyController.register()}" />
                                             </div>
-                                            <h6 class="mont">By clicking Sign In, you agree to our
-                                                <a href="#">License Agreement.</a>
+                                            <h6 class="mont">#{messages.byClickingSignUp}
+                                                <a href="#">#{messages.licenseAgree}</a>
                                             </h6>
-                                            <h6 class="mont">
-                                                <a href="#">I forgot my user ID or Password</a> New to QuickBooks?
-                                                <a href="#">Sign up</a>
-                                            </h6>
+                                            
                                         </h:form>
                                     </div>
                                 </div>

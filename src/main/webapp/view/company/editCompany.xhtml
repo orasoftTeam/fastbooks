@@ -15,7 +15,8 @@
 
             <ui:define name="content">
                 #{companyController.setValues()}
-        <h2>Informacion de compania</h2>
+                <h2>#{messages.comInfo}</h2>
+        <p>#{companyController.appPath}</p>
         <h:form id="comForm"  >
             <bnu:messages showDetail="true" />
             <h:panelGrid columns="1" >

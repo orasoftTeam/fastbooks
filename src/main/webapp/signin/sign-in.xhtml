@@ -39,7 +39,7 @@
                                 <div class="padder">
                                     <h3 class="mont mt-small">
                                         <strong>
-                                            Sign In
+                                            #{messages.signin}
                                         </strong>
                                     </h3>
                                     <div class="row">
@@ -47,7 +47,7 @@
                                             <img src="./assets/google.png" class="google-logo" />
                                         </div>
                                         <div class="col-md-8 col-8">
-                                            <a href="javscript:void(0)" class="btn btn-bordered mont"><strong>Login with google</strong></a>
+                                            <a href="javscript:void(0)" class="btn btn-bordered mont"><strong>#{messages.logWithGoogle}</strong></a>
                                         </div>
                                     </div>
                                     <hr />
@@ -55,26 +55,26 @@
                                         <h:form>
                                             <bnu:messages show-detail="true" />
                                             <div class="form-group">
-                                                <label class="mont ">User ID</label>
+                                                <label class="mont ">#{messages.userId}</label>
                                                 <strong><h:inputText class="form-control mont mont-light btn btn-bordered" p:placeholder='#{messages.phEmail}' value="#{userData.email}" /></strong>
                                             </div>
                                             <div class="form-group">
-                                                <label class="mont">Password</label>
+                                                <label class="mont">#{messages.password}</label>
                                                 <strong><h:inputSecret class="form-control mont mont-light btn btn-bordered" p:placeholder='#{messages.phPass}' value="#{userData.pass}"  /></strong>
                                             </div>
                                             <div class="form-group">
                                                 <label class="mont">
-                                                    <input type="checkbox" name="remember" /> Remember me</label>
+                                                    <input type="checkbox" name="remember" /> #{messages.rememberMe}</label>
                                             </div>
                                             <div class="form-group">
                                                 <h:commandButton value="#{messages.signin}" class="btn btn-success big-btn" style="width: 100%;border-radius: 12px"  action="#{userData.login()}" />
                                             </div>
-                                            <h6 class="mont">By clicking Sign In, you agree to our
-                                                <a href="#">License Agreement.</a>
+                                            <h6 class="mont">#{messages.byClickingSignIn}
+                                                <a href="#">#{messages.licenseAgree}</a>
                                             </h6>
                                             <h6 class="mont">
-                                                <a href="#">I forgot my user ID or Password</a> New to QuickBooks?
-                                                <a href="sign-up.xhtml">Sign up</a>
+                                                <a href="#">#{messages.forgotPass}</a> #{messages.newToFB}
+                                                <a href="sign-up.xhtml">#{messages.signup}</a>
                                             </h6>
                                         </h:form>
                                     </div>
