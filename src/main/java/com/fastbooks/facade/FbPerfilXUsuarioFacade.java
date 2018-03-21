@@ -6,9 +6,12 @@
 package com.fastbooks.facade;
 
 import com.fastbooks.modelo.FbPerfilXUsuario;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -27,6 +30,23 @@ public class FbPerfilXUsuarioFacade extends AbstractFacade<FbPerfilXUsuario> {
 
     public FbPerfilXUsuarioFacade() {
         super(FbPerfilXUsuario.class);
+    }
+    
+    public List<FbPerfilXUsuario> getUserbyCia (String idCia){
+        List<FbPerfilXUsuario> listU = new ArrayList<>();
+        try {
+            String sql = "select * from fb_perfil_x_usuario where id_cia = ?";
+            //tambien q muestre el perfil
+            Query q = em.createNativeQuery(sql, FbPerfilXUsuario.class);
+            q.setParameter(1, idCia);
+            listU = q.getResultList();
+            
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbUsuarioFacade.getUserbyCia()");
+            e.printStackTrace();
+           
+        }
+        return listU; 
     }
     
 }

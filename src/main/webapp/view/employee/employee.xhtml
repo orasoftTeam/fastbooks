@@ -21,7 +21,7 @@
             <ui:define name="content">
                 <div class="row" style="background-color: #f5f5f5; display: block; width: 100%;
                     padding: 0; margin: 0;">
-                    <h1 style="padding-left: 2%">Employees</h1> 
+                    <h1 style="padding-left: 2%">#{messages.employees}</h1> 
                 </div>
                
                 <h:form>
@@ -31,12 +31,24 @@
                     <br></br>
                     <br></br>
                     <br></br>
-                    <h:panelGrid style="float:right">
-                        <bnu:button value="Add employee" ></bnu:button>
-                    </h:panelGrid>
+                    <bnu:row>
+                    <bnu:column span="3" style="float:right">
+                        <bnu:button value="#{messages.btnAddEmployee}"  p:data-target="#amodal" p:data-toggle="modal"></bnu:button>
+                    </bnu:column>
+                    </bnu:row>
+                    <!--Modal para agregar empleado -->
+                    <bnu:modal id="amodal" title="Modal Example" styleClass="modalPseudoClass">
+                            <f:facet name="footer">
+                              <bnu:button value="Close" dismiss="modal" />
+                              <bnu:button value="Ok" look="primary" dismiss="modal" />
+                            </f:facet>
+                    </bnu:modal>
+                    
+                    
+                    
                     <br></br> 
              <h:panelGroup>
-                 <bnu:inputText placeholder="Filter by name"  tiny-screen="one-fourth" style="font-family: cursive" />
+                 <bnu:inputText placeholder="#{messages.inputFilterbyName}"  tiny-screen="one-fourth" style="font-family: cursive" />
                     <br></br><br></br><br></br>
                     
                     <bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />
@@ -47,29 +59,29 @@
                     var="dtosTable" value="#{userController.usuarioPrueba}" >
                      <h:column >
                         <f:facet name="header">
-                          <h:outputText value="FIRST NAME" />
+                            <h:outputText value="#{messages.firstNameC}"  />
                         </f:facet>
                           <h:outputText value="#{dtosTable.firstname}" />
                       </h:column>
                      <h:column>
                         <f:facet name="header">
-                          <h:outputText value="PHONE NUMBER" />
+                            <h:outputText value="#{messages.phoneNumberC}" />
                         </f:facet>
                          <h:outputText value="#{dtosTable.telefono}" />
                       </h:column>
                      <h:column>
                         <f:facet name="header">
-                          <h:outputText value="EMAIL ADDRESS" />
+                            <h:outputText value="#{messages.emailAddC}" />
                         </f:facet>
                          <h:outputText value="#{dtosTable.email}" />
                       </h:column>
                       <h:column>
                         <f:facet name="header">
-                          <h:outputText value="ACTION" />
+                            <h:outputText value="#{messages.action}" />
                         </f:facet>
-                          <bnu:dropButton  value="Edit" look="info">
-                              <bnu:navLink value="Delete" href="#"></bnu:navLink>
-                              <bnu:navLink value="Run Report" href="#"></bnu:navLink>
+                          <bnu:dropButton  value="#{messages.edit}" look="info">
+                              <bnu:navLink value="#{messages.delete}" href="#"></bnu:navLink>
+                              <bnu:navLink value="#{messages.runReport}" href="#"></bnu:navLink>
                           </bnu:dropButton>
                           
                       </h:column>

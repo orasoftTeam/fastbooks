@@ -6,6 +6,9 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:bnu="http://bootsfaces.net/ui">
+      
+    <f:view locale="#{ userData.locale}"/>
+
     <h:head>
         <title>Facelet Title</title>
     </h:head>
@@ -15,14 +18,14 @@
          <ui:composition template="../../template/template.xhtml">
 
             <ui:define name="content">
-                <bnu:button value="Add Tax" style="float: right"></bnu:button>
-                <bnu:dropButton  value="Edit IVA" style="float: right">
-                    <bnu:navLink value="Edit settings" href="#"></bnu:navLink>
-                    <bnu:navLink value="Edit Rates" href="#"></bnu:navLink>
+                <bnu:button value="#{messages.btnAddTax}" style="float: right"></bnu:button>
+                <bnu:dropButton  value="#{messages.btnEditIVA}" style="float: right">
+                    <bnu:navLink value="#{messages.eSettings}" href="#"></bnu:navLink>
+                    <bnu:navLink value="#{messages.eRates}" href="#"></bnu:navLink>
                 </bnu:dropButton>
                 <div class="row" style="background-color: #f5f5f5; display: block; width: 100%;
                     padding: 0; margin: 0;">
-                    <h1 style="padding-left: 2%">Tax</h1> 
+                    <h1 style="padding-left: 2%">#{messages.tax}</h1> 
                   
                 </div>
                 <h:form>
@@ -31,20 +34,20 @@
             </h:panelGroup>
                     
                     <br></br><br></br><br></br>
-                    <bnu:dropButton  value="View reports" style="float: right;">
-                              <bnu:navLink value="Taxable sales summary" href="#"></bnu:navLink>
-                              <bnu:navLink value="Transaction without sales tax" href="#"></bnu:navLink>
-                              <bnu:navLink value="Profit and loss" href="#"></bnu:navLink>
+                    <bnu:dropButton  value="#{messages.btnViewReports}" style="float: right; padding-right: 12%">
+                        <bnu:navLink value="#{messages.btnListVR1}" href="#"></bnu:navLink>
+                        <bnu:navLink value="#{messages.btnListVR2}" href="#"></bnu:navLink>
+                        <bnu:navLink value="#{messages.btnListVR3}" href="#"></bnu:navLink>
                     </bnu:dropButton>
                     
                             <bnu:tabView activeIndex="2">
-                                <bnu:tab title="Returns">
+                                <bnu:tab title="#{messages.returns}">
                                     <br></br><br></br>
-                                <bnu:dropButton  value="All returns" style="float: left">
-                                <bnu:navLink value="All returns" href="#"></bnu:navLink>
-                                <bnu:navLink value="Open" href="#"></bnu:navLink>
-                                <bnu:navLink value="Filed" href="#"></bnu:navLink>
-                                <bnu:navLink value="Filed and paid" href="#"></bnu:navLink>
+                                    <bnu:dropButton  value="#{messages.allRet}" style="float: left">
+                                        <bnu:navLink value="#{messages.allRet}" href="#"></bnu:navLink>
+                                        <bnu:navLink value="#{messages.open}" href="#"></bnu:navLink>
+                                        <bnu:navLink value="#{messages.filed}" href="#"></bnu:navLink>
+                                        <bnu:navLink value="#{messages.filedANDpaid}" href="#"></bnu:navLink>
 
                     </bnu:dropButton>
                     
@@ -55,49 +58,49 @@
                     <bnu:dataTable style="max-width: 100%">
                         <h:column >
                         <f:facet name="header">
-                          <h:outputText value="START DATE" />
+                            <h:outputText value="#{messages.sDate}" />
                         </f:facet>
                           <h:outputText value="" />
                         </h:column>
                         <h:column >
                         <f:facet name="header">
-                          <h:outputText value="END DATE" />
+                            <h:outputText value="#{messages.eDate}" />
                         </f:facet>
                           <h:outputText value="" />
                         </h:column>
                         <h:column >
                         <f:facet name="header">
-                          <h:outputText value="FILE DATE" />
+                            <h:outputText value="#{messages.fDate}" />
                         </f:facet>
                           <h:outputText value="" />
                         </h:column>
                         <h:column >
                         <f:facet name="header">
-                          <h:outputText value="AMOUNT DUE" />
+                            <h:outputText value="#{messages.aDue}" />
                         </f:facet>
                           <h:outputText value="" />
                         </h:column>
                         <h:column >
                         <f:facet name="header">
-                          <h:outputText value="PAYMENTS" />
+                            <h:outputText value="#{messages.paymentsC}" />
                         </f:facet>
                           <h:outputText value="" />
                         </h:column>
                         <h:column >
                         <f:facet name="header">
-                          <h:outputText value="BALANCE" />
+                            <h:outputText value="#{messages.balance}" />
                         </f:facet>
                           <h:outputText value="" />
                         </h:column>
                         <h:column >
                         <f:facet name="header">
-                          <h:outputText value="STATUS" />
+                            <h:outputText value="#{messages.status}" />
                         </f:facet>
                           <h:outputText value="" />
                         </h:column>
                         <h:column >
                         <f:facet name="header">
-                          <h:outputText value="ACTION" />
+                            <h:outputText value="#{messages.action}" />
                         </f:facet>
                           <h:outputText value="" />
                         </h:column>
@@ -106,9 +109,9 @@
                                     
                        </bnu:tab>
                                 
-                       <bnu:tab title="Payments">
+                                <bnu:tab title="#{messages.payments}">
                        <br></br>
-                       <bnu:button value="Record payment" style="float: right"></bnu:button>
+                       <bnu:button value="#{messages.btnRecordPay}" style="float: right"></bnu:button>
                        <br></br><br></br>
                        <bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />
                        <bnu:dropMenu value="" iconAwesome="fa-filter">
@@ -145,35 +148,35 @@
                         var="dtosTable" value="" >
                      <h:column >
                         <f:facet name="header">
-                          <h:outputText value="DATE" />
+                            <h:outputText value="#{messages.date}" />
                         </f:facet>
                           <h:outputText value="" />
                       </h:column>
                      <h:column>
                         <f:facet name="header">
-                          <h:outputText value="TYPE" />
+                            <h:outputText value="#{messages.type}" />
                         </f:facet>
                          <h:outputText value="" />
                       </h:column>
                      <h:column>
                         <f:facet name="header">
-                          <h:outputText value="TAX PERIOD" />
+                            <h:outputText value="#{messages.taxPeriod}" />
                         </f:facet>
                          <h:outputText value="" />
                       </h:column>
                       <h:column>
                         <f:facet name="header">
-                          <h:outputText value="AMOUNT" />
+                            <h:outputText value="#{messages.amount}" />
                         </f:facet>
                       </h:column>
                        <h:column>
                         <f:facet name="header">
-                          <h:outputText value="MEMO" />
+                            <h:outputText value="#{messages.memo}" />
                         </f:facet>
                       </h:column>
                       <h:column>
                         <f:facet name="header">
-                          <h:outputText value="ACTION" />
+                            <h:outputText value="#{messages.action}" />
                         </f:facet>
                       </h:column>
                      

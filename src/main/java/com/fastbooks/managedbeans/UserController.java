@@ -5,8 +5,10 @@
  */
 package com.fastbooks.managedbeans;
 
+import com.fastbooks.facade.FbPerfilXUsuarioFacade;
 import com.fastbooks.facade.FbUsuarioFacade;
 import com.fastbooks.modelo.FbCompania;
+import com.fastbooks.modelo.FbPerfilXUsuario;
 import com.fastbooks.modelo.FbUsuario;
 import com.fastbooks.util.ValidationBean;
 import java.io.Serializable;
@@ -34,6 +36,8 @@ public class UserController implements Serializable{
     private ValidationBean validationBean;
     @EJB
     private FbUsuarioFacade fbUsuarioFacade;
+    @EJB
+    private FbPerfilXUsuarioFacade pxuFacade;
     @Inject
     private UserData userData;
     
@@ -41,8 +45,8 @@ public class UserController implements Serializable{
     FbUsuario usuario = new FbUsuario();
     
     List<FbUsuario> usuarioL;
-    List<FbUsuario> usuarioPrueba;
-
+     @Getter @Setter List<FbUsuario> usuarioPrueba;
+    @Getter @Setter List<FbPerfilXUsuario>  pxuList = new ArrayList<>();
     
     String idCiaSearch;
     
@@ -69,10 +73,7 @@ public class UserController implements Serializable{
      * Creates a new instance of UserController
      */
     public UserController() {
-         
-       getList();
-        
-        
+        getList();
     }
 
     public String getRclave() {
@@ -225,15 +226,6 @@ public class UserController implements Serializable{
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
-    public List<FbUsuario> getUsuarioPrueba() {
-        return usuarioPrueba;
-    }
-
-    public void setUsuarioPrueba(List<FbUsuario> usuarioPrueba) {
-        this.usuarioPrueba = usuarioPrueba;
-    }
-    
     
 
     
@@ -344,6 +336,13 @@ public class UserController implements Serializable{
     return flag;
     }
     
+    
+    public void initCrud(){
+        this.pxuList = this.pxuFacade.getUserbyCia(this.userData.getCurrentCia().getIdCia().toString());
+    //usuarioL = this.fbUsuarioFacade.getUserbyCia(this.userData.getCurrentCia().getIdCia().toString());
+    // usuarioL = this.fbUsuarioFacade.getUserbyCia("1");
+    }
+ 
      public void getList(){
          usuarioPrueba = new ArrayList<>();
          int i;

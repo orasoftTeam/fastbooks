@@ -28,6 +28,8 @@ import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.servlet.http.HttpServletRequest;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -42,7 +44,7 @@ public class UserData implements Serializable {
 
     @EJB
     ValidationBean validationBean;
-
+    
     private static final long serialVersionUID = 1L;
     private String locale = "en";
     private Country lenguage;
@@ -54,6 +56,10 @@ public class UserData implements Serializable {
     private FbPerfiles perfil;
     private String email;
     private String pass;
+    
+    
+    private @Getter @Setter Integer offset  = 2;
+    private @Getter @Setter Integer colmd  = 10;
 
     public String getEmail() {
         return email;
