@@ -22,8 +22,7 @@ import javax.faces.view.ViewScoped;
 @ViewScoped
 public class CustomerController implements Serializable{
     
-    @EJB 
-    FbCustomer comFacade;
+    
     @EJB
     ValidationBean validationBean;
    

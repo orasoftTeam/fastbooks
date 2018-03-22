@@ -73,9 +73,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "FbCompania.findByFechaCreacion", query = "SELECT f FROM FbCompania f WHERE f.fechaCreacion = :fechaCreacion")})
 public class FbCompania implements Serializable {
 
-    @OneToMany(mappedBy = "idCia")
-    private List<FbCustomer> fbCustomerList;
-
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
@@ -272,15 +269,6 @@ public class FbCompania implements Serializable {
     @Override
     public String toString() {
         return "com.fastbooks.modelo.FbCompania[ idCia=" + idCia + " ]";
-    }
-
-    @XmlTransient
-    public List<FbCustomer> getFbCustomerList() {
-        return fbCustomerList;
-    }
-
-    public void setFbCustomerList(List<FbCustomer> fbCustomerList) {
-        this.fbCustomerList = fbCustomerList;
     }
     
 }

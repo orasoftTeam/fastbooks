@@ -1,0 +1,165 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:bnu="http://bootsfaces.net/ui">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+        <!--<h:outputStylesheet name="css/default.css" />
+        <h:outputStylesheet name="css/cssLayout.css" />-->
+        <title>FastBooks</title>
+    </h:head>
+
+    <h:body>
+
+        <ui:insert name="top">
+            <h:form>  
+                <bnu:navBar  brandHref="index.xhtml" inverse="true" fixed="top" fluid="true">
+                   <bnu:navbarLinks pull="left" styleClass="hidden-xs hidden-sm logo" >
+                       <bnu:navLink value="" href="#{request.contextPath}/index.xhtml"  >
+                            <p:graphicImage name="img/Sin-título-2.png" width="62" height="20" />
+                        </bnu:navLink>
+                    </bnu:navbarLinks>
+                    <bnu:navbarLinks  style="margin-left: 125px" pull="left"  styleClass="hidden-xs hidden-sm btnGrp"   >
+                        
+                        <bnu:navLink value="" href="#" iconAwesome="align-justify" iconSize="lg" onclick="toggleOut()" styleClass="btnOut" />
+                        <bnu:navLink value="" href="#" iconAwesome="align-justify" iconSize="lg" onclick="toggleIn()" styleClass="btnIn" style="display: none" />
+                        <bnu:navLink value="#{userData.currentCia.nomCom}" style="font-weight: bold" ></bnu:navLink>
+                    </bnu:navbarLinks>          
+                    <bnu:navbarLinks pull="right">
+                        <bnu:dropMenu value="Menu" icon-awesome="" styleClass="hidden-lg hidden-md" >
+                            <bnu:navLink href="/Fastbooks/view/dashboard.xhtml" value="#{messages.Dashboard}" active="true"/>
+                            <bnu:navLink href="#" value="#{messages.Banking}" />
+                            <bnu:navLink href="/Fastbooks/view/sales/sales.xhtml" value="#{messages.Sales}" />
+                            <bnu:navLink href="#" value="#{messages.Expenses}" />
+
+                            <bnu:navLink value="#{messages.Employees}" href="/Fastbooks/view/employee/employee.xhtml" />
+                            <bnu:navLink value="#{messages.Reports}" />
+                            <bnu:navLink value="#{messages.Taxes}" href="/Fastbooks/view/taxes/tax.xhtml"/>
+                            <bnu:navLink value="#{messages.Accounting}" href="/Fastbooks/view/accounting/accounting.xhtml" />
+                        </bnu:dropMenu>
+                        <bnu:dropMenu  value="" iconAwesome="fa-cog" rendered="#{userData.loggedUser != null}" styleClass="test" >
+                            <bnu:navLink header="#{messages.yourCom}"></bnu:navLink>
+                            <bnu:navLink value="#{messages.manageCompany}" rendered="#{userData.currentCia != null}" href="#{request.contextPath}/view/company/editCompany.xhtml?faces-redirect=true" ></bnu:navLink>
+                            <bnu:navLink value="#{messages.manageUsers}" rendered="#{userData.currentCia != null}" href="#{request.contextPath}/view/users/crudUser.xhtml?faces-redirect=true" ></bnu:navLink>
+                            <bnu:navLink></bnu:navLink>
+                            <bnu:navLink header="#{messages.yourUser}"></bnu:navLink>
+                            <bnu:navLink value="#{messages.yourInfo}"  href="#{request.contextPath}/view/users/editUser.xhtml?faces-redirect=true" ></bnu:navLink>
+                            <bnu:dropMenu value="#{messages.yourLan}" iconAwesome="flag" iconAlign="left"  >
+                                <ui:repeat value="#{userData.list}" var="coun">
+                                    <bnu:navLink value="#{coun.language}" onclick="ajax:userData.changeLocale('#{coun.lanInitials}');location.reload();" href="#" ></bnu:navLink>
+                                </ui:repeat>
+                            </bnu:dropMenu>
+                        </bnu:dropMenu>
+                        <bnu:navLink rendered="#{userData.loggedUser == null}" value="#{messages.signup}" href="#{request.contextPath}/registrarEmpresa.xhtml?faces-redirect=true"></bnu:navLink>
+                        <bnu:navLink rendered="#{userData.loggedUser == null}" value="#{messages.signin}" href="#{request.contextPath}/login.xhtml?faces-redirect=true"></bnu:navLink>
+                        <bnu:navLink rendered="#{userData.loggedUser != null}" value="#{messages.logout}" onclick="ajax:userData.logout();"  href="#" ></bnu:navLink>
+
+                    </bnu:navbarLinks>
+
+                </bnu:navBar>
+
+
+            </h:form>
+
+        </ui:insert>
+
+
+
+
+
+        <bnu:container fluid="true" styleClass="main" >
+            <bnu:column span="2" styleClass="barra hidden-xs hidden-sm sidebar" >
+
+                <ui:insert name="left">
+                    <h:form>
+
+                        <bnu:listLinks>
+                            <!--<bnu:navLink header="Dasboard Links" />-->
+                            <bnu:navLink href="/Fastbooks/view/dashboard.xhtml" value="#{messages.Dashboard}" active='#{userData.activo("Dashboard")}' />
+                            <bnu:navLink href="#" value="#{messages.Banking}" active='#{userData.activo("banking")}'  />
+                            <bnu:navLink href="/Fastbooks/view/sales/sales.xhtml" value="#{messages.Sales}" active='#{userData.activo("sales")}'  />
+                            <bnu:navLink href="#" value="#{messages.Expenses}" active='#{userData.activo("expenses")}'  />
+
+                            <bnu:navLink value="#{messages.Employees}" href="/Fastbooks/view/employee/employee.xhtml" active='#{userData.activo("employee")}'  />
+                            <bnu:navLink value="#{messages.Reports}"  active='#{userData.activo("reports")}'  />
+                            <bnu:navLink value="#{messages.Taxes}"  href="/Fastbooks/view/taxes/tax.xhtml" active='#{userData.activo("tax")}'  />
+                            <bnu:navLink value="#{messages.Accounting}" href="/Fastbooks/view/accounting/accounting.xhtml" active='#{userData.activo("Accounting")}'  />
+
+                        </bnu:listLinks>
+
+
+
+
+
+
+                    </h:form>
+
+
+
+                </ui:insert>
+            </bnu:column>
+
+            <bnu:column span="10">
+                <ui:insert name="content">Content</ui:insert>
+            </bnu:column>
+
+        </bnu:container> 
+        <script type="text/javascript">
+           function toggleOut() {
+                $('.barra').fadeOut();
+                $('.btnOut').hide();
+                $('.btnIn').show();
+                $('.btnGrp').css('margin-left','0px');
+                $('.logo').hide();
+                //alert('toggle');
+            }
+            function toggleIn() {
+                $('.barra').fadeIn();
+                $('.btnIn').hide();
+                $('.btnOut').show();
+                $('.btnGrp').css('margin-left','125px');
+                $('.logo').show();
+                //alert('toggle');
+            }
+        </script>
+        <style type="text/css">
+            .main{
+                margin-top: 60px;
+            }
+
+            .sidebar {
+
+                background-color: #f5f5f5;
+                border-right: 1px solid #eee;
+                padding: 20px;
+            }
+
+            .nav-list {
+                margin-bottom: 20px;
+                margin-left: -20px;
+                margin-right: -21px;
+            }
+            .nav-list > li > a {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .nav-list > .active > a, .nav-sidebar > .active > a:hover, .nav-sidebar > .active > a:focus {
+                background-color: #428bca;
+                color: #fff;
+                border-radius: 30px;
+            }
+
+        </style>
+        <!--<div id="bottom">
+            <ui:insert name="bottom">Bottom</ui:insert>
+        </div>-->
+
+    </h:body>
+
+</html>
