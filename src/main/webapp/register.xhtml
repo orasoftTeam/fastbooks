@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:bnu="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+    <f:view locale="#{ userData.locale}"/>
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+        <title>Fastbooks</title>
+        <link rel="stylesheet" id="modernize-style-css" href="./assets/style.css" type="text/css" media="all"></link>
+        <script type="text/javascript" src="./assets/jquery.js"></script>
+        <script type="text/javascript" src="./assets/jquery-migrate.min.js"></script>
+        <link href="./assets/bootstrap-grid.css" rel="stylesheet" type="text/css"></link>
+        <link href="./assets/mont.css" rel="stylesheet" type="text/css"></link>
+        <link href="./assets/fastbooks.css" rel="stylesheet" type="text/css"></link> 
+        <link href="./fonts/mont.css" rel="stylesheet" type="text/css"></link>
+    </h:head>
+    <h:body class="page-sign-in home page-template page-template-home page-template-home-php page page-id-6 wp-custom-logo" >
+         #{userData.valLogin()}
+        <div id="content" class="site-content bootstrap-wrapper ">
+
+            <div class="container mt-large">
+                <div class="row">
+                    <div class="col-md-6 text-left">
+                        <a href="index.xhtml" class="custom-logo-link" rel="home" itemprop="url">
+                            <img width="676" height="250" src="./assets/logo-fastbooks.svg" class="custom-logo" alt="Fastbooks" itemprop="logo" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel-round row sign-in">
+                            <div class="col-md-6 form-side">
+                                <div class="padder">
+                                    <h1 class="mont mt-medium">
+                                        <strong>
+                                            Register and get started
+                                        </strong>
+                                    </h1>
+                                    <br></br>
+                                    
+                                    <hr />
+                                    <div class="form">
+
+                                        <h:form >
+                                            <bnu:messages show-detail="true" />
+                                            <div class="form-group">
+                                                <label class="mont mont-light">
+                                                    <h:selectBooleanCheckbox  value="#{companyController.naturalPerson}"  binding="#{showCom}"   >
+                                                    <f:ajax event="click" render="@form" />
+                                                       </h:selectBooleanCheckbox>
+                                                    #{messages.naturalPerson}</label>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="mont mont-light">#{messages.email}</label>
+                                                <h:inputText class="form-control mont mont-light btn btn-bordered" p:placeholder='#{messages.phEmail}' value="#{companyController.email}"  maxlength="80"  />
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <h:outputLabel rendered="#{not showCom.value}" class="mont mont-light">#{messages.companyName}</h:outputLabel >
+                                                <h:inputText  value="#{companyController.companyComName}"  rendered="#{not  showCom.value}"  maxlength="80" class="form-control mont mont-light btn btn-bordered" p:placeholder='Company name'  />
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="mont mont-light">#{messages.firstName}</label>
+                                                <h:inputText class="form-control mont mont-light btn btn-bordered" p:placeholder='Firstname' value="#{companyController.fName}" maxlength="40"  />
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="mont mont-light">#{messages.lastName}</label>
+                                                <h:inputText class="form-control mont mont-light btn btn-bordered" p:placeholder='Lastname' value="#{companyController.lName}" maxlength="40" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="mont mont-light">#{messages.password}</label>
+                                                <h:inputSecret class="form-control mont mont-light btn btn-bordered" p:placeholder='#{messages.password}' value="#{companyController.pass}" maxlength="10" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="mont mont-light">#{messages.repassword}</label>
+                                                <h:inputSecret class="form-control mont mont-light btn btn-bordered" p:placeholder='#{messages.repassword}' value="#{companyController.rPass}" maxlength="10"/>
+                                            </div>
+                                            <div class="form-group">
+                   
+                                                <h:commandButton value="#{messages.signup}" class="btn btn-success big-btn" style="width: 100%;border-radius: 12px"  action="#{companyController.register()}" />
+                                            </div>
+                                            <h4 class="mont mont-light">By clicking Sign Up, you agree to our
+                                                <a href="#">License Agreement.</a>
+                                            </h4>
+                                            
+                                        </h:form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 image" style="background-image:url('./assets/web-fastbooks-3.jpg')">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <style>
+                body {
+                    background: #2b3c37;
+                }
+            </style>
+
+            <br></br>
+            <br></br>
+            <br></br>
+        </div>
+        
+        
+        
+    </h:body>
+</html>
+
