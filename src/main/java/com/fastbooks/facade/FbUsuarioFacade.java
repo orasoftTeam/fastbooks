@@ -118,8 +118,8 @@ public class FbUsuarioFacade extends AbstractFacade<FbUsuario> {
     public String actUser(FbCompania com,FbUsuario user,String op){
     String res = "";
         try {
-            Connection cn = em.unwrap(java.sql.Connection.class);
-            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_USUARIO (?,?,?,?,?,?,?,?,?,?,?)}");
+            Connection cn = em.unwrap(java.sql.Connection.class);//Conn EM
+            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_USUARIO (?,?,?,?,?,?,?,?,?,?,?)}"); //llamada al PR
             cs.setInt(1, Integer.parseInt(String.valueOf(user.getIdUsuario())));
             cs.setString(2, user.getEmail());
             cs.setInt(3, Integer.parseInt(String.valueOf(com.getIdCia())));
@@ -130,7 +130,7 @@ public class FbUsuarioFacade extends AbstractFacade<FbUsuario> {
             cs.setString(8, user.getBDay());
             cs.setString(9, user.getClave());
             cs.setString(10, op);
-            cs.registerOutParameter(11, Types.VARCHAR);
+            cs.registerOutParameter(11, Types.VARCHAR);//setea parametro de salida --res
             cs.execute();
             res = cs.getString(11);
             cs.close();

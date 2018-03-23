@@ -25,8 +25,6 @@ public class CustomerController implements Serializable{
     
     @EJB
     ValidationBean validationBean;
-   
-    
     
     private String title;
     private FbCustomer customer;
@@ -43,6 +41,14 @@ public class CustomerController implements Serializable{
     private String website;
     private String idDireccion;
     private String idDirShipp;
+    private boolean sameSHA;
+    private String address;
+    private String street;
+    private String city;
+    private String state;
+    private String postalCode;
+    private String country;
+    
 
     public String getTitle() {
         return title;
@@ -156,7 +162,61 @@ public class CustomerController implements Serializable{
         this.idDirShipp = idDirShipp;
     }
 
-    
+    public boolean isSameSHA() {
+        return sameSHA;
+    }
+
+    public void setSameSHA(boolean sameSHA) {
+        this.sameSHA = sameSHA;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
     
     
 
@@ -165,6 +225,50 @@ public class CustomerController implements Serializable{
      */
     public CustomerController() {
     }
+    
+    
+     public void registerC() {
+       
+        if (regVal()) {
+            FbCustomer cust= new FbCustomer();
+            cust.setTitle(title);
+            cust.setFirstname(firstName);
+            cust.setMiddlename(midName);
+            cust.setLastname(lastName);
+            cust.setSuffixx(suffix);
+            cust.setCompany(company);
+            cust.setDisplayName(displayName);
+            cust.setEmail(email);
+            cust.setPhone(phone);
+            cust.setMobile("");
+            cust.setFax("");
+            cust.setWebside(website);
+            cust.setStreet(address);
+            cust.setCity(address);
+            cust.setEstate(address);
+            cust.setPostalCode(address);
+            cust.setCountry(address);
+            FbCompania com = new FbCompania(); 
+            com.setIdCia(BigDecimal.ZERO);
+            String res = ""; // comFacade.actCompany(com, user, "A");
+            System.out.println("Resultado controller: " + res);
+
+            if (res.equals("0")) {
+               
+            } else if (res.equals("-1")) {
+                //lanzar mensaje de registro repetido
+                validationBean.lanzarMensaje("warn", "valErr", "repeatedEmail");
+            } else if (res.equals("-2")) {
+                //lanzar mensaje de ocurrio error inesperado
+                validationBean.lanzarMensaje("error", "valErr", "unexpectedError");
+            }
+
+            System.out.println("validation good");
+        } else {
+            System.out.println("validation fail");
+        }
+    }
+    
     
     
     public boolean regVal(){
@@ -228,9 +332,21 @@ public class CustomerController implements Serializable{
                 c++;
             }
           
+          if(!this.sameSHA){
+             if (!(validationBean.validarCampoVacio(this.address, "error", "valErr", "reqAddress")
+                    && validationBean.validarLongitudCampo(this.address, 4, 50, "error", "valErr", "reqAddress"))) {
+                c++;
+            }    
+                
+             }else{
+               this.address = this.street.trim() + ' ' + this.state.trim() + ' ' + this.city.trim() + ' ' + this.postalCode.trim() + ' ' + this.country.trim();
+          }
+          
+          
            if (c == 0) {
             flag = true;
         }
+           this.sameSHA = false;
         return flag;
     }
     
@@ -266,8 +382,5 @@ public class CustomerController implements Serializable{
         System.out.println("validation fail");
         }
     }
-
-    
-    
-    
-    }
+ 
+}

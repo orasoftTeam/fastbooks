@@ -46,6 +46,40 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "FbCustomer.findByAtachment", query = "SELECT f FROM FbCustomer f WHERE f.atachment = :atachment")})
 public class FbCustomer implements Serializable {
 
+    @Size(max = 20)
+    @Column(name = "STATUS")
+    private String status;
+    @Lob
+    @Column(name = "STREET")
+    private String street;
+    @Size(max = 50)
+    @Column(name = "CITY")
+    private String city;
+    @Size(max = 50)
+    @Column(name = "ESTATE")
+    private String estate;
+    @Size(max = 50)
+    @Column(name = "POSTAL_CODE")
+    private String postalCode;
+    @Size(max = 50)
+    @Column(name = "COUNTRY")
+    private String country;
+    @Lob
+    @Column(name = "STREET_S")
+    private String streetS;
+    @Size(max = 50)
+    @Column(name = "CITY_S")
+    private String cityS;
+    @Size(max = 50)
+    @Column(name = "ESTATE_S")
+    private String estateS;
+    @Size(max = 50)
+    @Column(name = "POSTAL_CODE_S")
+    private String postalCodeS;
+    @Size(max = 50)
+    @Column(name = "COUNTRY_S")
+    private String countryS;
+
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
@@ -282,6 +316,94 @@ public class FbCustomer implements Serializable {
     @Override
     public String toString() {
         return "com.fastbooks.modelo.FbCustomer[ idCust=" + idCust + " ]";
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getEstate() {
+        return estate;
+    }
+
+    public void setEstate(String estate) {
+        this.estate = estate;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getStreetS() {
+        return streetS;
+    }
+
+    public void setStreetS(String streetS) {
+        this.streetS = streetS;
+    }
+
+    public String getCityS() {
+        return cityS;
+    }
+
+    public void setCityS(String cityS) {
+        this.cityS = cityS;
+    }
+
+    public String getEstateS() {
+        return estateS;
+    }
+
+    public void setEstateS(String estateS) {
+        this.estateS = estateS;
+    }
+
+    public String getPostalCodeS() {
+        return postalCodeS;
+    }
+
+    public void setPostalCodeS(String postalCodeS) {
+        this.postalCodeS = postalCodeS;
+    }
+
+    public String getCountryS() {
+        return countryS;
+    }
+
+    public void setCountryS(String countryS) {
+        this.countryS = countryS;
     }
     
 }

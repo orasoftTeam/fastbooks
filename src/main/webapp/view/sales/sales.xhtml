@@ -10,6 +10,7 @@
 
     <h:head>
         <title>Sales</title>
+
     </h:head>
     <h:body>
 
@@ -88,8 +89,10 @@
                   
                 </bnu:panel>
                  <bnu:panel span="6">
-                    <p><b>Shipping Address</b></p>
-                        <bnu:inputTextarea placeholder="Street"></bnu:inputTextarea>
+                     <h:outputLabel><b>Shipping Address</b></h:outputLabel>
+                     <h:outputLabel value="Same as billing address" style="font-style: italic "></h:outputLabel>
+                     <h:selectBooleanCheckbox value="#{customerController.sameSHA}" binding="#{showAdd}" style="float: left"></h:selectBooleanCheckbox>
+                     <bnu:inputTextarea placeholder="Street" value="#{customerController.address}" rendered="#{not showAdd.value}"></bnu:inputTextarea>
                         <bnu:inputText placeholder="City/Town"></bnu:inputText>
                         <bnu:inputText placeholder="State/Province"></bnu:inputText>
                         <bnu:inputText placeholder="Postal code"></bnu:inputText>

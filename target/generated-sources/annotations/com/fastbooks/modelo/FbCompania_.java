@@ -1,5 +1,6 @@
 package com.fastbooks.modelo;
 
+import com.fastbooks.modelo.FbCustomer;
 import com.fastbooks.modelo.FbDireccion;
 import com.fastbooks.modelo.FbPerfilXUsuario;
 import com.fastbooks.modelo.FbUsuarioXCia;
@@ -10,10 +11,11 @@ import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2018-03-22T17:19:12")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2018-03-23T16:25:13")
 @StaticMetamodel(FbCompania.class)
 public class FbCompania_ { 
 
+    public static volatile ListAttribute<FbCompania, FbCustomer> fbCustomerList;
     public static volatile SingularAttribute<FbCompania, String> nomLeg;
     public static volatile SingularAttribute<FbCompania, String> estado;
     public static volatile SingularAttribute<FbCompania, String> website;
