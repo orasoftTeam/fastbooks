@@ -9,7 +9,7 @@ import java.util.Locale;
 
 /**
  *
- * @author Luis Eduardo Valdez
+ * @author Dell
  */
 public class Country {
     

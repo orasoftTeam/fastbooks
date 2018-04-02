@@ -211,9 +211,11 @@ public class CompanyController implements Serializable {
                 userData.login();
             } else if (res.equals("-1")) {
                 //lanzar mensaje de registro repetido
+                
                 validationBean.lanzarMensaje("warn", "valErr", "repeatedEmail");
-            } else if (res.equals("-2")) {
+            } else if (res.equals("-2"))  {
                 //lanzar mensaje de ocurrio error inesperado
+               
                 validationBean.lanzarMensaje("error", "valErr", "unexpectedError");
             }
 

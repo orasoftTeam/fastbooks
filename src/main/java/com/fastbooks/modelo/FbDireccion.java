@@ -8,6 +8,7 @@ package com.fastbooks.modelo;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,12 +17,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -65,6 +68,8 @@ public class FbDireccion implements Serializable {
     @JoinColumn(name = "ID_CIUDAD", referencedColumnName = "ID_CIUDAD")
     @ManyToOne(optional = false)
     private FbCiudad idCiudad;
+    @OneToMany(mappedBy = "idDireccion")
+    private List<FbCompania> fbCompaniaList;
 
     public FbDireccion() {
     }
@@ -127,6 +132,15 @@ public class FbDireccion implements Serializable {
 
     public void setIdCiudad(FbCiudad idCiudad) {
         this.idCiudad = idCiudad;
+    }
+
+    @XmlTransient
+    public List<FbCompania> getFbCompaniaList() {
+        return fbCompaniaList;
+    }
+
+    public void setFbCompaniaList(List<FbCompania> fbCompaniaList) {
+        this.fbCompaniaList = fbCompaniaList;
     }
 
     @Override

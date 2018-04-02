@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <weblogic-web-app xmlns="http://xmlns.oracle.com/weblogic/weblogic-web-app" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd http://xmlns.oracle.com/weblogic/weblogic-web-app http://xmlns.oracle.com/weblogic/weblogic-web-app/1.8/weblogic-web-app.xsd">
    <virtual-directory-mapping>
-     <!--<local-path>C:\oraora\user_projects\domains\base_domain</local-path>-->
-         <local-path>/u01/app/oracle/product/12.2.0/Middleware/user_projects/domains/dom1</local-path>
+      <local-path>C:\oraora\user_projects\domains\base_domain</local-path>
+        <!--<local-path>/u01/app/oracle/product/12.2.0/Middleware/user_projects/domains/dom1</local-path>-->
         <url-pattern>/logo/*</url-pattern>
 </virtual-directory-mapping>
     

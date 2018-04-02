@@ -1,0 +1,165 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:bnu="http://bootsfaces.net/ui">
+    
+         <f:view locale="#{ userData.locale}"/>
+
+    <h:head>
+        <title>Sales</title>
+
+    </h:head>
+    <h:body>
+
+        <ui:composition template="../../template/template.xhtml">
+
+            <ui:define name="content">
+                <div class="row" style="background-color: #f5f5f5; display: block; width: 100%;
+                    padding: 0; margin: 0;">
+                    <h1 style="padding-left: 2%">#{messages.sales}</h1> 
+                </div>
+                <br></br><br></br>
+                <h:form>
+                    
+                    <bnu:tabView activeIndex="3">
+                        <bnu:tab title="All Sales">
+                     <br></br><br></br>
+                    <bnu:dropButton value="New transaccion" style="float: right" look="success">
+                        <bnu:navLink value="Invoice"></bnu:navLink>
+                        <bnu:navLink value="Payment"></bnu:navLink>
+                        <bnu:navLink value="Estimate"></bnu:navLink>
+                        <bnu:navLink value="Sales Receipt"></bnu:navLink>
+                        <bnu:navLink value="Credit Note"></bnu:navLink>
+                        <bnu:navLink value="Delayed Charged"></bnu:navLink>
+                        <bnu:navLink value="Time Activity"></bnu:navLink>
+                    </bnu:dropButton> 
+                     <br></br><br></br><br></br><br></br>   
+                     <bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />
+      
+                        </bnu:tab>
+                        
+                        <bnu:tab title="Customers">
+                             <br></br><br></br>
+                       
+        <bnu:modal id="amodal2" title="Customer Information" styleClass="modalPseudoClass2"
+           closable="false" close-on-escape="false" backdrop="false">
+            <bnu:row>
+                <bnu:panel span="6">
+                        <h:outputLabel>Title</h:outputLabel>
+                        <bnu:inputText></bnu:inputText>
+                        <h:outputLabel>First name</h:outputLabel>
+                        <bnu:inputText></bnu:inputText>
+                        <h:outputLabel>Middle name</h:outputLabel>
+                        <bnu:inputText></bnu:inputText>
+                        <h:outputLabel>Last name</h:outputLabel>
+                        <bnu:inputText></bnu:inputText>
+                        <h:outputLabel>Suffix</h:outputLabel>
+                        <bnu:inputText></bnu:inputText>
+                        <h:outputLabel>Company</h:outputLabel>
+                        <bnu:inputText></bnu:inputText>
+                </bnu:panel>
+                <bnu:panel span="6">
+                    
+                        <h:outputLabel>Display name as</h:outputLabel>
+                            <bnu:inputText></bnu:inputText>
+                        <h:outputLabel>Email</h:outputLabel>
+                            <bnu:inputText></bnu:inputText>
+                        <h:outputLabel>Phone</h:outputLabel>
+                            <bnu:inputText></bnu:inputText>
+                        <h:outputLabel>Mobile</h:outputLabel>
+                            <bnu:inputText></bnu:inputText>
+                        <h:outputLabel>Fax</h:outputLabel>
+                            <bnu:inputText></bnu:inputText>
+                        <h:outputLabel>Website</h:outputLabel>
+                            <bnu:inputText></bnu:inputText>
+                 
+                </bnu:panel>
+            </bnu:row>
+            <bnu:row>
+                <bnu:panel span="6">
+                    <p><b>Billing Address</b></p>
+                        <bnu:inputTextarea placeholder="Street"></bnu:inputTextarea>
+                        <bnu:inputText placeholder="City/Town"></bnu:inputText>
+                        <bnu:inputText placeholder="State/Province"></bnu:inputText>
+                        <bnu:inputText placeholder="Postal code"></bnu:inputText>
+                        <bnu:inputText placeholder="Country"></bnu:inputText>
+                  
+                </bnu:panel>
+                 <bnu:panel span="6">
+                     <h:outputLabel><b>Shipping Address</b></h:outputLabel>
+                     <h:outputLabel value="Same as billing address" style="font-style: italic "></h:outputLabel>
+                     <h:selectBooleanCheckbox value="#{customerController.sameSHA}" binding="#{showAdd}" style="float: left"></h:selectBooleanCheckbox>
+                     <bnu:inputTextarea placeholder="Street" value="#{customerController.address}" rendered="#{not showAdd.value}"></bnu:inputTextarea>
+                        <bnu:inputText placeholder="City/Town"></bnu:inputText>
+                        <bnu:inputText placeholder="State/Province"></bnu:inputText>
+                        <bnu:inputText placeholder="Postal code"></bnu:inputText>
+                        <bnu:inputText placeholder="Country"></bnu:inputText>
+                </bnu:panel>
+            </bnu:row>
+                    <f:facet name="footer">
+                      <bnu:button value="Close" dismiss="modal" />
+                      <bnu:button value="Save" look="primary" dismiss="modal" />
+                    </f:facet>
+            </bnu:modal>
+                <bnu:row>
+                  <bnu:column>
+                    <bnu:button value="New Customer" look="success" style="float: right" onclick="$('.modalPseudoClass2').modal()" size="md"/>
+                  </bnu:column>
+                </bnu:row>
+                             
+         
+                    <br></br><br></br><br></br><br></br>
+                    
+                      <bnu:dropButton value="Batch actions" style="float: left">
+                        <bnu:navLink value="Create statements"></bnu:navLink>
+                        <bnu:navLink value="Email"></bnu:navLink>
+                    </bnu:dropButton>
+                    <bnu:inputText placeholder="#{messages.inputFilterbyName}"  tiny-screen="one-fourth" style="font-family: cursive" />
+                    
+                    <bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />
+                    <bnu:commandButton value="" iconAwesome="fa-clipboard" style="float: right" />
+                    <bnu:commandButton value="" iconAwesome="fa-print" style="float: right" />
+                    
+                     <h:dataTable  styleClass="table table-striped" rows="3"  
+                    var="dtosTable" value="#{userController.usuarioPrueba}" >
+                     <h:column >
+                        <f:facet name="header">
+                            <h:outputText value="CUSTOMER / COMPANY"  />
+                        </f:facet>
+                    </h:column> 
+                    <h:column>    
+                         <f:facet name="header"> 
+                          <h:outputText value="PHONE" />
+                         </f:facet> 
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="OPEN BALANCE" />
+                        </f:facet>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="#{messages.action}" />
+                        </f:facet>
+                          <bnu:dropButton  value="#{messages.edit}" look="info">
+                              <bnu:navLink value="#{messages.delete}" href="#"></bnu:navLink>
+                              <bnu:navLink value="#{messages.runReport}" href="#"></bnu:navLink>
+                          </bnu:dropButton>
+                    </h:column>
+                </h:dataTable>  
+            </bnu:tab>
+        </bnu:tabView>
+                    
+                 
+                
+                </h:form>
+            </ui:define>
+        </ui:composition>          
+
+
+    </h:body>
+</html>
+

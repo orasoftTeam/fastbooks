@@ -1,0 +1,184 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:bnu="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui">
+    <f:view locale="#{ userData.locale}"/>
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="../../template/template.xhtml">
+
+            <ui:define name="content">
+                #{categoryController.init()}
+                <h:form>
+                    <bnu:row>
+                        <bnu:column large-screen="7" medium-screen="8" small-screen="12" tiny-screen="12" >
+                            <h2>#{messages.ProdNServ}</h2>
+                        </bnu:column>
+                        <bnu:column large-screen="2" medium-screen="2" small-screen="6" tiny-screen="12" >
+                            <bnu:commandButton value="#{messages.manCat}" style="margin-top:20px;" action="#{productController.goCat()}"  />
+                        </bnu:column>
+                        <bnu:column large-screen="3" medium-screen="2" small-screen="6" tiny-screen="12">
+                            <bnu:button value="#{messages.lblNewProd}" look="success" style="margin-top:20px;"  onclick="$('.modalPseudoClass2').modal()" />
+                        </bnu:column>
+                    </bnu:row> 
+                    <p:separator/>
+                    <bnu:row>
+                        <bnu:column span="12">
+                            <bnu:dataTable
+                                responsive="true" >
+                                <bnu:dataTableColumn label="#{messages.firstName}"></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblSKU}"></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblType}"></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblPrice}"></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblDesc}"></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblQuant}"></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblCate}"></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblAction}"></bnu:dataTableColumn>
+                            </bnu:dataTable>
+                        </bnu:column>
+                    </bnu:row>
+                </h:form>
+                <p:separator/>
+
+
+
+
+                <!-- modal types-->
+                <bnu:modal id="amodal" title="Product/Service information" styleClass="modalPseudoClass" backdrop="false" closeOnEscape="false" >
+                    <h4>Select a type:</h4>
+
+                    <p:separator/>
+                    <bnu:row  styleClass="typeOp">
+                        <bnu:column tiny-screen="3" small-screen="2" medium-screen="2" large-screen="2">
+                            <p:graphicImage name="índice.png" library="img" width="64" height="64" />
+                        </bnu:column>
+                        <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                            <p><strong>Inventory</strong></p>
+                            <p>Products you buy and/or sell and that you track quantities of.</p>
+                        </bnu:column>
+                    </bnu:row>
+                    <p:separator/>
+                    <bnu:row  styleClass="typeOp">
+                        <bnu:column tiny-screen="3" small-screen="2" medium-screen="2" large-screen="2">
+                            <p:graphicImage name="índice.png" library="img" width="64" height="64" />
+                        </bnu:column>
+                        <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                            <p><strong>Non-inventory</strong></p>
+                            <p>Products you buy and/or sell but don’t need to (or can’t) track quantities of, for example, nuts and bolts used in an installation.</p>
+                        </bnu:column>
+                    </bnu:row>          
+                    <p:separator/>
+                    <bnu:row  styleClass="typeOp">
+                        <bnu:column tiny-screen="3" small-screen="2" medium-screen="2" large-screen="2">
+                            <p:graphicImage name="índice.png" library="img" width="64" height="64" />
+                        </bnu:column>
+                        <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                            <p><strong>Service</strong></p>
+                            <p>Services that you provide to customers, for example, landscaping or tax preparation services.</p>
+                        </bnu:column>
+                    </bnu:row>
+                    <p:separator/>
+                    <bnu:row  styleClass="typeOp">
+                        <bnu:column tiny-screen="3" small-screen="2" medium-screen="2" large-screen="2">
+                            <p:graphicImage name="índice.png" library="img" width="64" height="64" />
+                        </bnu:column>
+                        <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                            <p><strong>Bundle</strong></p>
+                            <p>A collection of products and/or services that you sell together, for example, a gift basket of fruit, cheese, and wine.</p>
+                        </bnu:column>
+                    </bnu:row>
+                    <p:separator/>
+
+                </bnu:modal>
+
+
+
+                <!-- modal add -->
+                <bnu:modal id="bmodal" title="Product/Service information" styleClass="modalPseudoClass2" backdrop="false" closeOnEscape="false">
+                    <h:form>
+                    <bnu:row  >
+                        <bnu:column tiny-screen="1" small-screen="1" medium-screen="1" large-screen="1" >
+                            <p:graphicImage name="índice.png" library="img" width="32" height="32" />
+                        </bnu:column>
+                        <bnu:column tiny-screen="11" small-screen="11" medium-screen="11" large-screen="11">
+                            <h6><strong>Inventory</strong></h6>
+                            
+                        </bnu:column>
+                    </bnu:row> 
+                    <p:separator/>
+                    <bnu:row  >
+                        <bnu:column tiny-screen="8" small-screen="8" medium-screen="8" large-screen="8">
+                    <bnu:inputText label="Name" maxlength="40" label-style="color:black;" placeholder="Product name" />
+                    <bnu:inputText label="SKU" maxlength="40" label-style="color:black;" placeholder="Product SKU" />
+                    </bnu:column>
+                        <bnu:column tiny-screen="4" small-screen="4" medium-screen="4" large-screen="4" >
+                    <p:graphicImage name="índice.png" library="img" width="128" height="128" />
+                    </bnu:column>
+                    </bnu:row  >
+                    <bnu:row>
+                        <bnu:column span="12">
+                    <h:outputLabel>Product photo</h:outputLabel>
+                <p:fileUpload label="#{messages['lblImageUpload']}" invalidFileMessage="#{messages['lblFileInvalid']}" id="logoCom" fileUploadListener="#{companyController.handleFileUpload}" mode="advanced"
+                                       auto="true" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+                                       </bnu:column>
+                    </bnu:row>
+                <bnu:row>
+                    <bnu:column span="6">
+                    <bnu:selectOneMenu label="Category" >
+                    <f:selectItem itemValue="" itemLabel="#{messages.selectOne}"  />
+                    <f:selectItems value="#{categoryController.list}" var="cat" itemValue="#{cat.idCat}" itemLabel="#{cat.name}" /> 
+                </bnu:selectOneMenu>
+                
+                        
+                    </bnu:column>
+                    <bnu:column span="6">
+                        <bnu:inputText label="Initial quantity on hand" />
+                    </bnu:column>
+                    
+                </bnu:row>
+                
+                
+                <p:separator/>
+                <bnu:inputTextarea label="Description" />
+                <bnu:row>
+                    <bnu:column span="6">
+                <bnu:inputText label="Price" />
+                </bnu:column>
+                    <bnu:column span="6">
+                <bnu:selectBooleanCheckbox label="Inclusive of tax"  />
+                </bnu:column>
+                
+                </bnu:row>
+                <bnu:selectOneMenu label="Tax" >
+                    <f:selectItem itemValue="" itemLabel="#{messages.selectOne}" />
+                    
+                </bnu:selectOneMenu>
+                <p:separator/>
+                <bnu:commandButton value="Save" />
+                </h:form>
+                </bnu:modal>
+
+
+
+                <style type="text/css">
+                    .typeOp{
+
+                        cursor: pointer;
+                    }
+                    .typeOp:hover{
+                        background-color: #dedeee;
+                        border-radius: 100px;
+                    }
+                </style>
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

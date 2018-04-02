@@ -5,32 +5,23 @@
  */
 package com.fastbooks.modelo;
 
-import com.fastbooks.forms.CompaniaForm;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ColumnResult;
-import javax.persistence.ConstructorResult;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -38,25 +29,6 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "FB_COMPANIA")
-
-@SqlResultSetMapping(
-        name = "CompaniaMapping",
-        classes = @ConstructorResult(
-                targetClass = CompaniaForm.class,
-                columns = {
-                    @ColumnResult(name = "id_cia", type = String.class),
-                    @ColumnResult(name = "nom_com", type = String.class),
-                    @ColumnResult(name = "nom_leg", type = String.class),
-                    @ColumnResult(name = "giro", type = String.class),
-                    @ColumnResult(name = "telefono", type = String.class),
-                    @ColumnResult(name = "logo", type = String.class),
-                    @ColumnResult(name = "per_nat", type = String.class),
-                    @ColumnResult(name = "estado", type = String.class),
-                    @ColumnResult(name = "email", type = String.class),
-                    @ColumnResult(name = "website", type = String.class),
-                    @ColumnResult(name = "perfil", type = String.class)}))
-
-
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "FbCompania.findAll", query = "SELECT f FROM FbCompania f"),
@@ -64,13 +36,13 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "FbCompania.findByNomCom", query = "SELECT f FROM FbCompania f WHERE f.nomCom = :nomCom"),
     @NamedQuery(name = "FbCompania.findByNomLeg", query = "SELECT f FROM FbCompania f WHERE f.nomLeg = :nomLeg"),
     @NamedQuery(name = "FbCompania.findByGiro", query = "SELECT f FROM FbCompania f WHERE f.giro = :giro"),
-    @NamedQuery(name = "FbCompania.findByTelefono", query = "SELECT f FROM FbCompania f WHERE f.telefono = :telefono"),
     @NamedQuery(name = "FbCompania.findByLogo", query = "SELECT f FROM FbCompania f WHERE f.logo = :logo"),
     @NamedQuery(name = "FbCompania.findByPerNat", query = "SELECT f FROM FbCompania f WHERE f.perNat = :perNat"),
     @NamedQuery(name = "FbCompania.findByEstado", query = "SELECT f FROM FbCompania f WHERE f.estado = :estado"),
     @NamedQuery(name = "FbCompania.findByEmail", query = "SELECT f FROM FbCompania f WHERE f.email = :email"),
     @NamedQuery(name = "FbCompania.findByWebsite", query = "SELECT f FROM FbCompania f WHERE f.website = :website"),
-    @NamedQuery(name = "FbCompania.findByFechaCreacion", query = "SELECT f FROM FbCompania f WHERE f.fechaCreacion = :fechaCreacion")})
+    @NamedQuery(name = "FbCompania.findByFechaCreacion", query = "SELECT f FROM FbCompania f WHERE f.fechaCreacion = :fechaCreacion"),
+    @NamedQuery(name = "FbCompania.findByTelefono", query = "SELECT f FROM FbCompania f WHERE f.telefono = :telefono")})
 public class FbCompania implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -89,9 +61,6 @@ public class FbCompania implements Serializable {
     @Size(max = 50)
     @Column(name = "GIRO")
     private String giro;
-    @Size(max = 15)
-    @Column(name = "TELEFONO")
-    private String telefono;
     @Size(max = 100)
     @Column(name = "LOGO")
     private String logo;
@@ -112,12 +81,11 @@ public class FbCompania implements Serializable {
     @Column(name = "FECHA_CREACION")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fbCompania", fetch = FetchType.EAGER)
-    private List<FbPerfilXUsuario> fbPerfilXUsuarioList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fbCompania", fetch = FetchType.EAGER)
-    private List<FbUsuarioXCia> fbUsuarioXCiaList;
+    @Size(max = 15)
+    @Column(name = "TELEFONO")
+    private String telefono;
     @JoinColumn(name = "ID_DIRECCION", referencedColumnName = "ID_DIRECCION")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private FbDireccion idDireccion;
 
     public FbCompania() {
@@ -162,14 +130,6 @@ public class FbCompania implements Serializable {
 
     public void setGiro(String giro) {
         this.giro = giro;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
     }
 
     public String getLogo() {
@@ -220,22 +180,12 @@ public class FbCompania implements Serializable {
         this.fechaCreacion = fechaCreacion;
     }
 
-    @XmlTransient
-    public List<FbPerfilXUsuario> getFbPerfilXUsuarioList() {
-        return fbPerfilXUsuarioList;
+    public String getTelefono() {
+        return telefono;
     }
 
-    public void setFbPerfilXUsuarioList(List<FbPerfilXUsuario> fbPerfilXUsuarioList) {
-        this.fbPerfilXUsuarioList = fbPerfilXUsuarioList;
-    }
-
-    @XmlTransient
-    public List<FbUsuarioXCia> getFbUsuarioXCiaList() {
-        return fbUsuarioXCiaList;
-    }
-
-    public void setFbUsuarioXCiaList(List<FbUsuarioXCia> fbUsuarioXCiaList) {
-        this.fbUsuarioXCiaList = fbUsuarioXCiaList;
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 
     public FbDireccion getIdDireccion() {
