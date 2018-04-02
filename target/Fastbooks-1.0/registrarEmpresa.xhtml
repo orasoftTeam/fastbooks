@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <f:view locale="#{ userData.locale}"/>
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="./template/template.xhtml">
+
+            <ui:define name="content">
+                <h:form>
+            <h:panelGroup>
+                <h:messages showDetail="true" />
+            </h:panelGroup>
+        <h:panelGrid columns="2">
+            
+            <h:outputLabel>#{messages.naturalPerson}</h:outputLabel> <h:outputLabel  ><h:selectBooleanCheckbox  value="#{companyController.naturalPerson}"  binding="#{showCom}"  >
+                    <f:ajax event="click" render="@form" />
+                </h:selectBooleanCheckbox>#{messages.yes}</h:outputLabel>
+            <h:outputLabel>#{messages.email}</h:outputLabel><h:inputText value="#{companyController.email}"  maxlength="80" />
+            <h:outputLabel rendered="#{not showCom.value}"  >#{messages.companyName}</h:outputLabel><h:inputText  value="#{companyController.companyComName}"  rendered="#{not  showCom.value}"  maxlength="80"/>
+            <h:outputLabel>#{messages.firstName}</h:outputLabel><h:inputText  value="#{companyController.fName}" maxlength="40" />
+            <h:outputLabel>#{messages.lastName}</h:outputLabel><h:inputText value="#{companyController.lName}" maxlength="40"/>
+            <h:outputLabel>#{messages.password}</h:outputLabel><h:inputSecret  value="#{companyController.pass}" maxlength="10" />
+            <h:outputLabel>#{messages.repassword}</h:outputLabel><h:inputSecret value="#{companyController.rPass}" maxlength="10" />
+            <h:panelGroup>
+                <h:commandButton value="#{messages.signup}" action="#{companyController.register()}"  />
+            </h:panelGroup>
+        </h:panelGrid>
+        </h:form>
+            </ui:define>
+
+        </ui:composition>
+        <h:outputScript>
+               function toggle(id) {
+        var element = document.getElementById(id);
+        if(element.style.display == 'block') {
+          element.style.display = 'none';
+        } else {
+          element.style.display = 'block'
+        }
+      }
+        </h:outputScript>
+        
+       
+        
+    </h:body>
+</html>
+

@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:bnu="http://bootsfaces.net/ui">
+      
+    <f:view locale="#{ userData.locale}"/>
+
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        
+       
+         <ui:composition template="../../template/template.xhtml">
+
+            <ui:define name="content">
+                <bnu:button value="#{messages.btnAddTax}" style="float: right"></bnu:button>
+                <bnu:dropButton  value="#{messages.btnEditIVA}" style="float: right">
+                    <bnu:navLink value="#{messages.eSettings}" href="#"></bnu:navLink>
+                    <bnu:navLink value="#{messages.eRates}" href="#"></bnu:navLink>
+                </bnu:dropButton>
+                <div class="row" style="background-color: #f5f5f5; display: block; width: 100%;
+                    padding: 0; margin: 0;">
+                    <h1 style="padding-left: 2%">#{messages.tax}</h1> 
+                  
+                </div>
+                <h:form>
+            <h:panelGroup>
+                <h:messages showDetail="true" />
+            </h:panelGroup>
+                    
+                    <br></br><br></br><br></br>
+                    <bnu:dropButton  value="#{messages.btnViewReports}" style="float: right; padding-right: 12%">
+                        <bnu:navLink value="#{messages.btnListVR1}" href="#"></bnu:navLink>
+                        <bnu:navLink value="#{messages.btnListVR2}" href="#"></bnu:navLink>
+                        <bnu:navLink value="#{messages.btnListVR3}" href="#"></bnu:navLink>
+                    </bnu:dropButton>
+                    
+                            <bnu:tabView activeIndex="2">
+                                <bnu:tab title="#{messages.returns}">
+                                    <br></br><br></br>
+                                    <bnu:dropButton  value="#{messages.allRet}" style="float: left">
+                                        <bnu:navLink value="#{messages.allRet}" href="#"></bnu:navLink>
+                                        <bnu:navLink value="#{messages.open}" href="#"></bnu:navLink>
+                                        <bnu:navLink value="#{messages.filed}" href="#"></bnu:navLink>
+                                        <bnu:navLink value="#{messages.filedANDpaid}" href="#"></bnu:navLink>
+
+                    </bnu:dropButton>
+                    
+                    <bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />
+
+                    <br></br><br></br><br></br><br></br>                     
+         
+                    <bnu:dataTable style="max-width: 100%">
+                        <h:column >
+                        <f:facet name="header">
+                            <h:outputText value="#{messages.sDate}" />
+                        </f:facet>
+                          <h:outputText value="" />
+                        </h:column>
+                        <h:column >
+                        <f:facet name="header">
+                            <h:outputText value="#{messages.eDate}" />
+                        </f:facet>
+                          <h:outputText value="" />
+                        </h:column>
+                        <h:column >
+                        <f:facet name="header">
+                            <h:outputText value="#{messages.fDate}" />
+                        </f:facet>
+                          <h:outputText value="" />
+                        </h:column>
+                        <h:column >
+                        <f:facet name="header">
+                            <h:outputText value="#{messages.aDue}" />
+                        </f:facet>
+                          <h:outputText value="" />
+                        </h:column>
+                        <h:column >
+                        <f:facet name="header">
+                            <h:outputText value="#{messages.paymentsC}" />
+                        </f:facet>
+                          <h:outputText value="" />
+                        </h:column>
+                        <h:column >
+                        <f:facet name="header">
+                            <h:outputText value="#{messages.balance}" />
+                        </f:facet>
+                          <h:outputText value="" />
+                        </h:column>
+                        <h:column >
+                        <f:facet name="header">
+                            <h:outputText value="#{messages.status}" />
+                        </f:facet>
+                          <h:outputText value="" />
+                        </h:column>
+                        <h:column >
+                        <f:facet name="header">
+                            <h:outputText value="#{messages.action}" />
+                        </f:facet>
+                          <h:outputText value="" />
+                        </h:column>
+                        
+                    </bnu:dataTable>
+                                    
+                       </bnu:tab>
+                                
+                                <bnu:tab title="#{messages.payments}">
+                       <br></br>
+                       <bnu:button value="#{messages.btnRecordPay}" style="float: right"></bnu:button>
+                       <br></br><br></br>
+                       <bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />
+                       <bnu:dropMenu value="" iconAwesome="fa-filter">
+                           <div>
+                            <section>
+                           <div class="row">
+                               <div class="col-xs-4">
+                                   <h:outputLabel value="Tax Period" ></h:outputLabel>
+                                <bnu:inputText></bnu:inputText>
+                               </div>
+                               <div class="col-md-4">
+                                   <div>
+                                        <h:outputLabel value="From"></h:outputLabel>
+                                            <bnu:inputText></bnu:inputText>
+                                   </div>
+                               </div>
+                               <div class="col-md-4">
+                                   <div>
+                                        <h:outputLabel value="to"></h:outputLabel>
+                                            <bnu:inputText></bnu:inputText>
+                                   </div>
+                               </div>
+                               
+                                </div>
+                           </section>
+                        </div> 
+                           
+                           
+                           
+                       </bnu:dropMenu>
+                       
+                       
+                    <h:dataTable  styleClass="table table-striped" rows="3"  
+                        var="dtosTable" value="" >
+                     <h:column >
+                        <f:facet name="header">
+                            <h:outputText value="#{messages.date}" />
+                        </f:facet>
+                          <h:outputText value="" />
+                      </h:column>
+                     <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="#{messages.type}" />
+                        </f:facet>
+                         <h:outputText value="" />
+                      </h:column>
+                     <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="#{messages.taxPeriod}" />
+                        </f:facet>
+                         <h:outputText value="" />
+                      </h:column>
+                      <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="#{messages.amount}" />
+                        </f:facet>
+                      </h:column>
+                       <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="#{messages.memo}" />
+                        </f:facet>
+                      </h:column>
+                      <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="#{messages.action}" />
+                        </f:facet>
+                      </h:column>
+                     
+                     
+                </h:dataTable>
+                       
+                       </bnu:tab>
+                </bnu:tabView> 
+                    <br></br>
+                     
+                    
+                 </h:form>
+            </ui:define>
+        
+        </ui:composition>
+               
+                    
+    </h:body>
+</html>
+

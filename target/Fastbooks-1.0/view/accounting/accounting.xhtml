@@ -1,0 +1,160 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:bnu="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <f:view locale="#{ userData.locale}"/>
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="../../template/template.xhtml">
+
+            <ui:define name="content">
+                #{accountControler.init()}
+                <h:form  >
+                <bnu:tabView activeIndex="1">
+                    <bnu:tab title="#{messages.Accounting}">
+                    
+                    
+                    <bnu:row>
+                        <bnu:panel span="6"  >
+                            <h:panelGrid columns="1" width="100%">
+                                <bnu:inputText label="#{messages.MayorAccount}"   />  
+                                <bnu:inputText label="#{messages.fullName}"  />
+                       
+                                <bnu:selectOneMenu label="#{messages.RecieveOp}"  style="width: 70px"   >
+                                    <f:selectItem itemLabel="#{messages.yes}" itemValue="S" />
+                                    <f:selectItem itemLabel="#{messages.No}" itemValue="N" />
+                        </bnu:selectOneMenu>
+                                <bnu:selectOneMenu label="#{messages.AccountType}"  style="width: 170px" >
+                                    <f:selectItem itemValue="" itemLabel="#{messages.selectOne}" />
+                                    <f:selectItem itemValue="A" itemLabel="#{messages.Activo}" />
+                                    <f:selectItem itemValue="P" itemLabel="#{messages.Pasivo}" />
+                                    <f:selectItem itemValue="C" itemLabel="#{messages.Capital}" />
+                                    <f:selectItem itemValue="R" itemLabel="#{messages.Resultados}" />
+                                    <f:selectItem itemValue="G" itemLabel="#{messages.Gastos}" />
+                                    <f:selectItem itemValue="O" itemLabel="#{messages.Otros}" />
+                        </bnu:selectOneMenu>
+                                <bnu:selectOneMenu label="#{messages.Currency}" style="width: 170px" >
+                            <f:selectItem itemValue="" itemLabel="#{messages.selectOne}" />
+                            <f:selectItem itemValue="USD" itemLabel="USD" />
+                            <f:selectItem itemValue="EUR" itemLabel="EUR" />
+                            
+                        </bnu:selectOneMenu>
+                            <bnu:selectOneMenu label="#{messages.typeBalance}" style="width: 170px" >
+                            <f:selectItem itemValue="" itemLabel="#{messages.selectOne}" />
+                            <f:selectItem itemValue="C" itemLabel="#{messages.Cargo}" />
+                            <f:selectItem itemValue="A" itemLabel="#{messages.Abono}" />
+                            
+                        </bnu:selectOneMenu>
+                        <p:separator />
+                        <bnu:inputText label="#{messages.accBalance}" style="width: 170px" disabled="true" value="1,000,000,000"  />  
+                        <bnu:selectBooleanCheckbox label="#{messages.accBlock}" />
+                       
+                        <bnu:button look="success" value="#{messages.save}" />
+                                
+                            </h:panelGrid>
+                            
+                            
+                        </bnu:panel>
+                        <bnu:panel span="6" >
+                            <ui:repeat value="#{accountControler.catList}" var="cat" >
+                                
+                                <p><p:outputLabel value="#{cat.fbGlCatalogoPK.conNumcta} - #{cat.conDescri}" /></p>
+                            </ui:repeat>
+                        </bnu:panel>
+                        
+                        
+                        
+                    </bnu:row>
+                    
+                    
+                    
+                    <!--<h:panelGrid columns="2"   >
+                        <bnu:panel style="padding:10px" >
+
+                       
+                        <bnu:inputText label="Cuenta de mayor" size="50" />  
+                        <bnu:inputText label="Nombre"  />
+                        <bnu:selectOneMenu label="Recibe Operaciones?"  >
+                            <f:selectItem itemLabel="Si" itemValue="S" />
+                            <f:selectItem itemLabel="No" itemValue="N" />
+                        </bnu:selectOneMenu>
+                        <bnu:selectOneMenu label="Tipo de cuenta">
+                            <f:selectItem itemValue="" itemLabel="Seleccione.." />
+                            <f:selectItem itemValue="A" itemLabel="Activo" />
+                            <f:selectItem itemValue="P" itemLabel="Pasivo" />
+                            <f:selectItem itemValue="C" itemLabel="Capital" />
+                            <f:selectItem itemValue="R" itemLabel="Resultados" />
+                            <f:selectItem itemValue="O" itemLabel="Otros" />
+                        </bnu:selectOneMenu>
+                        <bnu:selectOneMenu label="Tipo de moneda">
+                            <f:selectItem itemValue="" itemLabel="Seleccione.." />
+                            <f:selectItem itemValue="USD" itemLabel="USD" />
+                            <f:selectItem itemValue="EUR" itemLabel="EUR" />
+                            
+                        </bnu:selectOneMenu>
+                        
+                        <p:separator />
+                            <bnu:inputText label="Saldo cuenta"  />  
+                            <bnu:selectBooleanCheckbox label="Bloquear cuenta" />
+                       
+                        <bnu:button look="success" value="Save" />
+                        </bnu:panel>
+                        <bnu:panel style="padding:10px;height: 615px;width: 371px" >
+                            <bnu:jumbotron>
+                                <h2  >Preview</h2>
+                            </bnu:jumbotron>
+                            
+                        </bnu:panel>
+                    </h:panelGrid>-->
+                        
+                    
+                    
+                    
+                
+                    </bnu:tab>
+                    <bnu:tab title="#{messages.Entries}">
+                    
+                    <bnu:panel>
+                    <h:panelGrid width="100%" columns="2" >
+                        <bnu:inputText disabled="true" value="21/03/2018" label="#{messages.entryDate}" style="width: 120px"  label-style="color:black;" />
+                        <bnu:inputText disabled="true" value="17856" label="#{messages.entryNum}" style="width: 100px" label-style="color:black;" />
+                        <bnu:selectOneMenu label="#{messages.entryType}" style="width: 120px" >
+                        <f:selectItem itemValue="" itemLabel="#{messages.selectOne}"  />
+                        <f:selectItem itemValue="1" itemLabel="Opcion 1" />
+                        <f:selectItem itemValue="2" itemLabel="Opcion 2" />
+                        <f:selectItem itemValue="3" itemLabel="Opcion 3" />
+                        </bnu:selectOneMenu>
+                        <bnu:inputText disabled="true" value="267" label="#{messages.entryCode}" style="width: 100px" label-style="color:black;" />
+                        
+                    </h:panelGrid>
+                        <bnu:inputTextarea placeholder="#{messages.entryConcept}" label="#{messages.entryConcept}"   />
+                </bnu:panel>
+                    <bnu:panel>
+                        <bnu:dataTable 
+                            
+                            >
+                            <bnu:dataTableColumn label="#{messages.detEntrySeq}" ></bnu:dataTableColumn>
+                            <bnu:dataTableColumn label="#{messages.detEntryNumAcc}" ></bnu:dataTableColumn>
+                            <bnu:dataTableColumn label="#{messages.detEntryConcept}" ></bnu:dataTableColumn>
+                            <bnu:dataTableColumn label="#{messages.detEntryCharge}" ></bnu:dataTableColumn>
+                            <bnu:dataTableColumn label="#{messages.detEntryPayment}" ></bnu:dataTableColumn>
+                        </bnu:dataTable>
+                    </bnu:panel>
+               
+                
+                    </bnu:tab>
+                </bnu:tabView>
+                </h:form>
+                
+                   
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

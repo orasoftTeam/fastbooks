@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:bnu="http://bootsfaces.net/ui"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <f:view locale="#{ userData.locale}"/>
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+                <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+    <title>Fastbooks</title>
+    <link rel="stylesheet" id="modernize-style-css" href="./assets/style.css" type="text/css" media="all"></link>
+    <script type="text/javascript" src="./assets/jquery.js"></script>
+    <script type="text/javascript" src="./assets/jquery-migrate.min.js"></script>
+    <link href="./assets/bootstrap-grid.css" rel="stylesheet" type="text/css"></link>
+        <link href="./assets/mont.css" rel="stylesheet" type="text/css"></link>
+        <link href="./assets/fastbooks.css" rel="stylesheet" type="text/css"></link>
+        <link href="./fonts/mont.css" rel="stylesheet" type="text/css"></link>
+    </h:head>
+    <body  class="page-sign-in home page-template page-template-home page-template-home-php page page-id-6 wp-custom-logo">
+       #{userData.valLogin()}
+        <div id="content" class="site-content bootstrap-wrapper ">
+
+            <div class="container mt-small">
+                <div class="row">
+                    <div class="col-md-10 text-left centered">
+                        <a href="../index.xhtml" class="custom-logo-link" rel="home" itemprop="url">
+                            <img width="676" height="250" src="./assets/logo-fastbooks.svg" class="custom-logo" alt="Fastbooks" itemprop="logo" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-10 centered">
+                        <div class="panel-round row sign-in">
+                            <div class="col-md-6 form-side">
+                                <div class="padder">
+                                    <h3 class="mont mt-small">
+                                        <strong>
+                                            #{messages.signin}
+                                        </strong>
+                                    </h3>
+                                    <div class="row">
+                                        <div class="col-md-2 col-2">
+                                            <img src="./assets/google.png" class="google-logo" />
+                                        </div>
+                                        <div class="col-md-8 col-8">
+                                            <a href="javscript:void(0)" class="btn btn-bordered mont"><strong>#{messages.logWithGoogle}</strong></a>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="form">
+                                        <h:form>
+                                            <bnu:messages show-detail="true" />
+                                            <div class="form-group">
+                                                <label class="mont ">#{messages.userId}</label>
+                                                <strong><h:inputText class="form-control mont mont-light btn btn-bordered" p:placeholder='#{messages.phEmail}' value="#{userData.email}" /></strong>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="mont">#{messages.password}</label>
+                                                <strong><h:inputSecret class="form-control mont mont-light btn btn-bordered" p:placeholder='#{messages.phPass}' value="#{userData.pass}"  /></strong>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="mont">
+                                                    <input type="checkbox" name="remember" /> #{messages.rememberMe}</label>
+                                            </div>
+                                            <div class="form-group">
+                                                <h:commandButton value="#{messages.signin}" class="btn btn-success big-btn" style="width: 100%;border-radius: 12px"  action="#{userData.login()}" />
+                                            </div>
+                                            <h6 class="mont">#{messages.byClickingSignIn}
+                                                <a href="#">#{messages.licenseAgree}</a>
+                                            </h6>
+                                            <h6 class="mont">
+                                                <a href="#">#{messages.forgotPass}</a> #{messages.newToFB}
+                                                <a href="sign-up.xhtml">#{messages.signup}</a>
+                                            </h6>
+                                        </h:form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 image" style="background-image:url('./assets/web-fastbooks-3.jpg')">
+            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <style>
+                body {
+                    background: #2b3c37;
+                }
+            </style>
+
+            <br></br>
+            <br></br>
+            <br></br>
+    </div>
+    </body>
+</html>
+

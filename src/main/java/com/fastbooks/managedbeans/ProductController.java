@@ -33,4 +33,8 @@ public class ProductController implements Serializable{
     vb.redirecionar("/view/sales/categories.xhtml");
     }
     
+    public void goProd(){
+    vb.redirecionar("/view/sales/producsNServices.xhtml");
+    }
+    
 }
