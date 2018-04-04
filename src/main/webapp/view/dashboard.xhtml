@@ -23,7 +23,7 @@
                     #{userData.initLangs()}
                     <h:panelGrid columns = "2"> 
                         Language : 
-                        <h:selectOneMenu  value = "#{userData.locale}" onchange="submit()"
+                        <h:selectOneMenu  value = "#{userData.locale}" onchange="submit()" class="form-control"
                                           valueChangeListener="#{userData.localeChanged}">
 
                             <f:selectItems value = "#{userData.list}" var="country" itemValue="#{country.lanInitials}"

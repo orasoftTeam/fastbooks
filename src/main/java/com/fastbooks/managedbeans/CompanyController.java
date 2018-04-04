@@ -19,6 +19,7 @@ import javax.faces.view.ViewScoped;
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import lombok.Getter;
+import lombok.Setter;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -37,7 +38,7 @@ public class CompanyController implements Serializable {
     @Inject
     UserData userData;
 
-    @Getter String appPath = System.getProperty("user.dir");
+    private @Getter @Setter String appPath = System.getProperty("user.dir");
     private final String destination = appPath + File.separator + "logo\\";
     private UploadedFile archivo;
     private String nameFileFinal;
@@ -211,9 +212,11 @@ public class CompanyController implements Serializable {
                 userData.login();
             } else if (res.equals("-1")) {
                 //lanzar mensaje de registro repetido
+                
                 validationBean.lanzarMensaje("warn", "valErr", "repeatedEmail");
-            } else if (res.equals("-2")) {
+            } else if (res.equals("-2"))  {
                 //lanzar mensaje de ocurrio error inesperado
+               
                 validationBean.lanzarMensaje("error", "valErr", "unexpectedError");
             }
 
