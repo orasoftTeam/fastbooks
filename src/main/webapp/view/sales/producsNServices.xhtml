@@ -15,6 +15,7 @@
 
             <ui:define name="content">
                 #{categoryController.init()}
+                #{productController.init()}
                 <h:form>
                     <bnu:row>
                         <bnu:column span="12">
@@ -26,25 +27,36 @@
                             <h2>#{messages.ProdNServ}</h2>
                         </bnu:column>
                         <bnu:column large-screen="2" medium-screen="2" small-screen="6" tiny-screen="12" >
-                            <bnu:commandButton value="#{messages.manCat}" style="margin-top:20px;" action="#{productController.goCat()}"  />
+                            <bnu:commandButton value="#{messages.manCat}" style="margin-top:20px;" action="#{productController.goCat()}" look="warning"  />
                         </bnu:column>
                         <bnu:column large-screen="3" medium-screen="2" small-screen="6" tiny-screen="12">
-                            <bnu:button value="#{messages.lblNewProd}" look="success" style="margin-top:20px;"  onclick="$('.modalPseudoClass2').modal()" />
+                            <bnu:button value="#{messages.lblNewProd}" look="success" style="margin-top:20px;"  onclick="$('.modalPseudoClass').modal()" />
                         </bnu:column>
                     </bnu:row> 
                     <p:separator/>
                     <bnu:row>
                         <bnu:column span="12">
                             <bnu:dataTable
+                                value="#{productController.PList}"
+                                var="prod"
                                 responsive="true" >
-                                <bnu:dataTableColumn label="#{messages.firstName}"></bnu:dataTableColumn>
-                                <bnu:dataTableColumn label="#{messages.lblSKU}"></bnu:dataTableColumn>
-                                <bnu:dataTableColumn label="#{messages.lblType}"></bnu:dataTableColumn>
-                                <bnu:dataTableColumn label="#{messages.lblPrice}"></bnu:dataTableColumn>
-                                <bnu:dataTableColumn label="#{messages.lblDesc}"></bnu:dataTableColumn>
-                                <bnu:dataTableColumn label="#{messages.lblQuant}"></bnu:dataTableColumn>
-                                <bnu:dataTableColumn label="#{messages.lblCate}"></bnu:dataTableColumn>
-                                <bnu:dataTableColumn label="#{messages.lblAction}"></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.firstName}" value="#{prod.name}" ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblSKU}" value="#{prod.sku}" ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblType}" value="#{prod.type}" ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblPrice}" value="#{prod.price}" ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblDesc}" value="#{prod.descrip}" ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblQuant}" value="#{prod.initQuant}" ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblCate}" value="#{prod.idCat.name}" ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblAction}">
+                                    <bnu:dropButton value="#{messages.edit}" look="primary" styleClass="hidden-xs hidden-sm" >
+                                        <bnu:commandButton value="#{messages.edit}"  style="width:100%" />
+                                        <bnu:commandButton value="#{messages.delete}"  style="width:100%" />
+                                        
+                                    </bnu:dropButton>
+                                    <bnu:commandButton value="#{messages.edit}"  look="warning" styleClass="hidden-lg hidden-md"  />
+                                    <bnu:commandButton value="#{messages.delete}"  look="danger" styleClass="hidden-lg hidden-md" />
+                                </bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="Photo"  ><p:graphicImage value="#{prod.photo}" width="64" height="64" /></bnu:dataTableColumn>
                             </bnu:dataTable>
                         </bnu:column>
                     </bnu:row>
@@ -55,118 +67,155 @@
 
 
                 <!-- modal types-->
-                <bnu:modal id="amodal" title="Product/Service information" styleClass="modalPseudoClass" backdrop="false" closeOnEscape="false" >
-                    <h4>Select a type:</h4>
+                <bnu:modal id="amodal"   styleClass="modalPseudoClass" backdrop="false" closeOnEscape="false" 
+                           closable="false" >
+                    <h:form id="prodForm">
+                        <h:panelGroup id="modalContent">
+                            <h3>#{productController.modalTitle}</h3>
+                            <ui:fragment rendered="#{!productController.showForm}">
+                                <bnu:panel styleClass="typeOp" onclick="ajax:productController.selectType('Inventory', 'inv.png');" >
+                                    <bnu:row   >
 
-                    <p:separator/>
-                    <bnu:row  styleClass="typeOp">
-                        <bnu:column tiny-screen="3" small-screen="2" medium-screen="2" large-screen="2">
-                            <p:graphicImage name="índice.png" library="img" width="64" height="64" />
-                        </bnu:column>
-                        <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
-                            <p><strong>Inventory</strong></p>
-                            <p>Products you buy and/or sell and that you track quantities of.</p>
-                        </bnu:column>
-                    </bnu:row>
-                    <p:separator/>
-                    <bnu:row  styleClass="typeOp">
-                        <bnu:column tiny-screen="3" small-screen="2" medium-screen="2" large-screen="2">
-                            <p:graphicImage name="índice.png" library="img" width="64" height="64" />
-                        </bnu:column>
-                        <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
-                            <p><strong>Non-inventory</strong></p>
-                            <p>Products you buy and/or sell but don’t need to (or can’t) track quantities of, for example, nuts and bolts used in an installation.</p>
-                        </bnu:column>
-                    </bnu:row>          
-                    <p:separator/>
-                    <bnu:row  styleClass="typeOp">
-                        <bnu:column tiny-screen="3" small-screen="2" medium-screen="2" large-screen="2">
-                            <p:graphicImage name="índice.png" library="img" width="64" height="64" />
-                        </bnu:column>
-                        <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
-                            <p><strong>Service</strong></p>
-                            <p>Services that you provide to customers, for example, landscaping or tax preparation services.</p>
-                        </bnu:column>
-                    </bnu:row>
-                    <p:separator/>
-                    <bnu:row  styleClass="typeOp">
-                        <bnu:column tiny-screen="3" small-screen="2" medium-screen="2" large-screen="2">
-                            <p:graphicImage name="índice.png" library="img" width="64" height="64" />
-                        </bnu:column>
-                        <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
-                            <p><strong>Bundle</strong></p>
-                            <p>A collection of products and/or services that you sell together, for example, a gift basket of fruit, cheese, and wine.</p>
-                        </bnu:column>
-                    </bnu:row>
-                    <p:separator/>
+                                        <bnu:column tiny-screen="3" small-screen="2" medium-screen="2" large-screen="2">
+                                            <p:graphicImage name="inv.png" library="img" width="64" height="64" />
+                                        </bnu:column>
+                                        <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                                            <p><strong>Inventory</strong></p>
+                                            <p>Products you buy and/or sell and that you track quantities of.</p>
+                                        </bnu:column>
+                                    </bnu:row>
+                                </bnu:panel>
+                                <p:separator/>
+                                <bnu:panel styleClass="typeOp" onclick="ajax:productController.selectType('Non-inventory', 'noninv.png');" >
+                                    <bnu:row  >
+                                        <bnu:column tiny-screen="3" small-screen="2" medium-screen="2" large-screen="2">
+                                            <p:graphicImage name="noninv.png" library="img" width="64" height="64" />
+                                        </bnu:column>
+                                        <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                                            <p><strong>Non-inventory</strong></p>
+                                            <p>Products you buy and/or sell but don’t need to (or can’t) track quantities of, for example, nuts and bolts used in an installation.</p>
+                                        </bnu:column>
+                                    </bnu:row>   
+                                </bnu:panel>
+                                <p:separator/>
+                                <bnu:panel styleClass="typeOp" onclick="ajax:productController.selectType('Service', 'serv.png');" >
+                                    <bnu:row  >
+                                        <bnu:column tiny-screen="3" small-screen="2" medium-screen="2" large-screen="2">
+                                            <p:graphicImage name="serv.png" library="img" width="64" height="64" />
+                                        </bnu:column>
+                                        <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                                            <p><strong>Service</strong></p>
+                                            <p>Services that you provide to customers, for example, landscaping or tax preparation services.</p>
+                                        </bnu:column>
+                                    </bnu:row>
+                                </bnu:panel>
+                                <p:separator/>
+                                <bnu:panel styleClass="typeOp" onclick="ajax:productController.selectType('Bundle', 'bundle.png');" >
+                                    <bnu:row >
+                                        <bnu:column tiny-screen="3" small-screen="2" medium-screen="2" large-screen="2">
+                                            <p:graphicImage name="bundle.png" library="img" width="64" height="64" />
+                                        </bnu:column>
+                                        <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                                            <p><strong>Bundle</strong></p>
+                                            <p>A collection of products and/or services that you sell together, for example, a gift basket of fruit, cheese, and wine.</p>
+                                        </bnu:column>
+                                    </bnu:row>
+                                </bnu:panel>
+                                <p:separator/>
+                                <bnu:row>
+                                  
+                                    <bnu:column span="6">
+                                        <bnu:button value="Close" look="danger" onclick="$('.modalPseudoClass').modal('hide')" size="lg"/>
+                                    </bnu:column>
 
+                                </bnu:row>
+                            </ui:fragment>
+
+                            <ui:fragment rendered="#{productController.showForm}">
+
+                                <bnu:row  >
+                                    <bnu:column tiny-screen="1" small-screen="1" medium-screen="1" large-screen="1" >
+                                        <p:graphicImage name="#{productController.typeImg}" library="img" width="32" height="32" />
+                                    </bnu:column>
+                                    <bnu:column tiny-screen="11" small-screen="11" medium-screen="11" large-screen="11">
+                                        <h6><strong>#{productController.type}</strong></h6>
+
+                                    </bnu:column>
+                                </bnu:row> 
+                                <p:separator/>
+                                <bnu:row  >
+                                    <bnu:column tiny-screen="12" small-screen="12" medium-screen="8" large-screen="8">
+                                        <bnu:inputText label="Name" maxlength="40" label-style="color:black;" placeholder="Product name" value="#{productController.name}" />
+                                        <bnu:inputText label="SKU" maxlength="40" label-style="color:black;" placeholder="Product SKU" value="#{productController.sku}" />
+                                    </bnu:column>
+                                    <bnu:column tiny-screen="12" small-screen="12" medium-screen="4" large-screen="4" >
+                                        <p:graphicImage value="#{productController.photoUrl}" id="showPhoto" width="128" height="128" />
+                                    </bnu:column>
+                                </bnu:row  >
+                                <bnu:row>
+                                    <bnu:column span="12">
+                                        <h:outputLabel>Product photo</h:outputLabel>
+                                        <p:fileUpload label="#{messages['lblImageUpload']}" invalidFileMessage="#{messages['lblFileInvalid']}" id="logoCom" fileUploadListener="#{productController.handleFileUpload}" mode="advanced"
+                                                      auto="true" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+                                    </bnu:column>
+                                </bnu:row>
+                                <bnu:row>
+                                    <bnu:column span="6">
+                                        <bnu:selectOneMenu label="Category" value="#{productController.photoUrl}" >
+                                            <f:selectItem itemValue="" itemLabel="#{messages.selectOne}"  />
+                                            <f:selectItems value="#{categoryController.list}" var="cat" itemValue="#{cat.idCat}" itemLabel="#{cat.name}" /> 
+                                        </bnu:selectOneMenu>
+
+
+                                    </bnu:column>
+                                    <bnu:column span="6">
+                                        <bnu:inputText label="Initial quantity on hand"  maxlength="10" value="#{productController.initQuant}"  />
+                                    </bnu:column>
+
+                                </bnu:row>
+
+
+                                <p:separator/>
+                                <bnu:inputTextarea label="Description"  maxlength="250" value="#{productController.desc}" />
+                                <bnu:row>
+                                    <bnu:column span="6">
+                                        <bnu:inputText label="Price" maxlength="10" value="#{productController.price}"/>
+                                    </bnu:column>
+                                    <bnu:column span="6">
+                                        <bnu:selectBooleanCheckbox label="Inclusive of tax"  value="#{productController.incTax}" />
+                                        
+                                    </bnu:column>
+
+                                </bnu:row>
+                                <bnu:selectOneMenu label="Tax"  value="#{productController.idTax}" >
+                                    <f:selectItem itemValue="" itemLabel="#{messages.selectOne}" />
+                                    <f:selectItems value="#{productController.TList}" var="tax" 
+                                                   itemLabel="#{tax.name} (#{tax.rate}%)"
+                                                   itemValue="#{tax.idTax}" />
+                                </bnu:selectOneMenu>
+                                <p:separator/>
+                                <bnu:row>
+                                    <bnu:column span="6">
+                                        <bnu:commandButton value="Save" style="width: 100%" look="success" action="#{productController.addNew()}" />
+                                    </bnu:column>
+                                    <bnu:column span="6">
+                                        <bnu:commandButton value="Close" look="danger" action="#{productController.limpiar()}" style="width: 100%"/>
+                                    </bnu:column>
+
+                                </bnu:row>
+                                
+
+
+                            </ui:fragment>
+                        </h:panelGroup>
+                    </h:form>
                 </bnu:modal>
 
 
 
                 <!-- modal add -->
                 <bnu:modal id="bmodal" title="Product/Service information" styleClass="modalPseudoClass2" backdrop="false" closeOnEscape="false">
-                    <h:form>
-                    <bnu:row  >
-                        <bnu:column tiny-screen="1" small-screen="1" medium-screen="1" large-screen="1" >
-                            <p:graphicImage name="índice.png" library="img" width="32" height="32" />
-                        </bnu:column>
-                        <bnu:column tiny-screen="11" small-screen="11" medium-screen="11" large-screen="11">
-                            <h6><strong>Inventory</strong></h6>
-                            
-                        </bnu:column>
-                    </bnu:row> 
-                    <p:separator/>
-                    <bnu:row  >
-                        <bnu:column tiny-screen="8" small-screen="8" medium-screen="8" large-screen="8">
-                    <bnu:inputText label="Name" maxlength="40" label-style="color:black;" placeholder="Product name" />
-                    <bnu:inputText label="SKU" maxlength="40" label-style="color:black;" placeholder="Product SKU" />
-                    </bnu:column>
-                        <bnu:column tiny-screen="4" small-screen="4" medium-screen="4" large-screen="4" >
-                    <p:graphicImage name="índice.png" library="img" width="128" height="128" />
-                    </bnu:column>
-                    </bnu:row  >
-                    <bnu:row>
-                        <bnu:column span="12">
-                    <h:outputLabel>Product photo</h:outputLabel>
-                <p:fileUpload label="#{messages['lblImageUpload']}" invalidFileMessage="#{messages['lblFileInvalid']}" id="logoCom" fileUploadListener="#{companyController.handleFileUpload}" mode="advanced"
-                                       auto="true" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
-                                       </bnu:column>
-                    </bnu:row>
-                <bnu:row>
-                    <bnu:column span="6">
-                    <bnu:selectOneMenu label="Category" >
-                    <f:selectItem itemValue="" itemLabel="#{messages.selectOne}"  />
-                    <f:selectItems value="#{categoryController.list}" var="cat" itemValue="#{cat.idCat}" itemLabel="#{cat.name}" /> 
-                </bnu:selectOneMenu>
-                
-                        
-                    </bnu:column>
-                    <bnu:column span="6">
-                        <bnu:inputText label="Initial quantity on hand" />
-                    </bnu:column>
-                    
-                </bnu:row>
-                
-                
-                <p:separator/>
-                <bnu:inputTextarea label="Description" />
-                <bnu:row>
-                    <bnu:column span="6">
-                <bnu:inputText label="Price" />
-                </bnu:column>
-                    <bnu:column span="6">
-                <bnu:selectBooleanCheckbox label="Inclusive of tax"  />
-                </bnu:column>
-                
-                </bnu:row>
-                <bnu:selectOneMenu label="Tax" >
-                    <f:selectItem itemValue="" itemLabel="#{messages.selectOne}" />
-                    
-                </bnu:selectOneMenu>
-                <p:separator/>
-                <bnu:commandButton value="Save" />
-                </h:form>
+
                 </bnu:modal>
 
 

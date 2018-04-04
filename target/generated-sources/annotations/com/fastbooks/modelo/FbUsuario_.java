@@ -11,7 +11,7 @@ import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2018-04-02T15:42:47")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2018-04-03T12:39:07")
 @StaticMetamodel(FbUsuario.class)
 public class FbUsuario_ { 
 

@@ -45,6 +45,10 @@ import javax.xml.bind.annotation.XmlTransient;
 public class FbTax implements Serializable {
 
     @Size(max = 20)
+    @Column(name = "RATE")
+    private String rate;
+
+    @Size(max = 20)
     @Column(name = "STATUS")
     private String status;
 
@@ -61,8 +65,6 @@ public class FbTax implements Serializable {
     @Lob
     @Column(name = "DESCRIP")
     private String descrip;
-    @Column(name = "RATE")
-    private BigDecimal rate;
     @Column(name = "FECHA_CREACION")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
@@ -105,13 +107,6 @@ public class FbTax implements Serializable {
         this.descrip = descrip;
     }
 
-    public BigDecimal getRate() {
-        return rate;
-    }
-
-    public void setRate(BigDecimal rate) {
-        this.rate = rate;
-    }
 
     public Date getFechaCreacion() {
         return fechaCreacion;
@@ -177,6 +172,14 @@ public class FbTax implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getRate() {
+        return rate;
+    }
+
+    public void setRate(String rate) {
+        this.rate = rate;
     }
     
 }

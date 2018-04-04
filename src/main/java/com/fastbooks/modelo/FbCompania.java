@@ -8,6 +8,7 @@ package com.fastbooks.modelo;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,12 +17,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -44,6 +47,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "FbCompania.findByFechaCreacion", query = "SELECT f FROM FbCompania f WHERE f.fechaCreacion = :fechaCreacion"),
     @NamedQuery(name = "FbCompania.findByTelefono", query = "SELECT f FROM FbCompania f WHERE f.telefono = :telefono")})
 public class FbCompania implements Serializable {
+
+    @OneToMany(mappedBy = "idCia")
+    private List<FbTax> fbTaxList;
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -219,6 +225,15 @@ public class FbCompania implements Serializable {
     @Override
     public String toString() {
         return "com.fastbooks.modelo.FbCompania[ idCia=" + idCia + " ]";
+    }
+
+    @XmlTransient
+    public List<FbTax> getFbTaxList() {
+        return fbTaxList;
+    }
+
+    public void setFbTaxList(List<FbTax> fbTaxList) {
+        this.fbTaxList = fbTaxList;
     }
     
 }
