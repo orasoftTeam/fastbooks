@@ -56,25 +56,6 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer>{
         return listC; 
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     /* (pIdCia IN INT,pIdCust IN INT,pTitle IN VARCHAR2,pfirstName IN VARCHAR2,
 		pMidName IN VARCHAR2,pLastName IN VARCHAR2,pSuffix IN VARCHAR2,pEmail IN VARCHAR2,
 		pCompany IN VARCHAR2,pPhone IN VARCHAR2,pMobile IN VARCHAR2,pFax IN VARCHAR2,
