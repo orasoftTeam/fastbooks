@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package com.fastbooks.util;
+
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -40,13 +41,15 @@ import javax.servlet.http.HttpServletRequest;
 //import org.apache.commons.codec.binary.Base64;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.UploadedFile;
+
 /**
  *
  * @author dell
  */
 @Stateless
 public class ValidationBean {
-     public boolean validarCampoVacio(String c, String tipoMsg, String tituloMsg, String descMsg) {
+
+    public boolean validarCampoVacio(String c, String tipoMsg, String tituloMsg, String descMsg) {
         boolean flag;
         if (c != null) {
             if ("".equals(c)) {
@@ -74,7 +77,7 @@ public class ValidationBean {
         }
         return flag;
     }
-    
+
     public boolean validarURL(String c, String tipoMsg, String tituloMsg, String descMsg) {
         Pattern patron = Pattern.compile("\\\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
         Matcher validar = patron.matcher(c);
@@ -133,14 +136,14 @@ public class ValidationBean {
         }
         return flag;
     }
-    
+
     public boolean validarSoloNumerosConPunto(String c, String tipoMsg, String tituloMsg, String descMsg) {
         Pattern patron = Pattern.compile("^\\d+(?:\\.\\d{1,2})?$");
         Matcher validar = patron.matcher(c);
         boolean flag;
         if (validar.find()) {
             flag = true;
-            
+
         } else {
             flag = false;
             lanzarMensaje(tipoMsg, tituloMsg, descMsg);
@@ -182,7 +185,7 @@ public class ValidationBean {
         return value;
     }
 
-   /* public String encriptar(String texto, String keymod) {
+    /* public String encriptar(String texto, String keymod) {
 
         String secretKey = keymod; //llave para encriptar datos
         String base64EncryptedString = "";
@@ -230,7 +233,6 @@ public class ValidationBean {
         }
         return base64EncryptedString;
     }*/
-
     public String obtenerFechaActual() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
@@ -251,9 +253,8 @@ public class ValidationBean {
         tmp = cad[2] + "-" + cad[1] + "-" + cad[0];
         return tmp;
     }
-    
-    
-    public boolean validarFormatoFecha(String c, String tipoMsg, String tituloMsg, String descMsg){
+
+    public boolean validarFormatoFecha(String c, String tipoMsg, String tituloMsg, String descMsg) {
         Pattern patron = Pattern.compile("/^([0][1-9]|[12][0-9]|3[01])(\\/|-)([0][1-9]|[1][0-2])\\2(\\d{4})$/");
         Matcher validar = patron.matcher(c);
         //
@@ -261,12 +262,12 @@ public class ValidationBean {
         boolean flag;
         if (validar.find()) {
             flag = true;
-            
+
         } else {
             flag = false;
             lanzarMensaje(tipoMsg, tituloMsg, descMsg);
         }
-        return flag;     
+        return flag;
     }
 
     public boolean validarFecha(String fecha, String tipo, String titulo, String msg) {
@@ -320,17 +321,15 @@ public class ValidationBean {
         }
         return fecha;
     }
-    
-    
-    
-    public String obtenerLabelEstado(String estado){
-        String lbl="";
-        switch(estado){
+
+    public String obtenerLabelEstado(String estado) {
+        String lbl = "";
+        switch (estado) {
             case "A":
-                lbl= getMsgBundle("lblOfertaActivo");
+                lbl = getMsgBundle("lblOfertaActivo");
                 break;
             case "I":
-                lbl= getMsgBundle("lblOfertaInactiva");
+                lbl = getMsgBundle("lblOfertaInactiva");
                 break;
         }
         return lbl;
@@ -367,43 +366,43 @@ public class ValidationBean {
         return flag;
     }
 
-    public InputStream cutImage(BufferedImage img, String name){
-       String[] parts = name.split("\\.");
-       String part1 = parts[1];
+    public InputStream cutImage(BufferedImage img, String name) {
+        String[] parts = name.split("\\.");
+        String part1 = parts[1];
         int w = img.getWidth();
         int h = img.getHeight();
-        
+
         BufferedImage bufim = new BufferedImage(100, 100, img.getType());
         Graphics2D grafic = bufim.createGraphics();
         grafic.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         grafic.drawImage(img, 0, 0, 100, 100, 0, 0, w, h, null);
         grafic.dispose();
-        
+
         ByteArrayOutputStream byteout = new ByteArrayOutputStream();
         try {
             ImageIO.write(bufim, part1, byteout);
-           
+
         } catch (Exception e) {
         }
         byte[] bytes = byteout.toByteArray();
         InputStream in = new ByteArrayInputStream(bytes);
-        
-        return in; 
+
+        return in;
     }
-    
-    public boolean validarTamanioImagen(BufferedImage img) throws IOException{
+
+    public boolean validarTamanioImagen(BufferedImage img) throws IOException {
         boolean flag = true;
-        int wid=img.getWidth();
-        int heig= img.getHeight();
-        
-        if(wid != heig){
-            flag = false; 
-            lanzarMensaje("warn","titleEmpresa","lblFileNotSuccess");
+        int wid = img.getWidth();
+        int heig = img.getHeight();
+
+        if (wid != heig) {
+            flag = false;
+            lanzarMensaje("warn", "titleEmpresa", "lblFileNotSuccess");
             updateComponent("formGrl:growl");
         }
         return flag;
     }
-    
+
     public boolean deleteFile(String file) {
         boolean flag = false;
         File fichero = new File(file);
@@ -413,42 +412,41 @@ public class ValidationBean {
         return flag;
     }
 
-   public String generarRandom(String name){
+    public String generarRandom(String name) {
 
-       String[] parts = name.split("\\.");
-       String part1 = parts[1];
-       String nombre;
-       
-       char[] chars = "Na1Pb3Qc5Rd7Se9Tf2Ug4Vh6Wi8XjkYlZmA3nBo0Cp9Dq7Er5Fs3Gt1Hu0Iv8Jw6Kx4Ly2Mz".toCharArray();
-       StringBuilder sb = new StringBuilder();
-       Random random = new Random();
-       for (int i = 0; i <= 7; i++) {
+        String[] parts = name.split("\\.");
+        String part1 = parts[1];
+        String nombre;
+
+        char[] chars = "Na1Pb3Qc5Rd7Se9Tf2Ug4Vh6Wi8XjkYlZmA3nBo0Cp9Dq7Er5Fs3Gt1Hu0Iv8Jw6Kx4Ly2Mz".toCharArray();
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i <= 7; i++) {
             char c = chars[random.nextInt(chars.length)];
             sb.append(c);
-       }
-       nombre = sb.toString();
-       for (int i = 14; i >= 10; i--) {
-           int o = (int) (Math.random() * i) + 3;
-           nombre = nombre + o;
         }
-       return nombre +"."+ part1;
-   }
-    
-   public String generarCodigo(){
-       char[] chars = "Na1Pb3Qc5Rd7Se9Tf2Ug4Vh6Wi8XjkYlZmA3nBo0Cp9Dq7Er5Fs3Gt1Hu0Iv8Jw6Kx4Ly2Mz".toCharArray();
-       StringBuilder sb = new StringBuilder();
-       Random random = new Random();
-       for (int i = 0; i <= 5; i++) {
-       char c = chars[random.nextInt(chars.length)];
-       sb.append(c);
-       }
-      String output = sb.toString();
-      return output;
-    
+        nombre = sb.toString();
+        for (int i = 14; i >= 10; i--) {
+            int o = (int) (Math.random() * i) + 3;
+            nombre = nombre + o;
+        }
+        return nombre + "." + part1;
     }
-    
-    
-     public void redirecionar(String pagina) {
+
+    public String generarCodigo() {
+        char[] chars = "Na1Pb3Qc5Rd7Se9Tf2Ug4Vh6Wi8XjkYlZmA3nBo0Cp9Dq7Er5Fs3Gt1Hu0Iv8Jw6Kx4Ly2Mz".toCharArray();
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i <= 5; i++) {
+            char c = chars[random.nextInt(chars.length)];
+            sb.append(c);
+        }
+        String output = sb.toString();
+        return output;
+
+    }
+
+    public void redirecionar(String pagina) {
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             context.redirect(context.getRequestContextPath() + pagina);
@@ -458,15 +456,19 @@ public class ValidationBean {
         }
 
     }
-     
-     
-     public HttpServletRequest getRequestContext(){
-     HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-     return req;
-     }
-     
-     public void reload() throws IOException {
-    ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-    ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
-}
+
+    public HttpServletRequest getRequestContext() {
+        HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        return req;
+    }
+
+    public void reload() {
+        try {
+            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+            ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.util.ValidationBean.reload()");
+            e.printStackTrace();
+        }
+    }
 }

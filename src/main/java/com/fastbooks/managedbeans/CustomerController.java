@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 
 /**
  *
@@ -34,6 +35,8 @@ public class CustomerController implements Serializable{
     FbCustomerFacade custF;
     private FbCustomer customer; //declarar modelo
     private boolean sameSHA;
+    @Inject
+    UserData userData;
     
   
 
@@ -91,10 +94,12 @@ public class CustomerController implements Serializable{
                     customer.setCountryS(customer.getCountry());
                 }
             */
-            FbCompania com = new FbCompania(); 
+            FbCompania com = new FbCompania();
             com.setIdCia(BigDecimal.ZERO);
-            customer.setIdCia(com);
-            String res = custF.actCustomer(customer, "A");
+            customer.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
+            customer.setIdCust(BigDecimal.ZERO);
+            //customer.setIdCia(com);
+            String res = custF.actCustomer(customer,  "A");
             System.out.println("Resultado controller: " + res);
 
             if (res.equals("0")) {
@@ -116,7 +121,7 @@ public class CustomerController implements Serializable{
     public boolean regVal(){
         boolean flag = false;
         int c = 0;
-        
+       /* 
         if(!(validationBean.validarCampoVacio(customer.getTitle(), "error", "valErr", "reqTitle")
                 && validationBean.validarSoloLetras(customer.getTitle(), "error", "valErr", "reqTitle")
                 && validationBean.validarLongitudCampo(customer.getTitle(), 4, 50, "error", "valErr", "reqTitle"))){
@@ -173,7 +178,7 @@ public class CustomerController implements Serializable{
                 && validationBean.validarLongitudCampo(customer.getDisplayName(), 4, 50, "error", "valErr", "reqDisName"))){
                 c++;
             }
-          
+         */ 
            if (c == 0) {
             flag = true;
         }

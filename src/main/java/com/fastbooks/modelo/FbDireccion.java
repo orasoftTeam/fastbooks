@@ -43,13 +43,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "FbDireccion.findByFechaCreacion", query = "SELECT f FROM FbDireccion f WHERE f.fechaCreacion = :fechaCreacion")})
 public class FbDireccion implements Serializable {
 
-    @OneToMany(mappedBy = "idDireccion")
-    private List<FbCompania> fbCompaniaList;
-    @OneToMany(mappedBy = "idDirShip")
-    private List<FbCustomer> fbCustomerList;
-    @OneToMany(mappedBy = "idDireccion")
-    private List<FbCustomer> fbCustomerList1;
-
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
@@ -75,6 +68,8 @@ public class FbDireccion implements Serializable {
     @JoinColumn(name = "ID_CIUDAD", referencedColumnName = "ID_CIUDAD")
     @ManyToOne(optional = false)
     private FbCiudad idCiudad;
+    @OneToMany(mappedBy = "idDireccion")
+    private List<FbCompania> fbCompaniaList;
 
     public FbDireccion() {
     }
@@ -139,6 +134,15 @@ public class FbDireccion implements Serializable {
         this.idCiudad = idCiudad;
     }
 
+    @XmlTransient
+    public List<FbCompania> getFbCompaniaList() {
+        return fbCompaniaList;
+    }
+
+    public void setFbCompaniaList(List<FbCompania> fbCompaniaList) {
+        this.fbCompaniaList = fbCompaniaList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -162,33 +166,6 @@ public class FbDireccion implements Serializable {
     @Override
     public String toString() {
         return "com.fastbooks.modelo.FbDireccion[ idDireccion=" + idDireccion + " ]";
-    }
-
-    @XmlTransient
-    public List<FbCompania> getFbCompaniaList() {
-        return fbCompaniaList;
-    }
-
-    public void setFbCompaniaList(List<FbCompania> fbCompaniaList) {
-        this.fbCompaniaList = fbCompaniaList;
-    }
-
-    @XmlTransient
-    public List<FbCustomer> getFbCustomerList() {
-        return fbCustomerList;
-    }
-
-    public void setFbCustomerList(List<FbCustomer> fbCustomerList) {
-        this.fbCustomerList = fbCustomerList;
-    }
-
-    @XmlTransient
-    public List<FbCustomer> getFbCustomerList1() {
-        return fbCustomerList1;
-    }
-
-    public void setFbCustomerList1(List<FbCustomer> fbCustomerList1) {
-        this.fbCustomerList1 = fbCustomerList1;
     }
     
 }

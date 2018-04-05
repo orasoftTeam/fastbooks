@@ -25,7 +25,7 @@
                 <br></br><br></br>
                 <h:form>
                     
-                    <bnu:tabView activeIndex="3">
+                    <bnu:tabView activeIndex="0">
                         <bnu:tab title="All Sales">
                      <br></br><br></br>
                     <bnu:dropButton value="New transaccion" style="float: right" look="success">
@@ -107,14 +107,14 @@
             </bnu:row>
                     <f:facet name="footer">
                       <bnu:button value="Close" dismiss="modal" />
-                      <bnu:commandButton  action-listener="#{customerController.registerC()}" value="Save" look="primary"  />
+                      <bnu:commandButton  action="#{customerController.registerC()}" value="Save" look="primary"  />
                     </f:facet>
             </bnu:modal>
                 <bnu:row>
                   <bnu:column>
                       <bnu:button        
-                                         value="New Customer" look="success" 
-                                         style="float: right" onclick="$('.modalPseudoClass2').modal()" size="md"/>
+                            value="New Customer" look="success" 
+                            style="float: right" onclick="$('.modalPseudoClass2').modal()" size="md"/>
                   </bnu:column>
                 </bnu:row>
                              
@@ -159,6 +159,12 @@
                     </h:column>
                 </h:dataTable>  
             </bnu:tab>
+                        <bnu:tab title="Products and Services" onclick="ajax:productController.goProd();" >
+                            
+                        </bnu:tab>       
+                        
+                        
+                        
         </bnu:tabView>
                     
                  
