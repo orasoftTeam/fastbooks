@@ -97,7 +97,7 @@ public class CustomerController implements Serializable{
             FbCompania com = new FbCompania();
             com.setIdCia(BigDecimal.ZERO);
             customer.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
-            customer.setIdCust(BigDecimal.ZERO);
+            customer.setIdCust(new BigDecimal("0"));
             //customer.setIdCia(com);
             String res = custF.actCustomer(customer,  "A");
             System.out.println("Resultado controller: " + res);
