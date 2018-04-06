@@ -300,18 +300,7 @@ public class FbCustomer implements Serializable {
         return hash;
     }
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof FbCustomer)) {
-            return false;
-        }
-        FbCustomer other = (FbCustomer) object;
-        if ((this.idCust == null && other.idCust != null) || (this.idCust != null && !this.idCust.equals(other.idCust))) {
-            return false;
-        }
-        return true;
-    }
+   
      /*
     @Override
   
@@ -324,14 +313,7 @@ public class FbCustomer implements Serializable {
         return status;
     }
 
-    @Override
-    public String toString() {
-        return "FbCustomer{" + "status=" + status + ", street=" + street + ", city=" + city + ", estate=" + estate + ", postalCode=" + postalCode + ", country=" + country + ", streetS=" + streetS + ", cityS=" + cityS + ", estateS=" + estateS + ", postalCodeS=" + postalCodeS + ", countryS=" + countryS + ", idCust=" + idCust + ", title=" + title + ", firstname=" + firstname + ", middlename=" + middlename + ", lastname=" + lastname + ", suffixx=" + suffixx + ", email=" + email + ", company=" + company + ", phone=" + phone + ", mobile=" + mobile + ", fax=" + fax + ", displayName=" + displayName + ", webside=" + webside + ", note=" + note + ", atachment=" + atachment + ", idCia=" + idCia + ", idDirShip=" + idDirShip + ", idDireccion=" + idDireccion + '}';
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
+  
 
     public String getStreet() {
         return street;
@@ -411,6 +393,35 @@ public class FbCustomer implements Serializable {
 
     public void setCountryS(String countryS) {
         this.countryS = countryS;
+    }
+    
+     @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof FbCustomer)) {
+            return false;
+        }
+        FbCustomer other = (FbCustomer) object;
+        if ((this.idCust == null && other.idCust != null) || (this.idCust != null && !this.idCust.equals(other.idCust))) {
+            return false;
+        }
+        return true;
+    }
+    
+      @Override
+      
+    public String toString() {
+        return "FbCustomer{" + "status=" + status + ", street=" + street + ", city=" + city + ", estate=" + estate + ", postalCode=" + postalCode + ", country=" + country + ", streetS=" + streetS + ", cityS=" + cityS + ", estateS=" + estateS + ", postalCodeS=" + postalCodeS + ", countryS=" + countryS + ", idCust=" + idCust + ", title=" + title + ", firstname=" + firstname + ", middlename=" + middlename + ", lastname=" + lastname + ", suffixx=" + suffixx + ", email=" + email + ", company=" + company + ", phone=" + phone + ", mobile=" + mobile + ", fax=" + fax + ", displayName=" + displayName + ", webside=" + webside + ", note=" + note + ", atachment=" + atachment + ", idCia=" + idCia + ", idDirShip=" + idDirShip + ", idDireccion=" + idDireccion + '}';
+    }
+    
+      /* 
+      public String toString() {
+        return "com.fastbooks.modelo.FbCustomer[ idCust=" + idCust + " ]";
+    }
+     */ 
+      
+    public void setStatus(String status) {
+        this.status = status;
     }
     
 }

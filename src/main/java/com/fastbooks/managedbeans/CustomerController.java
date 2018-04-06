@@ -11,10 +11,14 @@ import com.fastbooks.modelo.FbCustomer;
 import com.fastbooks.util.ValidationBean;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -37,6 +41,10 @@ public class CustomerController implements Serializable{
     private boolean sameSHA;
     @Inject
     UserData userData;
+    
+    private @Getter @Setter List<FbCustomer> cList;
+    
+    
     
   
 
@@ -66,6 +74,7 @@ public class CustomerController implements Serializable{
      */
     public CustomerController() {
         customer = new FbCustomer();
+        cList =  new ArrayList<>();
     }
     
     //Instanciando objeto para prepararlo para que reciba la informacion
@@ -74,49 +83,90 @@ public class CustomerController implements Serializable{
     }
     
     
-    
+    //Adding a new customer
      public void registerC() {
+         System.out.println("ingresando a tomar la misma direccion y agregando valores");
         if(sameSHA){
                     customer.setStreetS(customer.getStreet());
                     customer.setCityS(customer.getCity());
                     customer.setEstateS(customer.getEstate());
                     customer.setPostalCodeS(customer.getPostalCode());
                     customer.setCountryS(customer.getCountry());
+                  
+                    FbCompania com = new FbCompania();
+                    com.setIdCia(BigDecimal.ZERO);
+                    customer.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
+                    customer.setIdCust(new BigDecimal("0"));
+                    customer.setNote("Prueba");
+                    customer.setAtachment("Prueba2");
+                    String res;
+                    res = custF.actCustomer(customer,  "A");
+                    System.out.println("Resultado esperado en el controlador: " + res);
+
+                    System.out.println("obteniendo valores de la shipping same as billing" + customer);
+                    
                 }
-         System.out.println("obteniendo valores" + customer);
-        if (regVal()) {
-            /*
-                if(sameSHA){
-                    customer.setStreetS(customer.getStreet());
-                    customer.setCityS(customer.getCity());
-                    customer.setEstateS(customer.getEstate());
-                    customer.setPostalCodeS(customer.getPostalCode());
-                    customer.setCountryS(customer.getCountry());
-                }
-            */
+         /*
+            System.out.println("Ingresando al registro de nuevo customer");
             FbCompania com = new FbCompania();
             com.setIdCia(BigDecimal.ZERO);
             customer.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
             customer.setIdCust(new BigDecimal("0"));
             //customer.setIdCia(com);
             String res = custF.actCustomer(customer,  "A");
-            System.out.println("Resultado controller: " + res);
+            System.out.println("Resultado esperado en el controlador: " + res);
+       */ 
+    }
+     
+     
+      public void getCustomerList(){  
+        cList = custF.getCustomer(customer.getIdCust().toString());
+        
+        }
+        
+      //Updating customer
+      public void editCustomer(){
+          String res = "";
+          try {
+              res = custF.actCustomer(customer, "U");
+              if (res.equals("0")) {
+                    validationBean.lanzarMensaje("info", "catEditSuccess", "blank");
+                } else if (res.equals("-1")) {
+                    validationBean.lanzarMensaje("error", "catRepeatFail", "blank");
+                } else if (res.equals("-2")) {
+                    validationBean.lanzarMensaje("error", "unexpectedError", "blank");
+                }
+          } catch (Exception e) {
+          }
+          
+          
+      }
+      
+        //Deleting customer
+          public void deleteCustomer() {
+        
+            String res = "";
+            try {
 
-            if (res.equals("0")) {
+                
+                res = custF.actCustomer(customer, "D");
+                if (res.equals("0")) {
+                    validationBean.lanzarMensaje("info", "catDelSuccess", "blank");
+                } else if (res.equals("-1")) {
+                    validationBean.lanzarMensaje("error", "catRepeatFail", "blank");
+                } else if (res.equals("-2")) {
+                    validationBean.lanzarMensaje("error", "unexpectedError", "blank");
+                }
                
-            } else if (res.equals("-1")) {
-                //lanzar mensaje de registro repetido
-                validationBean.lanzarMensaje("warn", "valErr", "repeatedEmail");
-            } else if (res.equals("-2")) {
-                //lanzar mensaje de ocurrio error inesperado
-                validationBean.lanzarMensaje("error", "valErr", "unexpectedError");
+            } catch (Exception e) {
+                System.out.println("com.fastbooks.managedbeans.CategoryController.add()");
+                e.printStackTrace();
+                res = "-2";
             }
 
-            System.out.println("validation good");
-        } else {
-            System.out.println("validation fail");
-        }
+        
     }
+      
      
     public boolean regVal(){
         boolean flag = false;
@@ -221,6 +271,14 @@ public class CustomerController implements Serializable{
         customer.setCountryS(customer.getCountry());
       
     }
+  
+    
+    }
+    
+    
+    
+    
+    
     
  
-}
+
