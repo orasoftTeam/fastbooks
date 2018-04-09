@@ -62,7 +62,7 @@ public class UserData implements Serializable {
     private @Getter @Setter Integer offset  = 2;
     private @Getter @Setter Integer colmd  = 10;
     private @Getter @Setter String currentPage = "Dashboard";
-
+    private @Getter @Setter String uses = "0";
     public String getEmail() {
         return email;
     }
