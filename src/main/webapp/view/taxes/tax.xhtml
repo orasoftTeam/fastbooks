@@ -18,8 +18,8 @@
          <ui:composition template="../../template/template.xhtml">
 
             <ui:define name="content">
-                <bnu:button value="#{messages.btnAddTax}" style="float: right"></bnu:button>
-                <bnu:dropButton  value="#{messages.btnEditIVA}" style="float: right">
+                <bnu:button onclick="$('.modalPseudoClass').modal()"  value="#{messages.btnAddTax}" look="success" style="float: right"></bnu:button>
+                <bnu:dropButton  value="#{messages.btnEditIVA}" look="success" style="float: right; padding-right:5px">
                     <bnu:navLink value="#{messages.eSettings}" href="#"></bnu:navLink>
                     <bnu:navLink value="#{messages.eRates}" href="#"></bnu:navLink>
                 </bnu:dropButton>
@@ -29,6 +29,71 @@
                   
                 </div>
                 <h:form>
+                    
+                   <!-- Modal add new tax-->
+                    <bnu:modal id="amodal"   styleClass="modalPseudoClass" backdrop="false" closeOnEscape="false" 
+                           closable="false">
+                        <h:form id="prodForm">
+                            <h:panelGroup id="modalContent">
+                                <h3>#{taxController.modalTitle}</h3>
+                            <h5>What type of tax do you want to add?</h5>
+                            <ui:fragment rendered="#{!taxController.showForm}">
+                                <bnu:panel styleClass="typeOp"  onclick="ajax:taxController.selectType('Tax Rate');">
+                                    <bnu:row>
+                                        
+                                        <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                                            <p><strong>Tax Rate</strong></p>
+                                            <p>Add another tax rate for IVA, such as a local tax not already included.</p>
+                                        </bnu:column>
+                                    </bnu:row>
+                                </bnu:panel>
+                                <p:separator/>
+                                <bnu:panel styleClass="typeOp" >
+                                    <bnu:row>
+                                        <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                                            <p><strong>Group rate</strong></p>
+                                            <p>Combine multiple taxes and make applying them to your transactions easier. All taxes you include are calculated and charged at once, but we track them separately for you.</p>
+                                        </bnu:column>
+                                    </bnu:row>   
+                                </bnu:panel>
+                                <p:separator/>
+                                <bnu:panel styleClass="typeOp" >
+                                    <bnu:row>
+                                        <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                                            <p><strong>Custom tax</strong></p>
+                                            <p>Services that you provide to customers, for example, landscaping or tax preparation services.</p>
+                                        </bnu:column>
+                                    </bnu:row>
+                                </bnu:panel>
+                                <bnu:row>
+                                  
+                                    <bnu:column span="6">
+                                        <bnu:button value="Close" look="danger" onclick="$('.modalPseudoClass').modal('hide')" size="md"/>
+                                    </bnu:column>
+
+                                </bnu:row>
+                            </ui:fragment>
+                            
+                            <ui:fragment rendered="#{taxController.showForm}">
+
+                                <bnu:row  >
+                                    <bnu:column tiny-screen="12" small-screen="12" medium-screen="8" large-screen="8">
+                                        <bnu:inputText label="Tax name" maxlength="40" label-style="color:black;" value="#{taxController.Taxname}" />
+                                        <bnu:inputText label="Description" maxlength="40" label-style="color:black;" value="#{taxController.descripcion}" />
+                                    </bnu:column>
+                    
+                                </bnu:row  >
+                                <p:separator/>
+                            
+                            
+                            </ui:fragment>
+                            </h:panelGroup>
+                        </h:form>
+                    </bnu:modal>
+                   
+                    
+                    
+                    
             <h:panelGroup>
                 <h:messages showDetail="true" />
             </h:panelGroup>
@@ -189,6 +254,8 @@
                      
                     
                  </h:form>
+                
+              
             </ui:define>
         
         </ui:composition>

@@ -5,6 +5,7 @@
  */
 package com.fastbooks.managedbeans;
 
+import com.fastbooks.facade.FbCustomerFacade;
 import com.fastbooks.modelo.FbCompania;
 import com.fastbooks.modelo.FbCustomer;
 import com.fastbooks.util.ValidationBean;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 
 /**
  *
@@ -22,144 +24,28 @@ import javax.faces.view.ViewScoped;
 @ViewScoped
 public class CustomerController implements Serializable{
     
-    
+    //1.Declarar modelo
+    //2.En la vista mapear los campos q se usaran en el modelo
+    //3.crear o instanciar el objeto y  Llenar el objeto
+    //4.Validar los datos antes de mandar a almacenar
+    //5.mandar el objeto al facade para que sea almacenado.
     @EJB
     ValidationBean validationBean;
-    
-    private String title;
-    private FbCustomer customer;
-    private String firstName;
-    private String midName;
-    private String lastName;
-    private String suffix;
-    private String email;
-    private String company;
-    private String phone;
-    private String mobile;
-    private String fax;
-    private String displayName;
-    private String website;
-    private String idDireccion;
-    private String idDirShipp;
+    @EJB 
+    FbCustomerFacade custF;
+    private FbCustomer customer; //declarar modelo
     private boolean sameSHA;
-    private String address;
-    private String street;
-    private String city;
-    private String state;
-    private String postalCode;
-    private String country;
+    @Inject
+    UserData userData;
     
+  
 
-    public String getTitle() {
-        return title;
+    public FbCustomer getCustomer() {
+        return customer;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getMidName() {
-        return midName;
-    }
-
-    public void setMidName(String midName) {
-        this.midName = midName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getSuffix() {
-        return suffix;
-    }
-
-    public void setSuffix(String suffix) {
-        this.suffix = suffix;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getCompany() {
-        return company;
-    }
-
-    public void setCompany(String company) {
-        this.company = company;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getFax() {
-        return fax;
-    }
-
-    public void setFax(String fax) {
-        this.fax = fax;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getWebsite() {
-        return website;
-    }
-
-    public void setWebsite(String website) {
-        this.website = website;
-    }
-
-    public String getIdDireccion() {
-        return idDireccion;
-    }
-
-    public void setIdDireccion(String idDireccion) {
-        this.idDireccion = idDireccion;
-    }
-
-    public String getIdDirShipp() {
-        return idDirShipp;
-    }
-
-    public void setIdDirShipp(String idDirShipp) {
-        this.idDirShipp = idDirShipp;
+    public void setCustomer(FbCustomer customer) {
+        this.customer = customer;
     }
 
     public boolean isSameSHA() {
@@ -169,54 +55,9 @@ public class CustomerController implements Serializable{
     public void setSameSHA(boolean sameSHA) {
         this.sameSHA = sameSHA;
     }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
+    
+    
+    
     
     
 
@@ -224,33 +65,41 @@ public class CustomerController implements Serializable{
      * Creates a new instance of CustomerController
      */
     public CustomerController() {
+        customer = new FbCustomer();
+    }
+    
+    //Instanciando objeto para prepararlo para que reciba la informacion
+    public void newCustomer(){
+        customer = new FbCustomer();
     }
     
     
+    
      public void registerC() {
-       
+        if(sameSHA){
+                    customer.setStreetS(customer.getStreet());
+                    customer.setCityS(customer.getCity());
+                    customer.setEstateS(customer.getEstate());
+                    customer.setPostalCodeS(customer.getPostalCode());
+                    customer.setCountryS(customer.getCountry());
+                }
+         System.out.println("obteniendo valores" + customer);
         if (regVal()) {
-            FbCustomer cust= new FbCustomer();
-            cust.setTitle(title);
-            cust.setFirstname(firstName);
-            cust.setMiddlename(midName);
-            cust.setLastname(lastName);
-            cust.setSuffixx(suffix);
-            cust.setCompany(company);
-            cust.setDisplayName(displayName);
-            cust.setEmail(email);
-            cust.setPhone(phone);
-            cust.setMobile("");
-            cust.setFax("");
-            cust.setWebside(website);
-            cust.setStreet(address);
-            cust.setCity(address);
-            cust.setEstate(address);
-            cust.setPostalCode(address);
-            cust.setCountry(address);
-            FbCompania com = new FbCompania(); 
+            /*
+                if(sameSHA){
+                    customer.setStreetS(customer.getStreet());
+                    customer.setCityS(customer.getCity());
+                    customer.setEstateS(customer.getEstate());
+                    customer.setPostalCodeS(customer.getPostalCode());
+                    customer.setCountryS(customer.getCountry());
+                }
+            */
+            FbCompania com = new FbCompania();
             com.setIdCia(BigDecimal.ZERO);
-            String res = ""; // comFacade.actCompany(com, user, "A");
+            customer.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
+            customer.setIdCust(new BigDecimal("0"));
+            //customer.setIdCia(com);
+            String res = custF.actCustomer(customer,  "A");
             System.out.println("Resultado controller: " + res);
 
             if (res.equals("0")) {
@@ -268,119 +117,110 @@ public class CustomerController implements Serializable{
             System.out.println("validation fail");
         }
     }
-    
-    
-    
+     
     public boolean regVal(){
         boolean flag = false;
         int c = 0;
-        
-        if(!(validationBean.validarCampoVacio(this.title, "error", "valErr", "reqTitle")
-                && validationBean.validarSoloLetras(this.title, "error", "valErr", "reqTitle")
-                && validationBean.validarLongitudCampo(this.title, 4, 50, "error", "valErr", "reqTitle"))){
+       /* 
+        if(!(validationBean.validarCampoVacio(customer.getTitle(), "error", "valErr", "reqTitle")
+                && validationBean.validarSoloLetras(customer.getTitle(), "error", "valErr", "reqTitle")
+                && validationBean.validarLongitudCampo(customer.getTitle(), 4, 50, "error", "valErr", "reqTitle"))){
                 c++;
             }
-        if(!(validationBean.validarCampoVacio(this.firstName, "error", "valErr", "reqFName")
-                && validationBean.validarSoloLetras(this.firstName, "error", "valErr", "reqFName")
-                && validationBean.validarLongitudCampo(this.firstName, 4, 50, "error", "valErr", "reqFName"))){
+        if(!(validationBean.validarCampoVacio(customer.getFirstname(), "error", "valErr", "reqFName")
+                && validationBean.validarSoloLetras(customer.getFirstname(), "error", "valErr", "reqFName")
+                && validationBean.validarLongitudCampo(customer.getFirstname(), 4, 50, "error", "valErr", "reqFName"))){
                 c++;
             }
-        if(!(validationBean.validarCampoVacio(this.midName, "error", "valErr", "reqMName")
-                && validationBean.validarSoloLetras(this.midName, "error", "valErr", "reqMName")
-                && validationBean.validarLongitudCampo(this.midName, 4, 50, "error", "valErr", "reqMName"))){
+        if(!(validationBean.validarCampoVacio(customer.getMiddlename(), "error", "valErr", "reqMName")
+                && validationBean.validarSoloLetras(customer.getMiddlename(), "error", "valErr", "reqMName")
+                && validationBean.validarLongitudCampo(customer.getMiddlename(), 4, 50, "error", "valErr", "reqMName"))){
                 c++;
             }
-        if(!(validationBean.validarCampoVacio(this.lastName, "error", "valErr", "reqLName")
-                && validationBean.validarSoloLetras(this.lastName, "error", "valErr", "reqLName")
-                && validationBean.validarLongitudCampo(this.lastName, 4, 50, "error", "valErr", "reqLName"))){
+        if(!(validationBean.validarCampoVacio(customer.getLastname(), "error", "valErr", "reqLName")
+                && validationBean.validarSoloLetras(customer.getLastname(), "error", "valErr", "reqLName")
+                && validationBean.validarLongitudCampo(customer.getLastname(), 4, 50, "error", "valErr", "reqLName"))){
                 c++;
             }
-        if(!(validationBean.validarCampoVacio(this.suffix, "error", "valErr", "reqSuffix")
-                && validationBean.validarSoloLetras(this.title, "error", "valErr", "reqSuffix")
-                && validationBean.validarLongitudCampo(this.title, 4, 50, "error", "valErr", "reqSuffix"))){
+        if(!(validationBean.validarCampoVacio(customer.getSuffixx(), "error", "valErr", "reqSuffix")
+                && validationBean.validarSoloLetras(customer.getSuffixx(), "error", "valErr", "reqSuffix")
+                && validationBean.validarLongitudCampo(customer.getSuffixx(), 4, 50, "error", "valErr", "reqSuffix"))){
                 c++;
             }
-        if(!(validationBean.validarCampoVacio(this.email, "error", "valErr", "reqEmail")
-                && validationBean.validarEmail(this.email, "error", "valErr", "reqEmail")
-                && validationBean.validarLongitudCampo(this.email, 4, 50, "error", "valErr", "reqEmail"))){
+        if(!(validationBean.validarCampoVacio(customer.getEmail(), "error", "valErr", "reqEmail")
+                && validationBean.validarEmail(customer.getEmail(), "error", "valErr", "reqEmail")
+                && validationBean.validarLongitudCampo(customer.getEmail(), 4, 50, "error", "valErr", "reqEmail"))){
                 c++;
             }
-        if(!(validationBean.validarCampoVacio(this.company, "error", "valErr", "reqCompany")
-                && validationBean.validarSoloLetras(this.company, "error", "valErr", "reqCompany")
-                && validationBean.validarLongitudCampo(this.company, 4, 50, "error", "valErr", "reqCompany"))){
+        if(!(validationBean.validarCampoVacio(customer.getCompany(), "error", "valErr", "reqCompany")
+                && validationBean.validarSoloLetras(customer.getCompany(), "error", "valErr", "reqCompany")
+                && validationBean.validarLongitudCampo(customer.getCompany(), 4, 50, "error", "valErr", "reqCompany"))){
                 c++;
             }
-        if(!(validationBean.validarCampoVacio(this.phone, "error", "valErr", "reqPhone")
-                && validationBean.validarSoloNumeros(this.phone, "error", "valErr", "reqPhone")
-                && validationBean.validarLongitudCampo(this.phone, 4, 50, "error", "valErr", "reqPhone"))){
+        if(!(validationBean.validarCampoVacio(customer.getPhone(), "error", "valErr", "reqPhone")
+                && validationBean.validarSoloNumeros(customer.getPhone(), "error", "valErr", "reqPhone")
+                && validationBean.validarLongitudCampo(customer.getPhone(), 4, 50, "error", "valErr", "reqPhone"))){
                 c++;
             }
-        if(!(validationBean.validarCampoVacio(this.mobile, "error", "valErr", "reqMobile")
-                && validationBean.validarSoloNumeros(this.mobile, "error", "valErr", "reqMobile")
-                && validationBean.validarLongitudCampo(this.mobile, 4, 50, "error", "valErr", "reqMobile"))){
+        if(!(validationBean.validarCampoVacio(customer.getMobile(), "error", "valErr", "reqMobile")
+                && validationBean.validarSoloNumeros(customer.getMobile(), "error", "valErr", "reqMobile")
+                && validationBean.validarLongitudCampo(customer.getMobile(), 4, 50, "error", "valErr", "reqMobile"))){
                 c++;
             }
-         if(!(validationBean.validarCampoVacio(this.fax, "error", "valErr", "reqFax")
-                && validationBean.validarSoloNumeros(this.fax, "error", "valErr", "reqFax")
-                && validationBean.validarLongitudCampo(this.fax, 4, 50, "error", "valErr", "reqFax"))){
+         if(!(validationBean.validarCampoVacio(customer.getFax(), "error", "valErr", "reqFax")
+                && validationBean.validarSoloNumeros(customer.getFax(), "error", "valErr", "reqFax")
+                && validationBean.validarLongitudCampo(customer.getFax(), 4, 50, "error", "valErr", "reqFax"))){
                 c++;
             }
          
-          if(!(validationBean.validarCampoVacio(this.displayName, "error", "valErr", "reqDisName")
-                && validationBean.validarSoloLetras(this.displayName, "error", "valErr", "reqDisName")
-                && validationBean.validarLongitudCampo(this.displayName, 4, 50, "error", "valErr", "reqDisName"))){
+          if(!(validationBean.validarCampoVacio(customer.getDisplayName(), "error", "valErr", "reqDisName")
+                && validationBean.validarSoloLetras(customer.getDisplayName(), "error", "valErr", "reqDisName")
+                && validationBean.validarLongitudCampo(customer.getDisplayName(), 4, 50, "error", "valErr", "reqDisName"))){
                 c++;
             }
-          
-          if(!this.sameSHA){
-             if (!(validationBean.validarCampoVacio(this.address, "error", "valErr", "reqAddress")
-                    && validationBean.validarLongitudCampo(this.address, 4, 50, "error", "valErr", "reqAddress"))) {
-                c++;
-            }    
-                
-             }else{
-               this.address = this.street.trim() + ' ' + this.state.trim() + ' ' + this.city.trim() + ' ' + this.postalCode.trim() + ' ' + this.country.trim();
-          }
-          
-          
+         */ 
            if (c == 0) {
             flag = true;
         }
-           this.sameSHA = false;
         return flag;
     }
     
+  
+    //crear un objeto de PF para capturar el evento del checkbox
+    //luego se crea metodo para capturar la info o evaluar datos (ajax)
+    //
     
-    public void registerCustomer(){
-        
-        if(regVal()){
+    public void poblarSA(){
+        boolean validarS = true;
             
-        this.customer.setTitle(title);
-        this.customer.setFirstname(firstName);
-        this.customer.setMiddlename(midName);
-        this.customer.setLastname(lastName);
-        this.customer.setSuffixx(suffix);
-        this.customer.setEmail(email);
-        this.customer.setCompany(company);
-        this.customer.setPhone(phone);
-        this.customer.setMobile(mobile);
-        this.customer.setFax(fax);
-        this.customer.setDisplayName(displayName);
-        this.customer.setWebside(website);
-        String res = ""; //= comFacade.actCustomer(customer);
-         if (res.equals("0")) {
-                validationBean.lanzarMensaje("info", "modComSuccess", "blank");
-                System.out.println("Exito!");
-            }else if(res.equals("-1")){
-                validationBean.lanzarMensaje("warn", "modComFailRepeat", "blank");
-             System.out.println("Repetido!");
-            }else if(res.equals("-2")){
-                validationBean.lanzarMensaje("error", "unexpectedError", "blank");
-            System.out.println("Error!");
-            }
-        }else{
-        System.out.println("validation fail");
+        if(customer.getStreet()==null || customer.getStreet().isEmpty()){
+            validarS = false;
         }
+        if(customer.getCity()==null || customer.getCity().isEmpty()){
+            validarS = false;
+        }
+        if(customer.getEstate()==null || customer.getEstate().isEmpty()){
+            validarS = false;
+        }
+        if(customer.getPostalCode()==null || customer.getPostalCode().isEmpty()){
+            validarS = false;
+        }
+        if(customer.getCountry()==null || customer.getCountry().isEmpty()){
+            validarS = false;
+        }
+        
+        if(!validarS){
+            validationBean.lanzarMensaje("error", "valErr", "reqDisName");
+        return;
+        }
+        
+        customer.setStreetS(customer.getStreet());
+        customer.setCityS(customer.getCity());
+        customer.setEstateS(customer.getEstate());
+        customer.setPostalCodeS(customer.getPostalCode());
+        customer.setCountryS(customer.getCountry());
+      
     }
+    
  
 }

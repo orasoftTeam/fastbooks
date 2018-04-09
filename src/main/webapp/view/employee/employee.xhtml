@@ -33,14 +33,73 @@
                     <br></br>
                     <bnu:row>
                     <bnu:column span="3" style="float:right">
-                        <bnu:button value="#{messages.btnAddEmployee}"  p:data-target="#amodal" p:data-toggle="modal"></bnu:button>
+                        <bnu:button value="#{messages.btnAddEmployee}" look="success" onclick="$('.modalPseudoClass').modal()" ></bnu:button>
                     </bnu:column>
                     </bnu:row>
+                    
                     <!--Modal para agregar empleado -->
-                    <bnu:modal id="amodal" title="Modal Example" styleClass="modalPseudoClass">
+                    <bnu:modal  id="amodal" title="Add employee" styleClass="modalPseudoClass">
+                        <bnu:panel span="6">
+                            <h:panelGrid columns="1" width="100%">
+                            
+                            <bnu:column>    
+                                <bnu:inputText label="Title" value="#{employeeController.emp.title}" maxlength="50" required="true"></bnu:inputText>
+                            </bnu:column>
+                            <bnu:column>    
+                                <bnu:inputText label="First name" value="#{employeeController.emp.firstname}" maxlength="50" required="true"></bnu:inputText>
+                            </bnu:column>
+                            <bnu:column>    
+                                <bnu:inputText label="Mid" value="#{employeeController.emp.middlename}"></bnu:inputText>
+                            </bnu:column>
+                            <bnu:column>    
+                                <bnu:inputText label="Last Name" value="#{employeeController.emp.lastname}"></bnu:inputText>
+                            </bnu:column>
+                            <bnu:column>    
+                                <bnu:inputText label="Suffix" value="#{employeeController.emp.suffixx}"></bnu:inputText>
+                            </bnu:column>
+                            <bnu:column>    
+                                <bnu:inputText label="Email" value="#{employeeController.emp.email}"></bnu:inputText>
+                            </bnu:column>
+                            <bnu:column>    
+                                <bnu:inputText label="Gender" value="#{employeeController.emp.gender}"></bnu:inputText>
+                            </bnu:column>
+                            <bnu:column>    
+                                <bnu:inputText label="Date of birth" value="#{employeeController.emp.dateOfBirth}"></bnu:inputText>
+                            </bnu:column>
+                            
+                        </h:panelGrid>
+                            </bnu:panel>
+                         <bnu:panel span="6">
+                            <h:panelGrid columns="1" width="100%">
+                            
+                            <bnu:column>    
+                                <bnu:inputText label="Phone" value="#{employeeController.emp.phone}"></bnu:inputText>
+                            </bnu:column>
+                            <bnu:column>    
+                                <bnu:inputText label="Mobile" value="#{employeeController.emp.mobile}"></bnu:inputText>
+                            </bnu:column>
+                            <bnu:column>    
+                                <bnu:inputTextarea label="Street" value="#{employeeController.emp.street}"></bnu:inputTextarea>
+                            </bnu:column>
+                            <bnu:column>    
+                                <bnu:inputText label="City" value="#{employeeController.emp.city}"></bnu:inputText>
+                            </bnu:column>
+                            <bnu:column>    
+                                <bnu:inputText label="State" value="#{employeeController.emp.state}"></bnu:inputText>
+                            </bnu:column>
+                            <bnu:column>    
+                                <bnu:inputText label="Postal Code" value="#{employeeController.emp.postalCode}"></bnu:inputText>
+                            </bnu:column>
+                            <bnu:column>    
+                                <bnu:inputText label="Country" value="#{employeeController.emp.country}"></bnu:inputText>
+                            </bnu:column>
+                            
+                        </h:panelGrid>
+                            </bnu:panel>
+                        
                             <f:facet name="footer">
-                              <bnu:button value="Close" dismiss="modal" />
-                              <bnu:button value="Ok" look="primary" dismiss="modal" />
+                                <bnu:button value="Close" look="danger" dismiss="modal" />
+                                <bnu:commandButton value="Save" look="success" action="#{employeeController.addEmployee()}"/>
                             </f:facet>
                     </bnu:modal>
                     

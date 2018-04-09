@@ -312,14 +312,21 @@ public class FbCustomer implements Serializable {
         }
         return true;
     }
-
+     /*
     @Override
+  
     public String toString() {
         return "com.fastbooks.modelo.FbCustomer[ idCust=" + idCust + " ]";
     }
-
+    */
+    
     public String getStatus() {
         return status;
+    }
+
+    @Override
+    public String toString() {
+        return "FbCustomer{" + "status=" + status + ", street=" + street + ", city=" + city + ", estate=" + estate + ", postalCode=" + postalCode + ", country=" + country + ", streetS=" + streetS + ", cityS=" + cityS + ", estateS=" + estateS + ", postalCodeS=" + postalCodeS + ", countryS=" + countryS + ", idCust=" + idCust + ", title=" + title + ", firstname=" + firstname + ", middlename=" + middlename + ", lastname=" + lastname + ", suffixx=" + suffixx + ", email=" + email + ", company=" + company + ", phone=" + phone + ", mobile=" + mobile + ", fax=" + fax + ", displayName=" + displayName + ", webside=" + webside + ", note=" + note + ", atachment=" + atachment + ", idCia=" + idCia + ", idDirShip=" + idDirShip + ", idDireccion=" + idDireccion + '}';
     }
 
     public void setStatus(String status) {
