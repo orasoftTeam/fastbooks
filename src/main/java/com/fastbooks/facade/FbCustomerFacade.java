@@ -36,10 +36,10 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer>{
     }
     
      //Lista para obtener usuarios por compania
-    public List<FbCustomer> getCustomer (){
+    public List<FbCustomer> getCustomer (String idCia){
         System.out.println("Ingresando a obtener lista clientes");
         List<FbCustomer> listC = new ArrayList<>();
-        String idCust = "";
+        //String idCust = "";
         System.out.println("Obteniendo lista.. " + listC.toString());
         try {
             String sql = "select * from fb_customer u\n" +
@@ -48,7 +48,7 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer>{
                     " where uc.id_cia = ?";
             //tambien q muestre el perfil
             Query q = em.createNativeQuery(sql, FbCustomer.class);
-            q.setParameter(1, idCust);
+            q.setParameter(1, idCia);
             listC = q.getResultList();
             System.out.println("Obteniendo Lista.." + listC.toString());
             

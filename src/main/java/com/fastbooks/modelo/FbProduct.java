@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,12 +19,14 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -45,6 +48,13 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "FbProduct.findByFechaCreacion", query = "SELECT f FROM FbProduct f WHERE f.fechaCreacion = :fechaCreacion"),
     @NamedQuery(name = "FbProduct.findByUserCreacion", query = "SELECT f FROM FbProduct f WHERE f.userCreacion = :userCreacion")})
 public class FbProduct implements Serializable {
+
+    @Column(name = "TOTAL_BUNDLE")
+    private BigDecimal totalBundle;
+    @OneToMany(mappedBy = "idBundle")
+    private List<FbBundleItems> fbBundleItemsList;
+    @OneToMany(mappedBy = "idProd")
+    private List<FbBundleItems> fbBundleItemsList1;
 
     @Size(max = 20)
     @Column(name = "STATUS")
@@ -243,6 +253,32 @@ public class FbProduct implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public BigDecimal getTotalBundle() {
+        return totalBundle;
+    }
+
+    public void setTotalBundle(BigDecimal totalBundle) {
+        this.totalBundle = totalBundle;
+    }
+
+    @XmlTransient
+    public List<FbBundleItems> getFbBundleItemsList() {
+        return fbBundleItemsList;
+    }
+
+    public void setFbBundleItemsList(List<FbBundleItems> fbBundleItemsList) {
+        this.fbBundleItemsList = fbBundleItemsList;
+    }
+
+    @XmlTransient
+    public List<FbBundleItems> getFbBundleItemsList1() {
+        return fbBundleItemsList1;
+    }
+
+    public void setFbBundleItemsList1(List<FbBundleItems> fbBundleItemsList1) {
+        this.fbBundleItemsList1 = fbBundleItemsList1;
     }
     
 }

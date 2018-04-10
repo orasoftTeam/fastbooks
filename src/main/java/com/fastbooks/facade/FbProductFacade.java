@@ -50,6 +50,22 @@ public class FbProductFacade extends AbstractFacade<FbProduct>{
     return list;
     }
     
+    public List<FbProduct> getProductsByIdCiaWithoutBundle(String idCia){
+    List<FbProduct> list = new ArrayList<>();
+        try {
+            String sql = "select * from fb_product where id_cia = ? and status = 'A' and type != 'BU'";
+            Query q = em.createNativeQuery(sql, FbProduct.class);
+            q.setParameter(1, idCia);
+            list = q.getResultList();
+            
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbProductFacade.getProductsByIdCia()");
+            e.printStackTrace();
+        }
+    
+    return list;
+    }
+    
     
     
   public String actProd(FbProduct prod,String op){
@@ -66,7 +82,8 @@ public class FbProductFacade extends AbstractFacade<FbProduct>{
             cs.setString(7, prod.getType());
             cs.setInt(8, Integer.parseInt(prod.getInitQuant().toString()));
             cs.setString(9, prod.getDescrip());
-            cs.setFloat(10, Float.parseFloat(prod.getPrice().toString()));
+            cs.setDouble(10, Double.parseDouble(prod.getPrice().toString()));
+            //cs.setFloat(10, Float.parseFloat(prod.getPrice().toString()));
             cs.setInt(11, Integer.parseInt(prod.getIncTax().toString()));
             cs.setInt(12, Integer.parseInt(prod.getIdTax().getIdTax().toString()));
             cs.setString(13, op);

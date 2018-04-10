@@ -43,12 +43,13 @@ public class CustomerController implements Serializable{
     UserData userData;
     
     
-    @Getter @Setter List<FbCustomer> custL;
+    @Getter @Setter List<FbCustomer> custL = new ArrayList<>();
     
     private @Getter @Setter String firstName;
     private @Getter @Setter String phone;
     private @Getter @Setter String OpenBalance;
     
+  
 
     public FbCustomer getCustomer() {
         return customer;
@@ -126,9 +127,8 @@ public class CustomerController implements Serializable{
       public void getCustomerList(){ 
           System.out.println("Obteniendo lista clientes controller");
           try {
-              custL = new ArrayList<>();
               System.out.println("custL"  + custL);
-              custL = custF.getCustomer(); 
+              custL = custF.getCustomer(this.userData.getCurrentCia().getIdCia().toString());
               System.out.println("Obteniendo lista"  + custL);
               
           } catch (Exception e) {

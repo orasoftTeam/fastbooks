@@ -37,7 +37,7 @@
                         <li>Language : </li>
                         <li> <h:form>
                         <h:selectOneMenu  value = "#{userData.locale}" onchange="submit()"
-                                  valueChangeListener="#{userData.localeChanged}">
+                                          valueChangeListener="#{userData.localeChanged}" styleClass="form-control" >
 
                     <f:selectItems value = "#{userData.list}" var="country" itemValue="#{country.lanInitials}"
                                    itemLabel="#{country.language}"/> 
