@@ -11,6 +11,7 @@ import com.fastbooks.modelo.FbBundleItems;
 import com.fastbooks.modelo.FbCatProd;
 import com.fastbooks.modelo.FbProduct;
 import com.fastbooks.modelo.FbTax;
+import com.fastbooks.util.GlobalParameters;
 import com.fastbooks.util.ValidationBean;
 import java.io.File;
 import java.io.Serializable;
@@ -45,11 +46,11 @@ public class ProductController implements Serializable {
     private @Getter
     @Setter
     boolean showScnd = false;
-
+    private GlobalParameters gp = new GlobalParameters();
     private @Getter
     @Setter
-    String appPath = System.getProperty("user.dir");
-    private final String destination = appPath + File.separator + "prodPhoto\\";
+    String appPath = gp.getAppPath();//System.getProperty("user.dir");
+    private final String destination = appPath + File.separator + "prodPhoto" + File.separator;
     private @Getter
     @Setter
     UploadedFile archivo;
@@ -202,6 +203,7 @@ public class ProductController implements Serializable {
         this.idProd = "0";
         this.bundleTotal = "0.00";
         this.isBundle = false;
+        this.bundleItems = new ArrayList<>();
         //this.vb.updateComponent("prodForm:modalContent");
         System.out.println("com.fastbooks.managedbeans.ProductController.limpiar()");
     }
@@ -209,21 +211,24 @@ public class ProductController implements Serializable {
     public void handleFileUpload(FileUploadEvent event) {
         String nameF;
         String ciaFolder = "cia" + userData.getCurrentCia().getIdCia().toString();
-        String newDest = destination + ciaFolder + "\\";
+        String newDest = destination + ciaFolder + File.separator;
         try {
             if (archivo == null) {
                 archivo = event.getFile();
                 //BufferedImage img = ImageIO.read(archivo.getInputstream());
                 nameF = vb.generarRandom(archivo.getFileName());
                 File file = new File(destination);
-                boolean res = file.mkdir();
+                file.mkdir();
+                
                 file = new File(newDest);
-                boolean result = file.mkdir();
+                file.mkdir();
+                
                 vb.copyFile(nameF, newDest, archivo.getInputstream());
                 //this.msgFile = vb.getMsgBundle("lblFileSuccess");
                 this.photoUrl = "/prodPhoto/" + ciaFolder + "/" + nameF;
+                
                 //vb.updateComponent("comForm:msgFile");
-                System.out.println(this.photoUrl);
+                
                 vb.updateComponent("prodForm:showPhoto");
                 this.nameFileFinal = nameF;
             } else {
@@ -248,9 +253,10 @@ public class ProductController implements Serializable {
             }
             this.photoUrl = "";
 
-            System.out.println("error" + this.photoUrl);
+            
             vb.updateComponent("prodForm:showPhoto");
             e.printStackTrace();
+            
         }
 
     }
@@ -413,7 +419,9 @@ public class ProductController implements Serializable {
             
             this.bundleItems = prod.getFbBundleItemsList();
             this.updateBundleTotal();
-            
+            for (FbBundleItems item : prod.getFbBundleItemsList()) {
+                System.out.println("::"+item.getItemName()+"::"+item.getQuant().toString());
+            }
             this.photoUrl = prod.getPhoto();
             this.typeImg = "bundle.png";
             this.type = prod.getType();
@@ -429,7 +437,7 @@ public class ProductController implements Serializable {
         product.setIdCat(new FbCatProd(new BigDecimal("0")));
         product.setIdTax(new FbTax(BigDecimal.ZERO));
         product.setInitQuant(BigInteger.ZERO);
-        String res = this.pFacade.actProd(product, "D");
+        String res = this.product.getType().equals("BU")? this.pFacade.actBundle(product, "D"):this.pFacade.actProd(product, "D");
 
         switch (res) {
             case "0":
@@ -545,6 +553,7 @@ public class ProductController implements Serializable {
                     case "0":
                         String message = this.operation.equals("A") ? "lblAddProdSuccess" : "lblUpdateProdSuccess";
                         this.userData.setUses(message);
+                        pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
                         this.vb.reload();
                         /*String message = this.operation.equals("A")? "lblAddProdSuccess" : "lblUpdateProdSuccess";
                     this.vb.ejecutarJavascript("$('.modalPseudoClass').modal('hide');");

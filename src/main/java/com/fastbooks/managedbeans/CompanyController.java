@@ -8,6 +8,7 @@ package com.fastbooks.managedbeans;
 import com.fastbooks.facade.FbCompaniaFacade;
 import com.fastbooks.modelo.FbCompania;
 import com.fastbooks.modelo.FbUsuario;
+import com.fastbooks.util.GlobalParameters;
 import com.fastbooks.util.ValidationBean;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -37,9 +38,9 @@ public class CompanyController implements Serializable {
     ValidationBean validationBean;
     @Inject
     UserData userData;
-
-    private @Getter @Setter String appPath = System.getProperty("user.dir");
-    private final String destination = appPath + File.separator + "logo\\";
+    private GlobalParameters gp = new GlobalParameters();
+    private @Getter @Setter String appPath = gp.getAppPath();//System.getProperty("user.dir");
+    private final String destination = appPath + File.separator + "logo" + File.separator ;
     private UploadedFile archivo;
     private String nameFileFinal;
     private String msgFile;
@@ -298,8 +299,10 @@ public class CompanyController implements Serializable {
                 File file = new File(destination);
                 file.mkdir();
                 validationBean.copyFile(name, destination, archivo.getInputstream());
-                this.msgFile = validationBean.getMsgBundle("lblFileSuccess");
+                
                 this.logourl = "/logo/" + name;
+                this.msgFile = validationBean.getMsgBundle("lblFileSuccess");
+               
                 validationBean.updateComponent("comForm:msgFile");
                 System.out.println(this.logourl);
                 validationBean.updateComponent("comForm:showLogo");
@@ -310,6 +313,7 @@ public class CompanyController implements Serializable {
                     name = validationBean.generarRandom(archivo.getFileName());
                     validationBean.copyFile(name, destination, archivo.getInputstream());
                     this.logourl = "/logo/" + name;
+                    this.msgFile = validationBean.getMsgBundle("lblFileSuccess");
                     validationBean.updateComponent("comForm:msgFile");
                     System.out.println(this.logourl);
                     validationBean.updateComponent("comForm:showLogo");
@@ -326,7 +330,7 @@ public class CompanyController implements Serializable {
             }
             this.logourl = "";
             validationBean.updateComponent("comForm:msgFile");
-            System.out.println("error"+this.logourl);
+            
             validationBean.updateComponent("comForm:showLogo");
             e.printStackTrace();
         }

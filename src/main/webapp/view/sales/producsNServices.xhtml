@@ -154,9 +154,9 @@
                                 <bnu:row  >
                                     <bnu:column tiny-screen="12" small-screen="12" medium-screen="8" large-screen="8">
                                         <bnu:inputText label="#{messages.lblName}" maxlength="40" 
-                                                       placeholder="Product name" value="#{productController.name}"
+                                                       placeholder="#{messages.lblProdName}" value="#{productController.name}"
                                                        />
-                                        <bnu:inputText label="#{messages.lblSKU}" onkeyup="soloNumeros(this)"  maxlength="20" label-style="color:black;" placeholder="Product SKU" value="#{productController.sku}" />
+                                        <bnu:inputText label="#{messages.lblSKU}" onkeyup="soloNumeros(this)"  maxlength="20" label-style="color:black;" placeholder="#{messages.lblSKU}" value="#{productController.sku}" />
                                     </bnu:column>
                                     <bnu:column tiny-screen="12" small-screen="12" medium-screen="4" large-screen="4" >
                                         <p:graphicImage value="#{productController.photoUrl}" id="showPhoto" width="128" height="128" />
@@ -214,17 +214,17 @@
                                 </bnu:row>
                                 <bnu:row  rendered="#{productController.bundle}">
                                     <bnu:column span="6">
-                                        <bnu:selectOneMenu label="Product" value="#{productController.productBundle}">
+                                        <bnu:selectOneMenu label="#{messages.lblProductComplete}" value="#{productController.productBundle}">
                                             <f:selectItems value="#{productController.itemBundleList}"
                                                            var="item" itemValue="#{item}"
                                                            itemLabel="#{item.name}" />
                                         </bnu:selectOneMenu>
                                     </bnu:column>
                                     <bnu:column span="3">
-                                        <bnu:inputText label="Quantity" value="#{productController.bundleQuant}" onkeyup="soloNumeros(this)" maxlength="4" id="bQuant" />
+                                        <bnu:inputText label="#{messages.lblQuant}" value="#{productController.bundleQuant}" onkeyup="soloNumeros(this)" maxlength="4" id="bQuant" />
                                     </bnu:column>
                                     <bnu:column span="3">
-                                        <bnu:commandButton value="Add Product" look="success" style="margin-top: 25px;" 
+                                        <bnu:commandButton value="#{messages.lblAddProductBundle}" look="success" style="margin-top: 25px;" 
                                                            action="#{productController.addItemBundle()}" ajax="true" update="tblBundle"  />
                                     </bnu:column>
                                     
@@ -239,11 +239,11 @@
                                             responsive="true"
                                             var="bi"
                                             >
-                                            <bnu:dataTableColumn label="Product name"  value="#{bi.itemName}" />
-                                            <bnu:dataTableColumn label="Price"  value="#{productController.formatDouble(bi.itemPrice)}"/>
-                                            <bnu:dataTableColumn label="Quantity" value="#{bi.quant}" />
-                                            <bnu:dataTableColumn label="Total" value="#{bi.total}" />
-                                            <bnu:dataTableColumn label="Action">
+                                            <bnu:dataTableColumn label="#{messages.lblProductComplete}"  value="#{bi.itemName}" />
+                                            <bnu:dataTableColumn label="#{messages.lblPrice}"  value="#{productController.formatDouble(bi.itemPrice)}"/>
+                                            <bnu:dataTableColumn label="#{messages.lblQuant}" value="#{bi.quant}" />
+                                            <bnu:dataTableColumn label="#{messages.lblTotal}" value="#{bi.total}" />
+                                            <bnu:dataTableColumn label="#{messages.lblAction}">
                                                 <bnu:commandButton icon-awesome="fa-trash" value="" icon-size="lg" ajax="true" action="#{productController.removeItemBundle(bi)}" />
                                                 
                                             </bnu:dataTableColumn>
@@ -253,7 +253,7 @@
                                 </bnu:row>
                                 <bnu:row  rendered="#{productController.bundle}">
                                     <bnu:column span="10">
-                                        <h:outputText value="Total Bundle:" style="font-weight: bold;" />
+                                        <h:outputText value="#{messages.lblTotal}" style="font-weight: bold;" />
                                         </bnu:column>
                                     <bnu:column span="2">
                                         <h:outputText value="#{productController.bundleTotal}" />
@@ -329,7 +329,10 @@
                     { 
                     obj.value = (obj.value + '').replace(/[^0-9]/g, '');
                     }
-                     //$.blockUI({ message: 'Hold on!' });        
+                     //$.blockUI({ message: 'Hold on!' });      
+                    function mensaje(e){
+                    alert(e);
+                    } 
                 </h:outputScript>
             </ui:define>
         </ui:composition>
