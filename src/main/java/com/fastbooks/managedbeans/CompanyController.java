@@ -38,7 +38,7 @@ public class CompanyController implements Serializable {
     @Inject
     UserData userData;
 
-    private @Getter @Setter String appPath = System.getProperty("user.dir");
+    private @Getter @Setter String appPath = "/u01/app/oracle/fastbooks";//System.getProperty("user.dir");
     private final String destination = appPath + File.separator + "logo\\";
     private UploadedFile archivo;
     private String nameFileFinal;
@@ -296,10 +296,11 @@ public class CompanyController implements Serializable {
                 //BufferedImage img = ImageIO.read(archivo.getInputstream());
                 name = validationBean.generarRandom(archivo.getFileName());
                 File file = new File(destination);
-                file.mkdir();
+                boolean res = file.mkdir();
                 validationBean.copyFile(name, destination, archivo.getInputstream());
-                this.msgFile = validationBean.getMsgBundle("lblFileSuccess");
+                
                 this.logourl = "/logo/" + name;
+                this.msgFile = " resultado:" + res + " :: " + destination + " :: " + this.logourl;
                 validationBean.updateComponent("comForm:msgFile");
                 System.out.println(this.logourl);
                 validationBean.updateComponent("comForm:showLogo");
@@ -318,7 +319,7 @@ public class CompanyController implements Serializable {
 
             }
         } catch (Exception e) {
-            msgFile = validationBean.getMsgBundle("lblFileUploadError");
+            msgFile = "error :: " + e.toString();//validationBean.getMsgBundle("lblFileUploadError");
             if (archivo != null) {
                 if (validationBean.deleteFile("/logo/" + archivo.getFileName())) {
                     archivo = null;

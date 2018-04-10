@@ -202,6 +202,7 @@ public class ProductController implements Serializable {
         this.idProd = "0";
         this.bundleTotal = "0.00";
         this.isBundle = false;
+        this.bundleItems = new ArrayList<>();
         //this.vb.updateComponent("prodForm:modalContent");
         System.out.println("com.fastbooks.managedbeans.ProductController.limpiar()");
     }
@@ -217,11 +218,14 @@ public class ProductController implements Serializable {
                 nameF = vb.generarRandom(archivo.getFileName());
                 File file = new File(destination);
                 boolean res = file.mkdir();
+                vb.ejecutarJavascript("console.log('creando folder: "+res+", "+destination+"');");
                 file = new File(newDest);
                 boolean result = file.mkdir();
+                vb.ejecutarJavascript("console.log('creando folder: "+result+", "+newDest+"');");
                 vb.copyFile(nameF, newDest, archivo.getInputstream());
                 //this.msgFile = vb.getMsgBundle("lblFileSuccess");
                 this.photoUrl = "/prodPhoto/" + ciaFolder + "/" + nameF;
+                vb.ejecutarJavascript("console.log('creando folder: "+ this.photoUrl+"');");
                 //vb.updateComponent("comForm:msgFile");
                 System.out.println(this.photoUrl);
                 vb.updateComponent("prodForm:showPhoto");
@@ -251,6 +255,7 @@ public class ProductController implements Serializable {
             System.out.println("error" + this.photoUrl);
             vb.updateComponent("prodForm:showPhoto");
             e.printStackTrace();
+            vb.ejecutarJavascript("console.log('creando folder: "+ e.toString()+"');");
         }
 
     }
@@ -413,7 +418,9 @@ public class ProductController implements Serializable {
             
             this.bundleItems = prod.getFbBundleItemsList();
             this.updateBundleTotal();
-            
+            for (FbBundleItems item : prod.getFbBundleItemsList()) {
+                System.out.println("::"+item.getItemName()+"::"+item.getQuant().toString());
+            }
             this.photoUrl = prod.getPhoto();
             this.typeImg = "bundle.png";
             this.type = prod.getType();
@@ -429,7 +436,7 @@ public class ProductController implements Serializable {
         product.setIdCat(new FbCatProd(new BigDecimal("0")));
         product.setIdTax(new FbTax(BigDecimal.ZERO));
         product.setInitQuant(BigInteger.ZERO);
-        String res = this.pFacade.actProd(product, "D");
+        String res = this.product.getType().equals("BU")? this.pFacade.actBundle(product, "D"):this.pFacade.actProd(product, "D");
 
         switch (res) {
             case "0":
@@ -545,6 +552,7 @@ public class ProductController implements Serializable {
                     case "0":
                         String message = this.operation.equals("A") ? "lblAddProdSuccess" : "lblUpdateProdSuccess";
                         this.userData.setUses(message);
+                        pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
                         this.vb.reload();
                         /*String message = this.operation.equals("A")? "lblAddProdSuccess" : "lblUpdateProdSuccess";
                     this.vb.ejecutarJavascript("$('.modalPseudoClass').modal('hide');");
