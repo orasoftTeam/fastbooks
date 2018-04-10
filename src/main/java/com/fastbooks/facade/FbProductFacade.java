@@ -5,6 +5,7 @@
  */
 package com.fastbooks.facade;
 
+import com.fastbooks.modelo.FbBundleItems;
 import com.fastbooks.modelo.FbProduct;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -99,6 +100,45 @@ public class FbProductFacade extends AbstractFacade<FbProduct>{
         System.out.println("Facade Resultado de operacion: " + res);
         return res;
     }  
+  
+  
+  
+  public String actBundle(FbProduct prod,String op){
+    String res = "";
+        try {
+            Connection cn = em.unwrap(java.sql.Connection.class);
+            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_BUNDLE (?,?,?,?,?,?,?,?,?,?,?,?)}");
+            cs.setInt(1, Integer.parseInt(prod.getIdCia().getIdCia().toString()));
+            cs.setInt(2, Integer.parseInt(prod.getIdProd().toString()));
+            cs.setString(3, prod.getName());
+            cs.setString(4, prod.getSku());
+            cs.setString(5, prod.getPhoto());
+            cs.setString(7, prod.getType());
+            cs.setString(6, prod.getDescrip());
+            cs.setDouble(8, Double.parseDouble(prod.getTotalBundle().toString()));
+            String pProdIds = "";
+            for (FbBundleItems obj : prod.getFbBundleItemsList1()) {
+                pProdIds += obj.getIdProd().getIdProd().toString() + ",";
+            }
+            cs.setString(9, pProdIds);
+            String pQuants = "";
+            for (FbBundleItems obj : prod.getFbBundleItemsList1()) {
+                pQuants += obj.getQuant().toString() + ",";
+            }
+            cs.setString(10, pQuants);
+            cs.setString(11, op);
+            cs.registerOutParameter(12, Types.VARCHAR);
+            cs.execute();
+            res = cs.getString(12);
+            cs.close();
+           
+        } catch (Exception e) {
+            res = "-2";
+            e.printStackTrace();
+        }
+        System.out.println("Facade Resultado de operacion: " + res);
+        return res;
+    } 
     
     
     
