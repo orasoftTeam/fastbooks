@@ -42,11 +42,13 @@ public class CustomerController implements Serializable{
     @Inject
     UserData userData;
     
-    private @Getter @Setter List<FbCustomer> cList;
     
+    @Getter @Setter List<FbCustomer> custL;
     
+    private @Getter @Setter String firstName;
+    private @Getter @Setter String phone;
+    private @Getter @Setter String OpenBalance;
     
-  
 
     public FbCustomer getCustomer() {
         return customer;
@@ -73,8 +75,9 @@ public class CustomerController implements Serializable{
      * Creates a new instance of CustomerController
      */
     public CustomerController() {
-        customer = new FbCustomer();
-        cList =  new ArrayList<>();
+        //customer = new FbCustomer();
+        getCustomerList();
+        
     }
     
     //Instanciando objeto para prepararlo para que reciba la informacion
@@ -102,6 +105,7 @@ public class CustomerController implements Serializable{
                     String res;
                     res = custF.actCustomer(customer,  "A");
                     System.out.println("Resultado esperado en el controlador: " + res);
+                    customer = new FbCustomer(); //limpiando formulario de add customer..
 
                     System.out.println("obteniendo valores de la shipping same as billing" + customer);
                     
@@ -118,12 +122,22 @@ public class CustomerController implements Serializable{
        */ 
     }
      
-     
-      public void getCustomerList(){  
-        cList = custF.getCustomer(customer.getIdCust().toString());
+   
+      public void getCustomerList(){ 
+          System.out.println("Obteniendo lista clientes controller");
+          try {
+              custL = new ArrayList<>();
+              System.out.println("custL"  + custL);
+              custL = custF.getCustomer(); 
+              System.out.println("Obteniendo lista"  + custL);
+              
+          } catch (Exception e) {
+              System.out.println("error obteniendo lista");
+              e.printStackTrace();
+          }
         
         }
-        
+     
       //Updating customer
       public void editCustomer(){
           String res = "";
@@ -271,9 +285,9 @@ public class CustomerController implements Serializable{
         customer.setCountryS(customer.getCountry());
       
     }
-  
     
-    }
+   
+}
     
     
     

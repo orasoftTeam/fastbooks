@@ -36,17 +36,21 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer>{
     }
     
      //Lista para obtener usuarios por compania
-    public List<FbCustomer> getCustomer (String idCust){
+    public List<FbCustomer> getCustomer (){
+        System.out.println("Ingresando a obtener lista clientes");
         List<FbCustomer> listC = new ArrayList<>();
+        String idCust = "";
+        System.out.println("Obteniendo lista.. " + listC.toString());
         try {
             String sql = "select * from fb_customer u\n" +
                     " inner join fb_usuario_x_cia uc\n" +
-                    " on u.id_usuario = uc.id_usuario\n" +
+                    " on u.id_cia = uc.id_cia\n" +
                     " where uc.id_cia = ?";
             //tambien q muestre el perfil
             Query q = em.createNativeQuery(sql, FbCustomer.class);
             q.setParameter(1, idCust);
             listC = q.getResultList();
+            System.out.println("Obteniendo Lista.." + listC.toString());
             
         } catch (Exception e) {
             System.out.println("com.fastbooks.facade.FbUsuarioFacade.getUserbyCia()");

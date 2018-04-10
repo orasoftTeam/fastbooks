@@ -131,12 +131,28 @@
                     <bnu:commandButton value="" iconAwesome="fa-clipboard" style="float: right" />
                     <bnu:commandButton value="" iconAwesome="fa-print" style="float: right" />
                     
-                     <bnu:dataTable  
-                         value="#{customerController.CList}" 
-                            var="dtosTable">
-                         <bnu:dataTableColumn label="CUSTOMER/COMPANY" value="#{dtosTable.firstname}"></bnu:dataTableColumn>
-                         <bnu:dataTableColumn label="PHONE" value="#{dtosTable.phone}"></bnu:dataTableColumn>
-                         <bnu:dataTableColumn label="OPEN BALANCE" value=""></bnu:dataTableColumn>
+                     <h:dataTable  styleClass="table table-striped" rows="3"
+                         value="#{customerController.custL}" 
+                            var="cust">
+                         <h:column >
+                             <f:facet name="header">
+                                 <h:outputText value="CUSTOMER/COMPANY"></h:outputText>
+                             </f:facet>
+                             <h:outputText value="#{cust.firstname}"></h:outputText>
+                         </h:column>
+                         <h:column >
+                             <f:facet name="header">
+                                 <h:outputText value="PHONE"></h:outputText>
+                             </f:facet>
+                             <h:outputText value="#{cust.phone}"></h:outputText>
+                         </h:column>
+                         <h:column >
+                             <f:facet name="header">
+                                 <h:outputText value="OPEN BALANCE"></h:outputText>
+                             </f:facet>
+                             <h:outputText value="#{cust.email}"></h:outputText>
+                         </h:column>
+                         
                          <bnu:dataTableColumn label="ACTION">
                          <bnu:dropButton value="#{messages.edit}" look="primary" >
                             <bnu:commandButton value="#{messages.edit}"  style="width:100%" />
@@ -144,7 +160,7 @@
                             <bnu:commandButton value="#{messages.runReport}"  style="width:100%" />
                          </bnu:dropButton>
                         </bnu:dataTableColumn> 
-                </bnu:dataTable>  
+                </h:dataTable>  
             </bnu:tab>
                         <bnu:tab title="Products and Services" onclick="ajax:productController.goProd();" >
                             
