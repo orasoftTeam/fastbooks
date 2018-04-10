@@ -43,12 +43,35 @@ public class CustomerController implements Serializable{
     UserData userData;
     
     
-    @Getter @Setter List<FbCustomer> custL = new ArrayList<>();
+    private @Getter @Setter List<FbCustomer> custL = new ArrayList<>();
     
     private @Getter @Setter String firstName;
     private @Getter @Setter String phone;
     private @Getter @Setter String OpenBalance;
+    private @Getter @Setter String title;
+    private @Getter @Setter String midName;
+    private @Getter @Setter String lastName;
+    private @Getter @Setter String email;
+    private @Getter @Setter String street;
+    private @Getter @Setter String city;
+    private @Getter @Setter String state;
+    private @Getter @Setter String country;
+    private @Getter @Setter String postalCode;
+    private @Getter @Setter String suffix;
+    private @Getter @Setter String company;
+    private @Getter @Setter String fax;
+    private @Getter @Setter String mobile;
+    private @Getter @Setter String displayName;
+    private @Getter @Setter String website;
+     private @Getter @Setter String streetS;
+    private @Getter @Setter String cityS;
+    private @Getter @Setter String stateS;
+    private @Getter @Setter String countryS;
+    private @Getter @Setter String postalCodeS;
+    private @Getter @Setter String attach;
+    private @Getter @Setter String note;
     
+    private @Getter @Setter FbCustomer cust;
   
 
     public FbCustomer getCustomer() {
@@ -76,8 +99,8 @@ public class CustomerController implements Serializable{
      * Creates a new instance of CustomerController
      */
     public CustomerController() {
-        //customer = new FbCustomer();
-        getCustomerList();
+        customer = new FbCustomer();
+        //getCustomerList();
         
     }
     
@@ -124,12 +147,14 @@ public class CustomerController implements Serializable{
     }
      
    
-      public void getCustomerList(){ 
+      public void init(){ 
           System.out.println("Obteniendo lista clientes controller");
           try {
-              System.out.println("custL"  + custL);
               custL = custF.getCustomer(this.userData.getCurrentCia().getIdCia().toString());
-              System.out.println("Obteniendo lista"  + custL);
+        if (!this.userData.getUses().equals("0")) {
+            this.validationBean.lanzarMensaje("info", this.userData.getUses(), "blank");
+            this.userData.setUses("0");
+        }
               
           } catch (Exception e) {
               System.out.println("error obteniendo lista");
@@ -139,39 +164,80 @@ public class CustomerController implements Serializable{
         }
      
       //Updating customer
-      public void editCustomer(){
-          String res = "";
-          try {
-              res = custF.actCustomer(customer, "U");
-              if (res.equals("0")) {
+      public void editCustomer(FbCustomer cu, String op){
+       System.out.println("updating customer" + cu);
+        this.cust = cu;
+        if (op.equals("U")) {
+            this.title = cu.getTitle();
+            this.firstName = cu.getFirstname();
+            this.midName =  cu.getMiddlename();
+            this.lastName = cu.getLastname();
+            this.suffix =  cu.getSuffixx();
+            this.company = cu.getCompany();
+            this.displayName = cu.getDisplayName();
+            this.email = cu.getEmail();
+            this.phone = cu.getPhone();
+            this.mobile = cu.getMobile();
+            this.fax = cu.getFax();
+            this.website = cu.getWebside();
+            this.street = cu.getStreet();
+            this.state = cu.getEstate();
+            this.postalCode = cu.getPostalCode();
+            this.country = cu.getCountry();
+            this.streetS = cu.getStreetS();
+            this.stateS = cu.getEstateS();
+            this.postalCodeS = cu.getPostalCodeS();
+            this.countryS = cu.getCountryS();
+            this.attach = cu.getAtachment();
+            this.note = cu.getNote();
+            this.validationBean.ejecutarJavascript("$('.modalPseudoClass2').modal();");
+        }else{
+            this.validationBean.ejecutarJavascript("$('.modalPseudoClass3').modal();");
+        }
+          
+      }
+      
+      
+      public void edit() {
+            String res = "";
+            System.out.println("getting cust" + cust);
+            try {
+                cust.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
+                cust.setIdCust(new BigDecimal("0"));
+                cust.setTitle(title);
+                cust.setFirstname(firstName);
+                cust.setMiddlename(midName);
+                cust.setLastname(lastName);
+                cust.setSuffixx(suffix);
+                cust.setCompany(company);
+                cust.setDisplayName(displayName);
+                cust.setEmail(email);
+                cust.setPhone(phone);
+                cust.setMobile(mobile);
+                cust.setFax(fax);
+                cust.setWebside(website);
+                cust.setStreet(street);
+                cust.setEstate(state);
+                cust.setCity(city);
+                cust.setPostalCode(postalCode);
+                cust.setCountry(country);
+                cust.setCityS(cityS);
+                cust.setEstateS(stateS);
+                cust.setCityS(cityS);
+                cust.setPostalCodeS(postalCodeS);
+                cust.setCountryS(countryS);
+                cust.setAtachment("prueba");
+                cust.setNote("prueba2");
+                res = custF.actCustomer(cust, "U");
+                System.out.println("resultado update customer" + res);
+                if (res.equals("0")) {
                     validationBean.lanzarMensaje("info", "catEditSuccess", "blank");
                 } else if (res.equals("-1")) {
                     validationBean.lanzarMensaje("error", "catRepeatFail", "blank");
                 } else if (res.equals("-2")) {
                     validationBean.lanzarMensaje("error", "unexpectedError", "blank");
                 }
-          } catch (Exception e) {
-          }
-          
-          
-      }
-      
-        //Deleting customer
-          public void deleteCustomer() {
-        
-            String res = "";
-            try {
-
-                
-                res = custF.actCustomer(customer, "D");
-                if (res.equals("0")) {
-                    validationBean.lanzarMensaje("info", "catDelSuccess", "blank");
-                } else if (res.equals("-1")) {
-                    validationBean.lanzarMensaje("error", "catRepeatFail", "blank");
-                } else if (res.equals("-2")) {
-                    validationBean.lanzarMensaje("error", "unexpectedError", "blank");
-                }
-               
+                //limpiar();
             } catch (Exception e) {
                 System.out.println("com.fastbooks.managedbeans.CategoryController.add()");
                 e.printStackTrace();
@@ -180,6 +246,34 @@ public class CustomerController implements Serializable{
 
         
     }
+      
+      
+      
+        //Deleting customer
+          public void deleteCustomer() {
+              System.out.println("Ingresando a eliminar registros");
+        
+            String res = "";
+            try {
+                res = custF.actCustomer(cust, "D");
+                System.out.println("Resultado controlador" + res);
+                if (res.equals("0")) {
+                    validationBean.lanzarMensaje("info", "catDelSuccess", "blank");
+                } else if (res.equals("-1")) {
+                    validationBean.lanzarMensaje("error", "catRepeatFail", "blank");
+                } else if (res.equals("-2")) {
+                    validationBean.lanzarMensaje("error", "unexpectedError", "blank");
+                }
+               // limpiar();
+            } catch (Exception e) {
+                System.out.println("com.fastbooks.managedbeans.CategoryController.add()");
+                e.printStackTrace();
+                res = "-2";
+            }
+
+        
+    }
+
       
      
     public boolean regVal(){
