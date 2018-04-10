@@ -149,10 +149,6 @@ public class FbCustomer implements Serializable {
         this.idCust = idCust;
     }
 
-    public FbCustomer(BigDecimal bigDecimal) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     public BigDecimal getIdCust() {
         return idCust;
     }
