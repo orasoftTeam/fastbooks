@@ -11,6 +11,7 @@ import com.fastbooks.modelo.FbBundleItems;
 import com.fastbooks.modelo.FbCatProd;
 import com.fastbooks.modelo.FbProduct;
 import com.fastbooks.modelo.FbTax;
+import com.fastbooks.util.GlobalParameters;
 import com.fastbooks.util.ValidationBean;
 import java.io.File;
 import java.io.Serializable;
@@ -45,11 +46,11 @@ public class ProductController implements Serializable {
     private @Getter
     @Setter
     boolean showScnd = false;
-
+    private GlobalParameters gp = new GlobalParameters();
     private @Getter
     @Setter
-    String appPath = System.getProperty("user.dir");
-    private final String destination = appPath + File.separator + "prodPhoto\\";
+    String appPath = gp.getAppPath();//System.getProperty("user.dir");
+    private final String destination = appPath + File.separator + "prodPhoto" + File.separator;
     private @Getter
     @Setter
     UploadedFile archivo;
@@ -210,24 +211,24 @@ public class ProductController implements Serializable {
     public void handleFileUpload(FileUploadEvent event) {
         String nameF;
         String ciaFolder = "cia" + userData.getCurrentCia().getIdCia().toString();
-        String newDest = destination + ciaFolder + "\\";
+        String newDest = destination + ciaFolder + File.separator;
         try {
             if (archivo == null) {
                 archivo = event.getFile();
                 //BufferedImage img = ImageIO.read(archivo.getInputstream());
                 nameF = vb.generarRandom(archivo.getFileName());
                 File file = new File(destination);
-                boolean res = file.mkdir();
-                vb.ejecutarJavascript("console.log('creando folder: "+res+", "+destination+"');");
+                file.mkdir();
+                
                 file = new File(newDest);
-                boolean result = file.mkdir();
-                vb.ejecutarJavascript("console.log('creando folder: "+result+", "+newDest+"');");
+                file.mkdir();
+                
                 vb.copyFile(nameF, newDest, archivo.getInputstream());
                 //this.msgFile = vb.getMsgBundle("lblFileSuccess");
                 this.photoUrl = "/prodPhoto/" + ciaFolder + "/" + nameF;
-                vb.ejecutarJavascript("console.log('creando folder: "+ this.photoUrl+"');");
+                
                 //vb.updateComponent("comForm:msgFile");
-                System.out.println(this.photoUrl);
+                
                 vb.updateComponent("prodForm:showPhoto");
                 this.nameFileFinal = nameF;
             } else {
@@ -252,10 +253,10 @@ public class ProductController implements Serializable {
             }
             this.photoUrl = "";
 
-            System.out.println("error" + this.photoUrl);
+            
             vb.updateComponent("prodForm:showPhoto");
             e.printStackTrace();
-            vb.ejecutarJavascript("console.log('creando folder: "+ e.toString()+"');");
+            
         }
 
     }

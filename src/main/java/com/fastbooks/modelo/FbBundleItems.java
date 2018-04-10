@@ -12,6 +12,7 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -64,7 +65,7 @@ public class FbBundleItems implements Serializable {
     @ManyToOne
     private FbProduct idBundle;
     @JoinColumn(name = "ID_PROD", referencedColumnName = "ID_PROD")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private FbProduct idProd;
 
     public FbBundleItems() {

@@ -13,6 +13,7 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
@@ -46,19 +47,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "FbProduct.findByPrice", query = "SELECT f FROM FbProduct f WHERE f.price = :price"),
     @NamedQuery(name = "FbProduct.findByIncTax", query = "SELECT f FROM FbProduct f WHERE f.incTax = :incTax"),
     @NamedQuery(name = "FbProduct.findByFechaCreacion", query = "SELECT f FROM FbProduct f WHERE f.fechaCreacion = :fechaCreacion"),
-    @NamedQuery(name = "FbProduct.findByUserCreacion", query = "SELECT f FROM FbProduct f WHERE f.userCreacion = :userCreacion")})
+    @NamedQuery(name = "FbProduct.findByUserCreacion", query = "SELECT f FROM FbProduct f WHERE f.userCreacion = :userCreacion"),
+    @NamedQuery(name = "FbProduct.findByStatus", query = "SELECT f FROM FbProduct f WHERE f.status = :status"),
+    @NamedQuery(name = "FbProduct.findByTotalBundle", query = "SELECT f FROM FbProduct f WHERE f.totalBundle = :totalBundle")})
 public class FbProduct implements Serializable {
-
-    @Column(name = "TOTAL_BUNDLE")
-    private BigDecimal totalBundle;
-    @OneToMany(mappedBy = "idBundle")
-    private List<FbBundleItems> fbBundleItemsList;
-    @OneToMany(mappedBy = "idProd")
-    private List<FbBundleItems> fbBundleItemsList1;
-
-    @Size(max = 20)
-    @Column(name = "STATUS")
-    private String status;
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -93,14 +85,23 @@ public class FbProduct implements Serializable {
     private Date fechaCreacion;
     @Column(name = "USER_CREACION")
     private BigInteger userCreacion;
+    @Size(max = 20)
+    @Column(name = "STATUS")
+    private String status;
+    @Column(name = "TOTAL_BUNDLE")
+    private BigDecimal totalBundle;
+    @OneToMany(mappedBy = "idBundle", fetch = FetchType.EAGER)
+    private List<FbBundleItems> fbBundleItemsList;
+    @OneToMany(mappedBy = "idProd")
+    private List<FbBundleItems> fbBundleItemsList1;
     @JoinColumn(name = "ID_TAX", referencedColumnName = "ID_TAX")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private FbTax idTax;
     @JoinColumn(name = "ID_CIA", referencedColumnName = "ID_CIA")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private FbCompania idCia;
     @JoinColumn(name = "ID_CAT", referencedColumnName = "ID_CAT")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private FbCatProd idCat;
 
     public FbProduct() {
@@ -198,6 +199,40 @@ public class FbProduct implements Serializable {
         this.userCreacion = userCreacion;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public BigDecimal getTotalBundle() {
+        return totalBundle;
+    }
+
+    public void setTotalBundle(BigDecimal totalBundle) {
+        this.totalBundle = totalBundle;
+    }
+
+    @XmlTransient
+    public List<FbBundleItems> getFbBundleItemsList() {
+        return fbBundleItemsList;
+    }
+
+    public void setFbBundleItemsList(List<FbBundleItems> fbBundleItemsList) {
+        this.fbBundleItemsList = fbBundleItemsList;
+    }
+
+    @XmlTransient
+    public List<FbBundleItems> getFbBundleItemsList1() {
+        return fbBundleItemsList1;
+    }
+
+    public void setFbBundleItemsList1(List<FbBundleItems> fbBundleItemsList1) {
+        this.fbBundleItemsList1 = fbBundleItemsList1;
+    }
+
     public FbTax getIdTax() {
         return idTax;
     }
@@ -245,40 +280,6 @@ public class FbProduct implements Serializable {
     @Override
     public String toString() {
         return "com.fastbooks.modelo.FbProduct[ idProd=" + idProd + " ]";
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public BigDecimal getTotalBundle() {
-        return totalBundle;
-    }
-
-    public void setTotalBundle(BigDecimal totalBundle) {
-        this.totalBundle = totalBundle;
-    }
-
-    @XmlTransient
-    public List<FbBundleItems> getFbBundleItemsList() {
-        return fbBundleItemsList;
-    }
-
-    public void setFbBundleItemsList(List<FbBundleItems> fbBundleItemsList) {
-        this.fbBundleItemsList = fbBundleItemsList;
-    }
-
-    @XmlTransient
-    public List<FbBundleItems> getFbBundleItemsList1() {
-        return fbBundleItemsList1;
-    }
-
-    public void setFbBundleItemsList1(List<FbBundleItems> fbBundleItemsList1) {
-        this.fbBundleItemsList1 = fbBundleItemsList1;
     }
     
 }
