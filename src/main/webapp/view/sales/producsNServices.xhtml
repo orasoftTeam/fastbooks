@@ -221,7 +221,7 @@
                                         </bnu:selectOneMenu>
                                     </bnu:column>
                                     <bnu:column span="3">
-                                        <bnu:inputText label="Quantity" value="#{productController.bundleQuant}" />
+                                        <bnu:inputText label="Quantity" value="#{productController.bundleQuant}" onkeyup="soloNumeros(this)" maxlength="4" id="bQuant" />
                                     </bnu:column>
                                     <bnu:column span="3">
                                         <bnu:commandButton value="Add Product" look="success" style="margin-top: 25px;" 
@@ -240,9 +240,9 @@
                                             var="bi"
                                             >
                                             <bnu:dataTableColumn label="Product name"  value="#{bi.itemName}" />
-                                            <bnu:dataTableColumn label="Price"  value="#{bi.itemPrice}"/>
-                                            <bnu:dataTableColumn label="Quantity"/>
-                                            <bnu:dataTableColumn label="Total"/>
+                                            <bnu:dataTableColumn label="Price"  value="#{productController.formatDouble(bi.itemPrice)}"/>
+                                            <bnu:dataTableColumn label="Quantity" value="#{bi.quant}" />
+                                            <bnu:dataTableColumn label="Total" value="#{bi.total}" />
                                             <bnu:dataTableColumn label="Action">
                                                 <bnu:commandButton icon-awesome="fa-trash" value="" icon-size="lg" ajax="true" action="#{productController.removeItemBundle(bi)}" />
                                                 
@@ -270,8 +270,12 @@
                                     <bnu:column span="6">
                                         <bnu:commandButton value="#{messages.save}" style="width: 100%" look="success" 
                                                            action="#{productController.addNew()}" update="@form"
+                                                           rendered="#{!productController.bundle}"
                                                             />
-                                       
+                                        <bnu:commandButton value="#{messages.save}" style="width: 100%" look="success" 
+                                                           action="#{productController.addBundle()}" update="@form"
+                                                           rendered="#{productController.bundle}"
+                                                            />
                                     </bnu:column>
                                     <bnu:column span="6">
                                         <bnu:commandButton value="#{messages.lblClose}" look="danger" action="#{productController.limpiar()}" style="width: 100%"/>

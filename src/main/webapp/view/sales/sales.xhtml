@@ -22,7 +22,12 @@
                     padding: 0; margin: 0;">
                     <h1 style="padding-left: 2%">#{messages.sales}</h1> 
                 </div>
-                <br></br><br></br>
+                <bnu:row>
+                    <bnu:column span="3">
+                        <bnu:navLink href="#{request.contextPath}/view/sales/producsNServices.xhtml" value="Products and Services" />
+                    </bnu:column>
+                </bnu:row>
+                <br></br>
                 <h:form>
                     
                     <bnu:tabView activeIndex="0">
@@ -159,9 +164,9 @@
                     </h:column>
                 </h:dataTable>  
             </bnu:tab>
-                        <bnu:tab title="Products and Services" onclick="ajax:productController.goProd();" >
+                       <!-- <bnu:tab title="Products and Services" onclick="ajax:productController.goProd();" >
                             
-                        </bnu:tab>       
+                        </bnu:tab>       -->
                         
                         
                         
