@@ -11,10 +11,14 @@ import com.fastbooks.modelo.FbCustomer;
 import com.fastbooks.util.ValidationBean;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -22,8 +26,8 @@ import javax.inject.Inject;
  */
 @Named(value = "customerController")
 @ViewScoped
-public class CustomerController implements Serializable{
-    
+public class CustomerController implements Serializable {
+
     //1.Declarar modelo
     //2.En la vista mapear los campos q se usaran en el modelo
     //3.crear o instanciar el objeto y  Llenar el objeto
@@ -31,14 +35,20 @@ public class CustomerController implements Serializable{
     //5.mandar el objeto al facade para que sea almacenado.
     @EJB
     ValidationBean validationBean;
-    @EJB 
+    @EJB
     FbCustomerFacade custF;
     private FbCustomer customer; //declarar modelo
     private boolean sameSHA;
     @Inject
     UserData userData;
-    
-  
+
+    private @Getter
+    @Setter
+    List<FbCustomer> custL = new ArrayList<>();
+
+    private @Getter
+    @Setter
+    FbCustomer cust;
 
     public FbCustomer getCustomer() {
         return customer;
@@ -55,172 +65,186 @@ public class CustomerController implements Serializable{
     public void setSameSHA(boolean sameSHA) {
         this.sameSHA = sameSHA;
     }
-    
-    
-    
-    
-    
 
     /**
      * Creates a new instance of CustomerController
      */
     public CustomerController() {
         customer = new FbCustomer();
+
     }
-    
+
     //Instanciando objeto para prepararlo para que reciba la informacion
-    public void newCustomer(){
+    public void newCustomer() {
         customer = new FbCustomer();
     }
-    
-    
-    
-     public void registerC() {
-        if(sameSHA){
-                    customer.setStreetS(customer.getStreet());
-                    customer.setCityS(customer.getCity());
-                    customer.setEstateS(customer.getEstate());
-                    customer.setPostalCodeS(customer.getPostalCode());
-                    customer.setCountryS(customer.getCountry());
-                }
-         System.out.println("obteniendo valores" + customer);
-        if (regVal()) {
-            /*
-                if(sameSHA){
-                    customer.setStreetS(customer.getStreet());
-                    customer.setCityS(customer.getCity());
-                    customer.setEstateS(customer.getEstate());
-                    customer.setPostalCodeS(customer.getPostalCode());
-                    customer.setCountryS(customer.getCountry());
-                }
-            */
+
+    //Adding a new customer
+    public void registerC() {
+        if (valCampos()) {
+            if (sameSHA) {
+                customer.setStreetS(customer.getStreet());
+                customer.setCityS(customer.getCity());
+                customer.setEstateS(customer.getEstate());
+                customer.setPostalCodeS(customer.getPostalCode());
+                customer.setCountryS(customer.getCountry());
+            }
+
             FbCompania com = new FbCompania();
             com.setIdCia(BigDecimal.ZERO);
             customer.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
             customer.setIdCust(new BigDecimal("0"));
-            //customer.setIdCia(com);
-            String res = custF.actCustomer(customer,  "A");
-            System.out.println("Resultado controller: " + res);
-
+            customer.setNote("Prueba");
+            customer.setAtachment("Prueba2");
+            String res;
+            res = custF.actCustomer(customer, "A");
             if (res.equals("0")) {
-               
+                validationBean.lanzarMensaje("info", "custAdded", "blank");
             } else if (res.equals("-1")) {
-                //lanzar mensaje de registro repetido
-                validationBean.lanzarMensaje("warn", "valErr", "repeatedEmail");
+                validationBean.lanzarMensaje("error", "customerRepeatFail", "blank");
             } else if (res.equals("-2")) {
-                //lanzar mensaje de ocurrio error inesperado
-                validationBean.lanzarMensaje("error", "valErr", "unexpectedError");
+                validationBean.lanzarMensaje("error", "unexpectedError", "blank");
+            }
+            System.out.println("obteniendo valores de la shipping same as billing" + customer);
+            customer = new FbCustomer(); //limpiando formulario de add customer..
+        }
+
+    }
+
+    public void init() {
+        try {
+            custL = custF.getCustomer(this.userData.getCurrentCia().getIdCia().toString());
+            if (!this.userData.getUses().equals("0")) {
+                this.validationBean.lanzarMensaje("info", this.userData.getUses(), "blank");
+                this.userData.setUses("0");
             }
 
-            System.out.println("validation good");
-        } else {
-            System.out.println("validation fail");
+        } catch (Exception e) {
+            System.out.println("error obteniendo lista");
+            e.printStackTrace();
         }
+
     }
-     
-    public boolean regVal(){
+
+    public void editCustomer(FbCustomer cu, String op) {
+        System.out.println("updating customer" + cu);
+        this.cust = cu;
+        if (op.equals("U")) {
+            this.validationBean.ejecutarJavascript("$('.modalPseudoClass2').modal();");
+        } else {
+            this.validationBean.ejecutarJavascript("$('.modalPseudoClass3').modal();");
+        }
+
+    }
+
+    //Updating customer
+    public void edit() {
+        String res = "";
+        System.out.println("getting cust" + cust);
+        try {
+            /*cust.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
+                cust.setIdCust(new BigDecimal("0"));
+             */
+
+            if (sameSHA) {
+                cust.setStreetS(cust.getStreet());
+                cust.setCityS(cust.getCity());
+                cust.setEstateS(cust.getEstate());
+                cust.setPostalCodeS(cust.getPostalCode());
+                cust.setCountryS(cust.getCountry());
+            }
+            res = custF.actCustomer(cust, "U");
+            System.out.println("resultado update customer" + res);
+            if (res.equals("0")) {
+                validationBean.lanzarMensaje("info", "customerUpdate", "blank");
+            } else if (res.equals("-1")) {
+                validationBean.lanzarMensaje("error", "customerRepeatFail", "blank");
+            } else if (res.equals("-2")) {
+                validationBean.lanzarMensaje("error", "unexpectedError", "blank");
+            }
+            cust = new FbCustomer(); //limpiando formulario
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.CustomerController.edit()");
+            e.printStackTrace();
+            res = "-2";
+        }
+
+    }
+
+    //Deleting customer
+    public void deleteCustomer() {
+        System.out.println("Ingresando a eliminar registros");
+
+        String res = "";
+        try {
+            res = custF.actCustomer(cust, "D");
+            System.out.println("Resultado controlador" + res);
+            if (res.equals("0")) {
+                validationBean.lanzarMensaje("info", "custDelSuccess", "blank");
+            } else if (res.equals("-1")) {
+                validationBean.lanzarMensaje("error", "customerRepeatFail", "blank");
+            } else if (res.equals("-2")) {
+                validationBean.lanzarMensaje("error", "unexpectedError", "blank");
+            }
+            cust = new FbCustomer(); //limpiando formulario
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.CustomerController.deleteCustomer()");
+            e.printStackTrace();
+            res = "-2";
+        }
+
+    }
+
+    public boolean valCampos() {
+
         boolean flag = false;
         int c = 0;
-       /* 
-        if(!(validationBean.validarCampoVacio(customer.getTitle(), "error", "valErr", "reqTitle")
-                && validationBean.validarSoloLetras(customer.getTitle(), "error", "valErr", "reqTitle")
-                && validationBean.validarLongitudCampo(customer.getTitle(), 4, 50, "error", "valErr", "reqTitle"))){
-                c++;
-            }
-        if(!(validationBean.validarCampoVacio(customer.getFirstname(), "error", "valErr", "reqFName")
-                && validationBean.validarSoloLetras(customer.getFirstname(), "error", "valErr", "reqFName")
-                && validationBean.validarLongitudCampo(customer.getFirstname(), 4, 50, "error", "valErr", "reqFName"))){
-                c++;
-            }
-        if(!(validationBean.validarCampoVacio(customer.getMiddlename(), "error", "valErr", "reqMName")
-                && validationBean.validarSoloLetras(customer.getMiddlename(), "error", "valErr", "reqMName")
-                && validationBean.validarLongitudCampo(customer.getMiddlename(), 4, 50, "error", "valErr", "reqMName"))){
-                c++;
-            }
-        if(!(validationBean.validarCampoVacio(customer.getLastname(), "error", "valErr", "reqLName")
-                && validationBean.validarSoloLetras(customer.getLastname(), "error", "valErr", "reqLName")
-                && validationBean.validarLongitudCampo(customer.getLastname(), 4, 50, "error", "valErr", "reqLName"))){
-                c++;
-            }
-        if(!(validationBean.validarCampoVacio(customer.getSuffixx(), "error", "valErr", "reqSuffix")
-                && validationBean.validarSoloLetras(customer.getSuffixx(), "error", "valErr", "reqSuffix")
-                && validationBean.validarLongitudCampo(customer.getSuffixx(), 4, 50, "error", "valErr", "reqSuffix"))){
-                c++;
-            }
-        if(!(validationBean.validarCampoVacio(customer.getEmail(), "error", "valErr", "reqEmail")
-                && validationBean.validarEmail(customer.getEmail(), "error", "valErr", "reqEmail")
-                && validationBean.validarLongitudCampo(customer.getEmail(), 4, 50, "error", "valErr", "reqEmail"))){
-                c++;
-            }
-        if(!(validationBean.validarCampoVacio(customer.getCompany(), "error", "valErr", "reqCompany")
-                && validationBean.validarSoloLetras(customer.getCompany(), "error", "valErr", "reqCompany")
-                && validationBean.validarLongitudCampo(customer.getCompany(), 4, 50, "error", "valErr", "reqCompany"))){
-                c++;
-            }
-        if(!(validationBean.validarCampoVacio(customer.getPhone(), "error", "valErr", "reqPhone")
-                && validationBean.validarSoloNumeros(customer.getPhone(), "error", "valErr", "reqPhone")
-                && validationBean.validarLongitudCampo(customer.getPhone(), 4, 50, "error", "valErr", "reqPhone"))){
-                c++;
-            }
-        if(!(validationBean.validarCampoVacio(customer.getMobile(), "error", "valErr", "reqMobile")
-                && validationBean.validarSoloNumeros(customer.getMobile(), "error", "valErr", "reqMobile")
-                && validationBean.validarLongitudCampo(customer.getMobile(), 4, 50, "error", "valErr", "reqMobile"))){
-                c++;
-            }
-         if(!(validationBean.validarCampoVacio(customer.getFax(), "error", "valErr", "reqFax")
-                && validationBean.validarSoloNumeros(customer.getFax(), "error", "valErr", "reqFax")
-                && validationBean.validarLongitudCampo(customer.getFax(), 4, 50, "error", "valErr", "reqFax"))){
-                c++;
-            }
-         
-          if(!(validationBean.validarCampoVacio(customer.getDisplayName(), "error", "valErr", "reqDisName")
-                && validationBean.validarSoloLetras(customer.getDisplayName(), "error", "valErr", "reqDisName")
-                && validationBean.validarLongitudCampo(customer.getDisplayName(), 4, 50, "error", "valErr", "reqDisName"))){
-                c++;
-            }
-         */ 
-           if (c == 0) {
+        if (!(validationBean.validarCampoVacio(this.customer.getFirstname(), "warn", "valErr", "reqFname")
+                && validationBean.validarSoloLetras(this.customer.getFirstname(), "warn", "valErr", "reqFname"))) {
+            c++;
+        }
+        if (!(validationBean.validarCampoVacio(this.customer.getLastname(), "warn", "valErr", "reqLname")
+                && validationBean.validarSoloLetras(this.customer.getLastname(), "warn", "valErr", "reqLname"))) {
+            c++;
+        }
+        if (!(validationBean.validarCampoVacio(this.customer.getCompany(), "warn", "valErr", "reqComp")
+                && validationBean.validarSoloLetras(this.customer.getCompany(), "warn", "valErr", "reqComp"))) {
+            c++;
+        }
+        if (!(validationBean.validarCampoVacio(this.customer.getEmail(), "warn", "valErr", "reqEmail")
+                && validationBean.validarEmail(this.customer.getEmail(), "warn", "valErr", "reqEmail"))) {
+            c++;
+        }
+        if (!(validationBean.validarCampoVacio(this.customer.getPhone(), "warn", "valErr", "reqPhone")
+                && validationBean.validarSoloNumeros(this.customer.getPhone(), "warn", "valErr", "reqPhone"))) {
+            c++;
+        }
+        if (!(validationBean.validarCampoVacio(this.customer.getWebside(), "warn", "valErr", "reqWebsite"))) {
+            c++;
+        }
+        if (!(validationBean.validarCampoVacio(this.customer.getStreet(), "warn", "valErr", "reqStreet"))) {
+            c++;
+        }
+        if (!(validationBean.validarCampoVacio(this.customer.getCity(), "warn", "valErr", "reqCity")
+                && validationBean.validarSoloLetras(this.customer.getCity(), "warn", "valErr", "reqCity"))) {
+            c++;
+        }
+        if (!(validationBean.validarCampoVacio(this.customer.getEstate(), "warn", "valErr", "reqState")
+                && validationBean.validarSoloLetras(this.customer.getEstate(), "warn", "valErr", "reqState"))) {
+        }
+        if (!(validationBean.validarCampoVacio(this.customer.getPostalCode(), "warn", "valErr", "reqPostalC")
+                && validationBean.validarSoloNumeros(this.customer.getPostalCode(), "warn", "valErr", "reqPostalC"))) {
+            c++;
+        }
+        if (!(validationBean.validarCampoVacio(this.customer.getCountry(), "warn", "valErr", "reqCountry")
+                && validationBean.validarSoloLetras(this.customer.getCountry(), "warn", "valErr", "reqCountry"))) {
+            c++;
+        }
+
+        if (c == 0) {
             flag = true;
         }
         return flag;
     }
-    
-  
-    //crear un objeto de PF para capturar el evento del checkbox
-    //luego se crea metodo para capturar la info o evaluar datos (ajax)
-    //
-    
-    public void poblarSA(){
-        boolean validarS = true;
-            
-        if(customer.getStreet()==null || customer.getStreet().isEmpty()){
-            validarS = false;
-        }
-        if(customer.getCity()==null || customer.getCity().isEmpty()){
-            validarS = false;
-        }
-        if(customer.getEstate()==null || customer.getEstate().isEmpty()){
-            validarS = false;
-        }
-        if(customer.getPostalCode()==null || customer.getPostalCode().isEmpty()){
-            validarS = false;
-        }
-        if(customer.getCountry()==null || customer.getCountry().isEmpty()){
-            validarS = false;
-        }
-        
-        if(!validarS){
-            validationBean.lanzarMensaje("error", "valErr", "reqDisName");
-        return;
-        }
-        
-        customer.setStreetS(customer.getStreet());
-        customer.setCityS(customer.getCity());
-        customer.setEstateS(customer.getEstate());
-        customer.setPostalCodeS(customer.getPostalCode());
-        customer.setCountryS(customer.getCountry());
-      
-    }
-    
- 
+
 }
