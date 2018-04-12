@@ -36,13 +36,10 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer>{
     }
     
      //Lista para obtener usuarios por compania
-    public List<FbCustomer> getCustomer (String idCust){
+    public List<FbCustomer> getCustomersByIdCia (String idCust){
         List<FbCustomer> listC = new ArrayList<>();
         try {
-            String sql = "select * from fb_customer u\n" +
-                    " inner join fb_usuario_x_cia uc\n" +
-                    " on u.id_usuario = uc.id_usuario\n" +
-                    " where uc.id_cia = ?";
+            String sql = "select * from fb_customer where id_cia = ? and status = 'A'";
             //tambien q muestre el perfil
             Query q = em.createNativeQuery(sql, FbCustomer.class);
             q.setParameter(1, idCust);

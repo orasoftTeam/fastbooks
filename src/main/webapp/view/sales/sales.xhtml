@@ -18,10 +18,7 @@
         <ui:composition template="../../template/template.xhtml">
 
             <ui:define name="content">
-                <div class="row" style="background-color: #f5f5f5; display: block; width: 100%;
-                    padding: 0; margin: 0;">
-                    <h1 style="padding-left: 2%">#{messages.sales}</h1> 
-                </div>
+                
                 <bnu:row>
                     <bnu:column span="3">
                         <bnu:navLink href="#{request.contextPath}/view/sales/producsNServices.xhtml" value="#{messages.lblProductsNServices}" />
@@ -32,19 +29,8 @@
                     
                     <bnu:tabView activeIndex="0">
                         <bnu:tab title="All Sales">
-                     <br></br><br></br>
-                    <bnu:dropButton value="New transaccion" style="float: right" look="success">
-                        <bnu:navLink value="Invoice"></bnu:navLink>
-                        <bnu:navLink value="Payment"></bnu:navLink>
-                        <bnu:navLink value="Estimate"></bnu:navLink>
-                        <bnu:navLink value="Sales Receipt"></bnu:navLink>
-                        <bnu:navLink value="Credit Note"></bnu:navLink>
-                        <bnu:navLink value="Delayed Charged"></bnu:navLink>
-                        <bnu:navLink value="Time Activity"></bnu:navLink>
-                    </bnu:dropButton> 
-                     <br></br><br></br><br></br><br></br>   
-                     <bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />
-      
+                     
+                            <ui:include src="invoice.xhtml"/>
                         </bnu:tab>
                         
                         <bnu:tab title="Customers">

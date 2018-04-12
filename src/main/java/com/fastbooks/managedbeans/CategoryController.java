@@ -94,7 +94,12 @@ public class CategoryController implements Serializable {
     }
 
     public void init() {
-        list = cpFacade.getCatsByIdCia(userData.getCurrentCia().getIdCia().toString());
+        try {
+            list = cpFacade.getCatsByIdCia(userData.getCurrentCia().getIdCia().toString());
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.CategoryController.init()");
+            e.printStackTrace();
+        }
     }
 
     public void assign(FbCatProd cate, String op) {

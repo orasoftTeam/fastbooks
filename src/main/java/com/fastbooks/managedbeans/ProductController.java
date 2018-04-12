@@ -148,11 +148,16 @@ public class ProductController implements Serializable {
     }
 
     public void init() {
-        pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+        try {
+              pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
         tList = tFacade.getTaxByIdCia(this.userData.getCurrentCia().getIdCia().toString());
         if (!this.userData.getUses().equals("0")) {
             this.vb.lanzarMensaje("info", this.userData.getUses(), "blank");
             this.userData.setUses("0");
+        }
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.ProductController.init()");
+            e.printStackTrace();
         }
     }
 
@@ -482,6 +487,9 @@ public class ProductController implements Serializable {
                         } else {
                             e.setQuant(BigInteger.ONE);
                         }
+                    }
+                    if (this.productBundle.getType().equals("SE")) {
+                        e.setQuant(BigInteger.ONE);
                     }
                     int x = Integer.parseInt(e.getQuant().toString());
                     Double y = Double.parseDouble(e.getItemPrice().toString());

@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:bnu="http://bootsfaces.net/ui"
+             xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+             xmlns:p="http://primefaces.org/ui">
+
+    <ui:remove>
+        <!--
+                    Hint to editors: The menus follow the Chicago style of capitalization. Please capitalize everything but the "smaller" words. 
+        -->
+    </ui:remove>
+    <h:form id="tblInvoiceForm">
+        <bnu:row>
+                        <bnu:column large-screen="10" medium-screen="11" small-screen="12" tiny-screen="12" >
+                            <h2>Sales Transactions</h2>
+                        </bnu:column>
+                        <bnu:column large-screen="2" medium-screen="1" small-screen="12" tiny-screen="12">
+                            <bnu:dropButton value="New transaccion"  look="success" style="margin-top:20px;" >
+                                <bnu:navLink value="Invoice" href="#{request.contextPath}/view/sales/invoiceForm.xhtml" ></bnu:navLink>
+                        <bnu:navLink value="Payment"></bnu:navLink>
+                        <!--<bnu:navLink value="Estimate"></bnu:navLink>
+                        <bnu:navLink value="Sales Receipt"></bnu:navLink>
+                        <bnu:navLink value="Credit Note"></bnu:navLink>
+                        <bnu:navLink value="Delayed Charged"></bnu:navLink>
+                        <bnu:navLink value="Time Activity"></bnu:navLink>-->
+                    </bnu:dropButton> 
+                        </bnu:column>
+                    </bnu:row> 
+                    <bnu:row>
+                        <bnu:column span="12">
+                            <bnu:messages  />
+                        </bnu:column>
+                    </bnu:row>
+                    <p:separator/>
+                    <bnu:row>
+                        <bnu:column span="12">
+                            <bnu:dataTable
+                                
+                                id="tblInvoice"
+                                
+                                responsive="true" >
+                                <bnu:dataTableColumn label="Date"  ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="Type"  ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="No."  ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="Customer"  ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="Due Date"  ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="Balance"  ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="Total Before Tax"  ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="Tax"  ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="Total"  ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="Status"  ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblAction}">
+                                    <bnu:dropButton value="#{messages.edit}" look="primary" styleClass="hidden-xs hidden-sm" >
+                                        <bnu:commandButton value="#{messages.edit}"  style="width:100%"  />
+                                        <bnu:commandButton value="Cancel"  style="width:100%"  />
+                                        <bnu:commandButton value="Recieve Payment"  style="width:100%"  />
+                                        <bnu:commandButton value="Print"  style="width:100%"  />
+                                        <bnu:commandButton value="Send Reminder"  style="width:100%"  />
+                                    </bnu:dropButton>
+                                    <bnu:commandButton value="#{messages.edit}"  look="warning" styleClass="hidden-lg hidden-md"    />
+                                    <bnu:commandButton value="#{messages.delete}"  look="danger" styleClass="hidden-lg hidden-md"  />
+                                    <bnu:commandButton value="Cancel"   styleClass="hidden-lg hidden-md" />
+                                        <bnu:commandButton value="Recieve Payment"   styleClass="hidden-lg hidden-md" />
+                                        <bnu:commandButton value="Print"   styleClass="hidden-lg hidden-md" />
+                                        <bnu:commandButton value="Send Reminder"   styleClass="hidden-lg hidden-md" />
+                                </bnu:dataTableColumn>
+                                
+                            </bnu:dataTable>
+                        </bnu:column>
+                    </bnu:row>
+                </h:form>
+                <p:separator/>
+                      
+                     <!--<bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />-->
+        
+        
+    
+    
+    
+</ui:fragment>
+

@@ -7,6 +7,7 @@ package com.fastbooks.modelo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,14 +17,16 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author DELL
+ * @author dell
  */
 @Entity
 @Table(name = "FB_CUSTOMER")
@@ -43,42 +46,18 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "FbCustomer.findByFax", query = "SELECT f FROM FbCustomer f WHERE f.fax = :fax"),
     @NamedQuery(name = "FbCustomer.findByDisplayName", query = "SELECT f FROM FbCustomer f WHERE f.displayName = :displayName"),
     @NamedQuery(name = "FbCustomer.findByWebside", query = "SELECT f FROM FbCustomer f WHERE f.webside = :webside"),
-    @NamedQuery(name = "FbCustomer.findByAtachment", query = "SELECT f FROM FbCustomer f WHERE f.atachment = :atachment")})
+    @NamedQuery(name = "FbCustomer.findByAtachment", query = "SELECT f FROM FbCustomer f WHERE f.atachment = :atachment"),
+    @NamedQuery(name = "FbCustomer.findByStatus", query = "SELECT f FROM FbCustomer f WHERE f.status = :status"),
+    @NamedQuery(name = "FbCustomer.findByCity", query = "SELECT f FROM FbCustomer f WHERE f.city = :city"),
+    @NamedQuery(name = "FbCustomer.findByEstate", query = "SELECT f FROM FbCustomer f WHERE f.estate = :estate"),
+    @NamedQuery(name = "FbCustomer.findByPostalCode", query = "SELECT f FROM FbCustomer f WHERE f.postalCode = :postalCode"),
+    @NamedQuery(name = "FbCustomer.findByCountry", query = "SELECT f FROM FbCustomer f WHERE f.country = :country"),
+    @NamedQuery(name = "FbCustomer.findByCityS", query = "SELECT f FROM FbCustomer f WHERE f.cityS = :cityS"),
+    @NamedQuery(name = "FbCustomer.findByEstateS", query = "SELECT f FROM FbCustomer f WHERE f.estateS = :estateS"),
+    @NamedQuery(name = "FbCustomer.findByPostalCodeS", query = "SELECT f FROM FbCustomer f WHERE f.postalCodeS = :postalCodeS"),
+    @NamedQuery(name = "FbCustomer.findByCountryS", query = "SELECT f FROM FbCustomer f WHERE f.countryS = :countryS"),
+    @NamedQuery(name = "FbCustomer.findByBalance", query = "SELECT f FROM FbCustomer f WHERE f.balance = :balance")})
 public class FbCustomer implements Serializable {
-
-    @Size(max = 20)
-    @Column(name = "STATUS")
-    private String status;
-    @Lob
-    @Column(name = "STREET")
-    private String street;
-    @Size(max = 50)
-    @Column(name = "CITY")
-    private String city;
-    @Size(max = 50)
-    @Column(name = "ESTATE")
-    private String estate;
-    @Size(max = 50)
-    @Column(name = "POSTAL_CODE")
-    private String postalCode;
-    @Size(max = 50)
-    @Column(name = "COUNTRY")
-    private String country;
-    @Lob
-    @Column(name = "STREET_S")
-    private String streetS;
-    @Size(max = 50)
-    @Column(name = "CITY_S")
-    private String cityS;
-    @Size(max = 50)
-    @Column(name = "ESTATE_S")
-    private String estateS;
-    @Size(max = 50)
-    @Column(name = "POSTAL_CODE_S")
-    private String postalCodeS;
-    @Size(max = 50)
-    @Column(name = "COUNTRY_S")
-    private String countryS;
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -132,15 +111,52 @@ public class FbCustomer implements Serializable {
     @Size(max = 100)
     @Column(name = "ATACHMENT")
     private String atachment;
-    @JoinColumn(name = "ID_CIA", referencedColumnName = "ID_CIA")
-    @ManyToOne
-    private FbCompania idCia;
-    @JoinColumn(name = "ID_DIR_SHIP", referencedColumnName = "ID_DIRECCION")
-    @ManyToOne
-    private FbDireccion idDirShip;
+    @Size(max = 20)
+    @Column(name = "STATUS")
+    private String status;
+    @Lob
+    @Column(name = "STREET")
+    private String street;
+    @Size(max = 50)
+    @Column(name = "CITY")
+    private String city;
+    @Size(max = 50)
+    @Column(name = "ESTATE")
+    private String estate;
+    @Size(max = 50)
+    @Column(name = "POSTAL_CODE")
+    private String postalCode;
+    @Size(max = 50)
+    @Column(name = "COUNTRY")
+    private String country;
+    @Lob
+    @Column(name = "STREET_S")
+    private String streetS;
+    @Size(max = 50)
+    @Column(name = "CITY_S")
+    private String cityS;
+    @Size(max = 50)
+    @Column(name = "ESTATE_S")
+    private String estateS;
+    @Size(max = 50)
+    @Column(name = "POSTAL_CODE_S")
+    private String postalCodeS;
+    @Size(max = 50)
+    @Column(name = "COUNTRY_S")
+    private String countryS;
+    @Column(name = "BALANCE")
+    private BigDecimal balance;
     @JoinColumn(name = "ID_DIRECCION", referencedColumnName = "ID_DIRECCION")
     @ManyToOne
     private FbDireccion idDireccion;
+    @JoinColumn(name = "ID_DIR_SHIP", referencedColumnName = "ID_DIRECCION")
+    @ManyToOne
+    private FbDireccion idDirShip;
+    @JoinColumn(name = "ID_CIA", referencedColumnName = "ID_CIA")
+    @ManyToOne
+    private FbCompania idCia;
+    @OneToMany(mappedBy = "idCust")
+    private List<FbInvoice> fbInvoiceList;
 
     public FbCustomer() {
     }
@@ -269,64 +285,8 @@ public class FbCustomer implements Serializable {
         this.atachment = atachment;
     }
 
-    public FbCompania getIdCia() {
-        return idCia;
-    }
-
-    public void setIdCia(FbCompania idCia) {
-        this.idCia = idCia;
-    }
-
-    public FbDireccion getIdDirShip() {
-        return idDirShip;
-    }
-
-    public void setIdDirShip(FbDireccion idDirShip) {
-        this.idDirShip = idDirShip;
-    }
-
-    public FbDireccion getIdDireccion() {
-        return idDireccion;
-    }
-
-    public void setIdDireccion(FbDireccion idDireccion) {
-        this.idDireccion = idDireccion;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idCust != null ? idCust.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof FbCustomer)) {
-            return false;
-        }
-        FbCustomer other = (FbCustomer) object;
-        if ((this.idCust == null && other.idCust != null) || (this.idCust != null && !this.idCust.equals(other.idCust))) {
-            return false;
-        }
-        return true;
-    }
-     /*
-    @Override
-  
-    public String toString() {
-        return "com.fastbooks.modelo.FbCustomer[ idCust=" + idCust + " ]";
-    }
-    */
-    
     public String getStatus() {
         return status;
-    }
-
-    @Override
-    public String toString() {
-        return "FbCustomer{" + "status=" + status + ", street=" + street + ", city=" + city + ", estate=" + estate + ", postalCode=" + postalCode + ", country=" + country + ", streetS=" + streetS + ", cityS=" + cityS + ", estateS=" + estateS + ", postalCodeS=" + postalCodeS + ", countryS=" + countryS + ", idCust=" + idCust + ", title=" + title + ", firstname=" + firstname + ", middlename=" + middlename + ", lastname=" + lastname + ", suffixx=" + suffixx + ", email=" + email + ", company=" + company + ", phone=" + phone + ", mobile=" + mobile + ", fax=" + fax + ", displayName=" + displayName + ", webside=" + webside + ", note=" + note + ", atachment=" + atachment + ", idCia=" + idCia + ", idDirShip=" + idDirShip + ", idDireccion=" + idDireccion + '}';
     }
 
     public void setStatus(String status) {
@@ -411,6 +371,72 @@ public class FbCustomer implements Serializable {
 
     public void setCountryS(String countryS) {
         this.countryS = countryS;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    public FbDireccion getIdDireccion() {
+        return idDireccion;
+    }
+
+    public void setIdDireccion(FbDireccion idDireccion) {
+        this.idDireccion = idDireccion;
+    }
+
+    public FbDireccion getIdDirShip() {
+        return idDirShip;
+    }
+
+    public void setIdDirShip(FbDireccion idDirShip) {
+        this.idDirShip = idDirShip;
+    }
+
+    public FbCompania getIdCia() {
+        return idCia;
+    }
+
+    public void setIdCia(FbCompania idCia) {
+        this.idCia = idCia;
+    }
+
+    @XmlTransient
+    public List<FbInvoice> getFbInvoiceList() {
+        return fbInvoiceList;
+    }
+
+    public void setFbInvoiceList(List<FbInvoice> fbInvoiceList) {
+        this.fbInvoiceList = fbInvoiceList;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (idCust != null ? idCust.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof FbCustomer)) {
+            return false;
+        }
+        FbCustomer other = (FbCustomer) object;
+        if ((this.idCust == null && other.idCust != null) || (this.idCust != null && !this.idCust.equals(other.idCust))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "com.fastbooks.modelo.FbCustomer[ idCust=" + idCust + " ]";
     }
     
 }
