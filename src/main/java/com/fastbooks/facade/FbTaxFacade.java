@@ -6,6 +6,9 @@
 package com.fastbooks.facade;
 
 import com.fastbooks.modelo.FbTax;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -46,4 +49,40 @@ public class FbTaxFacade extends AbstractFacade<FbTax>{
     
     return list;
     }
+    
+    public String actTax (FbTax tx, String op){
+    
+        String res = "";
+        
+        try {
+            Connection cn = em.unwrap(java.sql.Connection.class);//Conn EM
+            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_TAX (?,?,?,?,?,?,?)}"); 
+            cs.setInt(1, Integer.parseInt(String.valueOf(tx.getIdCia().getIdCia())));
+            cs.setInt(2, Integer.parseInt(String.valueOf(tx.getIdTax())));
+            cs.setString(3, tx.getName());
+            cs.setString(4, tx.getDescrip());
+            cs.setString(5, tx.getRate());
+            cs.setString(6, op);
+            cs.registerOutParameter(7, Types.VARCHAR);//setea parametro de salida --res
+            cs.execute();
+            res = cs.getString(7);
+            System.out.println("Resultado de la operacion res : " + res);
+            cs.close();
+            
+            
+        } catch (Exception e) {
+            res = "-2";
+            e.printStackTrace();
+        }
+        
+        
+        return res;
+    
+    
+    }
+    
+    
+    
+    
+    
 }
