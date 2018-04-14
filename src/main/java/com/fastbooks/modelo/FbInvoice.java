@@ -56,6 +56,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "FbInvoice.findByFechaCreacion", query = "SELECT f FROM FbInvoice f WHERE f.fechaCreacion = :fechaCreacion")})
 public class FbInvoice implements Serializable {
 
+    @OneToMany(mappedBy = "idInvoice")
+    private List<FbInvoiceTaxes> fbInvoiceTaxesList;
+
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
@@ -361,6 +364,15 @@ public class FbInvoice implements Serializable {
     @Override
     public String toString() {
         return "com.fastbooks.modelo.FbInvoice[ idInvoice=" + idInvoice + " ]";
+    }
+
+    @XmlTransient
+    public List<FbInvoiceTaxes> getFbInvoiceTaxesList() {
+        return fbInvoiceTaxesList;
+    }
+
+    public void setFbInvoiceTaxesList(List<FbInvoiceTaxes> fbInvoiceTaxesList) {
+        this.fbInvoiceTaxesList = fbInvoiceTaxesList;
     }
     
 }
