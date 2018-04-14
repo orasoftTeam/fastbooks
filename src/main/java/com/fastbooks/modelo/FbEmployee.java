@@ -363,16 +363,9 @@ public class FbEmployee implements Serializable {
         return true;
     }
 
-    /*
-    public String toString() {
-        return "com.fastbooks.modelo.FbEmployee[ idEmp=" + idEmp + " ]";
-   
-    }
- */
-
     @Override
     public String toString() {
-        return "FbEmployee{" + "idEmp=" + idEmp + ", title=" + title + ", firstname=" + firstname + ", middlename=" + middlename + ", lastname=" + lastname + ", suffixx=" + suffixx + ", email=" + email + ", phone=" + phone + ", mobile=" + mobile + ", gender=" + gender + ", displayName=" + displayName + ", note=" + note + ", status=" + status + ", street=" + street + ", city=" + city + ", state=" + state + ", postalCode=" + postalCode + ", country=" + country + ", billingRate=" + billingRate + ", employeeIdNo=" + employeeIdNo + ", employeeId=" + employeeId + ", hiredDate=" + hiredDate + ", released=" + released + ", dateOfBirth=" + dateOfBirth + ", idCia=" + idCia + '}';
+        return "com.fastbooks.modelo.FbEmployee[ idEmp=" + idEmp + " ]";
     }
     
 }

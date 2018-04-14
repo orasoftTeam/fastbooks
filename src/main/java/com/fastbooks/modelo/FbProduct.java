@@ -52,6 +52,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "FbProduct.findByTotalBundle", query = "SELECT f FROM FbProduct f WHERE f.totalBundle = :totalBundle")})
 public class FbProduct implements Serializable {
 
+    @OneToMany(mappedBy = "idProd")
+    private List<FbInvoiceDetail> fbInvoiceDetailList;
+
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
@@ -280,6 +283,15 @@ public class FbProduct implements Serializable {
     @Override
     public String toString() {
         return "com.fastbooks.modelo.FbProduct[ idProd=" + idProd + " ]";
+    }
+
+    @XmlTransient
+    public List<FbInvoiceDetail> getFbInvoiceDetailList() {
+        return fbInvoiceDetailList;
+    }
+
+    public void setFbInvoiceDetailList(List<FbInvoiceDetail> fbInvoiceDetailList) {
+        this.fbInvoiceDetailList = fbInvoiceDetailList;
     }
     
 }

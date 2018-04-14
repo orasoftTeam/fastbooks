@@ -33,18 +33,7 @@
 
                     <bnu:tabView activeIndex="0">
                         <bnu:tab title="#{messages.lblAllSales}">
-                            <br></br><br></br>
-                            <bnu:dropButton value="#{messages.lblNewTran}" style="float: right" look="success">
-                                <bnu:navLink value="#{messages.invoice}"></bnu:navLink>
-                                <bnu:navLink value="#{messages.payment}"></bnu:navLink>
-                                <bnu:navLink value="#{messages.estimate}"></bnu:navLink>
-                                <bnu:navLink value="#{messages.salesR}"></bnu:navLink>
-                                <bnu:navLink value="#{messages.creditN}"></bnu:navLink>
-                                <bnu:navLink value="#{messages.delayedC}"></bnu:navLink>
-                                <bnu:navLink value="#{messages.timeA}"></bnu:navLink>
-                            </bnu:dropButton> 
-                            <br></br><br></br><br></br><br></br>   
-                            <bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />
+                                <ui:include src="invoice.xhtml"/>
 
                         </bnu:tab>
 

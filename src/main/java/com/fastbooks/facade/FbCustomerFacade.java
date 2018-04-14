@@ -34,7 +34,22 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer>{
     public FbCustomerFacade() {
         super(FbCustomer.class);
     }
-    
+    public List<FbCustomer> getCustomersByIdCia (String idCust){
+        List<FbCustomer> listC = new ArrayList<>();
+        try {
+            String sql = "select * from fb_customer where id_cia = ? and status = 'A'";
+            //tambien q muestre el perfil
+            Query q = em.createNativeQuery(sql, FbCustomer.class);
+            q.setParameter(1, idCust);
+            listC = q.getResultList();
+            
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbUsuarioFacade.getUserbyCia()");
+            e.printStackTrace();
+           
+        }
+        return listC; 
+    }
      //Lista para obtener customer por compania
     public List<FbCustomer> getCustomer (String idCia){
         List<FbCustomer> listC = new ArrayList<>();

@@ -49,6 +49,11 @@ import javax.xml.bind.annotation.XmlTransient;
 public class FbCompania implements Serializable {
 
     @OneToMany(mappedBy = "idCia")
+    private List<FbCustomer> fbCustomerList;
+    @OneToMany(mappedBy = "idCia")
+    private List<FbInvoice> fbInvoiceList;
+
+    @OneToMany(mappedBy = "idCia")
     private List<FbCatProd> fbCatProdList;
     @OneToMany(mappedBy = "idCia")
     private List<FbProduct> fbProductList;
@@ -257,6 +262,24 @@ public class FbCompania implements Serializable {
 
     public void setFbProductList(List<FbProduct> fbProductList) {
         this.fbProductList = fbProductList;
+    }
+
+    @XmlTransient
+    public List<FbCustomer> getFbCustomerList() {
+        return fbCustomerList;
+    }
+
+    public void setFbCustomerList(List<FbCustomer> fbCustomerList) {
+        this.fbCustomerList = fbCustomerList;
+    }
+
+    @XmlTransient
+    public List<FbInvoice> getFbInvoiceList() {
+        return fbInvoiceList;
+    }
+
+    public void setFbInvoiceList(List<FbInvoice> fbInvoiceList) {
+        this.fbInvoiceList = fbInvoiceList;
     }
     
 }
