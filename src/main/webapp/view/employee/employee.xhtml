@@ -34,17 +34,17 @@
                             <bnu:button value="#{messages.btnAddEmployee}" look="success" onclick="$('.modalPseudoClass').modal()" ></bnu:button>
                         </bnu:column>
                     </bnu:row>
+                    <bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />
+                    <bnu:commandButton value="" iconAwesome="fa-print" style="float: right" />
                     <bnu:row>
                         <bnu:column span="12">
                             <bnu:messages  />
                         </bnu:column>
                     </bnu:row>
+
+
                     <p:separator/>
 
-                    <bnu:inputText placeholder="#{messages.inputFilterbyName}"  tiny-screen="one-fourth" style="font-family: cursive" />
-
-                    <bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />
-                    <bnu:commandButton value="" iconAwesome="fa-print" style="float: right" />
 
                     <!-- addind table for showing employees -->
                     <bnu:dataTable  styleClass="table table-striped" 
@@ -62,7 +62,7 @@
                     </bnu:dataTable>
                 </h:form>
                 <p:separator/>
-                
+
                 <!--Modal para agregar empleado -->
                 <bnu:modal  id="amodal" title="#{messages.btnAddEmployee}" styleClass="modalPseudoClass" backdrop="false" >
                     <h:form id="addModal">
@@ -117,19 +117,14 @@
                                 </bnu:column>
                             </bnu:panel>
                         </bnu:row>
-                        <bnu:row>
-                            <bnu:column span="12">
-                                <bnu:messages id="msg" />
-                            </bnu:column>
-                        </bnu:row>
+
                         <bnu:row>
                             <bnu:column span="6">
                                 <bnu:commandButton value="#{messages.save}" look="success" 
-                                                   action="#{employeeController.addEmployee()}" update="@form" >
+                                                   action="#{employeeController.addEmployee()}">
                                 </bnu:commandButton>
                             </bnu:column>
                         </bnu:row>
-
                     </h:form>
                 </bnu:modal>
 
@@ -139,13 +134,13 @@
                         <bnu:row>
                             <bnu:panel span="6">
                                 <bnu:inputText label="#{messages.titleC}" value="#{employeeController.empleado.title}" maxlength="50"></bnu:inputText>
-                                    <bnu:inputText label="#{messages.fNameC}" value="#{employeeController.empleado.firstname}"></bnu:inputText>
-                                    <bnu:inputText label="#{messages.midNameC}" value="#{employeeController.empleado.middlename}" maxlength="50"></bnu:inputText>
-                                    <bnu:inputText label="#{messages.lastNameC}" value="#{employeeController.empleado.lastname}" maxlength="50"></bnu:inputText>
-                                    <bnu:inputText label="#{messages.suffixC}" value="#{employeeController.empleado.suffixx}"></bnu:inputText>
-                                    <bnu:inputText label="#{messages.emailC}" value="#{employeeController.empleado.email}" maxlength="50"></bnu:inputText>            
-                                    <bnu:inputText label="#{messages.gender}" value="#{employeeController.empleado.gender}" maxlength="20"></bnu:inputText>                             
-                                    <bnu:inputText label="#{messages.dateBirth}" value="#{employeeController.empleado.dateOfBirth}" maxlength="20"></bnu:inputText>
+                                <bnu:inputText label="#{messages.fNameC}" value="#{employeeController.empleado.firstname}"></bnu:inputText>
+                                <bnu:inputText label="#{messages.midNameC}" value="#{employeeController.empleado.middlename}" maxlength="50"></bnu:inputText>
+                                <bnu:inputText label="#{messages.lastNameC}" value="#{employeeController.empleado.lastname}" maxlength="50"></bnu:inputText>
+                                <bnu:inputText label="#{messages.suffixC}" value="#{employeeController.empleado.suffixx}"></bnu:inputText>
+                                <bnu:inputText label="#{messages.emailC}" value="#{employeeController.empleado.email}" maxlength="50"></bnu:inputText>            
+                                <bnu:inputText label="#{messages.gender}" value="#{employeeController.empleado.gender}" maxlength="20"></bnu:inputText>                             
+                                <bnu:inputText label="#{messages.dateBirth}" value="#{employeeController.empleado.dateOfBirth}" maxlength="20"></bnu:inputText>
                             </bnu:panel>
                             <bnu:panel span="6">
                                 <bnu:column>    
@@ -171,13 +166,13 @@
                                 </bnu:column>
                             </bnu:panel>
                         </bnu:row>
-                        
-                            <bnu:commandButton value="#{messages.save}" look="success" action="#{employeeController.editEmployee()}"  />
-                        
+
+                        <bnu:commandButton value="#{messages.save}" look="success" action="#{employeeController.editEmployee()}"  />
+
 
                     </h:form>
                 </bnu:modal>
-                
+
                 <!-- modal delete-->
                 <bnu:modal id="cmodal"  styleClass="modalPseudoClass3" backdrop="false" closable="false" closeOnEscape="false"  >
                     <h:form id="deleteForm">
@@ -186,7 +181,7 @@
                         <bnu:button value="#{messages.No}" dismiss="modal" look="danger" />
                     </h:form>
                 </bnu:modal>
-                
+
 
             </ui:define>
         </ui:composition>
