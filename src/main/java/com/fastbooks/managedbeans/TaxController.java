@@ -142,23 +142,31 @@ public class TaxController implements Serializable {
     public void editTax() {
         System.out.println("Ingresando a actualizar tax");
         String res = "";
+       // if (valCampos()) {
+                if (this.tax.getRate().length() == 1) {
+                this.tax.setRate("0.0" + this.tax.getRate());
 
-        try {
-            res = tFacade.actTax(tax, "U");
-            if (res.equals("0")) {
-                validationBean.lanzarMensaje("info", "taxUpdated", "blank");
-            } else if (res.equals("-1")) {
-                validationBean.lanzarMensaje("error", "taxRepeatFail", "blank");
-            } else if (res.equals("-2")) {
-                validationBean.lanzarMensaje("error", "unexpectedError", "blank");
+            } else if (this.tax.getRate().length() > 1) {
+                this.tax.setRate("0." + this.tax.getRate());
+
             }
-            tax = new FbTax(); //limpiando
 
-        } catch (Exception e) {
-            System.out.println("com.fastbooks.managedbeans.TaxController.editTax()");
-            e.printStackTrace();
+            try {
+                res = tFacade.actTax(tax, "U");
+                if (res.equals("0")) {
+                    validationBean.lanzarMensaje("info", "taxUpdated", "blank");
+                } else if (res.equals("-1")) {
+                    validationBean.lanzarMensaje("error", "taxRepeatFail", "blank");
+                } else if (res.equals("-2")) {
+                    validationBean.lanzarMensaje("error", "unexpectedError", "blank");
+                }
+                tax = new FbTax(); //limpiando
+
+            } catch (Exception e) {
+                System.out.println("com.fastbooks.managedbeans.TaxController.editTax()");
+                e.printStackTrace();
+            //}
         }
-
     }
 
     public void deleteTax() {
@@ -202,7 +210,7 @@ public class TaxController implements Serializable {
             c++;
         }
         if (this.tx.getRate().equals("00") || this.tx.getRate().equals("0")) {
-
+            System.out.println("Obteniendo valor rate" + tx.getRate());
             c++;
         }
 
@@ -231,7 +239,7 @@ public class TaxController implements Serializable {
         this.taxName = "";
         this.descripcion = "";
         this.rate = "";
-        this.showForm = false;
+        this.showForm = false; 
 
     }
 }
