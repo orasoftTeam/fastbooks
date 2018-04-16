@@ -184,6 +184,29 @@ public class ValidationBean {
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(typeMessage, getMsgBundle(titulo), getMsgBundle(msg)));
     }
+    
+     public void lanzarMensajeSinBundle(String tipo, String titulo, String msg) {
+        FacesMessage.Severity typeMessage;
+        switch (tipo.toLowerCase()) {
+            case "info":
+                typeMessage = FacesMessage.SEVERITY_INFO;
+                break;
+            case "warn":
+                typeMessage = FacesMessage.SEVERITY_WARN;
+                break;
+            case "fatal":
+                typeMessage = FacesMessage.SEVERITY_FATAL;
+                break;
+            case "error":
+                typeMessage = FacesMessage.SEVERITY_ERROR;
+                break;
+            default:
+                typeMessage = FacesMessage.SEVERITY_INFO;
+                break;
+        }
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage(typeMessage, titulo, msg));
+    }
 
     public String getMsgBundle(String key) {
         ResourceBundle bundle = ResourceBundle.getBundle("/com/fastbooks/messages", FacesContext.getCurrentInstance().getViewRoot().getLocale());
