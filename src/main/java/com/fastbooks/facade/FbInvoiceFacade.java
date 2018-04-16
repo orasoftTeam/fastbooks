@@ -8,17 +8,29 @@ package com.fastbooks.facade;
 import com.fastbooks.modelo.FbInvoice;
 import com.fastbooks.modelo.FbInvoiceDetail;
 import com.fastbooks.modelo.FbInvoiceTaxes;
-import com.fastbooks.modelo.FbProduct;
+import com.fastbooks.util.GlobalParameters;
+import java.io.File;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.Stateless;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import net.sf.jasperreports.engine.JRExporter;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
 
 /**
  *
@@ -42,8 +54,8 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
     List<FbInvoice> list = new ArrayList<>();
         try {
             String sql = "select * from fb_invoice where id_cia = ?'";
-            Query q = em.createNativeQuery(sql, FbInvoice.class);
-            q.setParameter(1, idCia);
+            Query q = em.createNativeQuery("select * from fb_invoice where id_cia="+idCia, FbInvoice.class);
+            //q.setParameter(1, idCia);
             list = q.getResultList();
             
         } catch (Exception e) {
@@ -63,8 +75,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
         pTaxProdIds IN VARCHAR2, op IN VARCHAR2, res OUT VARCHAR2); 
     */
     
-     public String actProd(FbInvoice in,String op){
-         SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
+     public String actInvoice(FbInvoice in,String op){
     String res = "";
     String pProdsIds = "";
     String pQuants = "";
@@ -72,6 +83,8 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
     String pFromAmounts = "";
     String pTaxAmounts = "";
     String pTaxProdsIds = "";
+    String temp = null;
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         try {
             Connection cn = em.unwrap(java.sql.Connection.class);
             CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_INVOICE (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
@@ -81,8 +94,16 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
             cs.setString(4, in.getType());
             cs.setString(5, in.getNoDot());
             cs.setString(6, in.getCustEmail());
-            cs.setString(7, sdf.format(in.getInDate()));
-            cs.setString(8, sdf.format(in.getDueDate()));
+            if (in.getInDate() != null) {
+               temp = sdf.format(in.getInDate()); 
+            }
+            
+            cs.setString(7, temp );
+            if (in.getDueDate() != null) {
+             temp = sdf.format(in.getDueDate());   
+            }
+            
+            cs.setString(8, temp );
             cs.setDouble(9, Double.parseDouble(in.getActualBalance().toString()));
             cs.setDouble(10, Double.parseDouble(in.getSubTotal().toString()));
             cs.setDouble(11, Double.parseDouble(in.getTaxTotal().toString()));
@@ -93,7 +114,11 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
             cs.setString(16, in.getTerms());
             cs.setString(17, in.getTrackNum());
             cs.setString(18, in.getShipVia());
-            cs.setString(19, sdf.format(in.getShDate()));
+            if (in.getShDate() != null) {
+              temp = sdf.format(in.getShDate());  
+            }
+            
+            cs.setString(19, temp);
             cs.setDouble(20, Double.parseDouble(in.getShCost().toString()));
             cs.setString(21, in.getMessageInvoice());
             cs.setString(22, in.getAttachment());
@@ -131,5 +156,39 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
         System.out.println("Facade Resultado de operacion: " + res);
         return res;
     }
+     
+     
+     public void generateInvoice(FbInvoice i){
+            Connection cn = em.unwrap(java.sql.Connection.class);
+            String dir = "view"+File.separator+"jasper"+File.separator+"report1.jrxml";
+            GlobalParameters gp = new GlobalParameters();
+            File file = new File(gp.getAppPath()+ File.separator + "pdf"+File.separator+"cia" + i.getIdCia().getIdCia().toString()+
+                    File.separator);
+            file.mkdirs();
+            String destino= gp.getAppPath()+ File.separator + "pdf"+File.separator+"cia" + i.getIdCia().getIdCia().toString()+
+                    File.separator + "IN"+i.getNoDot()+i.getIdCia().getNomCom()+".pdf";
+            
+            String pdfName = File.separator + "IN"+i.getNoDot()+i.getIdCia().getNomCom()+".pdf";
+             Map parametersMap = new HashMap();
+            parametersMap.put("idInvoice",i.getIdInvoice().toString() );
+            try {
+             ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                String realPath = ec.getRealPath("/");
+                System.out.println(realPath + dir);
+                JasperReport report = JasperCompileManager.compileReport(realPath + dir);
+                
+                
+                JasperPrint print = JasperFillManager.fillReport(report,parametersMap, cn);
+                JRExporter exporter = new JRPdfExporter();
+                
+                exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, destino);
+                exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
+                exporter.exportReport();
+                System.out.println("File Created: " + destino);
+         } catch (Exception e) {
+                System.out.println("com.fastbooks.facade.FbInvoiceFacade.generateInvoice()");
+                e.printStackTrace();
+         }
+     }
     
 }

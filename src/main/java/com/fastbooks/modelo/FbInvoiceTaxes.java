@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author DELL
+ * @author Luis Eduardo Valdez
  */
 @Entity
 @Table(name = "FB_INVOICE_TAXES")
@@ -33,10 +33,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "FbInvoiceTaxes.findAll", query = "SELECT f FROM FbInvoiceTaxes f")
     , @NamedQuery(name = "FbInvoiceTaxes.findByIdInvoiceTax", query = "SELECT f FROM FbInvoiceTaxes f WHERE f.idInvoiceTax = :idInvoiceTax")
-    , @NamedQuery(name = "FbInvoiceTaxes.findByFromAmount", query = "SELECT f FROM FbInvoiceTaxes f WHERE f.fromAmount = :fromAmount")
-    , @NamedQuery(name = "FbInvoiceTaxes.findByTaxAmount", query = "SELECT f FROM FbInvoiceTaxes f WHERE f.taxAmount = :taxAmount")
     , @NamedQuery(name = "FbInvoiceTaxes.findByIdProds", query = "SELECT f FROM FbInvoiceTaxes f WHERE f.idProds = :idProds")
-    , @NamedQuery(name = "FbInvoiceTaxes.findByFechaCreacion", query = "SELECT f FROM FbInvoiceTaxes f WHERE f.fechaCreacion = :fechaCreacion")})
+    , @NamedQuery(name = "FbInvoiceTaxes.findByFechaCreacion", query = "SELECT f FROM FbInvoiceTaxes f WHERE f.fechaCreacion = :fechaCreacion")
+    , @NamedQuery(name = "FbInvoiceTaxes.findByFromAmount", query = "SELECT f FROM FbInvoiceTaxes f WHERE f.fromAmount = :fromAmount")
+    , @NamedQuery(name = "FbInvoiceTaxes.findByTaxAmount", query = "SELECT f FROM FbInvoiceTaxes f WHERE f.taxAmount = :taxAmount")})
 public class FbInvoiceTaxes implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,16 +46,16 @@ public class FbInvoiceTaxes implements Serializable {
     @NotNull
     @Column(name = "ID_INVOICE_TAX")
     private BigDecimal idInvoiceTax;
-    @Column(name = "FROM_AMOUNT")
-    private BigDecimal fromAmount;
-    @Column(name = "TAX_AMOUNT")
-    private BigDecimal taxAmount;
     @Size(max = 100)
     @Column(name = "ID_PRODS")
     private String idProds;
     @Column(name = "FECHA_CREACION")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
+    @Column(name = "FROM_AMOUNT")
+    private BigDecimal fromAmount;
+    @Column(name = "TAX_AMOUNT")
+    private BigDecimal taxAmount;
     @JoinColumn(name = "ID_INVOICE", referencedColumnName = "ID_INVOICE")
     @ManyToOne
     private FbInvoice idInvoice;
@@ -78,22 +78,6 @@ public class FbInvoiceTaxes implements Serializable {
         this.idInvoiceTax = idInvoiceTax;
     }
 
-    public BigDecimal getFromAmount() {
-        return fromAmount;
-    }
-
-    public void setFromAmount(BigDecimal fromAmount) {
-        this.fromAmount = fromAmount;
-    }
-
-    public BigDecimal getTaxAmount() {
-        return taxAmount;
-    }
-
-    public void setTaxAmount(BigDecimal taxAmount) {
-        this.taxAmount = taxAmount;
-    }
-
     public String getIdProds() {
         return idProds;
     }
@@ -108,6 +92,22 @@ public class FbInvoiceTaxes implements Serializable {
 
     public void setFechaCreacion(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+
+    public BigDecimal getFromAmount() {
+        return fromAmount;
+    }
+
+    public void setFromAmount(BigDecimal fromAmount) {
+        this.fromAmount = fromAmount;
+    }
+
+    public BigDecimal getTaxAmount() {
+        return taxAmount;
+    }
+
+    public void setTaxAmount(BigDecimal taxAmount) {
+        this.taxAmount = taxAmount;
     }
 
     public FbInvoice getIdInvoice() {

@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author DELL
+ * @author Luis Eduardo Valdez
  */
 @Entity
 @Table(name = "FB_INVOICE")

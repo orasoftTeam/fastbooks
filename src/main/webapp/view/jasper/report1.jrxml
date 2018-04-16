@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6da208d6-0ca8-4ca1-9eb0-5fbb88915a24">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idInvoice" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select * from fb_invoice i inner join fb_invoice_detail d on d.id_invoice = i.id_invoice where i.id_invoice =$P{idInvoice}]]>
+	</queryString>
+	<field name="ID_INVOICE" class="java.math.BigDecimal"/>
+	<field name="ID_CIA" class="java.math.BigDecimal"/>
+	<field name="ID_CUST" class="java.math.BigDecimal"/>
+	<field name="TYPE" class="java.lang.String"/>
+	<field name="NO_DOT" class="java.lang.String"/>
+	<field name="CUST_EMAIL" class="java.lang.String"/>
+	<field name="IN_DATE" class="java.sql.Timestamp"/>
+	<field name="DUE_DATE" class="java.sql.Timestamp"/>
+	<field name="ACTUAL_BALANCE" class="java.math.BigDecimal"/>
+	<field name="SUB_TOTAL" class="java.math.BigDecimal"/>
+	<field name="TAX_TOTAL" class="java.math.BigDecimal"/>
+	<field name="TOTAL" class="java.math.BigDecimal"/>
+	<field name="STATUS" class="java.lang.String"/>
+	<field name="BI_ADDRESS" class="oracle.jdbc.OracleClob"/>
+	<field name="SH_ADDRESS" class="oracle.jdbc.OracleClob"/>
+	<field name="TERMS" class="java.lang.String"/>
+	<field name="TRACK_NUM" class="java.lang.String"/>
+	<field name="SHIP_VIA" class="java.lang.String"/>
+	<field name="SH_DATE" class="java.sql.Timestamp"/>
+	<field name="SH_COST" class="java.math.BigDecimal"/>
+	<field name="MESSAGE_INVOICE" class="oracle.jdbc.OracleClob"/>
+	<field name="MESSAGE_STMNT" class="oracle.jdbc.OracleClob"/>
+	<field name="ATTACHMENT" class="java.lang.String"/>
+	<field name="FECHA_CREACION" class="java.sql.Timestamp"/>
+	<field name="ID_DETAIL" class="java.math.BigDecimal"/>
+	<field name="ID_PROD" class="java.math.BigDecimal"/>
+	<field name="ITEM_NAME" class="java.lang.String"/>
+	<field name="ITEM_SKU" class="java.lang.String"/>
+	<field name="ITEM_DESC" class="oracle.jdbc.OracleClob"/>
+	<field name="ITEM_QUANT" class="java.math.BigDecimal"/>
+	<field name="ITEM_RATE" class="java.math.BigDecimal"/>
+	<field name="ITEM_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="ITEM_TAX" class="java.lang.String"/>
+	<group name="NO_DOT">
+		<groupExpression><![CDATA[$F{NO_DOT}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<textField>
+				<reportElement x="29" y="29" width="100" height="20" uuid="29e0dfad-9f2e-42ae-b2eb-f9a07cbe012a"/>
+				<textFieldExpression><![CDATA[$F{NO_DOT}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="226" y="29" width="100" height="20" uuid="d8d561ca-dbe3-47b5-a8fe-45ba31c4f0ea"/>
+				<text><![CDATA[ITEM_NAME]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="226" y="0" width="100" height="20" uuid="f29f4abc-9d00-401a-8338-18fbcdea8de0"/>
+				<textFieldExpression><![CDATA[$F{ITEM_NAME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

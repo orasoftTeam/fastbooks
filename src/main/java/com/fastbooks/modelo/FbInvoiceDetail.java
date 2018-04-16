@@ -27,21 +27,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author dell
+ * @author Luis Eduardo Valdez
  */
 @Entity
 @Table(name = "FB_INVOICE_DETAIL")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "FbInvoiceDetail.findAll", query = "SELECT f FROM FbInvoiceDetail f"),
-    @NamedQuery(name = "FbInvoiceDetail.findByIdDetail", query = "SELECT f FROM FbInvoiceDetail f WHERE f.idDetail = :idDetail"),
-    @NamedQuery(name = "FbInvoiceDetail.findByItemName", query = "SELECT f FROM FbInvoiceDetail f WHERE f.itemName = :itemName"),
-    @NamedQuery(name = "FbInvoiceDetail.findByItemSku", query = "SELECT f FROM FbInvoiceDetail f WHERE f.itemSku = :itemSku"),
-    @NamedQuery(name = "FbInvoiceDetail.findByItemQuant", query = "SELECT f FROM FbInvoiceDetail f WHERE f.itemQuant = :itemQuant"),
-    @NamedQuery(name = "FbInvoiceDetail.findByItemRate", query = "SELECT f FROM FbInvoiceDetail f WHERE f.itemRate = :itemRate"),
-    @NamedQuery(name = "FbInvoiceDetail.findByItemAmount", query = "SELECT f FROM FbInvoiceDetail f WHERE f.itemAmount = :itemAmount"),
-    @NamedQuery(name = "FbInvoiceDetail.findByItemTax", query = "SELECT f FROM FbInvoiceDetail f WHERE f.itemTax = :itemTax"),
-    @NamedQuery(name = "FbInvoiceDetail.findByFechaCreacion", query = "SELECT f FROM FbInvoiceDetail f WHERE f.fechaCreacion = :fechaCreacion")})
+    @NamedQuery(name = "FbInvoiceDetail.findAll", query = "SELECT f FROM FbInvoiceDetail f")
+    , @NamedQuery(name = "FbInvoiceDetail.findByIdDetail", query = "SELECT f FROM FbInvoiceDetail f WHERE f.idDetail = :idDetail")
+    , @NamedQuery(name = "FbInvoiceDetail.findByItemName", query = "SELECT f FROM FbInvoiceDetail f WHERE f.itemName = :itemName")
+    , @NamedQuery(name = "FbInvoiceDetail.findByItemSku", query = "SELECT f FROM FbInvoiceDetail f WHERE f.itemSku = :itemSku")
+    , @NamedQuery(name = "FbInvoiceDetail.findByItemQuant", query = "SELECT f FROM FbInvoiceDetail f WHERE f.itemQuant = :itemQuant")
+    , @NamedQuery(name = "FbInvoiceDetail.findByItemRate", query = "SELECT f FROM FbInvoiceDetail f WHERE f.itemRate = :itemRate")
+    , @NamedQuery(name = "FbInvoiceDetail.findByItemAmount", query = "SELECT f FROM FbInvoiceDetail f WHERE f.itemAmount = :itemAmount")
+    , @NamedQuery(name = "FbInvoiceDetail.findByItemTax", query = "SELECT f FROM FbInvoiceDetail f WHERE f.itemTax = :itemTax")
+    , @NamedQuery(name = "FbInvoiceDetail.findByFechaCreacion", query = "SELECT f FROM FbInvoiceDetail f WHERE f.fechaCreacion = :fechaCreacion")})
 public class FbInvoiceDetail implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -72,12 +72,12 @@ public class FbInvoiceDetail implements Serializable {
     @Column(name = "FECHA_CREACION")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
-    @JoinColumn(name = "ID_PROD", referencedColumnName = "ID_PROD")
-    @ManyToOne
-    private FbProduct idProd;
     @JoinColumn(name = "ID_INVOICE", referencedColumnName = "ID_INVOICE")
     @ManyToOne
     private FbInvoice idInvoice;
+    @JoinColumn(name = "ID_PROD", referencedColumnName = "ID_PROD")
+    @ManyToOne
+    private FbProduct idProd;
 
     public FbInvoiceDetail() {
     }
@@ -158,20 +158,20 @@ public class FbInvoiceDetail implements Serializable {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public FbProduct getIdProd() {
-        return idProd;
-    }
-
-    public void setIdProd(FbProduct idProd) {
-        this.idProd = idProd;
-    }
-
     public FbInvoice getIdInvoice() {
         return idInvoice;
     }
 
     public void setIdInvoice(FbInvoice idInvoice) {
         this.idInvoice = idInvoice;
+    }
+
+    public FbProduct getIdProd() {
+        return idProd;
+    }
+
+    public void setIdProd(FbProduct idProd) {
+        this.idProd = idProd;
     }
 
     @Override

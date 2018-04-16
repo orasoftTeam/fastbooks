@@ -17,7 +17,7 @@
         #{invoiceController.parseDates()}
         <bnu:row>
             <bnu:column span="12">
-                <h3>Invoice</h3>
+                <h3>#{messages.lblInvoiceTypeIn}</h3>
                 
             </bnu:column>
             
@@ -31,7 +31,7 @@
             <p:separator/>
         <bnu:row>
             <bnu:column span="4">
-                <bnu:selectOneMenu label="Customer" value="#{invoiceController.idCust}" onchange="ajax:invoiceController.changeCust();" update="@form" >
+                <bnu:selectOneMenu label="#{messages.lblInvocieCustomer}" value="#{invoiceController.idCust}" onchange="ajax:invoiceController.changeCust();" update="@form" >
                     <f:selectItem  itemLabel="#{messages.selectOne}" itemValue="0"  />
             <f:selectItems value="#{invoiceController.CList}" var="cust"
                            itemValue="#{cust.idCust}" itemLabel="#{cust.title} #{cust.firstname} #{cust.lastname}"  itemDescription="#{cust.company}" />
@@ -39,50 +39,50 @@
                 
             </bnu:column>
             <bnu:column span="3">
-                <bnu:inputText label="Email" value="#{invoiceController.email}"  id="email" placeholder="Customer email" maxlength="20" />
+                <bnu:inputText label="#{messages.email}" value="#{invoiceController.email}"  id="email" placeholder="Customer email" maxlength="20" />
             </bnu:column>
             <bnu:column span="3">
                 
             </bnu:column>
             <bnu:column span="2">
-                <h4 style="margin-top: -5px">Balance due</h4>
+                <h4 style="margin-top: -5px">#{messages.lblInvoiceBalanceDue}</h4>
                 <h1 style="margin-top: -5px" >#{invoiceController.DBalance}</h1>
             </bnu:column>
         </bnu:row>
             <bnu:row>
             <bnu:column span="4">
-                <bnu:inputTextarea label="Billing address" maxlength="250" value="#{invoiceController.biAddress}" />
+                <bnu:inputTextarea label="#{messages.billingA}" maxlength="250" value="#{invoiceController.biAddress}" />
                 
             </bnu:column>
             <bnu:column span="2">
-                <bnu:selectOneMenu label="Terms" value="#{invoiceController.termDays}" onchange="ajax:invoiceController.updateDate();" update="@form" >
+                <bnu:selectOneMenu label="#{messages.lblInvoiceTerms}" value="#{invoiceController.termDays}" onchange="ajax:invoiceController.updateDate();" update="@form" >
                     <f:selectItems value="#{invoiceController.TList}" var="term"
                                    itemLabel="#{term.display}" itemValue="#{term.days}" />
                 </bnu:selectOneMenu>
             </bnu:column>
             <bnu:column span="2">
-                <strong><h:outputText value="Invoice date"  /></strong>
+                <strong><h:outputText value="#{messages.lblInvoiceInDate}"  /></strong>
                 <bnu:datepicker style="margin-top: 4px;" value="#{invoiceController.invoiceDate}" ></bnu:datepicker>
             </bnu:column>
                 <bnu:column span="2">
-               <strong><h:outputText value="Due date"  /></strong>
+                    <strong><h:outputText value="#{messages.lblIncoiceDueDate}"  /></strong>
                <bnu:datepicker style="margin-top: 4px;" value="#{invoiceController.dueDate}" ></bnu:datepicker>
             </bnu:column>
         </bnu:row>
             <bnu:row>
             <bnu:column span="4">
-                <bnu:inputTextarea label="Shipping address" value="#{invoiceController.shAddress}" maxlength="250" />
+                <bnu:inputTextarea label="#{messages.shippingA}" value="#{invoiceController.shAddress}" maxlength="250" />
                 
             </bnu:column>
             <bnu:column span="2">
-                <bnu:inputText label="Ship via" maxlength="15" />
+                <bnu:inputText label="#{messages.lblInvoiceShipVia}" maxlength="15" value="#{invoiceController.shVia}" />
             </bnu:column>
             <bnu:column span="2">
-                <strong><h:outputText value="Shipping date"  /></strong>
+                <strong><h:outputText value="#{messages.lblInvoiceShipDate}"  /></strong>
                 <bnu:datepicker style="margin-top: 4px;" value="#{invoiceController.shipDate}" ></bnu:datepicker>
             </bnu:column>
                 <bnu:column span="2">
-                    <bnu:inputText label="Tracking no." onkeyup="soloNumeros(this)" maxlength="15" />
+                    <bnu:inputText label="#{messages.lblInvoiceTrackNum}" onkeyup="soloNumeros(this)" maxlength="15" value="#{invoiceController.trackNo}" />
             </bnu:column>
         </bnu:row>
             <p:separator/>
@@ -96,7 +96,7 @@
         </bnu:row>
             <bnu:row>
                 <bnu:column span="6">
-                    <bnu:selectOneMenu label="Product/Service" value="#{invoiceController.idProd}" style="font-weight: bold" >
+                    <bnu:selectOneMenu label="#{messages.lblProductComplete}" value="#{invoiceController.idProd}" style="font-weight: bold" >
                         <f:selectItem  itemLabel="#{messages.selectOne}" itemValue="0"  />
                         <f:selectItems value="#{invoiceController.PList}" var="prod" 
                                        itemLabel="#{invoiceController.formatProdDisplay(prod)}" itemValue="#{prod.idProd}" />
@@ -108,7 +108,7 @@
                     
                 </bnu:column>-->
                 <bnu:column span="6">
-                    <bnu:commandButton ajax="true" update="@form" value="Add product" look="success" style="margin-top: 25px;width: 100%" action="#{invoiceController.addDetail()}" />
+                    <bnu:commandButton ajax="true" update="@form" value="#{messages.lblAddProductBundle}" look="success" style="margin-top: 25px;width: 100%" action="#{invoiceController.addDetail()}" />
                     
                 </bnu:column>
             </bnu:row>
@@ -117,8 +117,8 @@
             <bnu:row>
                 <bnu:column span="4">
                     <bnu:selectOneMenu  update="@form" value="#{invoiceController.hasTax}" onchange="ajax:invoiceController.updateTotal();" >
-                        <f:selectItem itemLabel="Invoice with taxes" itemValue="true" />
-                        <f:selectItem itemLabel="Invoice without taxes" itemValue="false" />
+                        <f:selectItem itemLabel="#{messages.lblInvoiceWTax}" itemValue="true" />
+                        <f:selectItem itemLabel="#{messages.lblInvoiceWTax}" itemValue="false" />
                     </bnu:selectOneMenu>
                     
                 </bnu:column>
@@ -132,15 +132,15 @@
                 id="tblDetail"
                 value="#{invoiceController.DList}"
                 var="det">
-                <bnu:dataTableColumn label="Product/Service" value="#{det.itemName}" />
-                <bnu:dataTableColumn label="Sku" value="#{det.itemSku}" />
-                <bnu:dataTableColumn label="Description" value="#{det.itemDesc}" />
-                <bnu:dataTableColumn label="Qty"  >
+                <bnu:dataTableColumn label="#{messages.lblProductComplete}" value="#{det.itemName}" />
+                <bnu:dataTableColumn label="#{messages.lblSKU}" value="#{det.itemSku}" />
+                <bnu:dataTableColumn label="#{messages.lblDesc}" value="#{det.itemDesc}" />
+                <bnu:dataTableColumn label="#{messages.lblQuant}"  >
                     <bnu:inputText  value="#{det.itemQuant}"  tooltip="#{invoiceController.tooltipQuant(det.idProd)}" onkeyup="soloNumeros(this)" maxlength="4"   onblur="ajax:invoiceController.updateTotal();"  update="@form" />
                 </bnu:dataTableColumn>
-                <bnu:dataTableColumn label="Rate" value="#{det.itemRate}" />
-                <bnu:dataTableColumn label="Amount" value="#{det.itemAmount}" />
-                <bnu:dataTableColumn label="Tax" rendered="#{invoiceController.hasTax}" >
+                <bnu:dataTableColumn label="#{messages.lblInDetRate}" value="#{det.itemRate}" />
+                <bnu:dataTableColumn label="#{messages.lblInDetAmount}" value="#{det.itemAmount}" />
+                <bnu:dataTableColumn label="#{messages.lblInvoiceTax}" rendered="#{invoiceController.hasTax}" >
                     <bnu:selectOneMenu value="#{det.itemTax}" update="@form" onchange="ajax:invoiceController.updateTotal();" >
                         <f:selectItems value="#{invoiceController.taxList}" var="tax" itemLabel="#{tax.name} (#{tax.rate}%)" itemValue="#{tax.idTax.toString()}" />
                     </bnu:selectOneMenu>
@@ -157,7 +157,7 @@
                     <!--<bnu:inputTextarea label="Message displayed on invoice" />-->
                 </bnu:column>
                 <bnu:column span="2">
-                    <h4> Subtotal</h4>
+                    <h4> #{messages.lblInvoiceSubTotal}</h4>
                 </bnu:column>
                 <bnu:column span="2">
                     <h4> #{invoiceController.DSubTotal}</h4>
@@ -168,7 +168,7 @@
                     
                 </bnu:column>
                 <bnu:column span="2">
-                    <h4>Shipping Cost</h4>
+                    <h4>#{messages.lblInShipCost}</h4>
                 </bnu:column>
                 <bnu:column span="2">
                     <bnu:inputText value="#{invoiceController.shCost}" maxlength="6"  onblur="ajax:invoiceController.updateTotal();"  update="@form" />
@@ -180,7 +180,7 @@
                     
                 </bnu:column>
                 <bnu:column span="2">
-                    <h4>#{it.idTax.name} #{it.idTax.rate}% of #{invoiceController.formatOutput(it.fromAmount)}</h4>
+                    <h4>#{it.idTax.name} #{it.idTax.rate}% #{messages.lblInTaxOf} #{invoiceController.formatOutput(it.fromAmount)}</h4>
                 </bnu:column>
                 <bnu:column span="2">
                     <h4>#{invoiceController.formatOutput(it.taxAmount)}</h4>
@@ -193,7 +193,7 @@
                     
                 </bnu:column>
                 <bnu:column span="2">
-                    <h4>Total</h4>
+                    <h4>#{messages.lblInvoiceTotal}</h4>
                 </bnu:column>
                 <bnu:column span="2">
                     <h4>#{invoiceController.DTotal}</h4>
@@ -204,7 +204,7 @@
                     
                 </bnu:column>
                 <bnu:column span="2">
-                    <h4>Balance due</h4>
+                    <h4>#{messages.lblInvoiceBalanceDue}</h4>
                 </bnu:column>
                 <bnu:column span="2">
                     <h4>#{invoiceController.DBalance}</h4>
@@ -216,7 +216,7 @@
                 <bnu:column span="6"></bnu:column>
                 <bnu:column span="3">
                     
-                    <bnu:commandButton value="Save"  look="success" size="lg" style="width: 100%" action="#{invoiceController.save()}" />
+                    <bnu:commandButton value="#{messages.save}"  look="success" size="lg" style="width: 100%" action="#{invoiceController.save()}" />
                 </bnu:column>
                 <!--<bnu:column span="3">
                     <bnu:commandButton value="Close"  look="danger" size="lg" style="width: 100%" />
