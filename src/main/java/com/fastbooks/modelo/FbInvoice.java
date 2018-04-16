@@ -29,35 +29,32 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author dell
+ * @author Luis Eduardo Valdez
  */
 @Entity
 @Table(name = "FB_INVOICE")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "FbInvoice.findAll", query = "SELECT f FROM FbInvoice f"),
-    @NamedQuery(name = "FbInvoice.findByIdInvoice", query = "SELECT f FROM FbInvoice f WHERE f.idInvoice = :idInvoice"),
-    @NamedQuery(name = "FbInvoice.findByType", query = "SELECT f FROM FbInvoice f WHERE f.type = :type"),
-    @NamedQuery(name = "FbInvoice.findByNoDot", query = "SELECT f FROM FbInvoice f WHERE f.noDot = :noDot"),
-    @NamedQuery(name = "FbInvoice.findByCustEmail", query = "SELECT f FROM FbInvoice f WHERE f.custEmail = :custEmail"),
-    @NamedQuery(name = "FbInvoice.findByInDate", query = "SELECT f FROM FbInvoice f WHERE f.inDate = :inDate"),
-    @NamedQuery(name = "FbInvoice.findByDueDate", query = "SELECT f FROM FbInvoice f WHERE f.dueDate = :dueDate"),
-    @NamedQuery(name = "FbInvoice.findByActualBalance", query = "SELECT f FROM FbInvoice f WHERE f.actualBalance = :actualBalance"),
-    @NamedQuery(name = "FbInvoice.findBySubTotal", query = "SELECT f FROM FbInvoice f WHERE f.subTotal = :subTotal"),
-    @NamedQuery(name = "FbInvoice.findByTaxTotal", query = "SELECT f FROM FbInvoice f WHERE f.taxTotal = :taxTotal"),
-    @NamedQuery(name = "FbInvoice.findByTotal", query = "SELECT f FROM FbInvoice f WHERE f.total = :total"),
-    @NamedQuery(name = "FbInvoice.findByStatus", query = "SELECT f FROM FbInvoice f WHERE f.status = :status"),
-    @NamedQuery(name = "FbInvoice.findByTerms", query = "SELECT f FROM FbInvoice f WHERE f.terms = :terms"),
-    @NamedQuery(name = "FbInvoice.findByTrackNum", query = "SELECT f FROM FbInvoice f WHERE f.trackNum = :trackNum"),
-    @NamedQuery(name = "FbInvoice.findByShipVia", query = "SELECT f FROM FbInvoice f WHERE f.shipVia = :shipVia"),
-    @NamedQuery(name = "FbInvoice.findByShDate", query = "SELECT f FROM FbInvoice f WHERE f.shDate = :shDate"),
-    @NamedQuery(name = "FbInvoice.findByShCost", query = "SELECT f FROM FbInvoice f WHERE f.shCost = :shCost"),
-    @NamedQuery(name = "FbInvoice.findByAttachment", query = "SELECT f FROM FbInvoice f WHERE f.attachment = :attachment"),
-    @NamedQuery(name = "FbInvoice.findByFechaCreacion", query = "SELECT f FROM FbInvoice f WHERE f.fechaCreacion = :fechaCreacion")})
+    @NamedQuery(name = "FbInvoice.findAll", query = "SELECT f FROM FbInvoice f")
+    , @NamedQuery(name = "FbInvoice.findByIdInvoice", query = "SELECT f FROM FbInvoice f WHERE f.idInvoice = :idInvoice")
+    , @NamedQuery(name = "FbInvoice.findByType", query = "SELECT f FROM FbInvoice f WHERE f.type = :type")
+    , @NamedQuery(name = "FbInvoice.findByNoDot", query = "SELECT f FROM FbInvoice f WHERE f.noDot = :noDot")
+    , @NamedQuery(name = "FbInvoice.findByCustEmail", query = "SELECT f FROM FbInvoice f WHERE f.custEmail = :custEmail")
+    , @NamedQuery(name = "FbInvoice.findByInDate", query = "SELECT f FROM FbInvoice f WHERE f.inDate = :inDate")
+    , @NamedQuery(name = "FbInvoice.findByDueDate", query = "SELECT f FROM FbInvoice f WHERE f.dueDate = :dueDate")
+    , @NamedQuery(name = "FbInvoice.findByActualBalance", query = "SELECT f FROM FbInvoice f WHERE f.actualBalance = :actualBalance")
+    , @NamedQuery(name = "FbInvoice.findBySubTotal", query = "SELECT f FROM FbInvoice f WHERE f.subTotal = :subTotal")
+    , @NamedQuery(name = "FbInvoice.findByTaxTotal", query = "SELECT f FROM FbInvoice f WHERE f.taxTotal = :taxTotal")
+    , @NamedQuery(name = "FbInvoice.findByTotal", query = "SELECT f FROM FbInvoice f WHERE f.total = :total")
+    , @NamedQuery(name = "FbInvoice.findByStatus", query = "SELECT f FROM FbInvoice f WHERE f.status = :status")
+    , @NamedQuery(name = "FbInvoice.findByTerms", query = "SELECT f FROM FbInvoice f WHERE f.terms = :terms")
+    , @NamedQuery(name = "FbInvoice.findByTrackNum", query = "SELECT f FROM FbInvoice f WHERE f.trackNum = :trackNum")
+    , @NamedQuery(name = "FbInvoice.findByShipVia", query = "SELECT f FROM FbInvoice f WHERE f.shipVia = :shipVia")
+    , @NamedQuery(name = "FbInvoice.findByShDate", query = "SELECT f FROM FbInvoice f WHERE f.shDate = :shDate")
+    , @NamedQuery(name = "FbInvoice.findByShCost", query = "SELECT f FROM FbInvoice f WHERE f.shCost = :shCost")
+    , @NamedQuery(name = "FbInvoice.findByAttachment", query = "SELECT f FROM FbInvoice f WHERE f.attachment = :attachment")
+    , @NamedQuery(name = "FbInvoice.findByFechaCreacion", query = "SELECT f FROM FbInvoice f WHERE f.fechaCreacion = :fechaCreacion")})
 public class FbInvoice implements Serializable {
-
-    @OneToMany(mappedBy = "idInvoice")
-    private List<FbInvoiceTaxes> fbInvoiceTaxesList;
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -124,14 +121,16 @@ public class FbInvoice implements Serializable {
     @Column(name = "FECHA_CREACION")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
-    @JoinColumn(name = "ID_CUST", referencedColumnName = "ID_CUST")
-    @ManyToOne
-    private FbCustomer idCust;
     @JoinColumn(name = "ID_CIA", referencedColumnName = "ID_CIA")
     @ManyToOne
     private FbCompania idCia;
+    @JoinColumn(name = "ID_CUST", referencedColumnName = "ID_CUST")
+    @ManyToOne
+    private FbCustomer idCust;
     @OneToMany(mappedBy = "idInvoice")
     private List<FbInvoiceDetail> fbInvoiceDetailList;
+    @OneToMany(mappedBy = "idInvoice")
+    private List<FbInvoiceTaxes> fbInvoiceTaxesList;
 
     public FbInvoice() {
     }
@@ -316,20 +315,20 @@ public class FbInvoice implements Serializable {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public FbCustomer getIdCust() {
-        return idCust;
-    }
-
-    public void setIdCust(FbCustomer idCust) {
-        this.idCust = idCust;
-    }
-
     public FbCompania getIdCia() {
         return idCia;
     }
 
     public void setIdCia(FbCompania idCia) {
         this.idCia = idCia;
+    }
+
+    public FbCustomer getIdCust() {
+        return idCust;
+    }
+
+    public void setIdCust(FbCustomer idCust) {
+        this.idCust = idCust;
     }
 
     @XmlTransient
@@ -339,6 +338,15 @@ public class FbInvoice implements Serializable {
 
     public void setFbInvoiceDetailList(List<FbInvoiceDetail> fbInvoiceDetailList) {
         this.fbInvoiceDetailList = fbInvoiceDetailList;
+    }
+
+    @XmlTransient
+    public List<FbInvoiceTaxes> getFbInvoiceTaxesList() {
+        return fbInvoiceTaxesList;
+    }
+
+    public void setFbInvoiceTaxesList(List<FbInvoiceTaxes> fbInvoiceTaxesList) {
+        this.fbInvoiceTaxesList = fbInvoiceTaxesList;
     }
 
     @Override
@@ -364,15 +372,6 @@ public class FbInvoice implements Serializable {
     @Override
     public String toString() {
         return "com.fastbooks.modelo.FbInvoice[ idInvoice=" + idInvoice + " ]";
-    }
-
-    @XmlTransient
-    public List<FbInvoiceTaxes> getFbInvoiceTaxesList() {
-        return fbInvoiceTaxesList;
-    }
-
-    public void setFbInvoiceTaxesList(List<FbInvoiceTaxes> fbInvoiceTaxesList) {
-        this.fbInvoiceTaxesList = fbInvoiceTaxesList;
     }
     
 }

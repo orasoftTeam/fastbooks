@@ -22,7 +22,7 @@
                 <h:form>
                     <div class="row" style="background-color: #f5f5f5; display: block; width: 100%;
                          padding: 0; margin: 0;">
-                        <h1 style="padding-left: 2%">#{messages.sales}</h1> 
+                        <h1 style="padding-left: 2%">#{messages.Sales}</h1> 
                     </div>
                     <bnu:row>
                         <bnu:column span="3">
@@ -86,7 +86,7 @@
                                     <f:facet name="header">
                                         <h:outputText value="#{messages.Tcampo3}"></h:outputText>
                                     </f:facet>
-                                    <h:outputText value="#{cust.email}"></h:outputText>
+                                    <h:outputText value="#{cust.balance.toString()}"></h:outputText>
                                 </h:column>
 
                                 <bnu:dataTableColumn label="#{messages.Tcampo4}">
@@ -245,7 +245,7 @@
                 </bnu:modal>
 
 
-                <!-- modal edit-->
+                <!-- modal delete-->
                 <bnu:modal id="cmodal"  styleClass="modalPseudoClass3" backdrop="false" closable="false" closeOnEscape="false"  >
                     <h:form id="deleteForm">
                         <p>#{messages.deleteC}</p>

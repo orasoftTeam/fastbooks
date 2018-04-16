@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -63,6 +64,11 @@ public class ValidationBean {
             flag = false;
         }
         return flag;
+    }
+    
+    public String formatDouble(BigDecimal num){
+    Double number = Double.parseDouble(num.toString());
+    return String.format("%.2f", number);
     }
 
     public boolean validarSoloLetras(String c, String tipoMsg, String tituloMsg, String descMsg) {
