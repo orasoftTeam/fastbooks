@@ -158,7 +158,8 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
     }
      
      
-     public void generateInvoice(FbInvoice i){
+     public String generateInvoice(FbInvoice i){
+            String res = "";
             Connection cn = em.unwrap(java.sql.Connection.class);
             String dir = "view"+File.separator+"jasper"+File.separator+"report1.jrxml";
             GlobalParameters gp = new GlobalParameters();
@@ -186,10 +187,16 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
                 exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
                 exporter.exportReport();
                 System.out.println("File Created: " + destino);
+                i.setMessageStmnt("/pdf/"+"cia" + i.getIdCia().getIdCia().toString()+
+                        "/IN"+i.getNoDot()+i.getIdCia().getNomCom()+".pdf");
+                this.edit(i);
+                res = i.getMessageStmnt();
          } catch (Exception e) {
                 System.out.println("com.fastbooks.facade.FbInvoiceFacade.generateInvoice()");
                 e.printStackTrace();
          }
+            
+            return res;
      }
     
 }

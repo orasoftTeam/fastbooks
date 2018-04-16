@@ -154,6 +154,10 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{NOM_LEG}]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="1" y="0" width="156" height="79" uuid="1704c701-f3f3-4a58-b6e1-cb0386eb1f3c"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>
