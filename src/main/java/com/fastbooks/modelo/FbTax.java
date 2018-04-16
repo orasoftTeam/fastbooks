@@ -44,6 +44,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "FbTax.findByUserCreacion", query = "SELECT f FROM FbTax f WHERE f.userCreacion = :userCreacion")})
 public class FbTax implements Serializable {
 
+    @OneToMany(mappedBy = "idTax")
+    private List<FbInvoiceTaxes> fbInvoiceTaxesList;
+
     @Size(max = 20)
     @Column(name = "RATE")
     private String rate;
@@ -180,6 +183,15 @@ public class FbTax implements Serializable {
 
     public void setRate(String rate) {
         this.rate = rate;
+    }
+
+    @XmlTransient
+    public List<FbInvoiceTaxes> getFbInvoiceTaxesList() {
+        return fbInvoiceTaxesList;
+    }
+
+    public void setFbInvoiceTaxesList(List<FbInvoiceTaxes> fbInvoiceTaxesList) {
+        this.fbInvoiceTaxesList = fbInvoiceTaxesList;
     }
     
 }
