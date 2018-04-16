@@ -34,17 +34,17 @@
                             <bnu:button value="#{messages.btnAddEmployee}" look="success" onclick="$('.modalPseudoClass').modal()" ></bnu:button>
                         </bnu:column>
                     </bnu:row>
+                    <bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />
+                    <bnu:commandButton value="" iconAwesome="fa-print" style="float: right" />
                     <bnu:row>
                         <bnu:column span="12">
                             <bnu:messages  />
                         </bnu:column>
                     </bnu:row>
+
+
                     <p:separator/>
 
-                    <bnu:inputText placeholder="#{messages.inputFilterbyName}"  tiny-screen="one-fourth" style="font-family: cursive" />
-
-                    <bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />
-                    <bnu:commandButton value="" iconAwesome="fa-print" style="float: right" />
 
                     <!-- addind table for showing employees -->
                     <bnu:dataTable  styleClass="table table-striped" 

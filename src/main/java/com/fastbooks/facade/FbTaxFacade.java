@@ -21,7 +21,8 @@ import javax.persistence.Query;
  * @author dell
  */
 @Stateless
-public class FbTaxFacade extends AbstractFacade<FbTax>{
+public class FbTaxFacade extends AbstractFacade<FbTax> {
+
     @PersistenceContext(unitName = "com_Fastbooks_war_1.0PU")
     private EntityManager em;
 
@@ -33,30 +34,30 @@ public class FbTaxFacade extends AbstractFacade<FbTax>{
     public FbTaxFacade() {
         super(FbTax.class);
     }
-    
-    public List<FbTax> getTaxByIdCia(String idCia){
-    List<FbTax> list = new ArrayList<>();
+
+    public List<FbTax> getTaxByIdCia(String idCia) {
+        List<FbTax> list = new ArrayList<>();
         try {
             String sql = "select * from fb_tax where id_cia = ? and status = 'A'";
             Query q = em.createNativeQuery(sql, FbTax.class);
             q.setParameter(1, idCia);
             list = q.getResultList();
-            
+
         } catch (Exception e) {
             System.out.println("com.fastbooks.facade.FbTaxFacade.getTaxByIdCia()");
             e.printStackTrace();
         }
-    
-    return list;
+
+        return list;
     }
-    
-    public String actTax (FbTax tx, String op){
-    
+
+    public String actTax(FbTax tx, String op) {
+
         String res = "";
-        
+
         try {
             Connection cn = em.unwrap(java.sql.Connection.class);//Conn EM
-            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_TAX (?,?,?,?,?,?,?)}"); 
+            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_TAX (?,?,?,?,?,?,?)}");
             cs.setInt(1, Integer.parseInt(String.valueOf(tx.getIdCia().getIdCia())));
             cs.setInt(2, Integer.parseInt(String.valueOf(tx.getIdTax())));
             cs.setString(3, tx.getName());
@@ -68,21 +69,14 @@ public class FbTaxFacade extends AbstractFacade<FbTax>{
             res = cs.getString(7);
             System.out.println("Resultado de la operacion res : " + res);
             cs.close();
-            
-            
+
         } catch (Exception e) {
             res = "-2";
             e.printStackTrace();
         }
-        
-        
+
         return res;
-    
-    
+
     }
-    
-    
-    
-    
-    
+
 }

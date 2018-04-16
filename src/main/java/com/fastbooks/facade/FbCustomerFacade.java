@@ -21,8 +21,8 @@ import javax.persistence.Query;
  * @author DELL
  */
 @Stateless
-public class FbCustomerFacade extends AbstractFacade<FbCustomer>{
-    
+public class FbCustomerFacade extends AbstractFacade<FbCustomer> {
+
     @PersistenceContext(unitName = "com_Fastbooks_war_1.0PU")
     private EntityManager em;
 
@@ -34,7 +34,8 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer>{
     public FbCustomerFacade() {
         super(FbCustomer.class);
     }
-    public List<FbCustomer> getCustomersByIdCia (String idCust){
+
+    public List<FbCustomer> getCustomersByIdCia(String idCust) {
         List<FbCustomer> listC = new ArrayList<>();
         try {
             String sql = "select * from fb_customer where id_cia = ? and status = 'A'";
@@ -42,32 +43,33 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer>{
             Query q = em.createNativeQuery(sql, FbCustomer.class);
             q.setParameter(1, idCust);
             listC = q.getResultList();
-            
+
         } catch (Exception e) {
             System.out.println("com.fastbooks.facade.FbUsuarioFacade.getUserbyCia()");
             e.printStackTrace();
-           
+
         }
-        return listC; 
+        return listC;
     }
-     //Lista para obtener customer por compania
-    public List<FbCustomer> getCustomer (String idCia){
+    //Lista para obtener customer por compania
+
+    public List<FbCustomer> getCustomer(String idCia) {
         List<FbCustomer> listC = new ArrayList<>();
         try {
-            String sql = "select * from fb_customer \n" +
-                    " where id_cia = ?" +
-                    " and status = 'A'";
+            String sql = "select * from fb_customer \n"
+                    + " where id_cia = ?"
+                    + " and status = 'A'";
             Query q = em.createNativeQuery(sql, FbCustomer.class);
             q.setParameter(1, idCia);
             listC = q.getResultList();
         } catch (Exception e) {
             System.out.println("com.fastbooks.facade.FbCustomerFacade.getCustomer()");
             e.printStackTrace();
-           
+
         }
-        return listC; 
+        return listC;
     }
-    
+
     /* (pIdCia IN INT,pIdCust IN INT,pTitle IN VARCHAR2,pfirstName IN VARCHAR2,
 		pMidName IN VARCHAR2,pLastName IN VARCHAR2,pSuffix IN VARCHAR2,pEmail IN VARCHAR2,
 		pCompany IN VARCHAR2,pPhone IN VARCHAR2,pMobile IN VARCHAR2,pFax IN VARCHAR2,
@@ -76,9 +78,8 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer>{
                 pCity_S IN VARCHAR2,pState_S IN VARCHAR2,pPostalCode_S IN VARCHAR2,
 		pCountry_S IN VARCHAR2,op IN VARCHAR2,res OUT VARCHAR2,pAttachment  
                 IN VARCHAR2,pNotes IN VARCHAR2)*/
-    
-    public String actCustomer(FbCustomer cust, String op){
-        String res = "";        
+    public String actCustomer(FbCustomer cust, String op) {
+        String res = "";
         try {
             //Abrimos la conexion al Entity Manager
             Connection cn = em.unwrap(java.sql.Connection.class);//Conn EM
@@ -114,15 +115,14 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer>{
             cs.execute();
             res = cs.getString(28);
             cs.close();
-            
+
         } catch (Exception e) {
-             res = "-2";
+            res = "-2";
             e.printStackTrace();
         }
         System.out.println("Resultado de la operacion res : " + res);
 
         return res;
     }
-    
-    
+
 }
