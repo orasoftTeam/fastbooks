@@ -264,9 +264,9 @@ public class InvoiceController implements Serializable {
             //dt.plusDays(Integer.parseInt(this.termDays));
             this.dueDate = sdf.format(c.getTime());
             this.invoiceDate = sdf.format(sd.parse(this.invoiceDate));
-            if (!this.shipDate.isEmpty()) {
+            
                 this.shipDate = sdf.format(sd.parse(this.shipDate));
-            }
+            
             System.out.println("invoice date:" + this.invoiceDate + " :: days to add :" + this.termDays + ":: due date: " + this.dueDate);
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.updateDate()");

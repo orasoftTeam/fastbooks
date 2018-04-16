@@ -12,6 +12,7 @@ import com.fastbooks.modelo.FbProduct;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Types;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -63,6 +64,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
     */
     
      public String actProd(FbInvoice in,String op){
+         SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
     String res = "";
     String pProdsIds = "";
     String pQuants = "";
@@ -79,8 +81,8 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
             cs.setString(4, in.getType());
             cs.setString(5, in.getNoDot());
             cs.setString(6, in.getCustEmail());
-            cs.setString(7, in.getInDate().toString());
-            cs.setString(8, in.getDueDate().toString());
+            cs.setString(7, sdf.format(in.getInDate()));
+            cs.setString(8, sdf.format(in.getDueDate()));
             cs.setDouble(9, Double.parseDouble(in.getActualBalance().toString()));
             cs.setDouble(10, Double.parseDouble(in.getSubTotal().toString()));
             cs.setDouble(11, Double.parseDouble(in.getTaxTotal().toString()));
@@ -91,7 +93,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
             cs.setString(16, in.getTerms());
             cs.setString(17, in.getTrackNum());
             cs.setString(18, in.getShipVia());
-            cs.setString(19, in.getShDate().toString());
+            cs.setString(19, sdf.format(in.getShDate()));
             cs.setDouble(20, Double.parseDouble(in.getShCost().toString()));
             cs.setString(21, in.getMessageInvoice());
             cs.setString(22, in.getAttachment());

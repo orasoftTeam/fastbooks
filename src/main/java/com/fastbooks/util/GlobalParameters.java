@@ -13,7 +13,7 @@ import lombok.Setter;
  * @author dell
  */
 public class GlobalParameters {
-    private @Getter @Setter String appPath = "/u01/app/oracle/fastbooks" /*System.getProperty("user.dir")*/ /*"C:\\Users\\luis\\Pictures\\fastbooks"*/ ; 
+    private @Getter @Setter String appPath = /*"/u01/app/oracle/fastbooks"*/ System.getProperty("user.dir") /*"C:\\Users\\luis\\Pictures\\fastbooks"*/ ; 
     
     
 }
