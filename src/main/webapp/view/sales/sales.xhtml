@@ -33,7 +33,7 @@
 
                     <bnu:tabView activeIndex="0">
                         <bnu:tab title="#{messages.lblAllSales}">
-                                <ui:include src="invoice.xhtml"/>
+                            <ui:include src="invoice.xhtml"/>
 
                         </bnu:tab>
 
@@ -52,8 +52,6 @@
                                     <bnu:messages  />
                                 </bnu:column>
                             </bnu:row>
-                            <p:separator/>
-
 
                             <br></br><br></br><br></br><br></br>
 
@@ -69,7 +67,7 @@
 
                             <bnu:dataTable  styleClass="table table-striped"
                                             value="#{customerController.custL}" 
-                                          var="cust">
+                                            var="cust">
                                 <bnu:dataTableColumn label="#{messages.Tcampo1}" value="#{cust.firstname}"></bnu:dataTableColumn>
                                 <bnu:dataTableColumn label="#{messages.Tcampo2}" value="#{cust.phone}"></bnu:dataTableColumn>
                                 <bnu:dataTableColumn label="#{messages.Tcampo3}" value="#{cust.balance.toString()}"></bnu:dataTableColumn>            
@@ -87,8 +85,8 @@
                 <p:separator/>
 
                 <!--Modal add-->
-                <bnu:modal id="amodal" title="#{messages.custInfo}" styleClass="modalPseudoClass" backdrop="false" >
-                    <h:form id="prodForm">      
+                <bnu:modal id="amodal" title="#{messages.custInfo}" styleClass="modalPseudoClass" backdrop="false">
+                    <h:form>      
                         <bnu:row>
                             <bnu:panel span="6">
                                 <h:outputLabel value="#{messages.titleC}" ></h:outputLabel>
@@ -147,15 +145,11 @@
 
                             </bnu:panel>
                         </bnu:row>
-                        <bnu:row>
-                            <bnu:column span="12">
-                                <bnu:messages id="msg" />
-                            </bnu:column>
-                        </bnu:row>
+
                         <bnu:row>
                             <bnu:column span="6">
                                 <bnu:commandButton value="#{messages.save}" look="success" 
-                                                   action="#{customerController.registerC()}" update="@form" >
+                                                   action="#{customerController.registerC()}">
                                 </bnu:commandButton>
                             </bnu:column>
                         </bnu:row>
@@ -223,8 +217,10 @@
 
                             </bnu:panel>
                         </bnu:row>
+
+
                         <bnu:commandButton value="#{messages.save}" look="success" action="#{customerController.edit()}"  />
-                        
+
                     </h:form>
                 </bnu:modal>
 
@@ -233,7 +229,7 @@
                 <bnu:modal id="cmodal"  styleClass="modalPseudoClass3" backdrop="false" closable="false" closeOnEscape="false"  >
                     <h:form id="deleteForm">
                         <p>#{messages.deleteC}</p>
-                        <bnu:commandButton value="#{messages.yes}" look="success" action="#{customerController.deleteCustomer()}"  />
+                        <bnu:commandButton value="#{messages.yes}" look="success" action="#{customerController.deleteCustomer()}" />
                         <bnu:button value="#{messages.No}" dismiss="modal" look="danger" />
                     </h:form>
                 </bnu:modal>
