@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6da208d6-0ca8-4ca1-9eb0-5fbb88915a24">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1219768f-560c-4f0b-8d55-c2f70666bba4">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="idInvoice" class="java.lang.String"/>
+	<parameter name="logo" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select * from fb_invoice i inner join fb_invoice_detail d on d.id_invoice = i.id_invoice where i.id_invoice =$P{idInvoice}]]>
+		<![CDATA[select * from fb_invoice i inner join fb_invoice_detail d on d.id_invoice = i.id_invoice inner join fb_compania c on c.id_cia = i.id_cia inner join fb_customer q on q.id_cust = i.id_cust inner join fb_invoice_taxes t on t.id_invoice = i.id_invoice  where i.id_invoice = $P{idInvoice}]]>
 	</queryString>
 	<field name="ID_INVOICE" class="java.math.BigDecimal"/>
 	<field name="ID_CIA" class="java.math.BigDecimal"/>
@@ -40,6 +41,46 @@
 	<field name="ITEM_RATE" class="java.math.BigDecimal"/>
 	<field name="ITEM_AMOUNT" class="java.math.BigDecimal"/>
 	<field name="ITEM_TAX" class="java.lang.String"/>
+	<field name="NOM_COM" class="java.lang.String"/>
+	<field name="NOM_LEG" class="java.lang.String"/>
+	<field name="GIRO" class="java.lang.String"/>
+	<field name="LOGO" class="java.lang.String"/>
+	<field name="PER_NAT" class="java.math.BigDecimal"/>
+	<field name="ESTADO" class="java.lang.String"/>
+	<field name="EMAIL" class="java.lang.String"/>
+	<field name="WEBSITE" class="java.lang.String"/>
+	<field name="ID_DIRECCION" class="java.math.BigDecimal"/>
+	<field name="TELEFONO" class="java.lang.String"/>
+	<field name="TITLE" class="java.lang.String"/>
+	<field name="FIRSTNAME" class="java.lang.String"/>
+	<field name="MIDDLENAME" class="java.lang.String"/>
+	<field name="LASTNAME" class="java.lang.String"/>
+	<field name="SUFFIXX" class="java.lang.String"/>
+	<field name="COMPANY" class="java.lang.String"/>
+	<field name="PHONE" class="java.lang.String"/>
+	<field name="MOBILE" class="java.lang.String"/>
+	<field name="FAX" class="java.lang.String"/>
+	<field name="DISPLAY_NAME" class="java.lang.String"/>
+	<field name="WEBSIDE" class="java.lang.String"/>
+	<field name="ID_DIR_SHIP" class="java.math.BigDecimal"/>
+	<field name="NOTE" class="oracle.jdbc.OracleClob"/>
+	<field name="ATACHMENT" class="java.lang.String"/>
+	<field name="STREET" class="oracle.jdbc.OracleClob"/>
+	<field name="CITY" class="java.lang.String"/>
+	<field name="ESTATE" class="java.lang.String"/>
+	<field name="POSTAL_CODE" class="java.lang.String"/>
+	<field name="COUNTRY" class="java.lang.String"/>
+	<field name="STREET_S" class="oracle.jdbc.OracleClob"/>
+	<field name="CITY_S" class="java.lang.String"/>
+	<field name="ESTATE_S" class="java.lang.String"/>
+	<field name="POSTAL_CODE_S" class="java.lang.String"/>
+	<field name="COUNTRY_S" class="java.lang.String"/>
+	<field name="BALANCE" class="java.math.BigDecimal"/>
+	<field name="ID_INVOICE_TAX" class="java.math.BigDecimal"/>
+	<field name="ID_TAX" class="java.math.BigDecimal"/>
+	<field name="FROM_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="TAX_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="ID_PRODS" class="java.lang.String"/>
 	<group name="NO_DOT">
 		<groupExpression><![CDATA[$F{NO_DOT}]]></groupExpression>
 	</group>
@@ -47,36 +88,79 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="79" splitType="Stretch"/>
-	</title>
-	<pageHeader>
-		<band height="35" splitType="Stretch"/>
-	</pageHeader>
-	<columnHeader>
-		<band height="61" splitType="Stretch">
+		<band height="79" splitType="Stretch">
 			<textField>
-				<reportElement x="29" y="29" width="100" height="20" uuid="29e0dfad-9f2e-42ae-b2eb-f9a07cbe012a"/>
+				<reportElement x="0" y="59" width="100" height="20" uuid="26acbc41-6958-477c-8039-85f74f895eee"/>
 				<textFieldExpression><![CDATA[$F{NO_DOT}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="455" y="59" width="100" height="20" uuid="2bb366d2-0957-4ea0-8320-ef0da436cefc"/>
+				<textFieldExpression><![CDATA[$F{IN_DATE}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="9" width="100" height="50" uuid="e1f78211-62d6-4d52-9fd5-17bd22486766"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="038b3952-c8da-42ed-8465-08b5d2ca9f71"/>
+				<textFieldExpression><![CDATA[$F{DUE_DATE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="74" splitType="Stretch">
+			<textField>
+				<reportElement x="51" y="24" width="100" height="20" uuid="4349fdaf-8cad-4f22-8afe-a57a78a78fc2"/>
+				<textFieldExpression><![CDATA[$F{DISPLAY_NAME}]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement x="226" y="29" width="100" height="20" uuid="d8d561ca-dbe3-47b5-a8fe-45ba31c4f0ea"/>
+				<reportElement x="186" y="2" width="100" height="20" uuid="035ef6e8-7907-4335-9335-6ce811cb7973"/>
 				<text><![CDATA[ITEM_NAME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="302" y="2" width="100" height="20" uuid="c0a127d6-42f1-4717-b39c-d828ef02e46c"/>
+				<text><![CDATA[ITEM_RATE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="2" width="100" height="20" uuid="3d2193e8-8aca-4ca5-af98-9a7fd1ebd0ac"/>
+				<text><![CDATA[ITEM_AMOUNT]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="22" splitType="Stretch">
+		<band height="21" splitType="Stretch">
 			<textField>
-				<reportElement x="226" y="0" width="100" height="20" uuid="f29f4abc-9d00-401a-8338-18fbcdea8de0"/>
+				<reportElement x="186" y="0" width="100" height="20" uuid="6ac5dcac-fc5e-4c7a-a4e6-f5fdd97fad2a"/>
 				<textFieldExpression><![CDATA[$F{ITEM_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="302" y="0" width="100" height="20" uuid="8b626172-cbd1-45a3-8c3e-997754658224"/>
+				<textFieldExpression><![CDATA[$F{ITEM_RATE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="440" y="0" width="100" height="20" uuid="3ad83a5e-640f-4698-b1e2-0f1d1ad6b5f4"/>
+				<textFieldExpression><![CDATA[$F{ITEM_AMOUNT}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="45" splitType="Stretch"/>
+		<band height="57" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="54" splitType="Stretch"/>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="455" y="34" width="100" height="20" uuid="295e5cd8-49cb-414b-a7d0-a4e4c5f3722f"/>
+				<textFieldExpression><![CDATA[$F{TOTAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="0" width="100" height="20" uuid="42a6a6e0-d756-401d-83af-343e8ee7a43f"/>
+				<textFieldExpression><![CDATA[$F{SUB_TOTAL}]]></textFieldExpression>
+			</textField>
+		</band>
 	</pageFooter>
 	<summary>
 		<band height="42" splitType="Stretch"/>

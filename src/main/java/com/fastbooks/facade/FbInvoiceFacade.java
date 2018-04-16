@@ -171,6 +171,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
             String pdfName = File.separator + "IN"+i.getNoDot()+i.getIdCia().getNomCom()+".pdf";
              Map parametersMap = new HashMap();
             parametersMap.put("idInvoice",i.getIdInvoice().toString() );
+            parametersMap.put("logo",new File(gp.getAppPath() + File.separator + "logo" + File.separator + "6Ra1xoZ7457138.png"));
             try {
              ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
                 String realPath = ec.getRealPath("/");

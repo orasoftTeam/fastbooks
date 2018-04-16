@@ -33,6 +33,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -471,8 +472,16 @@ public class InvoiceFormController implements Serializable {
                     tax = Double.parseDouble(this.rTaxTotal.toString());
                 
                 if (!this.shCost.isEmpty()) {
-                    ship = Double.parseDouble(shCost);
+                    if (StringUtils.isNumeric(shCost)) {
+                        ship = Double.parseDouble(shCost);
+                    }else{
+                        shCost = "0.00";
+                        ship = 0.00;
+                    }
+                    
                 }
+                
+                 
                 
                 this.dBalance = String.format("%.2f", (acum + ship+tax ));
                 //Double balanceDue = acum + ship;
@@ -722,7 +731,8 @@ public class InvoiceFormController implements Serializable {
 
     public void save() {
         try {
-            if (this.currentCust != null) {
+            if (this.validationBean.validarSoloNumerosConPunto(this.shCost, "error", "lblInShCostFail", "blank")) {
+                if (this.currentCust != null) {
                 
             
             DateFormat sd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
@@ -781,6 +791,7 @@ public class InvoiceFormController implements Serializable {
             }else{
             
             this.validationBean.lanzarMensaje("error", "lblSelectCust", "blank");
+            }
             }
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.save()");
