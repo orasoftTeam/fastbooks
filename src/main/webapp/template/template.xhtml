@@ -55,7 +55,7 @@
                         <bnu:navLink rendered="#{userData.loggedUser == null}" value="#{messages.signup}" href="#{request.contextPath}/registrarEmpresa.xhtml?faces-redirect=true"></bnu:navLink>
                         <bnu:navLink rendered="#{userData.loggedUser == null}" value="#{messages.signin}" href="#{request.contextPath}/login.xhtml?faces-redirect=true"></bnu:navLink>
                         <bnu:navLink rendered="#{userData.loggedUser != null}" value="#{messages.logout}" onclick="ajax:userData.logout();"  href="#" ></bnu:navLink>
-
+                        
                     </bnu:navbarLinks>
 
                 </bnu:navBar>
