@@ -33,17 +33,10 @@
                         <li><a href="signin/sign-in.xhtml">#{messages.signin}</a></li>
                         <li><a href="signin/sign-up.xhtml">#{messages.signup}</a></li>
                     </ul>
-                    <ul class="pull-right menu-right navigation">
+                    <!--<ul class="pull-right menu-right navigation">
                         <li>Language : </li>
-                        <li> <h:form>
-                        <h:selectOneMenu  value = "#{userData.locale}" onchange="submit()"
-                                          valueChangeListener="#{userData.localeChanged}" styleClass="form-control" >
-
-                    <f:selectItems value = "#{userData.list}" var="country" itemValue="#{country.lanInitials}"
-                                   itemLabel="#{country.language}"/> 
-                </h:selectOneMenu> 
-                            </h:form></li>
-                    </ul>
+                        <li> </li>
+                    </ul>-->
                 </h:panelGroup>
                 <a href="index.xhtml" class="custom-logo-link" rel="home" itemprop="url">
                     <img width="676" height="250" src="./assets/logo-fastbooks.svg" class="custom-logo" alt="Fastbooks" itemprop="logo" />
@@ -72,7 +65,7 @@
             <div class="banner-top-container"> 
                 <div class="container">
                     <br></br><br></br>
-                    <img width="2117" height="531" src="assets/slider-top.jpg" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" />
+                    <img width="2117" height="531" src="resources/img/#{messages.lblImgSliderTop}" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" />
                 </div>
             </div>
 

@@ -75,4 +75,8 @@ public class InvoiceController implements Serializable {
     
     return res;
     }
+    
+    public void print(FbInvoice i){
+        this.iFacade.generateInvoice(i);
+    }
 }
