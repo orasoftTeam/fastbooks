@@ -3,6 +3,48 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="invoiceTax" uuid="583dca52-94e7-4bbf-b39c-d59313b81df5">
+		<parameter name="codInvoice" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[select * from fb_invoice_taxes t inner join fb_tax a on a.ID_TAX = t.ID_TAX where id_invoice = $P{codInvoice}]]>
+		</queryString>
+		<field name="ID_INVOICE_TAX" class="java.math.BigDecimal"/>
+		<field name="ID_INVOICE" class="java.math.BigDecimal"/>
+		<field name="ID_TAX" class="java.math.BigDecimal"/>
+		<field name="FROM_AMOUNT" class="java.math.BigDecimal"/>
+		<field name="TAX_AMOUNT" class="java.math.BigDecimal"/>
+		<field name="ID_PRODS" class="java.lang.String"/>
+		<field name="FECHA_CREACION" class="java.sql.Timestamp"/>
+		<field name="ID_CIA" class="java.math.BigDecimal"/>
+		<field name="NAME" class="java.lang.String"/>
+		<field name="DESCRIP" class="oracle.jdbc.OracleClob"/>
+		<field name="USER_CREACION" class="java.math.BigDecimal"/>
+		<field name="STATUS" class="java.lang.String"/>
+		<field name="RATE" class="java.lang.String"/>
+	</subDataset>
 	<parameter name="idInvoice" class="java.lang.String"/>
 	<parameter name="logo" class="java.lang.String"/>
 	<queryString>
@@ -197,6 +239,73 @@
 			<line>
 				<reportElement x="440" y="80" width="100" height="1" uuid="b2f345eb-6d85-48ca-9a62-17cd99db9eab"/>
 			</line>
+			<componentElement>
+				<reportElement key="table" style="table" x="24" y="0" width="343" height="86" uuid="e139a9c2-cbdf-41e6-a2ce-79439f3c54a5"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="invoiceTax" uuid="98656d33-27f2-4b80-ba44-99ddccf02824">
+						<datasetParameter name="codInvoice">
+							<datasetParameterExpression><![CDATA[$P{idInvoice}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="90" uuid="7a4e0351-da09-40c7-a3f5-bbb5b6e61bbd">
+						<jr:tableHeader style="table_TH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="3a74012e-0180-4589-9130-2c476cf86693"/>
+								<text><![CDATA[TAX]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="88ac26f2-fdc7-4b5c-9be3-188cf1fc5c4e"/>
+								<textFieldExpression><![CDATA[$F{NAME}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="79fc1be4-bdd1-4c62-8f2a-40c3a2196a98">
+						<jr:tableHeader style="table_TH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="8d4ab6fb-3d7d-4156-bcf0-a8939880ab05"/>
+								<text><![CDATA[RATE]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="a37b58ba-4866-4832-a61d-3dba811aa42c"/>
+								<textFieldExpression><![CDATA[$F{RATE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="77e93671-57a8-49a2-bf07-3b2e219874f6">
+						<jr:tableHeader style="table_TH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="f674d2c2-664d-471f-b1e4-84cac4430589"/>
+								<text><![CDATA[FROM AMOUNT]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="04a11dce-8e96-4113-bcd2-8ba3b8e0d670"/>
+								<textFieldExpression><![CDATA[$F{FROM_AMOUNT}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="9ebc241f-5da2-4838-826d-ecdd42f8c93f">
+						<jr:tableHeader style="table_TH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="4c72a0b6-4a81-4ea2-a7ac-677039ea73a4"/>
+								<text><![CDATA[TAX AMOUNT]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="706c407b-77e2-446d-89d5-019f2735f2ef"/>
+								<textFieldExpression><![CDATA[$F{TAX_AMOUNT}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
 		</band>
 	</columnFooter>
 	<pageFooter>
