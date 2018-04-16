@@ -30,6 +30,11 @@
                         <h1 style="padding-left: 2%">#{messages.tax}</h1> 
 
                     </div>
+                    <bnu:row>
+                        <bnu:column span="12">
+                            <bnu:messages id="msg"/>
+                        </bnu:column>
+                    </bnu:row>
                     <p:separator/>
 
                     <bnu:dropButton  value="#{messages.btnViewReports}" style="float: right; padding-right: 12%">
@@ -184,28 +189,17 @@
                         <!-- TAX TAB VIEW -->
                         <bnu:tab title="#{messages.tittleTax}">
                             <br></br><br></br>
-                            <h:dataTable  styleClass="table table-striped" 
-                                          var="taxL" value="#{taxController.taxList}" >
-                                <h:column >
-                                    <f:facet name="header">
-                                        <h:outputText value="#{messages.nameTax}" />
-                                    </f:facet>
-                                    <h:outputText value="#{taxL.name}" />
-                                </h:column>
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="#{messages.rate}" />
-                                    </f:facet>
-                                    <h:outputText value="#{taxL.rate}" />
-                                </h:column>
-                                <!--
+                            <bnu:dataTable  styleClass="table table-striped" 
+                                            var="taxL" value="#{taxController.taxList}" >
+                                <bnu:dataTableColumn label="#{messages.nameTax}" value="#{taxL.name}"></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.rate}" value="#{taxL.rate}"></bnu:dataTableColumn>
                                 <bnu:dataTableColumn label="#{messages.Tcampo4}">
                                     <bnu:dropButton value="#{messages.edit}" look="primary" >
                                         <bnu:commandButton value="#{messages.edit}" action="#{taxController.action(taxL, 'U')}" style="width:100%" />
                                         <bnu:commandButton value="#{messages.delete}" action="#{taxController.action(taxL, 'D')}" style="width:100%" />
                                     </bnu:dropButton>
-                                </bnu:dataTableColumn>  -->
-                            </h:dataTable>
+                                </bnu:dataTableColumn>
+                            </bnu:dataTable>
                         </bnu:tab>
                     </bnu:tabView>
                 </h:form>
@@ -227,32 +221,32 @@
                                         </bnu:column>
                                     </bnu:row>
                                 </bnu:panel>
-                               <!-- <p:separator/>
-                                
-                                <bnu:panel styleClass="typeOp" >
-                                    <bnu:row>
-                                        <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
-                                            <p><strong>Group rate</strong></p>
-                                            <p>Combine multiple taxes and make applying them to your transactions easier. All taxes you include are calculated and charged at once, but we track them separately for you.</p>
-                                        </bnu:column>
-                                    </bnu:row>   
-                                </bnu:panel>
-                                <p:separator/>
-                                <bnu:panel styleClass="typeOp" >
-                                    <bnu:row>
-                                        <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
-                                            <p><strong>Custom tax</strong></p>
-                                            <p>Services that you provide to customers, for example, landscaping or tax preparation services.</p>
-                                        </bnu:column>
-                                    </bnu:row>
-                                </bnu:panel>
-                                <bnu:row>
-
-                                    <bnu:column span="6">
-                                        <bnu:button value="Close" look="danger" onclick="$('.modalPseudoClass').modal('hide')" size="md"/>
-                                    </bnu:column>
-
-                                </bnu:row>  -->
+                                <!-- <p:separator/>
+                                 
+                                 <bnu:panel styleClass="typeOp" >
+                                     <bnu:row>
+                                         <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                                             <p><strong>Group rate</strong></p>
+                                             <p>Combine multiple taxes and make applying them to your transactions easier. All taxes you include are calculated and charged at once, but we track them separately for you.</p>
+                                         </bnu:column>
+                                     </bnu:row>   
+                                 </bnu:panel>
+                                 <p:separator/>
+                                 <bnu:panel styleClass="typeOp" >
+                                     <bnu:row>
+                                         <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                                             <p><strong>Custom tax</strong></p>
+                                             <p>Services that you provide to customers, for example, landscaping or tax preparation services.</p>
+                                         </bnu:column>
+                                     </bnu:row>
+                                 </bnu:panel>
+                                 <bnu:row>
+ 
+                                     <bnu:column span="6">
+                                         <bnu:button value="Close" look="danger" onclick="$('.modalPseudoClass').modal('hide')" size="md"/>
+                                     </bnu:column>
+ 
+                                 </bnu:row>  -->
                             </ui:fragment>
 
                             <ui:fragment rendered="#{taxController.showForm}">
@@ -287,19 +281,44 @@
                     </h:form>
                 </bnu:modal>
 
-                <!--Funcion para validar solo numeros campo rate -->
-                <h:outputScript>
-                    function soloNumeros(obj) 
-                    { 
-                    obj.value = (obj.value + '').replace(/[^0-9]/g, '');
-                    }
-                    //$.blockUI({ message: 'Hold on!' });      
-                    function mensaje(e){
-                    alert(e);
-                    } 
-                </h:outputScript>
-            </ui:define>
-        </ui:composition>
-    </h:body>
-</html>
+                <!--edit modal -->
+                <bnu:modal  id="bmodal" title="#{messages.taxInfo}" styleClass="modalPseudoClass2" backdrop="false" >
+                    <h:form id="editForm">
+                        <bnu:row>
+                            <bnu:column tiny-screen="12" small-screen="12" medium-screen="8" large-screen="8">
+                                <bnu:inputText label="Tax name" maxlength="40" label-style="color:black;" value="#{taxController.tax.name}" />
+                                <bnu:inputText label="Rate %" maxlength="2" label-style="color:black;" onkeyup="soloNumeros(this)" value="#{taxController.tax.rate}" />
+                            </bnu:column>
+                        </bnu:row>
+
+                        <bnu:commandButton value="#{messages.save}" look="success" action="#{taxController.editTax()}"  />
+
+                    </h:form>
+                </bnu:modal>
+
+                <!-- delete tax -->
+                <bnu:modal id="cmodal"  styleClass="modalPseudoClass3" backdrop="false" closable="false" closeOnEscape="false"  >
+                    <h:form id="deleteForm">
+                        <p>#{messages.deleteTax}</p>
+                        <bnu:commandButton value="#{messages.yes}" look="success" action="#{taxController.deleteTax()}"  />
+                        <bnu:button value="#{messages.No}" dismiss="modal" look="danger" />
+                    </h:form>
+                </bnu:modal>
+
+
+                        <!--Funcion para validar solo numeros campo rate -->
+                        <h:outputScript>
+                            function soloNumeros(obj) 
+                            { 
+                            obj.value = (obj.value + '').replace(/[^0-9]/g, '');
+                            }
+                            //$.blockUI({ message: 'Hold on!' });      
+                            function mensaje(e){
+                            alert(e);
+                            } 
+                        </h:outputScript>
+                        </ui:define>
+                        </ui:composition>
+                        </h:body>
+                        </html>
 
