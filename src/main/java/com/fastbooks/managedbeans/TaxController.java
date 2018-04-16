@@ -44,7 +44,7 @@ public class TaxController implements Serializable {
     private @Getter
     @Setter
     FbTax tax;
-    
+
     private @Getter
     @Setter
     boolean showForm = false;
@@ -60,7 +60,7 @@ public class TaxController implements Serializable {
     private @Getter
     @Setter
     String descripcion;
-     private @Getter
+    private @Getter
     @Setter
     String rate;
 
@@ -84,13 +84,12 @@ public class TaxController implements Serializable {
             this.tx.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
             this.tx.setIdCia(this.userData.getCurrentCia());
             this.tx.setIdTax(new BigDecimal("0"));
-            if(this.tx.getRate().length() == 1){
-                this.tx.setRate("0.0"+this.tx.getRate());
+            if (this.tx.getRate().length() == 1) {
+                this.tx.setRate("0.0" + this.tx.getRate());
 
-            
-            }else if (this.tx.getRate().length() > 1){
-                this.tx.setRate("0."+this.tx.getRate());
-                
+            } else if (this.tx.getRate().length() > 1) {
+                this.tx.setRate("0." + this.tx.getRate());
+
             }
 
             String res = tFacade.actTax(tx, "A");
@@ -199,13 +198,13 @@ public class TaxController implements Serializable {
         }
         if (!(validationBean.validarCampoVacio(this.tx.getRate(), "warn", "valErr", "reqRateTax")
                 && validationBean.validarSoloNumeros(this.tx.getRate(), "warn", "valErr", "reqRateTax"))) {
-          
+
             c++;
         }
-         if(this.tx.getRate().equals("00") || this.tx.getRate().equals("0")) {
-                
-          c++;
-          } 
+        if (this.tx.getRate().equals("00") || this.tx.getRate().equals("0")) {
+
+            c++;
+        }
 
         if (c == 0) {
             flag = true;
@@ -227,12 +226,12 @@ public class TaxController implements Serializable {
         System.out.println("Levantar nuevo panel.");
         this.validationBean.updateComponent("prodForm:modalContent");
     }
-    
-    public void limpiar(){
-     this.taxName = "";
-     this.descripcion = "";
-     this.rate = "";
-     this.showForm = false;
+
+    public void limpiar() {
+        this.taxName = "";
+        this.descripcion = "";
+        this.rate = "";
+        this.showForm = false;
 
     }
 }

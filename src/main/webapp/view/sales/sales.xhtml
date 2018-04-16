@@ -67,28 +67,12 @@
                             <bnu:commandButton value="" iconAwesome="fa-clipboard" style="float: right" />
                             <bnu:commandButton value="" iconAwesome="fa-print" style="float: right" />
 
-                            <h:dataTable  styleClass="table table-striped" rows="10"
-                                          value="#{customerController.custL}" 
+                            <bnu:dataTable  styleClass="table table-striped"
+                                            value="#{customerController.custL}" 
                                           var="cust">
-                                <h:column >
-                                    <f:facet name="header">
-                                        <h:outputText value="#{messages.Tcampo1}"></h:outputText>
-                                    </f:facet>
-                                    <h:outputText value="#{cust.firstname}"></h:outputText>
-                                </h:column>
-                                <h:column >
-                                    <f:facet name="header">
-                                        <h:outputText value="#{messages.Tcampo2}"></h:outputText>
-                                    </f:facet>
-                                    <h:outputText value="#{cust.phone}"></h:outputText>
-                                </h:column>
-                                <h:column >
-                                    <f:facet name="header">
-                                        <h:outputText value="#{messages.Tcampo3}"></h:outputText>
-                                    </f:facet>
-                                    <h:outputText value="#{cust.balance.toString()}"></h:outputText>
-                                </h:column>
-
+                                <bnu:dataTableColumn label="#{messages.Tcampo1}" value="#{cust.firstname}"></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.Tcampo2}" value="#{cust.phone}"></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.Tcampo3}" value="#{cust.balance.toString()}"></bnu:dataTableColumn>            
                                 <bnu:dataTableColumn label="#{messages.Tcampo4}">
                                     <bnu:dropButton value="#{messages.edit}" look="primary" >
                                         <bnu:commandButton value="#{messages.edit}" action="#{customerController.editCustomer(cust, 'U')}" style="width:100%" />
@@ -96,7 +80,7 @@
 
                                     </bnu:dropButton>
                                 </bnu:dataTableColumn> 
-                            </h:dataTable>  
+                            </bnu:dataTable>  
                         </bnu:tab>        
                     </bnu:tabView>
                 </h:form>

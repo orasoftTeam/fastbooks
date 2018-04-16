@@ -778,10 +778,12 @@ public class InvoiceFormController implements Serializable {
                 in.setFbInvoiceTaxesList(taxesAmountList);
                 String res = iFacade.actInvoice(in, "A");
                 System.out.println("result: " + res);
-                if (res.equals(res)) {
+                if (res.equals("0")) {
                             
                             this.userData.setUses("lblInvoiceAddSuccess");
                             this.validationBean.redirecionar("/view/sales/sales.xhtml");
+                }else{
+                this.validationBean.lanzarMensajeSinBundle("error", res, " ");
                 }
                 
             }else{
@@ -795,6 +797,7 @@ public class InvoiceFormController implements Serializable {
             }
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.save()");
+            this.validationBean.lanzarMensajeSinBundle("error", e.toString(), " ");
             e.printStackTrace();
         }
         

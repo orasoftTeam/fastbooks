@@ -20,7 +20,7 @@
 
             <ui:define name="content">
                 #{employeeController.init()}
-                <h:form>
+                <h:form id="tableForm">
                     <div class="row" style="background-color: #f5f5f5; display: block; width: 100%;
                          padding: 0; margin: 0;">
                         <h1 style="padding-left: 2%">#{messages.employees}</h1> 
@@ -47,26 +47,11 @@
                     <bnu:commandButton value="" iconAwesome="fa-print" style="float: right" />
 
                     <!-- addind table for showing employees -->
-                    <h:dataTable  styleClass="table table-striped" rows="10"  
-                                  var="empList" value="#{employeeController.empL}" >
-                        <h:column >
-                            <f:facet name="header">
-                                <h:outputText value="#{messages.firstNameC}"  />
-                            </f:facet>
-                            <h:outputText value="#{empList.firstname}" />
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{messages.phoneNumberC}" />
-                            </f:facet>
-                            <h:outputText value="#{empList.phone}" />
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{messages.emailAddC}" />
-                            </f:facet>
-                            <h:outputText value="#{empList.email}" />
-                        </h:column>
+                    <bnu:dataTable  styleClass="table table-striped" 
+                                    var="empList" value="#{employeeController.empL}" >
+                        <bnu:dataTableColumn label="#{messages.firstNameC}" value="#{empList.firstname}"></bnu:dataTableColumn>
+                        <bnu:dataTableColumn label="#{messages.phoneNumberC}" value="#{empList.phone}"></bnu:dataTableColumn>
+                        <bnu:dataTableColumn label="#{messages.emailAddC}" value="#{empList.email}"></bnu:dataTableColumn>
                         <bnu:dataTableColumn label="#{messages.Tcampo4}">
                             <bnu:dropButton value="#{messages.edit}" look="primary" >
                                 <bnu:commandButton value="#{messages.edit}" action="#{employeeController.action(empList, 'U')}" style="width:100%" />
@@ -74,7 +59,7 @@
                             </bnu:dropButton>
                         </bnu:dataTableColumn> 
 
-                    </h:dataTable>
+                    </bnu:dataTable>
                 </h:form>
                 <p:separator/>
                 

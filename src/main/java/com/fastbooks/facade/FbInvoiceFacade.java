@@ -150,7 +150,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
             cs.close();
            
         } catch (Exception e) {
-            res = "-2";
+            res = e.toString();//"-2";
             e.printStackTrace();
         }
         System.out.println("Facade Resultado de operacion: " + res);
