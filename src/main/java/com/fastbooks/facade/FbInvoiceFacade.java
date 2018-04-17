@@ -85,7 +85,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
     String pTaxAmounts = "";
     String pTaxProdsIds = "";
     String temp = null;
-    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         try {
             Connection cn = em.unwrap(java.sql.Connection.class);
             CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_INVOICE (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
@@ -96,12 +96,12 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
             cs.setString(5, in.getNoDot());
             cs.setString(6, in.getCustEmail());
             if (in.getInDate() != null) {
-               temp = sdf.format(in.getInDate()); 
+               temp = in.getInDate(); 
             }
             
             cs.setString(7, temp );
             if (in.getDueDate() != null) {
-             temp = sdf.format(in.getDueDate());   
+             temp = in.getDueDate();   
             }
             
             cs.setString(8, temp );
@@ -116,7 +116,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
             cs.setString(17, in.getTrackNum());
             cs.setString(18, in.getShipVia());
             if (in.getShDate() != null) {
-              temp = sdf.format(in.getShDate());  
+              temp = in.getShDate();  
             }
             
             cs.setString(19, temp);
@@ -130,10 +130,10 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
             }
             
             for (FbInvoiceTaxes fbInvoiceDetail : in.getFbInvoiceTaxesList()) {
-                pIdTaxes = fbInvoiceDetail.getIdTax().getIdTax().toString() + ",";
-                pFromAmounts = fbInvoiceDetail.getFromAmount().toString()+ ",";
-                pTaxAmounts = fbInvoiceDetail.getTaxAmount().toString()+ ",";
-                pTaxProdsIds = fbInvoiceDetail.getIdProds()+ ",";
+                pIdTaxes += fbInvoiceDetail.getIdTax().getIdTax().toString() + ",";
+                pFromAmounts += fbInvoiceDetail.getFromAmount().toString()+ ",";
+                pTaxAmounts += fbInvoiceDetail.getTaxAmount().toString()+ ",";
+                pTaxProdsIds += fbInvoiceDetail.getIdProds()+ ",";
                 
             }
             

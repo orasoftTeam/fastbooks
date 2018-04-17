@@ -34,8 +34,8 @@
 		<field name="ID_INVOICE_TAX" class="java.math.BigDecimal"/>
 		<field name="ID_INVOICE" class="java.math.BigDecimal"/>
 		<field name="ID_TAX" class="java.math.BigDecimal"/>
-		<field name="FROM_AMOUNT" class="java.math.BigDecimal"/>
-		<field name="TAX_AMOUNT" class="java.math.BigDecimal"/>
+		<field name="FROM_AMOUNT" class="java.lang.String"/>
+		<field name="TAX_AMOUNT" class="java.lang.String"/>
 		<field name="ID_PRODS" class="java.lang.String"/>
 		<field name="FECHA_CREACION" class="java.sql.Timestamp"/>
 		<field name="ID_CIA" class="java.math.BigDecimal"/>
@@ -56,8 +56,6 @@
 	<field name="TYPE" class="java.lang.String"/>
 	<field name="NO_DOT" class="java.lang.String"/>
 	<field name="CUST_EMAIL" class="java.lang.String"/>
-	<field name="IN_DATE" class="java.sql.Timestamp"/>
-	<field name="DUE_DATE" class="java.sql.Timestamp"/>
 	<field name="ACTUAL_BALANCE" class="java.math.BigDecimal"/>
 	<field name="SUB_TOTAL" class="java.math.BigDecimal"/>
 	<field name="TAX_TOTAL" class="java.math.BigDecimal"/>
@@ -68,12 +66,14 @@
 	<field name="TERMS" class="java.lang.String"/>
 	<field name="TRACK_NUM" class="java.lang.String"/>
 	<field name="SHIP_VIA" class="java.lang.String"/>
-	<field name="SH_DATE" class="java.sql.Timestamp"/>
 	<field name="SH_COST" class="java.math.BigDecimal"/>
 	<field name="MESSAGE_INVOICE" class="oracle.jdbc.OracleClob"/>
 	<field name="MESSAGE_STMNT" class="oracle.jdbc.OracleClob"/>
 	<field name="ATTACHMENT" class="java.lang.String"/>
 	<field name="FECHA_CREACION" class="java.sql.Timestamp"/>
+	<field name="IN_DATE" class="java.lang.String"/>
+	<field name="DUE_DATE" class="java.lang.String"/>
+	<field name="SH_DATE" class="java.lang.String"/>
 	<field name="ID_DETAIL" class="java.math.BigDecimal"/>
 	<field name="ID_PROD" class="java.math.BigDecimal"/>
 	<field name="ITEM_NAME" class="java.lang.String"/>
@@ -138,14 +138,14 @@
 				<textElement>
 					<font size="14" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{DUE_DATE})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{DUE_DATE}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="455" y="0" width="100" height="20" uuid="2bb366d2-0957-4ea0-8320-ef0da436cefc"/>
 				<textElement>
 					<font size="14" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{IN_DATE})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{IN_DATE}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="157" y="20" width="398" height="26" uuid="096408fc-e267-463b-91dc-6767145e0df6"/>
@@ -304,7 +304,7 @@
 						<jr:detailCell style="table_TD" height="20">
 							<textField>
 								<reportElement x="0" y="0" width="90" height="20" uuid="706c407b-77e2-446d-89d5-019f2735f2ef"/>
-								<textFieldExpression><![CDATA[$F{TAX_AMOUNT}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[ String.format("%.2f",(double)(Double.valueOf($F{TAX_AMOUNT})))]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

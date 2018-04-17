@@ -154,7 +154,6 @@ public class InvoiceFormController implements Serializable {
     private @Getter
     @Setter
     BigDecimal rTotal = new BigDecimal(BigInteger.ZERO);
-    
 
     private @Getter
     @Setter
@@ -311,74 +310,74 @@ public class InvoiceFormController implements Serializable {
             if (this.dList.size() < 7) {
                 if (!this.idProd.equals("0")) {
 
-                /* int c = 0;
+                    /* int c = 0;
                 for (FbInvoiceDetail det : dList) {
                     if (this.idProd.equals(det.getIdProd().getIdProd().toString())) {
                         c++;
                     }
                 }*/
-                if (isNotInDetList(idProd)) {
-                    FbProduct prod = new FbProduct();
-                    for (FbProduct fbProd : pList) {
-                        if (this.idProd.equals(fbProd.getIdProd().toString())) {
-                            prod = fbProd;
-                        }
-                    }
-
-                    if (prod.getType().equals("BU")) {
-                        FbProduct prodBundle = new FbProduct();
-                        int c = 0;
-                        int i = 0;
-                        for (FbBundleItems bi : prod.getFbBundleItemsList()) {
-                            prodBundle = bi.getIdProd();
-
-                            if (!(isNotInDetList(prodBundle.getIdProd().toString()))) {
-                                c++;
-                            }
-
-                            if (checkIfInvHasQuant(prodBundle, Integer.parseInt(bi.getQuant().toString()))) {
-                                i++;
+                    if (isNotInDetList(idProd)) {
+                        FbProduct prod = new FbProduct();
+                        for (FbProduct fbProd : pList) {
+                            if (this.idProd.equals(fbProd.getIdProd().toString())) {
+                                prod = fbProd;
                             }
                         }
 
-                        if (c == 0 && i == 0) {
-
+                        if (prod.getType().equals("BU")) {
+                            FbProduct prodBundle = new FbProduct();
+                            int c = 0;
+                            int i = 0;
                             for (FbBundleItems bi : prod.getFbBundleItemsList()) {
                                 prodBundle = bi.getIdProd();
 
-                                addItemInDetailList(prodBundle);
+                                if (!(isNotInDetList(prodBundle.getIdProd().toString()))) {
+                                    c++;
+                                }
 
+                                if (checkIfInvHasQuant(prodBundle, Integer.parseInt(bi.getQuant().toString()))) {
+                                    i++;
+                                }
                             }
 
-                        } else if (c != 0) {
-                            this.validationBean.lanzarMensaje("error", "lblBundleInDetail", "blank");
-                        } else if (i != 0) {
-                            this.validationBean.lanzarMensaje("error", "lblBundNoQuant", "blank");
-                        } else {
-                            System.out.println("It should never go here");
-                        }
+                            if (c == 0 && i == 0) {
 
-                        /**/
+                                for (FbBundleItems bi : prod.getFbBundleItemsList()) {
+                                    prodBundle = bi.getIdProd();
+
+                                    addItemInDetailList(prodBundle);
+
+                                }
+
+                            } else if (c != 0) {
+                                this.validationBean.lanzarMensaje("error", "lblBundleInDetail", "blank");
+                            } else if (i != 0) {
+                                this.validationBean.lanzarMensaje("error", "lblBundNoQuant", "blank");
+                            } else {
+                                System.out.println("It should never go here");
+                            }
+
+                            /**/
+                        } else {
+
+                            if (checkIfInvHasQuant(prod, 1)) {
+                                addItemInDetailList(prod);
+                            } else {
+                                this.validationBean.lanzarMensaje("error", "lblProdNoQuant", "blank");
+                            }
+
+                        }
+                        this.updateTotal();
+
                     } else {
-
-                        if (checkIfInvHasQuant(prod, 1)) {
-                            addItemInDetailList(prod);
-                        } else {
-                            this.validationBean.lanzarMensaje("error", "lblProdNoQuant", "blank");
-                        }
-
+                        this.validationBean.lanzarMensaje("error", "lblAddDetailRepeat", "blank");
                     }
-                    this.updateTotal();
 
                 } else {
-                    this.validationBean.lanzarMensaje("error", "lblAddDetailRepeat", "blank");
+                    this.validationBean.lanzarMensaje("error", "lblAddDetailFail", "blank");
                 }
-
             } else {
-                this.validationBean.lanzarMensaje("error", "lblAddDetailFail", "blank");
-            }
-            }else{
-            this.validationBean.lanzarMensaje("error", "lblMaxDetInvoice", "blank");
+                this.validationBean.lanzarMensaje("error", "lblMaxDetInvoice", "blank");
             }
 
         } catch (Exception e) {
@@ -468,34 +467,32 @@ public class InvoiceFormController implements Serializable {
                 this.rSubTotal = new BigDecimal(acum);
                 Double ship = 0.00;
                 Double tax = 0.00;
-                
-                    tax = Double.parseDouble(this.rTaxTotal.toString());
-                
+
+                tax = Double.parseDouble(this.rTaxTotal.toString());
+
                 if (!this.shCost.isEmpty()) {
                     if (StringUtils.isNumeric(shCost)) {
                         ship = Double.parseDouble(shCost);
-                    }else{
+                    } else {
                         shCost = "0.00";
                         ship = 0.00;
                     }
-                    
+
                 }
-                
-                 
-                
-                this.dBalance = String.format("%.2f", (acum + ship+tax ));
+
+                this.dBalance = String.format("%.2f", (acum + ship + tax));
                 //Double balanceDue = acum + ship;
 
                 this.rBalance = new BigDecimal((acum + ship + tax));
-                this.dTotal = String.format("%.2f", (acum + ship+ tax));
+                this.dTotal = String.format("%.2f", (acum + ship + tax));
                 //Double balanceDue = acum + ship;
 
-                this.rTotal = new BigDecimal((acum + ship+ tax));
+                this.rTotal = new BigDecimal((acum + ship + tax));
             } else {
                 this.validationBean.lanzarMensaje("error", "lblProdNoQuant", "blank");
 
             }
-            
+
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.ProductController.updateBundleTotal()");
             e.printStackTrace();
@@ -544,105 +541,104 @@ public class InvoiceFormController implements Serializable {
     }
 
     public void actTaxes() {
-        
+
         if (hasTax) {
             int a = 0;
-        int c = 0;
-        List<String> idTaxes = new ArrayList<>();
-        taxesAmountList = new ArrayList<>();
-        FbInvoiceTaxes it = new FbInvoiceTaxes();
-        Double rate = 0.00;
-        Double amount = 0.00;
+            int c = 0;
+            List<String> idTaxes = new ArrayList<>();
+            taxesAmountList = new ArrayList<>();
+            FbInvoiceTaxes it = new FbInvoiceTaxes();
+            Double rate = 0.00;
+            Double amount = 0.00;
 
-        for (FbInvoiceDetail det : dList) {
-            if (det.getItemTax() == null) {
-                det.setItemTax(this.taxList.get(0).getIdTax().toString());
-            }
-
-        }
-
-        for (FbInvoiceDetail det : dList) {
-            c = 0;
-
-            for (FbInvoiceDetail deta : dList) {
-                if (deta.getItemTax().equals(det.getItemTax())) {
-                    c++;
-                }
-
-            }
-            //System.out.println(c);
-            if (c == 1) { //solo esta una vez
-                idTaxes.add(det.getItemTax());
-            } else if (c > 1) {//dos o mas veces
-                for (String idTaxe : idTaxes) {
-                    if (idTaxe.equals(det.getItemTax())) {
-                        a++;
-                    }
-                }
-
-                if (a == 0) {
-                    idTaxes.add(det.getItemTax());
-                }
-
-            }
-        }
-
-        for (String t : idTaxes) {
-            a = 0;
             for (FbInvoiceDetail det : dList) {
-                if (det.getItemTax().equals(t)) {
-                    if (a == 0) {
-                        it = new FbInvoiceTaxes();
-                        for (FbTax fbTax : this.taxList) {
-                            if (det.getItemTax().equals(fbTax.getIdTax().toString())) {
-                                it.setIdTax(fbTax);
-                            }
-                        }
-                        it.setFromAmount(det.getItemAmount());
-                        it.setIdProds(det.getIdProd().getIdProd().toString());
-                        rate = Double.parseDouble(it.getIdTax().getRate());
-                        amount = Double.parseDouble(det.getItemAmount().toString());
-                        it.setTaxAmount(new BigDecimal(String.valueOf(amount * rate)));
-
-                        this.taxesAmountList.add(it);
-                        a++;
-                    } else {
-
-                        for (FbInvoiceTaxes inTax : taxesAmountList) {
-
-                            if (inTax.getIdTax().getIdTax().toString().equals(det.getItemTax())) {
-
-                                amount = Double.parseDouble(inTax.getFromAmount().toString());
-                                inTax.setFromAmount(new BigDecimal(String.valueOf(amount + Double.parseDouble(det.getItemAmount().toString()))));
-                                inTax.setIdProds(inTax.getIdProds() + ":" + det.getIdProd().getIdProd());
-                                inTax.setTaxAmount(new BigDecimal(String.valueOf(
-                                        Double.parseDouble(inTax.getFromAmount().toString())
-                                        * Double.parseDouble(inTax.getIdTax().getRate()))));
-
-                            }
-                        }
-                    }
+                if (det.getItemTax() == null) {
+                    det.setItemTax(this.taxList.get(0).getIdTax().toString());
                 }
 
             }
-        }
-        Double acum = 0.00;
+
+            for (FbInvoiceDetail det : dList) {
+                c = 0;
+
+                for (FbInvoiceDetail deta : dList) {
+                    if (deta.getItemTax().equals(det.getItemTax())) {
+                        c++;
+                    }
+
+                }
+                //System.out.println(c);
+                if (c == 1) { //solo esta una vez
+                    idTaxes.add(det.getItemTax());
+                } else if (c > 1) {//dos o mas veces
+                    for (String idTaxe : idTaxes) {
+                        if (idTaxe.equals(det.getItemTax())) {
+                            a++;
+                        }
+                    }
+
+                    if (a == 0) {
+                        idTaxes.add(det.getItemTax());
+                    }
+
+                }
+            }
+
+            for (String t : idTaxes) {
+                a = 0;
+                for (FbInvoiceDetail det : dList) {
+                    if (det.getItemTax().equals(t)) {
+                        if (a == 0) {
+                            it = new FbInvoiceTaxes();
+                            for (FbTax fbTax : this.taxList) {
+                                if (det.getItemTax().equals(fbTax.getIdTax().toString())) {
+                                    it.setIdTax(fbTax);
+                                }
+                            }
+                            it.setFromAmount(det.getItemAmount());
+                            it.setIdProds(det.getIdProd().getIdProd().toString());
+                            rate = Double.parseDouble(it.getIdTax().getRate());
+                            amount = Double.parseDouble(det.getItemAmount().toString());
+                            it.setTaxAmount(new BigDecimal(String.valueOf(amount * rate)));
+
+                            this.taxesAmountList.add(it);
+                            a++;
+                        } else {
+
+                            for (FbInvoiceTaxes inTax : taxesAmountList) {
+
+                                if (inTax.getIdTax().getIdTax().toString().equals(det.getItemTax())) {
+
+                                    amount = Double.parseDouble(inTax.getFromAmount().toString());
+                                    inTax.setFromAmount(new BigDecimal(String.valueOf(amount + Double.parseDouble(det.getItemAmount().toString()))));
+                                    inTax.setIdProds(inTax.getIdProds() + ":" + det.getIdProd().getIdProd());
+                                    inTax.setTaxAmount(new BigDecimal(String.valueOf(
+                                            Double.parseDouble(inTax.getFromAmount().toString())
+                                            * Double.parseDouble(inTax.getIdTax().getRate()))));
+
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+            Double acum = 0.00;
             for (FbInvoiceTaxes fbInvoiceTaxes : taxesAmountList) {
                 acum += Double.parseDouble(fbInvoiceTaxes.getTaxAmount().toString());
             }
             this.rTaxTotal = new BigDecimal(acum.toString());
             this.dTaxTotal = rTaxTotal.toString();
-        System.out.println(taxesAmountList.size());
-        }else{
-        taxesAmountList = new ArrayList<>();
+            System.out.println(taxesAmountList.size());
+        } else {
+            taxesAmountList = new ArrayList<>();
         }
-        
+
     }
-    
-    
-    public String formatOutput(BigDecimal input){
-    return this.validationBean.formatDouble(input);
-    
+
+    public String formatOutput(BigDecimal input) {
+        return this.validationBean.formatDouble(input);
+
     }
 
     /*public void updateTaxes() {
@@ -728,16 +724,15 @@ public class InvoiceFormController implements Serializable {
 
         }
     }*/
-
     public void save() {
         try {
             if (this.validationBean.validarSoloNumerosConPunto(this.shCost, "error", "lblInShCostFail", "blank")) {
                 if (this.currentCust != null) {
-                
-            
-            DateFormat sd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
-            if (!this.dList.isEmpty() ) {
-                /*
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+                    DateFormat sd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+                    if (!this.dList.isEmpty()) {
+                        /*
      PROCEDURE PR_ACT_INVOICE
  (pIdCia IN INT, pIdInvoice IN INT, pIdCust IN INT, pType IN VARCHAR2,pNo IN VARCHAR2, pEmail IN VARCHAR2,
     pInDate IN VARCHAR2,pDueDate IN VARCHAR2,pActBalance IN DECIMAL,pSubTotal IN DECIMAL,pTaxTotal IN DECIMAL,
@@ -745,61 +740,134 @@ public class InvoiceFormController implements Serializable {
       pShipVia IN VARCHAR2,pShDate IN VARCHAR2,pShCost IN DECIMAL,pMessageInvoice IN VARCHAR2,pAttachment IN VARCHAR2,
       pProdIds IN VARCHAR2,pQuants IN VARCHAR2,pIdTaxes IN VARCHAR2,pFromAmounts IN VARCHAR2,pTaxAmounts IN VARCHAR2,
         pTaxProdIds IN VARCHAR2, op IN VARCHAR2, res OUT VARCHAR2); 
-    */
-                updateTotal();
-                FbInvoice in = new FbInvoice();
-                in.setIdCia(this.userData.getCurrentCia());
-                in.setIdInvoice(BigDecimal.ZERO);
-                in.setIdCust(currentCust);
-                in.setType("IN");
-                in.setNoDot("");
-                in.setCustEmail(this.currentCust.getEmail());
-                in.setInDate(sd.parse(this.invoiceDate));
-                in.setDueDate(sd.parse(this.dueDate));
-                in.setActualBalance(this.rBalance);
-                in.setSubTotal(rSubTotal);
-                in.setTotal(rTotal);
-                in.setTaxTotal(rTaxTotal);
-                in.setStatus("OP");
-                in.setBiAddress(biAddress);
-                in.setShAddress(shAddress);
-                in.setTerms(termDays);
-                in.setTrackNum(trackNo);
-                in.setShipVia(shVia);
-                in.setShCost(new BigDecimal(this.shCost));
-                if (shipDate != null) {
-                    in.setShDate(sd.parse(shipDate));
-                }
-                
-                in.setMessageInvoice(messageInvoice);
-                in.setAttachment(attach);
-                
-                in.setFbInvoiceDetailList(dList);
-                in.setFbInvoiceTaxesList(taxesAmountList);
-                String res = iFacade.actInvoice(in, "A");
-                System.out.println("result: " + res);
-                if (res.equals("0")) {
-                            
+                         */
+                        updateTotal();
+                        FbInvoice in = new FbInvoice();
+                        in.setIdCia(this.userData.getCurrentCia());
+                        in.setIdInvoice(BigDecimal.ZERO);
+                        in.setIdCust(currentCust);
+                        in.setType("IN");
+                        in.setNoDot("");
+                        in.setCustEmail(this.currentCust.getEmail());
+                        in.setInDate(sdf.format(sd.parse(this.invoiceDate)));
+                        in.setDueDate(sdf.format(sd.parse(this.dueDate)));
+                        in.setActualBalance(this.rBalance);
+                        in.setSubTotal(rSubTotal);
+                        in.setTotal(rTotal);
+                        in.setTaxTotal(rTaxTotal);
+                        in.setStatus("OP");
+                        in.setBiAddress(biAddress);
+                        in.setShAddress(shAddress);
+                        in.setTerms(termDays);
+                        in.setTrackNum(trackNo);
+                        in.setShipVia(shVia);
+                        in.setShCost(new BigDecimal(this.shCost));
+                        if (shipDate != null) {
+                            in.setShDate(sdf.format(sd.parse(shipDate)));
+                        }
+
+                        in.setMessageInvoice(messageInvoice);
+                        in.setAttachment(attach);
+
+                        in.setFbInvoiceDetailList(dList);
+                        in.setFbInvoiceTaxesList(taxesAmountList);
+                        String res = iFacade.actInvoice(in, "A");
+                        System.out.println("result: " + res);
+                        if (res.equals("0")) {
+
                             this.userData.setUses("lblInvoiceAddSuccess");
                             this.validationBean.redirecionar("/view/sales/sales.xhtml");
-                }else{
-                this.validationBean.lanzarMensajeSinBundle("error", res, " ");
+                        } else {
+                            //this.validationBean.lanzarMensajeSinBundle("error", res, " ");
+                        }
+
+                    } else {
+                        this.validationBean.lanzarMensaje("error", "lblMinDetInvoice", "blank");
+                    }
+
+                } else {
+
+                    this.validationBean.lanzarMensaje("error", "lblSelectCust", "blank");
                 }
-                
-            }else{
-                this.validationBean.lanzarMensaje("error", "lblMinDetInvoice", "blank");
-            }
-            
-            }else{
-            
-            this.validationBean.lanzarMensaje("error", "lblSelectCust", "blank");
-            }
             }
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.save()");
             this.validationBean.lanzarMensajeSinBundle("error", e.toString(), " ");
             e.printStackTrace();
         }
+
+    }
+
+    public String assign(FbInvoice in) {
+        try {
+            this.currentCust = in.getIdCust();
+            this.idCust = in.getIdCust().toString();
+            this.email = in.getIdCust().getEmail();
+            biAddress = "";
+            if (currentCust.getStreet() != null) {
+                biAddress += currentCust.getStreet() + " ";
+            }
+            if (currentCust.getPostalCode() != null) {
+                biAddress += currentCust.getPostalCode() + " ";
+            }
+            if (currentCust.getCity() != null) {
+                biAddress += currentCust.getCity() + " ";
+            }
+            if (currentCust.getEstate() != null) {
+                biAddress += currentCust.getEstate() + " ";
+            }
+            if (currentCust.getCountry() != null) {
+                biAddress += currentCust.getCountry() + ".";
+            }
+
+            shAddress = "";
+            if (currentCust.getStreet() != null) {
+                shAddress += currentCust.getStreetS() + " ";
+            }
+            if (currentCust.getPostalCode() != null) {
+                shAddress += currentCust.getPostalCodeS() + " ";
+            }
+            if (currentCust.getCity() != null) {
+                shAddress += currentCust.getCityS() + " ";
+            }
+            if (currentCust.getEstate() != null) {
+                shAddress += currentCust.getEstateS() + " ";
+            }
+            if (currentCust.getCountry() != null) {
+                shAddress += currentCust.getCountryS() + ".";
+            }
+            
+            termDays = in.getTerms();
+            invoiceDate = in.getInDate();
+            dueDate = in.getDueDate();
+            shVia = in.getShipVia();
+            shipDate = in.getShDate();
+            trackNo = in.getTrackNum();
+            this.dList = in.getFbInvoiceDetailList();
+            
+            if (in.getFbInvoiceTaxesList().isEmpty()) {
+                hasTax = false;
+            }else{
+            this.taxesAmountList = in.getFbInvoiceTaxesList();
+            }
+            
+           /* for (FbInvoiceDetail det : dList) {
+                
+                for (FbInvoiceTaxes taz : taxesAmountList) {
+                    taz.getIdProds().split(":")
+                }
+                
+                
+            }*/
+            
+            updateTotal();
+            
+
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.InvoiceFormController.assign()");
+            e.printStackTrace();
+        }
         
+        return "/view/sales/invoiceForm.xhtml";
     }
 }

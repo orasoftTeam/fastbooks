@@ -118,7 +118,7 @@
                 <bnu:column span="4">
                     <bnu:selectOneMenu  update="@form" value="#{invoiceController.hasTax}" onchange="ajax:invoiceController.updateTotal();" >
                         <f:selectItem itemLabel="#{messages.lblInvoiceWTax}" itemValue="true" />
-                        <f:selectItem itemLabel="#{messages.lblInvoiceWTax}" itemValue="false" />
+                        <f:selectItem itemLabel="#{messages.lblInvoiceWTTax}" itemValue="false" />
                     </bnu:selectOneMenu>
                     
                 </bnu:column>
@@ -139,7 +139,7 @@
                     <bnu:inputText  value="#{det.itemQuant}"  tooltip="#{invoiceController.tooltipQuant(det.idProd)}" onkeyup="soloNumeros(this)" maxlength="4"   onblur="ajax:invoiceController.updateTotal();"  update="@form" />
                 </bnu:dataTableColumn>
                 <bnu:dataTableColumn label="#{messages.lblInDetRate}" value="#{det.itemRate}" />
-                <bnu:dataTableColumn label="#{messages.lblInDetAmount}" value="#{det.itemAmount}" />
+                <bnu:dataTableColumn label="#{messages.lblInDetAmount}" value="#{invoiceController.formatOutput(det.itemAmount)}" />
                 <bnu:dataTableColumn label="#{messages.lblInvoiceTax}" rendered="#{invoiceController.hasTax}" >
                     <bnu:selectOneMenu value="#{det.itemTax}" update="@form" onchange="ajax:invoiceController.updateTotal();" >
                         <f:selectItems value="#{invoiceController.taxList}" var="tax" itemLabel="#{tax.name} (#{tax.rate}%)" itemValue="#{tax.idTax.toString()}" />

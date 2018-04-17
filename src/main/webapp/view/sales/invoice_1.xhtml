@@ -57,20 +57,20 @@
                                 <bnu:dataTableColumn label="#{messages.lblInvoiceTotal}"  value="#{in.total}" ></bnu:dataTableColumn>
                                 <bnu:dataTableColumn label="#{messages.lblInvoiceStatus}" value="#{invoiceTableController.formatStatus(in.status)}" ></bnu:dataTableColumn>
                                 <bnu:dataTableColumn label="#{messages.lblAction}">
-                                  
-                                    <!--<bnu:dropButton value="#{messages.edit}" look="primary" styleClass="hidden-xs hidden-sm" >
-                                        <bnu:commandButton value="#{messages.edit}"  style="width:100%"  />
+                                   
+                                   <bnu:dropButton value="#{messages.edit}" look="primary" styleClass="hidden-xs hidden-sm" >
+                                       <bnu:commandButton value="#{messages.edit}"  style="width:100%" action="#{invoiceController.assign(in)}"  />
                                         <bnu:commandButton value="#{messages.lblInvoiceCancel}"  style="width:100%"  />
                                         <bnu:commandButton value="#{messages.lblInvoiceRecievePay}" style="width:100%"  />
-                                        <bnu:commandButton value="#{messages.lblInvoicePrint}"  style="width:100%"  />
+                                        <bnu:commandButton value="#{messages.lblInvoicePrint}"  style="width:100%"  action="#{invoiceTableController.print(in)}"  />
                                         <bnu:commandButton value="#{messages.lblInvoiceSend }"  style="width:100%"  />
                                     </bnu:dropButton>
                                     <bnu:commandButton value="#{messages.edit}"  look="warning" styleClass="hidden-lg hidden-md"    />
                                     <bnu:commandButton value="#{messages.delete}"  look="danger" styleClass="hidden-lg hidden-md"  />
-                                    <bnu:commandButton value="Cancel"   styleClass="hidden-lg hidden-md" />
-                                        <bnu:commandButton value="Recieve Payment"   styleClass="hidden-lg hidden-md" />
-                                        <bnu:commandButton value="Print"   styleClass="hidden-lg hidden-md" />
-                                        <bnu:commandButton value="Send Reminder"   styleClass="hidden-lg hidden-md" />-->
+                                    <bnu:commandButton value="#{messages.lblInvoiceCancel}"   styleClass="hidden-lg hidden-md" />
+                                        <bnu:commandButton value="#{messages.lblInvoiceRecievePay}"   styleClass="hidden-lg hidden-md" />
+                                        <bnu:commandButton value="#{messages.lblInvoicePrint}"   styleClass="hidden-lg hidden-md"  action="#{invoiceTableController.print(in)}" />
+                                        <bnu:commandButton value="#{messages.lblInvoiceSend }"   styleClass="hidden-lg hidden-md" />
                                 </bnu:dataTableColumn>
                                 
                             </bnu:dataTable>
@@ -80,7 +80,30 @@
                 </h:form>
                 <p:separator/>
                       
-   
+                     <!--<bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />-->
+        <bnu:modal  id="invoiceModal" title="Invoice" styleClass="invoiceModal"  close-on-escape="false" backdrop="false"  >
+                        <h:panelGroup id="pdf">
+                            <bnu:row>
+                                <bnu:column span="4">
+                                    <h:panelGrid columns="1">
+                                        <bnu:inputText label="Subject" value="#{invoiceTableController.subjet}"  />
+                                        <bnu:inputTextarea label="Message"  value="#{invoiceTableController.body}" />
+                                    </h:panelGrid>
+                                    
+                                </bnu:column>
+                                
+                                <bnu:column span="8">
+                                    <p:media value="#{invoiceTableController.invoiceModal}" width="100%" height="500px" rendered="#{not(invoiceTableController.invoiceModal eq '0')}"  />     
+                                </bnu:column>
+                            </bnu:row>   
+                            <bnu:row>
+                                <bnu:column span="4">
+                                    
+                                    <bnu:commandButton look="success" value="Send" action="#{invoiceTableController.sendReminder()}" />
+                                </bnu:column>
+                            </bnu:row>
+                        </h:panelGroup>
+                        </bnu:modal> 
                      
                      
                      

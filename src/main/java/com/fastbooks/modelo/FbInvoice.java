@@ -73,11 +73,9 @@ public class FbInvoice implements Serializable {
     @Column(name = "CUST_EMAIL")
     private String custEmail;
     @Column(name = "IN_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date inDate;
+    private String inDate;
     @Column(name = "DUE_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dueDate;
+    private String dueDate;
     @Column(name = "ACTUAL_BALANCE")
     private BigDecimal actualBalance;
     @Column(name = "SUB_TOTAL")
@@ -105,8 +103,7 @@ public class FbInvoice implements Serializable {
     @Column(name = "SHIP_VIA")
     private String shipVia;
     @Column(name = "SH_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date shDate;
+    private String shDate;
     @Column(name = "SH_COST")
     private BigDecimal shCost;
     @Lob
@@ -171,19 +168,19 @@ public class FbInvoice implements Serializable {
         this.custEmail = custEmail;
     }
 
-    public Date getInDate() {
+    public String getInDate() {
         return inDate;
     }
 
-    public void setInDate(Date inDate) {
+    public void setInDate(String inDate) {
         this.inDate = inDate;
     }
 
-    public Date getDueDate() {
+    public String getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -267,11 +264,11 @@ public class FbInvoice implements Serializable {
         this.shipVia = shipVia;
     }
 
-    public Date getShDate() {
+    public String getShDate() {
         return shDate;
     }
 
-    public void setShDate(Date shDate) {
+    public void setShDate(String shDate) {
         this.shDate = shDate;
     }
 
