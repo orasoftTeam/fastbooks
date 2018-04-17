@@ -5,6 +5,7 @@
  */
 package com.fastbooks.util;
 
+import java.io.File;
 import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -26,6 +27,7 @@ import javax.mail.internet.MimeMultipart;
  * @author DELL
  */
 public class SendMails {
+    GlobalParameters gp = new GlobalParameters();
 
     public void sendSimpleMail(String toEmail, String fromEmail, String subject, String body, String filepath) {
         Properties props = new Properties();
@@ -39,7 +41,7 @@ public class SendMails {
         Session session = Session.getInstance(props,
                 new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("hayteguachoprueba", "orasoft123");
+                return new PasswordAuthentication(gp.getEmail(), gp.getPass());
             }
         });
 
@@ -64,7 +66,7 @@ public class SendMails {
          String filename = filepath;
          DataSource source = new FileDataSource(filename);
          messageBodyPart.setDataHandler(new DataHandler(source));
-         messageBodyPart.setFileName(filename);
+         messageBodyPart.setFileName(new File(filename).getName());
          multipart.addBodyPart(messageBodyPart);
 
          // Send the complete message parts

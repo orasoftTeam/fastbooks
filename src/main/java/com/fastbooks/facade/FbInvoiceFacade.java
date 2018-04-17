@@ -38,6 +38,7 @@ import net.sf.jasperreports.engine.export.JRPdfExporter;
  */
 @Stateless
 public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
+    
     @PersistenceContext(unitName = "com_Fastbooks_war_1.0PU")
     private EntityManager em;
 
@@ -158,7 +159,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
     }
      
      
-     public String generateInvoice(FbInvoice i){
+     public String generateInvoice(FbInvoice i,String logo){
             String res = "";
             Connection cn = em.unwrap(java.sql.Connection.class);
             String dir = "view"+File.separator+"jasper"+File.separator+"report1.jrxml";
@@ -172,7 +173,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
             String pdfName = File.separator + "IN"+i.getNoDot()+i.getIdCia().getNomCom()+".pdf";
              Map parametersMap = new HashMap();
             parametersMap.put("idInvoice",i.getIdInvoice().toString() );
-            parametersMap.put("logo",new File(gp.getAppPath() + File.separator + "logo" + File.separator + "6Ra1xoZ7457138.png"));
+            parametersMap.put("logo",new File(gp.getAppPath() +logo));
             try {
              ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
                 String realPath = ec.getRealPath("/");

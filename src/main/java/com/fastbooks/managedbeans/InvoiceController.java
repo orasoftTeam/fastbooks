@@ -91,10 +91,10 @@ public class InvoiceController implements Serializable {
     }
 
     public void print(FbInvoice i) {
-        this.invoiceModal = this.iFacade.generateInvoice(i);
+        this.invoiceModal = this.iFacade.generateInvoice(i,this.userData.getCurrentCia().getLogo());
         //this.userData.setSInvoice(invoiceModal);
         this.currentIn = i;
-        this.validationBean.updateComponent("pdf");
+       // this.validationBean.updateComponent("pdf");
         this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
     }
 
