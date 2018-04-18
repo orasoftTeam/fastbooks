@@ -5,6 +5,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:bnu="http://bootsfaces.net/ui">
 
     <f:view locale="#{ userData.locale}"/>
@@ -86,19 +87,28 @@
                                 <bnu:column>    
                                     <bnu:inputText label="#{messages.emailC}" value="#{employeeController.emp.email}" maxlength="50"></bnu:inputText>
                                 </bnu:column>
-                                <bnu:column>    
+                                <!--<bnu:column>    
                                     <bnu:inputText label="#{messages.gender}" value="#{employeeController.emp.gender}" maxlength="20"></bnu:inputText>
-                                </bnu:column>
+                                </bnu:column>-->
                                 <bnu:column>    
-                                    <bnu:inputText label="#{messages.dateBirth}" value="#{employeeController.emp.dateOfBirth}" maxlength="20"></bnu:inputText>
+                                   <bnu:inputText label="#{messages.dateBirth}"  value="#{employeeController.emp.dateOfBirth}" maxlength="20" onkeyup="soloNumeros(this)"></bnu:inputText>
                                 </bnu:column>
+                                <bnu:column>
+                                    <h:outputLabel>#{messages.gender}</h:outputLabel>
+                                    <bnu:radiobutton value="#{userController.gender}">
+                                        <f:selectItem itemLabel="#{messages.male}" itemValue="M" />
+                                        <f:selectItem itemLabel="#{messages.female}" itemValue="F" />
+                                    </bnu:radiobutton>
+                                </bnu:column>
+
+
                             </bnu:panel>
                             <bnu:panel span="6">
                                 <bnu:column>    
-                                    <bnu:inputText label="#{messages.phoneC}" value="#{employeeController.emp.phone}" maxlength="20"></bnu:inputText>
+                                    <bnu:inputText label="#{messages.phoneC}" value="#{employeeController.emp.phone}" onkeyup="soloNumeros(this)" maxlength="20"></bnu:inputText>
                                 </bnu:column>
                                 <bnu:column>    
-                                    <bnu:inputText label="#{messages.mobileC}" value="#{employeeController.emp.mobile}" maxlength="20"></bnu:inputText>
+                                    <bnu:inputText label="#{messages.mobileC}" value="#{employeeController.emp.mobile}" onkeyup="soloNumeros(this)" maxlength="20"></bnu:inputText>
                                 </bnu:column>
                                 <bnu:column>    
                                     <bnu:inputTextarea label="#{messages.streetC}" value="#{employeeController.emp.street}"></bnu:inputTextarea>
@@ -182,6 +192,14 @@
                     </h:form>
                 </bnu:modal>
 
+
+                <h:outputScript>
+                    function soloNumeros(obj) 
+                    { 
+                    obj.value = (obj.value + '').replace(/[^0-9]/g, '');
+                    }
+
+                </h:outputScript>
 
             </ui:define>
         </ui:composition>

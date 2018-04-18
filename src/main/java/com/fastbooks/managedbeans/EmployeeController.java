@@ -40,8 +40,26 @@ public class EmployeeController implements Serializable {
     private @Getter
     @Setter
     List<FbEmployee> empL = new ArrayList<>();
-    
-    private @Getter @Setter FbEmployee empleado;
+
+    private @Getter
+    @Setter
+    FbEmployee empleado;
+
+    private @Setter
+    @Getter
+    String day;
+    private @Setter
+    @Getter
+    String month;
+    private @Setter
+    @Getter
+    String year;
+    private @Setter
+    @Getter
+    String bDay;
+    private @Setter
+    @Getter
+    List<Integer> years = new ArrayList<Integer>();
 
     public FbEmployee getEmp() {
         return emp;
@@ -66,23 +84,28 @@ public class EmployeeController implements Serializable {
     //Adding a new employee
     public void addEmployee() {
         System.out.println("Ingresando a agregar nuevo employee" + emp);
-        if(valCampos()){
-        FbCompania com = new FbCompania();
-        com.setIdCia(BigDecimal.ZERO);
-        this.emp.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
-        this.emp.setIdCia(this.userData.getCurrentCia());
-        this.emp.setIdEmp(new BigDecimal("0"));
+        if (valCampos()) {
+            FbCompania com = new FbCompania();
+            com.setIdCia(BigDecimal.ZERO);
+            this.emp.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
+            this.emp.setIdCia(this.userData.getCurrentCia());
+            this.emp.setIdEmp(new BigDecimal("0"));
+            this.bDay = this.day + "/"+this.month+"/"+this.year;
+            
 
-        String res = eFacade.actEmployee(emp, "A");
-        System.out.println("Res: " + res);
-        if (res.equals("0")) {
-            validationBean.lanzarMensaje("info", "empAdded", "blank");
-        } else if (res.equals("-1")) {
-            validationBean.lanzarMensaje("error", "empRepeatFail", "blank");
-        } else if (res.equals("-2")) {
-            validationBean.lanzarMensaje("error", "unexpectedError", "blank");
-        }
-        emp = new FbEmployee(); //limpiando..
+            
+            
+
+            String res = eFacade.actEmployee(emp, "A");
+            System.out.println("Res: " + res);
+            if (res.equals("0")) {
+                validationBean.lanzarMensaje("info", "empAdded", "blank");
+            } else if (res.equals("-1")) {
+                validationBean.lanzarMensaje("error", "empRepeatFail", "blank");
+            } else if (res.equals("-2")) {
+                validationBean.lanzarMensaje("error", "unexpectedError", "blank");
+            }
+            emp = new FbEmployee(); //limpiando..
         }
 
     }
@@ -100,6 +123,7 @@ public class EmployeeController implements Serializable {
             System.out.println("error obteniendo lista");
             e.printStackTrace();
         }
+        
 
     }
 
@@ -108,7 +132,7 @@ public class EmployeeController implements Serializable {
 
         this.empleado = em;
         System.out.println("obteniendo objeto action " + em);
-    
+
         if (op.equals("U")) {
             this.validationBean.ejecutarJavascript("$('.modalPseudoClass2').modal();");
         } else {
@@ -116,12 +140,11 @@ public class EmployeeController implements Serializable {
         }
 
     }
-    
-    
+
     //Updating customer
-    public void editEmployee(){
+    public void editEmployee() {
         System.out.println("Ingresando a actualizar employee");
-         String res = "";
+        String res = "";
 
         try {
             res = eFacade.actEmployee(empleado, "U");
@@ -133,17 +156,17 @@ public class EmployeeController implements Serializable {
                 validationBean.lanzarMensaje("error", "unexpectedError", "blank");
             }
             empleado = new FbEmployee(); //limpiando
- 
+
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.EmployeeController.editEmployee()");
             e.printStackTrace();
             res = "-2";
         }
     }
-    
-    public void deleteEmployee(){
-         System.out.println("Ingresando a eliminar employee");
-         String res = "";
+
+    public void deleteEmployee() {
+        System.out.println("Ingresando a eliminar employee");
+        String res = "";
         try {
             res = eFacade.actEmployee(empleado, "D");
             System.out.println("resultado delete employee" + res);
@@ -155,46 +178,46 @@ public class EmployeeController implements Serializable {
                 validationBean.lanzarMensaje("error", "unexpectedError", "blank");
             }
             empleado = new FbEmployee(); //limpiando
- 
+
         } catch (Exception e) {
             e.printStackTrace();
             res = "-2";
         }
-    
-    
+
     }
-    
-    
-    public boolean valCampos (){
-    
+
+    public boolean valCampos() {
+
         boolean flag = false;
         int c = 0;
-        
-        if(!(validationBean.validarCampoVacio(this.emp.getFirstname(), "warn", "valErr", "reqFname")
-            && validationBean.validarSoloLetras(this.emp.getFirstname(), "warn", "valErr", "reqFname"))){
+
+        if (!(validationBean.validarCampoVacio(this.emp.getFirstname(), "warn", "valErr", "reqFname")
+                && validationBean.validarSoloLetras(this.emp.getFirstname(), "warn", "valErr", "reqFname"))) {
             c++;
         }
-        if(!(validationBean.validarCampoVacio(this.emp.getLastname(), "warn", "valErr", "reqLname")
-            && validationBean.validarSoloLetras(this.emp.getFirstname(), "warn", "valErr", "reqLname"))){
+        if (!(validationBean.validarCampoVacio(this.emp.getLastname(), "warn", "valErr", "reqLname")
+                && validationBean.validarSoloLetras(this.emp.getFirstname(), "warn", "valErr", "reqLname"))) {
             c++;
         }
         if (!(validationBean.validarCampoVacio(this.emp.getEmail(), "warn", "valErr", "reqEmail")
                 && validationBean.validarEmail(this.emp.getEmail(), "warn", "valErr", "reqEmail"))) {
             c++;
         }
-        if(!(validationBean.validarCampoVacio(this.emp.getGender(), "warn", "valErr", "reqGender")
-            && validationBean.validarSoloLetras(this.emp.getGender(), "warn", "valErr", "reqGender"))){
+        if (!(validationBean.validarCampoVacio(this.emp.getGender(), "warn", "valErr", "reqGender")
+                && validationBean.validarSoloLetras(this.emp.getGender(), "warn", "valErr", "reqGender"))) {
             c++;
         }
-         if(!(validationBean.validarCampoVacio(this.emp.getDateOfBirth(), "warn", "valErr", "reqBDay")
-            && validationBean.validarSoloNumeros(this.emp.getDateOfBirth(), "warn", "valErr", "reqBDay"))){
+        
+        if (!(validationBean.validarCampoVacio(this.emp.getDateOfBirth(), "warn", "valErr", "reqBDay")
+                && validationBean.validarSoloNumeros(this.emp.getDateOfBirth(), "warn", "valErr", "reqBDay"))) {
             c++;
         }
+        
         if (!(validationBean.validarCampoVacio(this.emp.getPhone(), "warn", "valErr", "reqPhone")
                 && validationBean.validarSoloNumeros(this.emp.getPhone(), "warn", "valErr", "reqPhone"))) {
             c++;
         }
-         if (!(validationBean.validarCampoVacio(this.emp.getStreet(), "warn", "valErr", "reqStreet"))) {
+        if (!(validationBean.validarCampoVacio(this.emp.getStreet(), "warn", "valErr", "reqStreet"))) {
             c++;
         }
         if (!(validationBean.validarCampoVacio(this.emp.getCity(), "warn", "valErr", "reqCity")
@@ -212,16 +235,14 @@ public class EmployeeController implements Serializable {
                 && validationBean.validarSoloLetras(this.emp.getCountry(), "warn", "valErr", "reqCountry"))) {
             c++;
         }
+
+        
         if (c == 0) {
             flag = true;
         }
-        
-        
-    return flag;
-    }
-    
-    
-    
-    
 
+        return flag;
+    }
+
+ 
 }
