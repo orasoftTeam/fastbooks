@@ -350,7 +350,7 @@
 						<jr:detailCell style="table_TD" height="20">
 							<textField>
 								<reportElement x="0" y="0" width="90" height="20" uuid="04a11dce-8e96-4113-bcd2-8ba3b8e0d670"/>
-								<textFieldExpression><![CDATA[$F{FROM_AMOUNT}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[String.format("%.2f",(double)(Double.valueOf($F{FROM_AMOUNT})))]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -358,7 +358,7 @@
 						<jr:tableHeader style="table_TH" height="30">
 							<staticText>
 								<reportElement x="0" y="0" width="90" height="30" uuid="4c72a0b6-4a81-4ea2-a7ac-677039ea73a4"/>
-								<text><![CDATA[String.format("%.2f",(double)(Double.valueOf(TAX AMOUNT)))]]></text>
+								<text><![CDATA[TAX AMOUNT]]></text>
 							</staticText>
 						</jr:tableHeader>
 						<jr:detailCell style="table_TD" height="20">
