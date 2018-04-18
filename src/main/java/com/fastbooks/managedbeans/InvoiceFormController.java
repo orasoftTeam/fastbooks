@@ -79,6 +79,9 @@ public class InvoiceFormController implements Serializable {
     List<FbInvoiceTaxes> taxesAmountList = new ArrayList<>();
     private @Getter
     @Setter
+    List<FbInvoiceTaxes> taxesModList = new ArrayList<>();
+    private @Getter
+    @Setter
     FbCustomer currentCust;
     private @Getter
     @Setter
@@ -137,6 +140,9 @@ public class InvoiceFormController implements Serializable {
     String dSubTotal = "0.00";
     private @Getter
     @Setter
+    String InNo = "";
+    private @Getter
+    @Setter
     String messageInvoice = "";
     private @Getter
     @Setter
@@ -158,6 +164,12 @@ public class InvoiceFormController implements Serializable {
     private @Getter
     @Setter
     String shCost = "0.00";
+    private @Getter
+    @Setter
+    boolean mod = false;
+    private @Getter
+    @Setter
+    boolean modStay = false;
 
     public InvoiceFormController() {
     }
@@ -420,6 +432,10 @@ public class InvoiceFormController implements Serializable {
 
         }
 
+        if (mod) {
+            flag = true;
+        }
+
         return flag;
     }
 
@@ -546,7 +562,10 @@ public class InvoiceFormController implements Serializable {
             int a = 0;
             int c = 0;
             List<String> idTaxes = new ArrayList<>();
-            taxesAmountList = new ArrayList<>();
+            
+               taxesAmountList = new ArrayList<>(); 
+            
+            
             FbInvoiceTaxes it = new FbInvoiceTaxes();
             Double rate = 0.00;
             Double amount = 0.00;
@@ -798,76 +817,85 @@ public class InvoiceFormController implements Serializable {
 
     }
 
-    public String assign(FbInvoice in) {
+    public void assign() {
+        FbInvoice in = this.userData.getFbInvoice();
         try {
-            this.currentCust = in.getIdCust();
-            this.idCust = in.getIdCust().toString();
-            this.email = in.getIdCust().getEmail();
-            biAddress = "";
-            if (currentCust.getStreet() != null) {
-                biAddress += currentCust.getStreet() + " ";
-            }
-            if (currentCust.getPostalCode() != null) {
-                biAddress += currentCust.getPostalCode() + " ";
-            }
-            if (currentCust.getCity() != null) {
-                biAddress += currentCust.getCity() + " ";
-            }
-            if (currentCust.getEstate() != null) {
-                biAddress += currentCust.getEstate() + " ";
-            }
-            if (currentCust.getCountry() != null) {
-                biAddress += currentCust.getCountry() + ".";
-            }
-
-            shAddress = "";
-            if (currentCust.getStreet() != null) {
-                shAddress += currentCust.getStreetS() + " ";
-            }
-            if (currentCust.getPostalCode() != null) {
-                shAddress += currentCust.getPostalCodeS() + " ";
-            }
-            if (currentCust.getCity() != null) {
-                shAddress += currentCust.getCityS() + " ";
-            }
-            if (currentCust.getEstate() != null) {
-                shAddress += currentCust.getEstateS() + " ";
-            }
-            if (currentCust.getCountry() != null) {
-                shAddress += currentCust.getCountryS() + ".";
-            }
-            
-            termDays = in.getTerms();
-            invoiceDate = in.getInDate();
-            dueDate = in.getDueDate();
-            shVia = in.getShipVia();
-            shipDate = in.getShDate();
-            trackNo = in.getTrackNum();
-            this.dList = in.getFbInvoiceDetailList();
-            
-            if (in.getFbInvoiceTaxesList().isEmpty()) {
-                hasTax = false;
-            }else{
-            this.taxesAmountList = in.getFbInvoiceTaxesList();
-            }
-            
-           /* for (FbInvoiceDetail det : dList) {
-                
-                for (FbInvoiceTaxes taz : taxesAmountList) {
-                    taz.getIdProds().split(":")
+            if (in != null) {
+                this.currentCust = in.getIdCust();
+                this.idCust = in.getIdCust().getIdCust().toString();
+                this.email = in.getIdCust().getEmail();
+                this.InNo = in.getNoDot();
+                biAddress = "";
+                if (currentCust.getStreet() != null) {
+                    biAddress += currentCust.getStreet() + " ";
                 }
-                
-                
-            }*/
-            
-            updateTotal();
-            
+                if (currentCust.getPostalCode() != null) {
+                    biAddress += currentCust.getPostalCode() + " ";
+                }
+                if (currentCust.getCity() != null) {
+                    biAddress += currentCust.getCity() + " ";
+                }
+                if (currentCust.getEstate() != null) {
+                    biAddress += currentCust.getEstate() + " ";
+                }
+                if (currentCust.getCountry() != null) {
+                    biAddress += currentCust.getCountry() + ".";
+                }
+
+                shAddress = "";
+                if (currentCust.getStreet() != null) {
+                    shAddress += currentCust.getStreetS() + " ";
+                }
+                if (currentCust.getPostalCode() != null) {
+                    shAddress += currentCust.getPostalCodeS() + " ";
+                }
+                if (currentCust.getCity() != null) {
+                    shAddress += currentCust.getCityS() + " ";
+                }
+                if (currentCust.getEstate() != null) {
+                    shAddress += currentCust.getEstateS() + " ";
+                }
+                if (currentCust.getCountry() != null) {
+                    shAddress += currentCust.getCountryS() + ".";
+                }
+
+                termDays = in.getTerms();
+                invoiceDate = in.getInDate();
+                dueDate = in.getDueDate();
+                shVia = in.getShipVia();
+                shipDate = in.getShDate();
+                trackNo = in.getTrackNum();
+                this.dList = in.getFbInvoiceDetailList();
+
+                if (in.getFbInvoiceTaxesList().isEmpty()) {
+                    hasTax = false;
+                } else {
+                    this.taxesModList = in.getFbInvoiceTaxesList();
+                }
+
+                for (FbInvoiceDetail det : dList) {
+
+                    for (FbInvoiceTaxes taz : taxesModList) {
+                        String[] split = taz.getIdProds().split(":");
+                        for (String string : split) {
+                            if (det.getIdProd().getIdProd().toString().equals(string)) {
+                                det.setItemTax(taz.getIdTax().getIdTax().toString());
+                            }
+                        }
+                    }
+
+                }
+                mod = true;
+                modStay = true;
+                 updateTotal();
+                 this.userData.setFbInvoice(null);  
+                 mod = false;
+            }
 
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceFormController.assign()");
             e.printStackTrace();
         }
-        
-        return "/view/sales/invoiceForm.xhtml";
+
     }
 }

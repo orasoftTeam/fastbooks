@@ -11,13 +11,16 @@
         <title>Fastbooks</title>
     </h:head>
     <h:body>
-        #{invoiceController.init()}
+        
         <h:form id="invoiceForm">
             <bnu:container styleClass="marco">
+        #{invoiceController.init()}        
+        #{invoiceController.assign()}
         #{invoiceController.parseDates()}
+        
         <bnu:row>
             <bnu:column span="12">
-                <h3>#{messages.lblInvoiceTypeIn}</h3>
+                <h3>#{messages.lblInvoiceTypeIn} <ui:fragment rendered="#{invoiceController.modStay}">#{invoiceController.inNo}</ui:fragment> </h3>
                 
             </bnu:column>
             
@@ -216,7 +219,8 @@
                 <bnu:column span="6"></bnu:column>
                 <bnu:column span="3">
                     
-                    <bnu:commandButton value="#{messages.save}"  look="success" size="lg" style="width: 100%" action="#{invoiceController.save()}" />
+                    <bnu:commandButton value="#{messages.save}"  look="success" size="lg" style="width: 100%" action="#{invoiceController.save()}" rendered="#{!invoiceController.modStay}"  />
+                    <bnu:commandButton value="#{messages.lblUpdateIn}"  look="success" size="lg" style="width: 100%"  rendered="#{invoiceController.modStay}" />
                 </bnu:column>
                 <!--<bnu:column span="3">
                     <bnu:commandButton value="Close"  look="danger" size="lg" style="width: 100%" />

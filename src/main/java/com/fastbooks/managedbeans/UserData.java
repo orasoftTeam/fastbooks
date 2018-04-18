@@ -10,6 +10,7 @@ import com.fastbooks.forms.CompaniaForm;
 import com.fastbooks.forms.UserForm;
 import com.fastbooks.modelo.Country;
 import com.fastbooks.modelo.FbCompania;
+import com.fastbooks.modelo.FbInvoice;
 import com.fastbooks.modelo.FbPerfilXUsuario;
 import com.fastbooks.modelo.FbPerfiles;
 import com.fastbooks.modelo.FbUsuario;
@@ -64,6 +65,8 @@ public class UserData implements Serializable {
     private @Getter @Setter String currentPage = "Dashboard";
     private @Getter @Setter String uses = "0";
     private @Getter @Setter String sInvoice = "0";
+    private @Getter @Setter FbInvoice fbInvoice = null;
+    
     public String getEmail() {
         return email;
     }

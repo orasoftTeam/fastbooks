@@ -59,7 +59,7 @@
                                 <bnu:dataTableColumn label="#{messages.lblAction}">
                                    
                                    <bnu:dropButton value="#{messages.edit}" look="primary" styleClass="hidden-xs hidden-sm" >
-                                       <bnu:commandButton value="#{messages.edit}"  style="width:100%" action="#{invoiceController.assign(in)}"  />
+                                       <bnu:commandButton value="#{messages.edit}"  style="width:100%" action="#{invoiceTableController.edit(in)}"  />
                                         <bnu:commandButton value="#{messages.lblInvoiceCancel}"  style="width:100%"  />
                                         <bnu:commandButton value="#{messages.lblInvoiceRecievePay}" style="width:100%"  />
                                         <bnu:commandButton value="#{messages.lblInvoicePrint}"  style="width:100%"  action="#{invoiceTableController.print(in)}"  />

@@ -119,5 +119,10 @@ public class InvoiceController implements Serializable {
         }
     }
     
+    public void edit(FbInvoice in){
+    this.userData.setFbInvoice(in);
+    this.validationBean.redirecionar("/view/sales/invoiceForm.xhtml");
+    }
+    
     
 }
