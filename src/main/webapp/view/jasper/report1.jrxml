@@ -292,12 +292,12 @@
 				<textFieldExpression><![CDATA[$F{ITEM_RATE}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="265" y="0" width="100" height="20" uuid="3ad83a5e-640f-4698-b1e2-0f1d1ad6b5f4"/>
-				<textFieldExpression><![CDATA[$F{ITEM_AMOUNT}]]></textFieldExpression>
+				<reportElement x="265" y="1" width="100" height="20" uuid="7e76df14-6656-4c53-ab06-421bb573405c"/>
+				<textFieldExpression><![CDATA[$F{ITEM_QUANT}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="365" y="0" width="100" height="20" uuid="7e76df14-6656-4c53-ab06-421bb573405c"/>
-				<textFieldExpression><![CDATA[$F{ITEM_QUANT}]]></textFieldExpression>
+				<reportElement x="365" y="0" width="100" height="20" uuid="3ad83a5e-640f-4698-b1e2-0f1d1ad6b5f4"/>
+				<textFieldExpression><![CDATA[$F{ITEM_AMOUNT}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
