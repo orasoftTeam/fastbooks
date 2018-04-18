@@ -61,7 +61,7 @@
                                      <bnu:dropButton value="#{messages.edit}" look="primary" styleClass="hidden-xs hidden-sm" >
                                        <bnu:commandButton value="#{messages.edit}"  style="width:100%" action="#{invoiceTableController.edit(in)}"  />
                                 
-                                        <bnu:commandButton value="#{messages.lblInvoicePrint}"  style="width:100%"  action="#{invoiceTableController.print(in)}"  />
+                                        <bnu:commandButton value="#{messages.lblInvoicePrint}"  style="width:100%"  action="#{invoiceTableController.print(in,request)}"  />
                                      
                                     </bnu:dropButton>
                                     <bnu:commandButton value="#{messages.edit}"  look="warning" styleClass="hidden-lg hidden-md"    />
@@ -78,7 +78,14 @@
                     
                 </h:form>
                 <p:separator/>
-                      
+                     <bnu:modal  id="invoiceModal" title="Invoice" styleClass="invoiceModal"  close-on-escape="false" backdrop="false"  >
+                        <h:panelGroup id="pdf">
+                            
+                                    <p:media value="#{invoiceTableController.invoiceModal}" width="100%" height="500px" rendered="#{not(invoiceTableController.invoiceModal eq '0')}"  />     
+                              
+                          
+                        </h:panelGroup>
+                        </bnu:modal>   
    
                      
                      

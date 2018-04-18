@@ -815,7 +815,7 @@ public class InvoiceFormController implements Serializable {
             }
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.save()");
-            this.validationBean.lanzarMensajeSinBundle("error", e.toString(), " ");
+           // this.validationBean.lanzarMensajeSinBundle("error", e.toString(), " ");
             e.printStackTrace();
         }
 
