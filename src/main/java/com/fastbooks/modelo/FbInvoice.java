@@ -12,6 +12,7 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
@@ -124,9 +125,9 @@ public class FbInvoice implements Serializable {
     @JoinColumn(name = "ID_CUST", referencedColumnName = "ID_CUST")
     @ManyToOne
     private FbCustomer idCust;
-    @OneToMany(mappedBy = "idInvoice")
+    @OneToMany(mappedBy = "idInvoice", fetch = FetchType.EAGER)
     private List<FbInvoiceDetail> fbInvoiceDetailList;
-    @OneToMany(mappedBy = "idInvoice")
+    @OneToMany(mappedBy = "idInvoice", fetch = FetchType.EAGER)
     private List<FbInvoiceTaxes> fbInvoiceTaxesList;
 
     public FbInvoice() {

@@ -86,6 +86,9 @@ public class InvoiceFormController implements Serializable {
     private @Getter
     @Setter
     String idCust = "0";
+    private @Getter
+    @Setter
+    String idInvoice = "0";
 
     private @Getter
     @Setter
@@ -291,11 +294,12 @@ public class InvoiceFormController implements Serializable {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
             DateFormat sd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
-            this.invoiceDate = sdf.format(sd.parse(this.invoiceDate));
-            this.dueDate = sdf.format(sd.parse(this.dueDate));
             if (!this.shipDate.isEmpty()) {
                 this.shipDate = sdf.format(sd.parse(this.shipDate));
             }
+            this.invoiceDate = sdf.format(sd.parse(this.invoiceDate));
+            this.dueDate = sdf.format(sd.parse(this.dueDate));
+            
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.parseDates()");
             //e.printStackTrace();
@@ -743,7 +747,7 @@ public class InvoiceFormController implements Serializable {
 
         }
     }*/
-    public void save() {
+    public void save(String op) {
         try {
             if (this.validationBean.validarSoloNumerosConPunto(this.shCost, "error", "lblInShCostFail", "blank")) {
                 if (this.currentCust != null) {
@@ -763,10 +767,10 @@ public class InvoiceFormController implements Serializable {
                         updateTotal();
                         FbInvoice in = new FbInvoice();
                         in.setIdCia(this.userData.getCurrentCia());
-                        in.setIdInvoice(BigDecimal.ZERO);
+                        in.setIdInvoice(new BigDecimal(idInvoice));
                         in.setIdCust(currentCust);
                         in.setType("IN");
-                        in.setNoDot("");
+                        in.setNoDot(this.InNo);
                         in.setCustEmail(this.currentCust.getEmail());
                         in.setInDate(sdf.format(sd.parse(this.invoiceDate)));
                         in.setDueDate(sdf.format(sd.parse(this.dueDate)));
@@ -774,7 +778,7 @@ public class InvoiceFormController implements Serializable {
                         in.setSubTotal(rSubTotal);
                         in.setTotal(rTotal);
                         in.setTaxTotal(rTaxTotal);
-                        in.setStatus("OP");
+                        in.setStatus("OP");//aqui
                         in.setBiAddress(biAddress);
                         in.setShAddress(shAddress);
                         in.setTerms(termDays);
@@ -790,11 +794,11 @@ public class InvoiceFormController implements Serializable {
 
                         in.setFbInvoiceDetailList(dList);
                         in.setFbInvoiceTaxesList(taxesAmountList);
-                        String res = iFacade.actInvoice(in, "A");
+                        String res = iFacade.actInvoice(in, op);
                         System.out.println("result: " + res);
                         if (res.equals("0")) {
-
-                            this.userData.setUses("lblInvoiceAddSuccess");
+                            
+                            this.userData.setUses(op.equals("U")? "lblInUpdateSuccess":"lblInvoiceAddSuccess");
                             this.validationBean.redirecionar("/view/sales/sales.xhtml");
                         } else {
                             //this.validationBean.lanzarMensajeSinBundle("error", res, " ");
@@ -865,6 +869,8 @@ public class InvoiceFormController implements Serializable {
                 shVia = in.getShipVia();
                 shipDate = in.getShDate();
                 trackNo = in.getTrackNum();
+                shCost = in.getShCost().toString();
+                idInvoice = in.getIdInvoice().toString();
                 this.dList = in.getFbInvoiceDetailList();
 
                 if (in.getFbInvoiceTaxesList().isEmpty()) {
