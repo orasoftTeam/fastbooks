@@ -10,10 +10,11 @@ import com.fastbooks.modelo.FbInvoiceDetail;
 import com.fastbooks.modelo.FbInvoiceTaxes;
 import com.fastbooks.util.GlobalParameters;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Types;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,13 +25,18 @@ import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.servlet.http.HttpServletRequest;
+import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporter;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 /**
  *
@@ -159,7 +165,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
     }
      
      
-     public String generateInvoice(FbInvoice i,String logo){
+     public String generateInvoice(FbInvoice i,String logo,JasperReport report){
             String res = "";
             Connection cn = em.unwrap(java.sql.Connection.class);
             String dir = "view"+File.separator+"jasper"+File.separator+"report1.jrxml";
@@ -173,12 +179,16 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
             String pdfName = File.separator + "IN"+i.getNoDot()+i.getIdCia().getNomCom()+".pdf";
              Map parametersMap = new HashMap();
             parametersMap.put("idInvoice",i.getIdInvoice().toString() );
-            parametersMap.put("logo",new File(gp.getAppPath() +logo));
+            File logoFile = new File(gp.getAppPath() +logo);
+            if (!logoFile.exists()) {
+             logoFile = null;
+            }
+            parametersMap.put("logo",logoFile);
             try {
              ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
                 String realPath = ec.getRealPath("/");
                 System.out.println(realPath + dir);
-                JasperReport report = JasperCompileManager.compileReport(realPath + dir);
+                //JasperReport report = JasperCompileManager.compileReport(realPath + dir);
                 
                 
                 JasperPrint print = JasperFillManager.fillReport(report,parametersMap, cn);
@@ -195,9 +205,31 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
          } catch (Exception e) {
                 System.out.println("com.fastbooks.facade.FbInvoiceFacade.generateInvoice()");
                 e.printStackTrace();
+                res = e.toString() + " ::: " + e.getMessage();
          }
             
             return res;
      }
+     
+     public JasperReport getCompiledFile(String fileName, HttpServletRequest request) throws JRException, IOException {
+    // Create temporary folder to store jasper report as you should not write a resource into your program
+    // distribution
+    String tempFolderPath = System.getProperty("java.io.tmpdir") + File.separator + "jasperReport";
+    File tempFolder = new File(tempFolderPath);
+    if (!tempFolder.exists()) {
+        tempFolder.mkdirs();
+    }
+    String jasperFilePath = tempFolderPath + File.separator + fileName + ".jasper";
+    File reportFile = new File(jasperFilePath);
+    // If compiled file is not found, then compile XML template
+    if (!reportFile.exists()) {
+        InputStream jRXmlStream = request.getSession().getServletContext().getResourceAsStream
+                ("/view/jasper/" + fileName + ".jrxml");
+        JasperDesign jasperDesign = JRXmlLoader.load(jRXmlStream);
+        JasperCompileManager.compileReportToFile(jasperDesign, jasperFilePath);
+    }
+    JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(reportFile.getPath());
+    return jasperReport;
+}
     
 }

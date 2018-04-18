@@ -19,6 +19,7 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -90,12 +91,17 @@ public class InvoiceController implements Serializable {
         return res;
     }
 
-    public void print(FbInvoice i) {
-        this.invoiceModal = this.iFacade.generateInvoice(i,this.userData.getCurrentCia().getLogo());
+    public void print(FbInvoice i,HttpServletRequest req) {
+        try {
+            this.invoiceModal = this.iFacade.generateInvoice(i,this.userData.getCurrentCia().getLogo(),this.iFacade.getCompiledFile("report1", req));
         //this.userData.setSInvoice(invoiceModal);
+        //this.validationBean.lanzarMensajeSinBundle("error", this.invoiceModal, "");
         this.currentIn = i;
        // this.validationBean.updateComponent("pdf");
         this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.InvoiceController.print()");
+        }
     }
 
     public void showInvoice() {
@@ -111,7 +117,7 @@ public class InvoiceController implements Serializable {
         try {
             SendMails sm = new SendMails();
             GlobalParameters gp = new GlobalParameters();
-            sm.sendSimpleMail(currentIn.getCustEmail(), currentIn.getIdCia().getEmail(), this.subjet, this.body, gp.getAppPath() + this.invoiceModal);
+            sm.sendMailWithAttach(currentIn.getCustEmail(), currentIn.getIdCia().getEmail(), this.subjet, this.body, gp.getAppPath() + this.invoiceModal);
             this.validationBean.lanzarMensajeSinBundle("info", "Enviado con exito", "");
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.sendReminder()");

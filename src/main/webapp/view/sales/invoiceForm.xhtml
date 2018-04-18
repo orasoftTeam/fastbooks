@@ -219,8 +219,8 @@
                 <bnu:column span="6"></bnu:column>
                 <bnu:column span="3">
                     
-                    <bnu:commandButton value="#{messages.save}"  look="success" size="lg" style="width: 100%" action="#{invoiceController.save()}" rendered="#{!invoiceController.modStay}"  />
-                    <bnu:commandButton value="#{messages.lblUpdateIn}"  look="success" size="lg" style="width: 100%"  rendered="#{invoiceController.modStay}" />
+                    <bnu:commandButton value="#{messages.save}"  look="success" size="lg" style="width: 100%" action="#{invoiceController.save('A')}" rendered="#{!invoiceController.modStay}"  />
+                    <bnu:commandButton value="#{messages.lblUpdateIn}"  look="success" size="lg" style="width: 100%"  action="#{invoiceController.save('U')}" rendered="#{invoiceController.modStay}" />
                 </bnu:column>
                 <!--<bnu:column span="3">
                     <bnu:commandButton value="Close"  look="danger" size="lg" style="width: 100%" />

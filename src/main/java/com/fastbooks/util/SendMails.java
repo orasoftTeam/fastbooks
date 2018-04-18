@@ -29,7 +29,7 @@ import javax.mail.internet.MimeMultipart;
 public class SendMails {
     GlobalParameters gp = new GlobalParameters();
 
-    public void sendSimpleMail(String toEmail, String fromEmail, String subject, String body, String filepath) {
+    public void sendMailWithAttach(String toEmail, String fromEmail, String subject, String body, String filepath) {
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.socketFactory.port", "465");
@@ -78,5 +78,40 @@ public class SendMails {
             throw new RuntimeException(e);
         }
 
+    }
+    
+    
+    public void sendSimpleMail(String toEmail, String fromEmail, String subject, String body){
+    Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class",
+                "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
+
+        Session session = Session.getInstance(props,
+                new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(gp.getEmail(), gp.getPass());
+            }
+        });
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(fromEmail));
+            message.setRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse(toEmail));
+            message.setSubject(subject);
+
+           message.setText(body);
+            
+            Transport.send(message);
+            System.out.println("Done");
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+
+    
     }
 }
