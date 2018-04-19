@@ -16,10 +16,11 @@
     <url-pattern>/prodPhoto/*</url-pattern>
   </virtual-directory-mapping>
   <virtual-directory-mapping>
-      <local-path>/u01/app/oracle/fastbooks</local-path>
+     <!--  <local-path>/u01/app/oracle/fastbooks</local-path>-->
    <!-- <local-path>C:\Users\luis\Pictures\fastbooks</local-path>
     <local-path>/u01/app/oracle/product/12.2.0/Middleware/user_projects/domains/dom1</local-path>
     <local-path>C:\oraora\user_projects\domains\base_domain</local-path>-->
+    <local-path>C:\Oracle12c\user_projects\domains\base_domain</local-path>
     <url-pattern>/pdf/*</url-pattern>
   </virtual-directory-mapping>
   <jsp-descriptor>

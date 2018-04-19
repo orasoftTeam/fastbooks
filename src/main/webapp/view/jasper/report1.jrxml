@@ -148,6 +148,16 @@
 	</background>
 	<title>
 		<band height="194" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="87" width="555" height="107" backcolor="#CCFFFF" uuid="1901e7ca-b18e-4d34-a232-91517a7036af"/>
+				<box>
+					<pen lineWidth="1.25"/>
+					<topPen lineWidth="1.25"/>
+					<leftPen lineWidth="1.25"/>
+					<bottomPen lineWidth="1.25"/>
+					<rightPen lineWidth="1.25"/>
+				</box>
+			</frame>
 			<image>
 				<reportElement x="0" y="0" width="153" height="76" uuid="1704c701-f3f3-4a58-b6e1-cb0386eb1f3c"/>
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
@@ -178,7 +188,7 @@
 				<textElement>
 					<font size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[INVOICE NO.:]]></text>
+				<text><![CDATA[INVOICE NO:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="322" y="144" width="100" height="20" uuid="8beff85d-19d4-4a75-bad4-727a285bdb61"/>
@@ -250,6 +260,26 @@
 				<reportElement x="378" y="27" width="142" height="20" uuid="1a4e1507-693d-47f1-8fda-be25595d2738"/>
 				<textFieldExpression><![CDATA[$F{COUNTRY_S}]]></textFieldExpression>
 			</textField>
+			<frame>
+				<reportElement x="298" y="1" width="257" height="86" uuid="2091fbe3-6a13-4fef-bbf0-6c8a51677be3"/>
+				<box>
+					<pen lineWidth="1.5"/>
+					<topPen lineWidth="1.5"/>
+					<leftPen lineWidth="1.5"/>
+					<bottomPen lineWidth="1.5"/>
+					<rightPen lineWidth="1.5"/>
+				</box>
+			</frame>
+			<frame>
+				<reportElement x="0" y="0" width="298" height="86" uuid="f1319030-a034-4370-a607-aecc1bdfbde9"/>
+				<box>
+					<pen lineWidth="1.25"/>
+					<topPen lineWidth="1.25"/>
+					<leftPen lineWidth="1.25"/>
+					<bottomPen lineWidth="1.25"/>
+					<rightPen lineWidth="1.25"/>
+				</box>
+			</frame>
 		</band>
 	</title>
 	<columnHeader>
