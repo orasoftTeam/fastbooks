@@ -489,14 +489,23 @@ public class InvoiceFormController implements Serializable {
                 Double tax = 0.00;
 
                 tax = Double.parseDouble(this.rTaxTotal.toString());
-
+                Double t = 0.00;
                 if (!this.shCost.isEmpty()) {
-                    if (StringUtils.isNumeric(shCost)) {
-                        ship = Double.parseDouble(shCost);
-                    } else {
+                    try {
+                        t = Double.parseDouble(shCost);
+                    } catch (Exception e) {
+                        t = 0.00;
                         shCost = "0.00";
-                        ship = 0.00;
                     }
+                    
+                    
+                    
+                    //if (StringUtils.isNumeric(shCost)) {
+                        ship = t;
+                   // } else {
+                      //  shCost = "0.00";
+                       // ship = 0.00;
+                    //}
 
                 }
 
