@@ -19,7 +19,7 @@
 
             <ui:define name="content">
                 #{customerController.init()}
-                <h:form>
+                
                     <div class="row" style="background-color: #f5f5f5; display: block; width: 100%;
                          padding: 0; margin: 0;">
                         <h1 style="padding-left: 2%">#{messages.Sales}</h1> 
@@ -36,7 +36,7 @@
                             <ui:include src="invoice.xhtml"/>
 
                         </bnu:tab>
-
+                        <h:form>
                         <bnu:tab title="#{messages.customer}">
                             <br></br><br></br>
 
@@ -78,9 +78,10 @@
                                     </bnu:dropButton>
                                 </bnu:dataTableColumn> 
                             </bnu:dataTable>  
-                        </bnu:tab>        
+                        </bnu:tab> 
+                        </h:form>
                     </bnu:tabView>
-                </h:form>
+                
                 <p:separator/>
 
                 <!--Modal add-->
@@ -232,6 +233,8 @@
                         <bnu:button value="#{messages.No}" dismiss="modal" look="danger" />
                     </h:form>
                 </bnu:modal>
+                
+
 
             </ui:define>
         </ui:composition>   

@@ -198,7 +198,10 @@
                     { 
                     obj.value = (obj.value + '').replace(/[^0-9]/g, '');
                     }
-
+                     //$.blockUI({ message: 'Hold on!' });      
+                    function mensaje(e){
+                    alert(e);
+                    } 
                 </h:outputScript>
 
             </ui:define>

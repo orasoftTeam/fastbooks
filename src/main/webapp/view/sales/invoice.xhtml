@@ -61,7 +61,7 @@
                                      <bnu:dropButton value="#{messages.edit}" look="primary" styleClass="hidden-xs hidden-sm" >
                                        <bnu:commandButton value="#{messages.edit}"  style="width:100%" action="#{invoiceTableController.edit(in)}"  />
                                 
-                                        <bnu:commandButton value="#{messages.lblInvoicePrint}"  style="width:100%"  action="#{invoiceTableController.print(in,request)}"  />
+                                       <bnu:commandButton value="#{messages.lblInvoicePrint}"  style="width:100%"  update="pdf" action="#{invoiceTableController.print(in,request)}"  />
                                      
                                     </bnu:dropButton>
                                     <bnu:commandButton value="#{messages.edit}"  look="warning" styleClass="hidden-lg hidden-md"    />
