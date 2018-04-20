@@ -30,7 +30,15 @@
                     </bnu:column>
                 </bnu:row>
                 <br></br>
-                <bnu:tabView>
+                
+                
+                
+                <bnu:tabView active-index="0">
+                    <bnu:tab title="#{messages.Sales}">
+                        <ui:include src="invoice.xhtml" />
+                    
+                    </bnu:tab>
+                    
                         <bnu:tab title="#{messages.customer}">
                             <h:form>
                             <br></br><br></br>

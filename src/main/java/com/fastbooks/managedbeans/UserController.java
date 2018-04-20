@@ -323,7 +323,7 @@ public class UserController implements Serializable{
         }
          
          if (!(this.day.isEmpty() && this.month.isEmpty())) {
-            this.bday = this.day + "/"+this.month+"/"+this.year;
+            this.bday = this.day + "/"+this.month+"/"+this.year; // aqui poner que si mes o dia es d elongitud 1 entonces concatenarle un cero antes
              if (!validationBean.validarFecha(this.bday, "error", "valErr", "reqDate")) {
                  c++;
              }
