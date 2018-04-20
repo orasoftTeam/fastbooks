@@ -223,6 +223,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
     File reportFile = new File(jasperFilePath);
     // If compiled file is not found, then compile XML template
    // if (!reportFile.exists()) {
+        reportFile.delete();
         InputStream jRXmlStream = request.getSession().getServletContext().getResourceAsStream
                 ("/view/jasper/" + fileName + ".jrxml");
         JasperDesign jasperDesign = JRXmlLoader.load(jRXmlStream);
