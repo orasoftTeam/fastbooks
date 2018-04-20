@@ -900,6 +900,33 @@ public class InvoiceFormController implements Serializable {
                     }
 
                 }
+                Integer initQuant = 0;
+                Integer itemQuant = 0;
+                for (FbInvoiceDetail det : dList) {
+                    initQuant = Integer.parseInt(det.getIdProd().getInitQuant().toString());
+                    itemQuant = Integer.parseInt(det.getItemQuant().toString());
+                    det.getIdProd().setInitQuant(new BigInteger(String.valueOf(initQuant + itemQuant)));
+                    
+                    
+                    for (FbProduct fbProduct : pList) {
+                        if (fbProduct.getIdProd().toString().equals(det.getIdProd().getIdProd().toString())) {
+                            initQuant = Integer.parseInt(fbProduct.getInitQuant().toString());
+                            fbProduct.setInitQuant(new BigInteger(String.valueOf(initQuant + itemQuant)));
+                        }
+                        
+                        if (fbProduct.getType().equals("BU")) {
+                            for (FbBundleItems fbBundleItems : fbProduct.getFbBundleItemsList()) {
+                                if (fbBundleItems.getIdProd().getIdProd().toString().equals(det.getIdProd().getIdProd().toString())) {
+                            initQuant = Integer.parseInt(fbBundleItems.getIdProd().getInitQuant().toString());
+                            fbBundleItems.getIdProd().setInitQuant(new BigInteger(String.valueOf(initQuant + itemQuant)));
+                        }
+                            }
+                        }
+                    }
+                }
+                
+                
+                
                 mod = true;
                 modStay = true;
                  updateTotal();

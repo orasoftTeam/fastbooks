@@ -16,6 +16,6 @@ public class GlobalParameters {
     private @Getter @Setter String appPath = /*System.getProperty("user.dir");"C:\\Users\\luis\\Pictures\\fastbooks"  */"/u01/app/oracle/fastbooks" ;  
     private @Getter @Setter String email = "fastbooks20@gmail.com";
     private @Getter @Setter String pass = "orasoft123";
-    
+    private @Getter @Setter String imgBytesSize = "1000000";
     
 }

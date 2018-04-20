@@ -190,7 +190,10 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
                 System.out.println(realPath + dir);
                 //JasperReport report = JasperCompileManager.compileReport(realPath + dir);
                 
-                
+                File dest = new File(destino);
+                if (dest.exists()) {
+                    dest.delete();
+                }
                 JasperPrint print = JasperFillManager.fillReport(report,parametersMap, cn);
                 JRExporter exporter = new JRPdfExporter();
                 

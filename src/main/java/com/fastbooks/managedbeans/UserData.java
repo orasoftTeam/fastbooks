@@ -15,6 +15,7 @@ import com.fastbooks.modelo.FbPerfilXUsuario;
 import com.fastbooks.modelo.FbPerfiles;
 import com.fastbooks.modelo.FbUsuario;
 import com.fastbooks.modelo.FbUsuarioXCia;
+import com.fastbooks.util.GlobalParameters;
 import com.fastbooks.util.ValidationBean;
 import java.io.IOException;
 import javax.inject.Named;
@@ -59,7 +60,7 @@ public class UserData implements Serializable {
     private String email;
     private String pass;
     
-    
+    private @Getter @Setter GlobalParameters gParameters = new GlobalParameters();
     private @Getter @Setter Integer offset  = 2;
     private @Getter @Setter Integer colmd  = 10;
     private @Getter @Setter String currentPage = "Dashboard";
