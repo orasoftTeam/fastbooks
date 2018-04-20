@@ -30,14 +30,9 @@
                     </bnu:column>
                 </bnu:row>
                 <br></br>
-
-                <bnu:tabView activeIndex="0">
-                    <bnu:tab title="#{messages.lblAllSales}">
-                        <ui:include src="invoice.xhtml"/>
-
-                    </bnu:tab>
-                    <h:form>
+                <bnu:tabView>
                         <bnu:tab title="#{messages.customer}">
+                            <h:form>
                             <br></br><br></br>
 
                             <bnu:row>
@@ -77,11 +72,12 @@
 
                                     </bnu:dropButton>
                                 </bnu:dataTableColumn> 
-                            </bnu:dataTable>  
+                            </bnu:dataTable>
+                            </h:form>
                         </bnu:tab> 
-                    </h:form>
-                </bnu:tabView>
-
+                        
+                    </bnu:tabView>
+                
                 <p:separator/>
 
                 <!--Modal add-->
