@@ -203,11 +203,12 @@ public class EmployeeController implements Serializable {
                 && validationBean.validarEmail(this.emp.getEmail(), "warn", "valErr", "reqEmail"))) {
             c++;
         }
+        /*
         if (!(validationBean.validarCampoVacio(this.emp.getGender(), "warn", "valErr", "reqGender")
                 && validationBean.validarSoloLetras(this.emp.getGender(), "warn", "valErr", "reqGender"))) {
             c++;
         }
-        
+        */
         if (!(validationBean.validarCampoVacio(this.emp.getDateOfBirth(), "warn", "valErr", "reqBDay")
                 && validationBean.validarSoloNumeros(this.emp.getDateOfBirth(), "warn", "valErr", "reqBDay"))) {
             c++;
