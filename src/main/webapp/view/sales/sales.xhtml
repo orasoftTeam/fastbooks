@@ -19,24 +19,24 @@
 
             <ui:define name="content">
                 #{customerController.init()}
-                
-                    <div class="row" style="background-color: #f5f5f5; display: block; width: 100%;
-                         padding: 0; margin: 0;">
-                        <h1 style="padding-left: 2%">#{messages.Sales}</h1> 
-                    </div>
-                    <bnu:row>
-                        <bnu:column span="3">
-                            <bnu:navLink href="#{request.contextPath}/view/sales/producsNServices.xhtml" value="#{messages.lblProductsNServices}" />
-                        </bnu:column>
-                    </bnu:row>
-                    <br></br>
 
-                    <bnu:tabView activeIndex="0">
-                        <bnu:tab title="#{messages.lblAllSales}">
-                            <ui:include src="invoice.xhtml"/>
+                <div class="row" style="background-color: #f5f5f5; display: block; width: 100%;
+                     padding: 0; margin: 0;">
+                    <h1 style="padding-left: 2%">#{messages.Sales}</h1> 
+                </div>
+                <bnu:row>
+                    <bnu:column span="3">
+                        <bnu:navLink href="#{request.contextPath}/view/sales/producsNServices.xhtml" value="#{messages.lblProductsNServices}" />
+                    </bnu:column>
+                </bnu:row>
+                <br></br>
 
-                        </bnu:tab>
-                        <h:form>
+                <bnu:tabView activeIndex="0">
+                    <bnu:tab title="#{messages.lblAllSales}">
+                        <ui:include src="invoice.xhtml"/>
+
+                    </bnu:tab>
+                    <h:form>
                         <bnu:tab title="#{messages.customer}">
                             <br></br><br></br>
 
@@ -79,9 +79,9 @@
                                 </bnu:dataTableColumn> 
                             </bnu:dataTable>  
                         </bnu:tab> 
-                        </h:form>
-                    </bnu:tabView>
-                
+                    </h:form>
+                </bnu:tabView>
+
                 <p:separator/>
 
                 <!--Modal add-->
@@ -233,7 +233,7 @@
                         <bnu:button value="#{messages.No}" dismiss="modal" look="danger" />
                     </h:form>
                 </bnu:modal>
-                
+
 
 
             </ui:define>
