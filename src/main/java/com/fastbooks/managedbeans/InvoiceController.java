@@ -85,7 +85,9 @@ public class InvoiceController implements Serializable {
     public String formatStatus(String s) {
         String res = "";
         if (s.equals("OP")) {
-            res = this.validationBean.getMsgBundle("lblInvoiceStatus");
+            res = this.validationBean.getMsgBundle("lblInvoiceStatusOpen");
+        }else if(s.equals("CA")){
+            res = this.validationBean.getMsgBundle("lblInvoiceStatusCancel");
         }
 
         return res;
@@ -128,6 +130,22 @@ public class InvoiceController implements Serializable {
     public void edit(FbInvoice in){
     this.userData.setFbInvoice(in);
     this.validationBean.redirecionar("/view/sales/invoiceForm.xhtml");
+    }
+    
+    
+    public void cancel(){
+    String res = this.iFacade.actInvoice(currentIn, "D");
+        if (res.equals("0")) {
+            this.validationBean.lanzarMensaje("info", "lblInCancelSuccess", "blank");
+        }else{
+        this.validationBean.lanzarMensajeSinBundle("error", res, "");
+        }
+    
+    }
+    
+    public void assign(FbInvoice in){
+    currentIn = in;
+    this.validationBean.ejecutarJavascript("$('.cancelModal').modal()");
     }
     
     
