@@ -59,17 +59,17 @@
                                 <bnu:dataTableColumn label="#{messages.lblAction}">
                                   
                                      <bnu:dropButton value="#{messages.edit}" look="primary" styleClass="hidden-xs hidden-sm" >
-                                       <bnu:commandButton value="#{messages.edit}"  style="width:100%" action="#{invoiceTableController.edit(in)}" rendered="#{not in.type eq 'CA'}" />
+                                       <bnu:commandButton value="#{messages.edit}"  style="width:100%" action="#{invoiceTableController.edit(in)}"  />
                                        
-                                       <bnu:commandButton value="#{messages.lblInvoicePrint}"  style="width:100%"  update="pdf" action="#{invoiceTableController.print(in,request)}"   />
-                                       <bnu:commandButton value="#{messages.lblInvoiceCancel}"  style="width:100%" onclick="ajax:invoiceTableController.assign(in);" rendered="#{not in.type eq 'CA'}"  />
+                                       <bnu:commandButton value="#{messages.lblInvoicePrint}"  style="width:100%"  update="pdf" action="#{invoiceTableController.print(in,request)}"  />
+                                       <bnu:commandButton value="#{messages.lblInvoiceCancel}"  style="width:100%" onclick="ajax:invoiceTableController.assign(in);"  />
                                     </bnu:dropButton>
-                                    <bnu:commandButton value="#{messages.edit}"  rendered="#{not in.type eq 'CA'}" look="warning" styleClass="hidden-lg hidden-md" action="#{invoiceTableController.edit(in)}"   />
+                                    <bnu:commandButton value="#{messages.edit}"  look="warning" styleClass="hidden-lg hidden-md" action="#{invoiceTableController.edit(in)}"   />
                                     
                                  
                                        
                                         <bnu:commandButton value="#{messages.lblInvoicePrint}" update="pdf"  styleClass="hidden-lg hidden-md"  action="#{invoiceTableController.print(in)}" />
-                                        <bnu:commandButton value="#{messages.lblInvoiceCancel}"   styleClass="hidden-lg hidden-md" rendered="#{not in.type eq 'CA'}" onclick="ajax:invoiceTableController.assign(in);"  />
+                                        <bnu:commandButton value="#{messages.lblInvoiceCancel}"   styleClass="hidden-lg hidden-md"  onclick="ajax:invoiceTableController.assign(in);"  />
                                 </bnu:dataTableColumn>
                                 
                             </bnu:dataTable>
@@ -90,9 +90,9 @@
                <bnu:modal  id="cancelModal" title="Invoice" styleClass="cancelModal"  close-on-escape="false" backdrop="false"  >
                         <h:panelGroup id="can">
                             <h:form>
-                                    Esta seguro que desea anular esta factura?
-                                    <bnu:commandButton value="Si" look="danger" action="#{invoiceTableController.cancel()}" />
-                                    <bnu:commandButton value="No" look="success"/>
+                                    #{messages.lblInCancelConfirm }
+                                    <bnu:commandButton value="#{messages.yes}" look="danger" action="#{invoiceTableController.cancel()}" />
+                                    <bnu:commandButton value="#{messages.No}" look="success"/>
                           </h:form>
                         </h:panelGroup>
                         </bnu:modal> 
