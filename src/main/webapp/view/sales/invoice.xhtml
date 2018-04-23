@@ -90,9 +90,18 @@
                <bnu:modal  id="cancelModal" title="Invoice" styleClass="cancelModal"  close-on-escape="false" backdrop="false"  >
                         <h:panelGroup id="can">
                             <h:form>
-                                    #{messages.lblInCancelConfirm }
-                                    <bnu:commandButton value="#{messages.yes}" look="danger" action="#{invoiceTableController.cancel()}" />
-                                    <bnu:commandButton value="#{messages.No}" look="success"/>
+                                <bnu:row>
+                                    <bnu:column span="12">
+                                        <h5>#{messages.lblInCancelConfirm }</h5>
+                                    </bnu:column>
+                                </bnu:row>
+                                <bnu:row>
+                                    <bnu:column span="6"><bnu:commandButton value="#{messages.yes}" look="danger" action="#{invoiceTableController.cancel()}" />
+                                    </bnu:column>
+                                    <bnu:column span="6"><bnu:commandButton value="#{messages.No}" look="success"/></bnu:column>
+                                </bnu:row>
+                                    
+                                    
                           </h:form>
                         </h:panelGroup>
                         </bnu:modal> 
