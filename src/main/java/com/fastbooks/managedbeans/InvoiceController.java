@@ -148,5 +148,11 @@ public class InvoiceController implements Serializable {
     this.validationBean.ejecutarJavascript("$('.cancelModal').modal()");
     }
     
-    
+    public boolean showOptions(String status){
+        boolean flag = false;
+    if(status.equals("OP")){
+    flag = true;
+    }
+    return flag;
+    }
 }

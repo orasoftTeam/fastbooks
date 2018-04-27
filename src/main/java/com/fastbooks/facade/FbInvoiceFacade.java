@@ -61,8 +61,8 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
     List<FbInvoice> list = new ArrayList<>();
         try {
             String sql = "select * from fb_invoice where id_cia = ?'";
-            Query q = em.createNativeQuery("select * from fb_invoice where id_cia="+idCia, FbInvoice.class);
-            //q.setParameter(1, idCia);
+            Query q = em.createNativeQuery("select * from fb_invoice where id_cia=?", FbInvoice.class);
+            q.setParameter(1, idCia);
             list = q.getResultList();
             
         } catch (Exception e) {
@@ -201,10 +201,12 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
                 exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
                 exporter.exportReport();
                 System.out.println("File Created: " + destino);
-                i.setMessageStmnt("/pdf/"+"cia" + i.getIdCia().getIdCia().toString()+
-                        "/IN"+i.getNoDot()+i.getIdCia().getNomCom()+".pdf");
-                this.edit(i);
-                res = i.getMessageStmnt();
+               // i.setMessageStmnt("/pdf/"+"cia" + i.getIdCia().getIdCia().toString()+
+                 //       "/IN"+i.getNoDot()+i.getIdCia().getNomCom()+".pdf");
+               // this.edit(i);
+              //  res = i.getMessageStmnt();
+              res = "/pdf/"+"cia" + i.getIdCia().getIdCia().toString()+
+                        "/IN"+i.getNoDot()+i.getIdCia().getNomCom()+".pdf";
          } catch (Exception e) {
                 System.out.println("com.fastbooks.facade.FbInvoiceFacade.generateInvoice()");
                 e.printStackTrace();
