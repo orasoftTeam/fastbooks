@@ -69,14 +69,15 @@
                             <f:selectItem itemLabel="#{messages.lblThreeMonths}"  itemValue="90"/>
                             <f:selectItem itemLabel="#{messages.lblLastMonth}" itemValue="30" />
                         </bnu:selectOneMenu>
-                        <bnu:inputText label="#{messages.lblFrom}" style="width: 115px;margin: 10px" value="#{invoiceTableController.FFrom}" />
-                        <bnu:inputText label="#{messages.lblTo}" style="width: 115px;margin: 10px" value="#{invoiceTableController.FTo}" />
+                        <bnu:inputText label="#{messages.lblFrom}" style="width: 115px;margin: 10px" value="#{invoiceTableController.FFrom}" placeholder="mm/dd/yyyy" onblur="soloDate(this)" />
+                        <bnu:inputText label="#{messages.lblTo}" style="width: 115px;margin: 10px" value="#{invoiceTableController.FTo}"   placeholder="mm/dd/yyyy"  onblur="soloDate(this)" />
                         <br></br>
                         <bnu:selectOneMenu label="#{messages.lblCustomer}"  style="width: 150px;margin: 10px" value="#{invoiceTableController.FIdCust}" >
                             <f:selectItem itemValue="0" itemLabel="#{messages.selectOne}"  />
                             <f:selectItems value="#{invoiceTableController.CList}" var="cust" itemValue="#{cust.idCust}" itemLabel="#{cust.displayName}"/>
                         </bnu:selectOneMenu><br></br>
-                        <bnu:commandButton value="#{messages.lblApply}" action="#{invoiceTableController.applyFilter()}" style="margin: 10px" look="success"/> <bnu:commandButton style="margin: 10px" value="#{messages.lblReset}" look="danger"/> 
+                        <bnu:commandButton value="#{messages.lblApply}" action="#{invoiceTableController.applyFilter()}" style="margin: 10px" look="success"/> 
+                        <bnu:commandButton style="margin: 10px" value="#{messages.lblReset}" look="danger" action="#{invoiceTableController.resetFilter()}" /> 
 
                     </div>
                 </div>
@@ -94,6 +95,14 @@
                     <bnu:navLink value="#{messages.lblSendTranc}" href="#"></bnu:navLink>
                     <bnu:navLink value="#{messages.lblSendRemind}" ></bnu:navLink>
                 </bnu:dropButton>
+            </bnu:column>
+        </bnu:row>
+        <bnu:row rendered="#{ invoiceTableController.showFilters('enq', '')}" >
+            <bnu:column span="2"  >
+                Filters
+            </bnu:column>
+            <bnu:column span="2"  >
+                Type: #{invoiceTableController.FType}
             </bnu:column>
         </bnu:row>
         <bnu:row>
@@ -215,21 +224,51 @@
     </style>
 
     <h:outputScript>
+        $( document ).ready(function() {
+        var w = $( document ).width();
+        
+         if(w &lt;= 768){
+         
+        $('.dropdown-content').css('min-width','200px');
+        }
+       
+    });
+        
+        
         function myFunction() {
         $(".dropdown-content").show();
         };
-
+        
         $(document).on("click",function(event) {
-        var str = $(event.target).parent().parent().attr('class')+' '+$(event.target).parent().attr('class') + ' ' + $(event.target).attr('class');
+        
+        var str = $(event.target).parent().parent().parent().attr('class')+' '+$(event.target).parent().parent().attr('class')+' '+$(event.target).parent().attr('class') + ' ' + $(event.target).attr('class');
         //alert(str.indexOf("dropLi")>=0);
         if(str.indexOf("dropLi")>=0){
 
 
         }else{
-
+        //alert(str);
         $(".dropdown-content").hide();
         }
+        
+        
+        
         });
+
+
+        function soloDate(obj) 
+        { 
+        //alert(obj.value);
+        var str = obj.value;
+        var patt = new RegExp("^((0?[1-9]|1[012])[- /.](0?[1-9]|[12][0-9]|3[01])[- /.](19|20)?[0-9]{2})*$");
+        var res = patt.test(str);
+        if(res){
+        }else{
+        obj.value = '';
+        }
+        //obj.value = (obj.value + '').replace(/^((0?[1-9]|1[012])[- /.](0?[1-9]|[12][0-9]|3[01])[- /.](19|20)?[0-9]{2})*$/g, '');
+        }
+
     </h:outputScript>
 
 

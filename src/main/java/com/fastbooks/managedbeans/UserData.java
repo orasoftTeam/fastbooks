@@ -68,6 +68,7 @@ public class UserData implements Serializable {
     private @Getter @Setter String sInvoice = "0";
     private @Getter @Setter FbInvoice fbInvoice = null;
     private @Getter @Setter int salesIndex= 0;
+    private @Getter @Setter String invoiceSql = "0";
     
     public String getEmail() {
         return email;

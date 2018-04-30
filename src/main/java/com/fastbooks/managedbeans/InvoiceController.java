@@ -65,10 +65,10 @@ public class InvoiceController implements Serializable {
     String body = "";
     private @Getter
     @Setter
-    String fType = "";
+    String fType = "0";
     private @Getter
     @Setter
-    String fStatus = "";
+    String fStatus = "0";
     private @Getter
     @Setter
     String fShiVia = "";
@@ -83,18 +83,27 @@ public class InvoiceController implements Serializable {
     String fTo = "";
     private @Getter
     @Setter
-    String fIdCust = "";
+    String fIdCust = "0";
     private @Getter
     @Setter
-    String fDate = "";
+    String fDate = "0";
 
     public void init() {
         try {
-            iList = iFacade.getInvoicesByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+            if (this.userData.getInvoiceSql().equals("0")) {
+              iList = iFacade.getInvoicesByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+              DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+              Calendar cal = Calendar.getInstance();
+              this.fFrom= dateFormat.format(cal.getTime());
+            }else{
+              iList = iFacade.getInvoicesByIdCiaFilter(this.userData.getInvoiceSql());
+            }
+            
              cList = cFacade.getCustomersByIdCia(this.userData.getCurrentCia().getIdCia().toString());
             if (!this.userData.getUses().equals("0")) {
                 this.validationBean.lanzarMensaje("info", "lblInvoiceAddSuccess", "blank");
             }
+            
             System.out.println("com.fastbooks.managedbeans.InvoiceController.init()");
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.init()");
@@ -212,32 +221,9 @@ public class InvoiceController implements Serializable {
     
     
     public void applyFilter(){
-    /*
-        private @Getter
-    @Setter
-    String fType = "0";
-    private @Getter
-    @Setter
-    String fStatus = "0";
-    private @Getter
-    @Setter
-    String fShiVia = "";
-    private @Getter
-    @Setter
-    String fFrom = "";
-    private @Getter
-    @Setter
-    String fTo = "";
-    private @Getter
-    @Setter
-    String fIdCust = "0";
-    private @Getter
-    @Setter
-    String fDate = "0";
-        
-        */
     
-    String query = "SELECT * FROM FB_INVOICE WHERE ID_CIA = ? ";
+    
+    String query = "SELECT * FROM FB_INVOICE WHERE ID_CIA = " + this.userData.getCurrentCia().getIdCia().toString() + " ";
     
         if (!this.fType.equals("0")) {
             query += "AND TYPE = '" + this.fType+"' ";
@@ -275,7 +261,60 @@ public class InvoiceController implements Serializable {
             query += " AND ID_CUST =  " + this.fIdCust ;
         }
         
+        this.userData.setInvoiceSql(query);
         System.out.println("com.fastbooks.managedbeans.InvoiceController.applyFilter()");
     
+    }
+    
+    public void resetFilter(){
+    this.userData.setInvoiceSql("0");
+    fType = "0";
+    fStatus = "0";
+    fShiVia = "";
+    fFrom = "";
+    fTo = "";
+    fIdCust = "0";
+    fDate = "0";
+    }
+    
+    public boolean showFilters(String sec, String value){
+        /*
+        private @Getter
+    @Setter
+    String fType = "0";
+    private @Getter
+    @Setter
+    String fStatus = "0";
+    private @Getter
+    @Setter
+    String fShiVia = "";
+    private @Getter
+    @Setter
+    String fFrom = "";
+    private @Getter
+    @Setter
+    String fTo = "";
+    private @Getter
+    @Setter
+    String fIdCust = "0";
+    private @Getter
+    @Setter
+    String fDate = "0";
+        
+        */
+    boolean flag = false;
+    DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+              Calendar cal = Calendar.getInstance();
+              String tmp= dateFormat.format(cal.getTime());
+        if (sec.equals("enq")) {
+            if (fType.equals("0") && fStatus.equals("0") && fShiVia.isEmpty() && this.fFrom.equals(tmp) && this.fTo.isEmpty() &&  fIdCust.equals("0") && fDate.equals("0")) {
+                System.out.println("no hay filtro");
+            }else{
+            System.out.println("si hay filtro");
+            }
+        }
+    
+    
+    return flag;
     }
 }

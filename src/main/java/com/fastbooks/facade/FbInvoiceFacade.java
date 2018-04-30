@@ -72,6 +72,22 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
     
     return list;
     }
+    
+    public List<FbInvoice> getInvoicesByIdCiaFilter(String sql){
+    List<FbInvoice> list = new ArrayList<>();
+        try {
+            //String sql = "select * from fb_invoice where id_cia = ?'";
+            Query q = em.createNativeQuery(sql, FbInvoice.class);
+            //q.setParameter(1, idCia);
+            list = q.getResultList();
+            
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbProductFacade.getProductsByIdCia()");
+            e.printStackTrace();
+        }
+    
+    return list;
+    }
     /*
      PROCEDURE PR_ACT_INVOICE
  (pIdCia IN INT, pIdInvoice IN INT, pIdCust IN INT, pType IN VARCHAR2,pNo IN VARCHAR2, pEmail IN VARCHAR2,
@@ -237,5 +253,9 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
     JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(reportFile.getPath());
     return jasperReport;
 }
+     
+     
+     
+     
     
 }
