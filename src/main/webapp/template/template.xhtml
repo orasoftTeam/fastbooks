@@ -27,9 +27,10 @@
                     </bnu:navbarLinks>
                     <bnu:navbarLinks  style="margin-left: 125px" pull="left"  styleClass="hidden-xs hidden-sm btnGrp"   >
                         
-                        <bnu:navLink value="" href="#" iconAwesome="align-justify" iconSize="lg" onclick="toggleOut()" styleClass="btnOut" />
-                        <bnu:navLink value="" href="#" iconAwesome="align-justify" iconSize="lg" onclick="toggleIn()" styleClass="btnIn" style="display: none" />
-                        <bnu:navLink value="#{userData.currentCia.nomCom}" style="font-weight: bold" ></bnu:navLink>
+                        <bnu:navLink value="  #{userData.currentCia.nomCom}" href="#" iconAwesome="align-justify" iconSize="lg" onclick="toggleOut()" styleClass="btnOut" style="font-weight: bold" />
+                        <bnu:navLink value="  #{userData.currentCia.nomCom}" href="#" iconAwesome="align-justify" iconSize="lg" onclick="toggleIn()"  styleClass="btnIn" style="display: none;font-weight: bold" />
+                         
+                        
                     </bnu:navbarLinks>          
                     <bnu:navbarLinks pull="right">
                         <bnu:dropMenu value="Menu" icon-awesome="" styleClass="hidden-lg hidden-md" >

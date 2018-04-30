@@ -5,14 +5,18 @@
  */
 package com.fastbooks.managedbeans;
 
+import com.fastbooks.facade.FbCustomerFacade;
 import com.fastbooks.facade.FbInvoiceFacade;
+import com.fastbooks.modelo.FbCustomer;
 import com.fastbooks.modelo.FbInvoice;
 import com.fastbooks.util.GlobalParameters;
 import com.fastbooks.util.SendMails;
 import com.fastbooks.util.ValidationBean;
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
@@ -43,6 +47,11 @@ public class InvoiceController implements Serializable {
     List<FbInvoice> iList = new ArrayList<>();
     private @Getter
     @Setter
+    List<FbCustomer> cList = new ArrayList<>();
+    @EJB
+    FbCustomerFacade cFacade;
+    private @Getter
+    @Setter
     FbInvoice currentIn = new FbInvoice();
 
     private @Getter
@@ -54,10 +63,35 @@ public class InvoiceController implements Serializable {
     private @Getter
     @Setter
     String body = "";
+    private @Getter
+    @Setter
+    String fType = "";
+    private @Getter
+    @Setter
+    String fStatus = "";
+    private @Getter
+    @Setter
+    String fShiVia = "";
+    private @Getter
+    @Setter
+    String fDays = "";
+    private @Getter
+    @Setter
+    String fFrom = "";
+    private @Getter
+    @Setter
+    String fTo = "";
+    private @Getter
+    @Setter
+    String fIdCust = "";
+    private @Getter
+    @Setter
+    String fDate = "";
 
     public void init() {
         try {
             iList = iFacade.getInvoicesByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+             cList = cFacade.getCustomersByIdCia(this.userData.getCurrentCia().getIdCia().toString());
             if (!this.userData.getUses().equals("0")) {
                 this.validationBean.lanzarMensaje("info", "lblInvoiceAddSuccess", "blank");
             }
@@ -84,10 +118,24 @@ public class InvoiceController implements Serializable {
 
     public String formatStatus(String s) {
         String res = "";
-        if (s.equals("OP")) {
-            res = this.validationBean.getMsgBundle("lblInvoiceStatusOpen");
-        }else if(s.equals("CA")){
-            res = this.validationBean.getMsgBundle("lblInvoiceStatusCancel");
+        switch (s) {
+            case "OP":
+                res = this.validationBean.getMsgBundle("lblInvoiceStatusOpen");
+                break;
+            case "CA":
+                res = this.validationBean.getMsgBundle("lblInvoiceStatusCancel");
+                break;
+            case "PA":
+                res = this.validationBean.getMsgBundle("lblInvoiceStatusPartial");
+                break;
+            case "OV":
+                res = this.validationBean.getMsgBundle("lblInvoiceStatusOverdue");
+                break;
+            case "CL":
+                res = this.validationBean.getMsgBundle("lblInvoiceStatusClosed");
+                break;
+            default:
+                break;
         }
 
         return res;
@@ -154,5 +202,80 @@ public class InvoiceController implements Serializable {
     flag = true;
     }
     return flag;
+    }
+    
+    
+    public void changeTab(int index){
+    this.userData.setSalesIndex(index);
+    
+    }
+    
+    
+    public void applyFilter(){
+    /*
+        private @Getter
+    @Setter
+    String fType = "0";
+    private @Getter
+    @Setter
+    String fStatus = "0";
+    private @Getter
+    @Setter
+    String fShiVia = "";
+    private @Getter
+    @Setter
+    String fFrom = "";
+    private @Getter
+    @Setter
+    String fTo = "";
+    private @Getter
+    @Setter
+    String fIdCust = "0";
+    private @Getter
+    @Setter
+    String fDate = "0";
+        
+        */
+    
+    String query = "SELECT * FROM FB_INVOICE WHERE ID_CIA = ? ";
+    
+        if (!this.fType.equals("0")) {
+            query += "AND TYPE = '" + this.fType+"' ";
+        }
+        
+        if (!this.fStatus.equals("0")) {
+            query += "AND STATUS = '" + this.fStatus+"' ";
+        }
+        
+        if (!this.fShiVia.isEmpty()) {
+            query += "AND SHIP_VIA = '" + this.fShiVia+"' ";
+        }
+                
+        /*if (!this.fDate.equals("0")) {
+            query += "AND to_date(IN_DATE,'MM/dd/yyyy') = to_date('"+ this.fDate+"','MM/dd/yyyy') " ;
+        } */       
+        
+        if (!this.fDate.equals("0")) {
+            query += "AND to_date(sysdate,'MM/dd/yyyy') >= to_date(IN_DATE  ,'MM/dd/yyyy')-"+ this.fDate+" " ;
+        }
+        
+        if (this.fFrom.isEmpty()) {
+            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+            Calendar cal = Calendar.getInstance();
+            this.fFrom= dateFormat.format(cal.getTime());
+        }
+        
+        if (this.fTo.isEmpty()) {
+            query += " AND to_date(IN_DATE,'MM/dd/yyyy') >= to_date('"+ this.fFrom+"','MM/dd/yyyy') " ;
+        }else{
+            query += " BETWEEN to_date('"+ this.fFrom+"','MM/dd/yyyy') AND to_date('"+ this.fTo+"','MM/dd/yyyy') " ;
+        }
+        
+        if (!this.fIdCust.equals("0")) {
+            query += " AND ID_CUST =  " + this.fIdCust ;
+        }
+        
+        System.out.println("com.fastbooks.managedbeans.InvoiceController.applyFilter()");
+    
     }
 }

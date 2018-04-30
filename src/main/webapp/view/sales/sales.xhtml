@@ -24,22 +24,18 @@
                      padding: 0; margin: 0;">
                     <h1 style="padding-left: 2%">#{messages.Sales}</h1> 
                 </div>
-                <bnu:row>
-                    <bnu:column span="3">
-                        <bnu:navLink href="#{request.contextPath}/view/sales/producsNServices.xhtml" value="#{messages.lblProductsNServices}" />
-                    </bnu:column>
-                </bnu:row>
+                
                 <br></br>
                 
                 
                 
-                <bnu:tabView active-index="0">
-                    <bnu:tab title="#{messages.Sales}">
-                        <ui:include src="invoice.xhtml" />
+                <bnu:tabView active-index="#{userData.salesIndex}">
+                    <bnu:tab title="#{messages.Sales}"  onclick="ajax:invoiceTableController.changeTab(0);"  >
+                        <ui:include src="invoice.xhtml"  />
                     
                     </bnu:tab>
                     
-                        <bnu:tab title="#{messages.customer}">
+                    <bnu:tab title="#{messages.customer}" onclick="ajax:invoiceTableController.changeTab(1);"  >
                             <h:form>
                             <br></br><br></br>
 
@@ -69,7 +65,9 @@
 
                             <bnu:dataTable  styleClass="table table-striped"
                                             value="#{customerController.custL}" 
-                                            var="cust">
+                                            
+                                            var="cust"
+                                           >
                                 <bnu:dataTableColumn label="#{messages.Tcampo1}" value="#{cust.firstname}"></bnu:dataTableColumn>
                                 <bnu:dataTableColumn label="#{messages.Tcampo2}" value="#{cust.phone}"></bnu:dataTableColumn>
                                 <bnu:dataTableColumn label="#{messages.Tcampo3}" value="#{cust.balance.toString()}"></bnu:dataTableColumn>            
@@ -82,12 +80,15 @@
                                 </bnu:dataTableColumn> 
                             </bnu:dataTable>
                             </h:form>
+                        <p:separator/>
+
                         </bnu:tab> 
-                        
+                    <bnu:tab title="#{messages.ProdNServ}"  onclick="ajax:invoiceTableController.changeTab(2);" >
+                        <ui:include src="product.xhtml"  />
+                    </bnu:tab>
                     </bnu:tabView>
                 
-                <p:separator/>
-
+                
                 <!--Modal add-->
                 <bnu:modal id="amodal" title="#{messages.custInfo}" styleClass="modalPseudoClass" backdrop="false">
                     <h:form>      

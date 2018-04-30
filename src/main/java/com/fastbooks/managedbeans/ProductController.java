@@ -174,9 +174,9 @@ public class ProductController implements Serializable {
         this.typeImg = typeImg;
         //showScnd = true;
         //this.vb.reload();
-        /*this.vb.ejecutarJavascript("$('.modalPseudoClass').modal('hide');");
+        /*this.vb.ejecutarJavascript("$('.modalType').modal('hide');");
     this.vb.updateComponent("bmodal");
-    this.vb.ejecutarJavascript("$('.modalPseudoClass2').modal();");*/
+    this.vb.ejecutarJavascript("$('.modalAddProd').modal();");*/
         this.modalTitle = this.vb.getMsgBundle("lblProdServiceInfo");
         this.showForm = true;
         if (type.equals("BU")) {
@@ -188,7 +188,7 @@ public class ProductController implements Serializable {
     }
 
     public void limpiar() {
-        //this.vb.ejecutarJavascript("$('.modalPseudoClass').modal('hide')");
+        //this.vb.ejecutarJavascript("$('.modalType').modal('hide')");
         this.modalTitle = "Select a type:";
         this.showForm = false;
         photoUrl = "/resources/img/placeholder.png";
@@ -302,7 +302,7 @@ public class ProductController implements Serializable {
                     this.userData.setUses(message);
                     this.vb.reload();
                     /*String message = this.operation.equals("A")? "lblAddProdSuccess" : "lblUpdateProdSuccess";
-                    this.vb.ejecutarJavascript("$('.modalPseudoClass').modal('hide');");
+                    this.vb.ejecutarJavascript("$('.modalType').modal('hide');");
                     this.vb.lanzarMensaje("info",message , "blank");
                     this.init();
                     this.vb.updateComponent("tableForm");*/
@@ -408,11 +408,11 @@ public class ProductController implements Serializable {
             }
 
             this.operation = "U";
-            this.vb.ejecutarJavascript("$('.modalPseudoClass').modal();");
+            this.vb.ejecutarJavascript("$('.modalType').modal();");
         } else if (op.equals("D")) {
             this.product = prod;
             this.name = prod.getName();
-            this.vb.ejecutarJavascript("$('.modalPseudoClass2').modal();");
+            this.vb.ejecutarJavascript("$('.modalAddProd').modal();");
         } else if (op.equals("U") && prod.getType().equals("BU")){
             this.operation = "U";
             this.product = prod;
@@ -434,7 +434,7 @@ public class ProductController implements Serializable {
             this.isBundle = true;
             itemBundleList = pFacade.getProductsByIdCiaWithoutBundle(this.userData.getCurrentCia().getIdCia().toString());
             this.modalTitle = this.vb.getMsgBundle("lblBundleInfo");
-            this.vb.ejecutarJavascript("$('.modalPseudoClass').modal();");
+            this.vb.ejecutarJavascript("$('.modalType').modal();");
         }
     }
 
@@ -564,7 +564,7 @@ public class ProductController implements Serializable {
                         pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
                         this.vb.reload();
                         /*String message = this.operation.equals("A")? "lblAddProdSuccess" : "lblUpdateProdSuccess";
-                    this.vb.ejecutarJavascript("$('.modalPseudoClass').modal('hide');");
+                    this.vb.ejecutarJavascript("$('.modalType').modal('hide');");
                     this.vb.lanzarMensaje("info",message , "blank");
                     this.init();
                     this.vb.updateComponent("tableForm");*/

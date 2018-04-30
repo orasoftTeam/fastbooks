@@ -351,7 +351,7 @@ public class InvoiceFormController implements Serializable {
                                     c++;
                                 }
 
-                                if (checkIfInvHasQuant(prodBundle, Integer.parseInt(bi.getQuant().toString()))) {
+                                if (!checkIfInvHasQuant(prodBundle, Integer.parseInt(bi.getQuant().toString()))) {
                                     i++;
                                 }
                             }

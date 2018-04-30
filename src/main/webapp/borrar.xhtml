@@ -28,17 +28,33 @@
                 <div class="dropdown">
                     <button onclick="myFunction()" class="dropbtn">Dropdown</button>
                     <div id="myDropdown" class="dropdown-content">
-                        <h:form>
-                            <li>Home</li>
-                            <li>About</li>
-                            <li>Contact</li>
-                            <li><bnu:selectOneMenu label="Type">
-                                    <f:selectItem itemLabel="Uno"/>
-                                    <f:selectItem itemLabel="Dos"/>
-                                    <f:selectItem itemLabel="Tres"/>
-                                </bnu:selectOneMenu></li>
-                            <li><bnu:commandButton value="Apply" look="success"/> <bnu:commandButton value="Reset" look="danger"/> </li>
-                        </h:form>
+                        <li class="dropLi" ><bnu:selectOneMenu label="#{messages.lblType}">
+                                <f:selectItem itemLabel="#{messages.invoice}"/>
+                                <!--<f:selectItem itemLabel="Dos"/>
+                                <f:selectItem itemLabel="Tres"/>-->
+                            </bnu:selectOneMenu></li>
+                        <li class="dropLi" ><bnu:selectOneMenu label="#{messages.lblInvoiceStatus}">
+                                <f:selectItem itemLabel="#{messages.lblInvoiceStatusOpen}"  itemValue="OP" />
+                                <f:selectItem itemLabel="#{messages.lblInvoiceStatusPartial}" itemValue="PA" />
+                                <f:selectItem itemLabel="#{messages.lblInvoiceStatusClosed}" itemValue="CL" />
+                                <f:selectItem itemLabel="#{messages.lblInvoiceStatusCancel}" itemValue="CA" />
+                                <f:selectItem itemLabel="#{messages.lblInvoiceStatusOverdue}" itemValue="OV" />
+                            </bnu:selectOneMenu>
+
+                            <bnu:inputText label="#{messages.lblInvoiceShipVia}" />
+                        </li>
+                        <li class="dropLi" ><bnu:selectOneMenu label="#{messages.lblInvoiceDate}">
+                                <f:selectItem itemLabel="#{messages.lblLastYear}" itemValue="365" />
+                                <f:selectItem itemLabel="#{messages.lblSixMonths}" itemValue="180" />
+                                <f:selectItem itemLabel="#{messages.lblThreeMonths}"  itemValue="90"/>
+                                <f:selectItem itemLabel="#{messages.lblLastMonth}" itemValue="30" />
+                            </bnu:selectOneMenu></li>
+                        <li class="dropLi" ><bnu:inputText label="#{messages.lblFrom}"/><bnu:inputText label="#{messages.lblTo}"/></li>
+                        <li class="dropLi" ><bnu:selectOneMenu label="#{messages.lblCustomer}">
+                                <f:selectItems value="#{invoiceTableController.CList}" var="cust" itemValue="#{cust.idCust}" itemLabel="#{cust.displayName}"/>
+                            </bnu:selectOneMenu></li>
+                        <li class="dropLi" ><bnu:commandButton value="#{messages.lblApply}" look="success"/> <bnu:commandButton value="#{messages.lblReset}" look="danger"/> </li>
+
                     </div>
                 </div>
 
