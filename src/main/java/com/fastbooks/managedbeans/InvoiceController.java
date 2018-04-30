@@ -242,10 +242,11 @@ public class InvoiceController implements Serializable {
         } */       
         
         if (!this.fDate.equals("0")) {
-            query += "AND to_date(sysdate,'MM/dd/yyyy') >= to_date(IN_DATE  ,'MM/dd/yyyy')-"+ this.fDate+" " ;
+            query += " AND to_date(IN_DATE,'MM/dd/yyyy') BETWEEN sysdate-"+ this.fDate+" AND sysdate " ;
         }
         
-        if (this.fFrom.isEmpty()) {
+        if (this.fDate.equals("0")) {
+            if (this.fFrom.isEmpty()) {
             DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
             Calendar cal = Calendar.getInstance();
             this.fFrom= dateFormat.format(cal.getTime());
@@ -254,7 +255,8 @@ public class InvoiceController implements Serializable {
         if (this.fTo.isEmpty()) {
             query += " AND to_date(IN_DATE,'MM/dd/yyyy') >= to_date('"+ this.fFrom+"','MM/dd/yyyy') " ;
         }else{
-            query += " BETWEEN to_date('"+ this.fFrom+"','MM/dd/yyyy') AND to_date('"+ this.fTo+"','MM/dd/yyyy') " ;
+            query += " AND to_date(IN_DATE,'MM/dd/yyyy') BETWEEN to_date('"+ this.fFrom+"','MM/dd/yyyy') AND to_date('"+ this.fTo+"','MM/dd/yyyy') " ;
+        }
         }
         
         if (!this.fIdCust.equals("0")) {
@@ -311,6 +313,7 @@ public class InvoiceController implements Serializable {
                 System.out.println("no hay filtro");
             }else{
             System.out.println("si hay filtro");
+            flag = true;
             }
         }
     
