@@ -90,7 +90,7 @@
 
                 <bnu:iconAwesome name="fa-long-arrow-down" size="2x"  style="margin-right: 15px" />
                 <bnu:dropButton value="#{messages.lblBatchOptions}" style="margin-bottom:15px"  >
-                    <bnu:navLink value="#{messages.lblPrintTranc}" href="#"></bnu:navLink>
+                    <bnu:commandButton value="#{messages.lblPrintTranc}" action="#{invoiceTableController.printTransactions(request)}"   ></bnu:commandButton>
                     <bnu:navLink value="#{messages.lblPrintPackingSlip}" href="#"></bnu:navLink>
                     <bnu:navLink value="#{messages.lblSendTranc}" href="#"></bnu:navLink>
                     <bnu:navLink value="#{messages.lblSendRemind}" ></bnu:navLink>
@@ -116,7 +116,7 @@
                     selectionMode="multiple"
                     >
                     <bnu:dataTableColumn label="#{messages.lblInvoiceDate}"   >
-                        <bnu:selectBooleanCheckbox style="margin-right: 10px" />#{in.inDate}
+                        <bnu:selectBooleanCheckbox style="margin-right: 10px"  onclick="ajax:invoiceTableController.addToInvoiceList(in.idInvoice);"  />#{in.inDate}
                     </bnu:dataTableColumn>
                     <bnu:dataTableColumn  label="#{messages.lblType}" value="#{invoiceTableController.formatType(in.type)}" ></bnu:dataTableColumn>
                     <bnu:dataTableColumn   label="#{messages.lblInvoiceNo}"  value="#{in.noDot}" ></bnu:dataTableColumn>

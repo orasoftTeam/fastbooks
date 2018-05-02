@@ -87,6 +87,7 @@ public class InvoiceController implements Serializable {
     private @Getter
     @Setter
     String fDate = "0";
+    private @Getter @Setter List<String> idInvoices = new ArrayList<>();
 
     public void init() {
         try {
@@ -319,5 +320,47 @@ public class InvoiceController implements Serializable {
     
     
     return flag;
+    }
+    
+    public void addToInvoiceList(String idInvoice){
+    int c = 0;
+        for (String str : idInvoices) {
+            if (str.equals(idInvoice)) {
+                c++;
+            }
+        }
+        
+        if (c == 0) {
+            idInvoices.add(idInvoice);
+        }else{
+             for (int i = 0; i < idInvoices.size(); i++) {
+                 if (idInvoices.get(i).equals(idInvoice)) {
+                     idInvoices.remove(i);
+                 }
+            }
+   
+        }
+        System.out.println("com.fastbooks.managedbeans.InvoiceController.addToInvoiceList()");
+    }
+    
+    
+    public void printTransactions(HttpServletRequest req) {
+        String res = "";
+        try {
+            for (int i = 0; i < idInvoices.size(); i++) {
+                res += idInvoices.get(i);
+                if (i != idInvoices.size()-1) {
+                    res += ",";
+                }
+            }
+            this.invoiceModal = this.iFacade.printTransactions("",this.userData.getCurrentCia().getLogo(),this.iFacade.getCompiledFile("multipleInvoice", req),this.userData.getCurrentCia().getIdCia().toString());
+        //this.userData.setSInvoice(invoiceModal);
+        //this.validationBean.lanzarMensajeSinBundle("error", this.invoiceModal, "");
+        //this.currentIn = i;
+       // this.validationBean.updateComponent("pdf");
+        this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.InvoiceController.print()");
+        }
     }
 }
