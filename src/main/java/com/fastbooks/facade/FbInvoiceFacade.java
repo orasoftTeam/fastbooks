@@ -106,11 +106,12 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
     String pFromAmounts = "";
     String pTaxAmounts = "";
     String pTaxProdsIds = "";
+    String pItemTaxes = "";
     String temp = null;
     //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         try {
             Connection cn = em.unwrap(java.sql.Connection.class);
-            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_INVOICE (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_INVOICE (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             cs.setInt(1, Integer.parseInt(in.getIdCia().getIdCia().toString()));
             cs.setInt(2, Integer.parseInt(in.getIdInvoice().toString()));
             cs.setInt(3, Integer.parseInt(in.getIdCust().getIdCust().toString()));
@@ -149,7 +150,15 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
             for (FbInvoiceDetail fbInvoiceDetail : in.getFbInvoiceDetailList()) {
                 pProdsIds += fbInvoiceDetail.getIdProd().getIdProd().toString() + ",";
                 pQuants += fbInvoiceDetail.getItemQuant().toString()+",";
+                    for (FbInvoiceTaxes fbInvoiceTax : in.getFbInvoiceTaxesList()) {
+                        if (fbInvoiceTax.getIdTax().getIdTax().toString().equals(fbInvoiceDetail.getItemTax())) {
+                            fbInvoiceDetail.setItemTax(fbInvoiceTax.getIdTax().getName());
+                        }
+                    }
+                    pItemTaxes += fbInvoiceDetail.getItemTax() + ",";
             }
+            
+            
             
             for (FbInvoiceTaxes fbInvoiceDetail : in.getFbInvoiceTaxesList()) {
                 pIdTaxes += fbInvoiceDetail.getIdTax().getIdTax().toString() + ",";
@@ -165,11 +174,12 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice>{
             cs.setString(26, pFromAmounts);
             cs.setString(27, pTaxAmounts);
             cs.setString(28, pTaxProdsIds);
-            cs.setString(29, op);
-            cs.registerOutParameter(30, Types.VARCHAR);
+            cs.setString(29, pItemTaxes);
+            cs.setString(30, op);
+            cs.registerOutParameter(31, Types.VARCHAR);
             
             cs.execute();
-            res = cs.getString(30);
+            res = cs.getString(31);
             cs.close();
            
         } catch (Exception e) {
