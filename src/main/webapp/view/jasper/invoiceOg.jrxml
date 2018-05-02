@@ -158,25 +158,11 @@
 					<rightPen lineWidth="1.25"/>
 				</box>
 				<textField>
-					<reportElement x="14" y="68" width="100" height="20" uuid="6d46ea40-7c19-4140-b7b3-439337cea7af"/>
+					<reportElement x="14" y="60" width="100" height="20" uuid="6d46ea40-7c19-4140-b7b3-439337cea7af"/>
 					<textElement>
 						<font size="9"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{COMPANY}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="14" y="7" width="153" height="21" forecolor="#3399FF" uuid="bec060ce-ea30-479c-8a3b-da467c430ccd"/>
-					<textElement>
-						<font fontName="Verdana" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-					</textElement>
-					<text><![CDATA[Tax Invoice]]></text>
-				</staticText>
-				<textField>
-					<reportElement x="399" y="65" width="100" height="20" uuid="28d5dc18-4f60-4ca1-897a-03435353e9f0"/>
-					<textElement>
-						<font size="12" isBold="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{TERMS}]]></textFieldExpression>
 				</textField>
 			</frame>
 			<frame>
@@ -277,14 +263,14 @@
 				<textFieldExpression><![CDATA[$F{IN_DATE}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="14" y="144" width="100" height="20" forecolor="#000000" uuid="0b09496f-c3f3-4e67-8956-bfd96ba31e07"/>
+				<reportElement x="14" y="124" width="100" height="20" forecolor="#000000" uuid="0b09496f-c3f3-4e67-8956-bfd96ba31e07"/>
 				<textElement>
 					<font size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[BILL TO:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="14" y="164" width="100" height="20" uuid="5dab9495-d189-4dea-a32e-898490c47cc4"/>
+				<reportElement x="14" y="156" width="100" height="20" uuid="5dab9495-d189-4dea-a32e-898490c47cc4"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
@@ -321,16 +307,9 @@
 				</box>
 			</frame>
 			<textField>
-				<reportElement x="114" y="164" width="100" height="17" uuid="73d41cb3-65f5-4399-98d3-9b97de53ac3e"/>
+				<reportElement x="90" y="156" width="100" height="17" uuid="73d41cb3-65f5-4399-98d3-9b97de53ac3e"/>
 				<textFieldExpression><![CDATA[$F{LASTNAME}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="322" y="181" width="100" height="20" forecolor="#000000" uuid="a48229a6-b761-473d-9ced-1447ae890056"/>
-				<textElement>
-					<font size="12" isBold="true"/>
-				</textElement>
-				<text><![CDATA[TERMS:]]></text>
-			</staticText>
 		</band>
 	</title>
 	<columnHeader>
@@ -528,7 +507,7 @@
 			</textField>
 			<textField>
 				<reportElement x="471" y="103" width="73" height="20" uuid="65a923cb-11e9-45e2-afa7-18cb1b8f176c"/>
-				<textFieldExpression><![CDATA[$F{TOTAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ACTUAL_BALANCE}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="406" y="29" width="138" height="2" forecolor="#CCCCCC" uuid="88597541-8de9-494e-882e-49393a3f56c4"/>
