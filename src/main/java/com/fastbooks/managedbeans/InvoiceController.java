@@ -353,14 +353,35 @@ public class InvoiceController implements Serializable {
                     res += ",";
                 }
             }
-            this.invoiceModal = this.iFacade.printTransactions("",this.userData.getCurrentCia().getLogo(),this.iFacade.getCompiledFile("multipleInvoice", req),this.userData.getCurrentCia().getIdCia().toString());
+            this.invoiceModal = this.iFacade.printTransactions(res,this.userData.getCurrentCia().getLogo(),this.iFacade.getCompiledFile("multipleInvoice", req),this.userData.getCurrentCia().getIdCia().toString());
         //this.userData.setSInvoice(invoiceModal);
         //this.validationBean.lanzarMensajeSinBundle("error", this.invoiceModal, "");
         //this.currentIn = i;
        // this.validationBean.updateComponent("pdf");
         this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
+        this.idInvoices = new ArrayList<>();
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.print()");
+            e.printStackTrace();
         }
+    }
+    
+    public boolean disableBatch(String op){
+        boolean flag = true;
+    /*
+        PT = PRINT TRANSACTIONS
+        PP = PRINT PACKING SLIP
+        ST = SEND TRANSACTIONS
+        SR = SEND REMINDER
+        
+        */
+        if (op.equals("PT")) {
+            if (!idInvoices.isEmpty()) {
+                flag = false;
+            }
+        }
+    
+        
+        return flag;
     }
 }

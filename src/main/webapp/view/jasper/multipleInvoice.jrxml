@@ -373,6 +373,10 @@
 						<bottomPen lineWidth="1.0"/>
 						<rightPen lineWidth="1.0"/>
 					</box>
+					<image>
+						<reportElement x="31" y="0" width="154" height="86" uuid="d61acabd-bfc5-49f5-99d0-82d833035b79"/>
+						<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+					</image>
 				</frame>
 				<componentElement>
 					<reportElement key="table 3" style="table 3" x="0" y="205" width="554" height="166" uuid="eb136037-4b8a-426c-85a1-4fcda77ea896"/>
