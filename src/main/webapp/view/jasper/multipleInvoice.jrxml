@@ -214,7 +214,7 @@
 					<staticText>
 						<reportElement x="14" y="7" width="153" height="21" forecolor="#3399FF" uuid="bec060ce-ea30-479c-8a3b-da467c430ccd"/>
 						<textElement>
-							<font fontName="Verdana" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+							<font fontName="SansSerif" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 						</textElement>
 						<text><![CDATA[Tax Invoice]]></text>
 					</staticText>
