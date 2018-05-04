@@ -43,8 +43,13 @@ public class InvoiceController implements Serializable {
     List<FbInvoice> iList = new ArrayList<>();
     private @Getter
     @Setter
+    List<FbInvoice> caList;
+    private @Getter
+    @Setter
     FbInvoice currentIn = new FbInvoice();
-
+    private @Getter
+    @Setter
+    String status;
     private @Getter
     @Setter
     String invoiceModal = "0";
@@ -54,6 +59,10 @@ public class InvoiceController implements Serializable {
     private @Getter
     @Setter
     String body = "";
+    
+    private @Getter
+    @Setter
+    FbInvoice inv;
 
     public void init() {
         try {
@@ -148,5 +157,11 @@ public class InvoiceController implements Serializable {
     this.validationBean.ejecutarJavascript("$('.cancelModal').modal()");
     }
     
-    
-}
+    public void selectSalesPanelStatus(String status){
+      
+        String res  =  "";
+        caList = iFacade.getInvoicesCancelledBalance(this.userData.getCurrentCia().getIdCia().toString(), "CA");
+        
+        
+        }   
+  }

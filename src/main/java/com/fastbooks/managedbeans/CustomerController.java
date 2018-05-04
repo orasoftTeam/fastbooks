@@ -8,10 +8,16 @@ package com.fastbooks.managedbeans;
 import com.fastbooks.facade.FbCustomerFacade;
 import com.fastbooks.modelo.FbCompania;
 import com.fastbooks.modelo.FbCustomer;
+import com.fastbooks.util.GlobalParameters;
 import com.fastbooks.util.ValidationBean;
+import java.io.File;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -19,6 +25,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -49,6 +57,28 @@ public class CustomerController implements Serializable {
     private @Getter
     @Setter
     FbCustomer cust;
+
+    private GlobalParameters gp = new GlobalParameters();
+    private @Getter
+    @Setter
+    String appPath = gp.getAppPath();//System.getProperty("user.dir");
+    private final String destination = appPath + File.separator + "logo" + File.separator;
+    private @Getter
+    @Setter
+    UploadedFile archivo;
+    private @Getter
+    @Setter
+    String nameFileFinal;
+    private @Getter
+    @Setter
+    String msgFile;
+    private @Getter
+    @Setter
+    String logourl;
+
+    private @Getter
+    @Setter
+    boolean selectAllCustomers;
 
     public FbCustomer getCustomer() {
         return customer;
@@ -83,6 +113,7 @@ public class CustomerController implements Serializable {
     public void registerC() {
         if (valCampos()) {
             if (sameSHA) {
+                System.out.println("gettin sameSHA" + sameSHA);
                 customer.setStreetS(customer.getStreet());
                 customer.setCityS(customer.getCity());
                 customer.setEstateS(customer.getEstate());
@@ -94,8 +125,8 @@ public class CustomerController implements Serializable {
             com.setIdCia(BigDecimal.ZERO);
             customer.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
             customer.setIdCust(new BigDecimal("0"));
-            customer.setNote("Prueba");
-            customer.setAtachment("Prueba2");
+            customer.setAtachment(this.logourl);
+            System.out.println("getting customer first name" + customer.getFirstname());
             String res;
             res = custF.actCustomer(customer, "A");
             if (res.equals("0")) {
@@ -163,6 +194,7 @@ public class CustomerController implements Serializable {
                 validationBean.lanzarMensaje("error", "unexpectedError", "blank");
             }
             cust = new FbCustomer(); //limpiando formulario
+
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.CustomerController.edit()");
             e.printStackTrace();
@@ -199,14 +231,12 @@ public class CustomerController implements Serializable {
 
         boolean flag = false;
         int c = 0;
+        /*
         if (!(validationBean.validarCampoVacio(this.customer.getFirstname(), "warn", "valErr", "reqFname")
                 && validationBean.validarSoloLetras(this.customer.getFirstname(), "warn", "valErr", "reqFname"))) {
             c++;
         }
-        if (!(validationBean.validarCampoVacio(this.customer.getLastname(), "warn", "valErr", "reqLname")
-                && validationBean.validarSoloLetras(this.customer.getLastname(), "warn", "valErr", "reqLname"))) {
-            c++;
-        }
+         */
         if (!(validationBean.validarCampoVacio(this.customer.getCompany(), "warn", "valErr", "reqComp")
                 && validationBean.validarSoloLetras(this.customer.getCompany(), "warn", "valErr", "reqComp"))) {
             c++;
@@ -246,5 +276,60 @@ public class CustomerController implements Serializable {
         }
         return flag;
     }
+
+    public void handleFileUpload(FileUploadEvent event) {
+        String name;
+        try {
+            if (archivo == null) {
+                archivo = event.getFile();
+                //BufferedImage img = ImageIO.read(archivo.getInputstream());
+                name = validationBean.generarRandom(archivo.getFileName());
+                File file = new File(destination);
+                file.mkdir();
+                validationBean.copyFile(name, destination, archivo.getInputstream());
+
+                this.logourl = "/logo/" + name;
+                this.msgFile = validationBean.getMsgBundle("lblFileSuccess");
+
+                validationBean.updateComponent("comForm:msgFile");
+                System.out.println(this.logourl);
+                validationBean.updateComponent("comForm:showLogo");
+                this.nameFileFinal = name;
+            } else {
+                archivo = event.getFile();
+                if (validationBean.deleteFile(destination + nameFileFinal)) {
+                    name = validationBean.generarRandom(archivo.getFileName());
+                    validationBean.copyFile(name, destination, archivo.getInputstream());
+                    this.logourl = "/logo/" + name;
+                    this.msgFile = validationBean.getMsgBundle("lblFileSuccess");
+                    validationBean.updateComponent("comForm:msgFile");
+                    System.out.println(this.logourl);
+                    validationBean.updateComponent("comForm:showLogo");
+                    nameFileFinal = name;
+                }
+
+            }
+        } catch (Exception e) {
+            msgFile = validationBean.getMsgBundle("lblFileUploadError");
+            if (archivo != null) {
+                if (validationBean.deleteFile("/logo/" + archivo.getFileName())) {
+                    archivo = null;
+                }
+            }
+            this.logourl = "";
+            validationBean.updateComponent("comForm:msgFile");
+
+            validationBean.updateComponent("comForm:showLogo");
+            e.printStackTrace();
+        }
+
+    }
+
+    public void limpiar() {
+        sameSHA = false;
+        customer = new FbCustomer();
+    }
+
+
 
 }
