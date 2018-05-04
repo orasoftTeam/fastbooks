@@ -32,7 +32,7 @@
                     <br></br>
                     <bnu:row>
                         <bnu:column span="3" style="float:right">
-                            <bnu:button value="#{messages.btnAddEmployee}" look="success" onclick="$('.modalPseudoClass').modal()" ></bnu:button>
+                            <bnu:button value="#{messages.btnAddEmployee}" look="success" onclick="PF('dlg2').show();" ></bnu:button>
                         </bnu:column>
                     </bnu:row>
                     <bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />
@@ -64,7 +64,129 @@
                 </h:form>
                 <p:separator/>
 
-                <!--Modal para agregar empleado -->
+                <!--modal add -->
+                <p:dialog header="Employee Information" widgetVar="dlg2" modal="true" height="500" width="1000">
+                    <h:form>
+                        <h:panelGrid >
+                            <bnu:row>
+                                <bnu:panel span="7">
+                                    <bnu:column span="2">
+                                        <p>#{messages.titleC}</p>
+                                        <bnu:inputText value="#{employeeController.emp.title}" maxlength="50" ></bnu:inputText>
+                                    </bnu:column>
+                                    <bnu:column span="3">
+                                        <p>#{messages.fNameC}</p>
+                                        <bnu:inputText value="#{employeeController.emp.firstname}" maxlength="50"></bnu:inputText>
+                                    </bnu:column>
+                                    <bnu:column span="2"> 
+                                        <p>Mid</p>
+                                        <bnu:inputText value="#{employeeController.emp.middlename}" maxlength="50"></bnu:inputText>
+                                    </bnu:column>
+                                    <bnu:column span="3">
+                                        <p>#{messages.lastNameC}</p>
+                                        <bnu:inputText value="#{employeeController.emp.lastname}" maxlength="50"></bnu:inputText>
+                                    </bnu:column>
+                                    <bnu:column span="2">
+                                        <p>#{messages.suffixC}</p>
+                                        <bnu:inputText value="#{employeeController.emp.suffixx}" maxlength="50"></bnu:inputText>
+                                    </bnu:column>
+                                    <bnu:column span="12">
+                                        <p>Display name as</p>  
+                                        <bnu:inputText value="#{employeeController.emp.displayName}" maxlength="50"></bnu:inputText>
+                                    </bnu:column>
+                                    <bnu:column span="12">
+                                        <p><b>Address</b></p>
+                                        <bnu:inputTextarea placeholder="#{messages.streetC}" value="#{employeeController.emp.street}"></bnu:inputTextarea>
+                                    </bnu:column>
+                                    <bnu:column span="6">
+                                        <bnu:inputText placeholder="#{messages.cityT}" value="#{employeeController.emp.city}" maxlength="50"></bnu:inputText>
+                                    </bnu:column>
+                                    <bnu:column span="6">
+                                        <bnu:inputText placeholder="#{messages.stateP}" value="#{employeeController.emp.state}" maxlength="50"></bnu:inputText>
+                                    </bnu:column>
+                                    <bnu:column span="6">
+                                        <bnu:inputText placeholder="#{messages.postalCC}" value="#{employeeController.emp.postalCode}" maxlength="50"></bnu:inputText>
+                                    </bnu:column>
+                                    <bnu:column span="6">
+                                        <bnu:inputText placeholder="#{messages.countryC}" value="#{employeeController.emp.country}" maxlength="50"></bnu:inputText>
+                                    </bnu:column>
+                                    <bnu:column span="12">
+                                        <p>Notes</p>
+                                        <bnu:inputTextarea value="#{employeeController.emp.note}"></bnu:inputTextarea>
+                                    </bnu:column>
+                                </bnu:panel> 
+
+                                <bnu:panel span="5">
+                                    <bnu:column span="12">   
+                                        <p>#{messages.emailC}</p>
+                                        <bnu:inputText value="#{employeeController.emp.email}" maxlength="50"></bnu:inputText>
+                                    </bnu:column>
+                                    <bnu:column span="6">  
+                                        <p>#{messages.phoneC}</p>
+                                        <bnu:inputText value="#{employeeController.emp.phone}" onkeyup="soloNumeros(this)" maxlength="20"></bnu:inputText>
+                                    </bnu:column>
+                                    <bnu:column span="6">
+                                        <p>#{messages.mobileC}</p>
+                                        <bnu:inputText value="#{employeeController.emp.mobile}" onkeyup="soloNumeros(this)" maxlength="20"></bnu:inputText>
+                                    </bnu:column>
+                                    <bnu:column span="6">
+                                        <p>Billing rate(/hr)</p>
+                                        <bnu:inputText value="#{employeeController.emp.billingRate}" onkeyup="soloNumeros(this)" maxlength="20"></bnu:inputText>
+                                    </bnu:column>
+                                    <bnu:column span="12">
+                                        <p:selectBooleanCheckbox></p:selectBooleanCheckbox>
+                                        <h:outputText value="Employee's time billable by default" ></h:outputText>
+                                    </bnu:column>
+                                    <bnu:column span="7">
+                                        <p>Employee ID No.</p>
+                                        <bnu:inputText value="#{employeeController.emp.employeeIdNo}" onkeyup="soloNumeros(this)" maxlength="20"></bnu:inputText>
+                                    </bnu:column>
+                                    <bnu:column span="6">
+                                        <p>Employee ID</p>
+                                        <bnu:inputText value="#{employeeController.emp.employeeId}" onkeyup="soloNumeros(this)" maxlength="20"></bnu:inputText>
+                                    </bnu:column>
+                                    <bnu:column span="6">
+                                        <h:outputLabel>#{messages.gender}</h:outputLabel>
+                                        <bnu:radiobutton value="#{userController.gender}">
+                                            <f:selectItem itemLabel="#{messages.male}" itemValue="M" />
+                                            <f:selectItem itemLabel="#{messages.female}" itemValue="F" />
+                                        </bnu:radiobutton>
+                                    </bnu:column>
+                                    <bnu:column span="6">
+                                        <p><strong>Hired date</strong></p>
+                                        <bnu:inputText value="#{employeeController.emp.hiredDate}"></bnu:inputText>
+                                    </bnu:column>
+                                    <bnu:column span="6">
+                                        <p><strong>Released date</strong></p>
+                                        <bnu:inputText value="#{employeeController.emp.released}"></bnu:inputText>
+                                    </bnu:column>
+                                    <bnu:column span="6">
+                                        <p><strong>Date of birth</strong></p>
+                                        <bnu:inputText value="#{employeeController.emp.dateOfBirth}">
+                                        </bnu:inputText>
+                                    </bnu:column>
+                                </bnu:panel>
+                            </bnu:row>
+                             <bnu:row>
+                            <bnu:column span="12">
+                                <bnu:messages id="msg" />
+                            </bnu:column>
+                        </bnu:row>
+                        <bnu:row>
+                            <bnu:column span="6">
+                                <bnu:commandButton value="#{messages.save}" look="success" style="float: left"
+                                                   action="#{employeeController.addEmployee()}" update="@form">
+                                </bnu:commandButton>
+                            </bnu:column>
+                            <bnu:column span="6">
+                                <bnu:commandButton value="#{messages.lblClose}" look="danger" action="#{employeeController.limpiar()}" style="float: right"/>
+                            </bnu:column>
+                        </bnu:row>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+
+                <!--Modal para agregar empleado 
                 <bnu:modal  id="amodal" title="#{messages.btnAddEmployee}" styleClass="modalPseudoClass" backdrop="false" >
                     <h:form id="addModal">
                         <bnu:row>
@@ -87,11 +209,8 @@
                                 <bnu:column>    
                                     <bnu:inputText label="#{messages.emailC}" value="#{employeeController.emp.email}" maxlength="50"></bnu:inputText>
                                 </bnu:column>
-                                <!--<bnu:column>    
-                                    <bnu:inputText label="#{messages.gender}" value="#{employeeController.emp.gender}" maxlength="20"></bnu:inputText>
-                                </bnu:column>-->
                                 <bnu:column>    
-                                   <bnu:inputText label="#{messages.dateBirth}"  value="#{employeeController.emp.dateOfBirth}" maxlength="20" onkeyup="soloNumeros(this)"></bnu:inputText>
+                                    <bnu:inputText label="#{messages.dateBirth}"  value="#{employeeController.emp.dateOfBirth}" maxlength="20" onkeyup="soloNumeros(this)"></bnu:inputText>
                                 </bnu:column>
                                 <bnu:column>
                                     <h:outputLabel>#{messages.gender}</h:outputLabel>
@@ -127,16 +246,24 @@
                                 </bnu:column>
                             </bnu:panel>
                         </bnu:row>
-
+                        <bnu:row>
+                            <bnu:column span="12">
+                                <bnu:messages id="msg" />
+                            </bnu:column>
+                        </bnu:row>
                         <bnu:row>
                             <bnu:column span="6">
-                                <bnu:commandButton value="#{messages.save}" look="success" 
-                                                   action="#{employeeController.addEmployee()}">
+                                <bnu:commandButton value="#{messages.save}" look="success" style="width: 100%"
+                                                   action="#{employeeController.addEmployee()}" update="@form">
                                 </bnu:commandButton>
+                            </bnu:column>
+                            <bnu:column span="6">
+                                <bnu:commandButton value="#{messages.lblClose}" look="danger" action="#{employeeController.limpiar()}" style="width: 100%"/>
                             </bnu:column>
                         </bnu:row>
                     </h:form>
                 </bnu:modal>
+                -->
 
                 <!--Modal editar employee -->
                 <bnu:modal  id="bmodal" title="#{messages.empInfo}" styleClass="modalPseudoClass2" backdrop="false" >
@@ -198,11 +325,12 @@
                     { 
                     obj.value = (obj.value + '').replace(/[^0-9]/g, '');
                     }
-                     //$.blockUI({ message: 'Hold on!' });      
+                    //$.blockUI({ message: 'Hold on!' });      
                     function mensaje(e){
                     alert(e);
                     } 
                 </h:outputScript>
+                
 
             </ui:define>
         </ui:composition>

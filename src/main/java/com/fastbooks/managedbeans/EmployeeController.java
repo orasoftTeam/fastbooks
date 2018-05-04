@@ -11,7 +11,11 @@ import com.fastbooks.modelo.FbEmployee;
 import com.fastbooks.util.ValidationBean;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -90,11 +94,7 @@ public class EmployeeController implements Serializable {
             this.emp.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
             this.emp.setIdCia(this.userData.getCurrentCia());
             this.emp.setIdEmp(new BigDecimal("0"));
-            this.bDay = this.day + "/"+this.month+"/"+this.year;
-            
-
-            
-            
+            this.bDay = this.day + "/" + this.month + "/" + this.year;
 
             String res = eFacade.actEmployee(emp, "A");
             System.out.println("Res: " + res);
@@ -123,7 +123,6 @@ public class EmployeeController implements Serializable {
             System.out.println("error obteniendo lista");
             e.printStackTrace();
         }
-        
 
     }
 
@@ -208,12 +207,13 @@ public class EmployeeController implements Serializable {
                 && validationBean.validarSoloLetras(this.emp.getGender(), "warn", "valErr", "reqGender"))) {
             c++;
         }
-        */
+         
+       
         if (!(validationBean.validarCampoVacio(this.emp.getDateOfBirth(), "warn", "valErr", "reqBDay")
                 && validationBean.validarSoloNumeros(this.emp.getDateOfBirth(), "warn", "valErr", "reqBDay"))) {
             c++;
         }
-        
+        */
         if (!(validationBean.validarCampoVacio(this.emp.getPhone(), "warn", "valErr", "reqPhone")
                 && validationBean.validarSoloNumeros(this.emp.getPhone(), "warn", "valErr", "reqPhone"))) {
             c++;
@@ -237,7 +237,6 @@ public class EmployeeController implements Serializable {
             c++;
         }
 
-        
         if (c == 0) {
             flag = true;
         }
@@ -245,5 +244,17 @@ public class EmployeeController implements Serializable {
         return flag;
     }
 
- 
+    public void limpiar() {
+        emp = new FbEmployee();
+
+    }
+
+    public void formatoFecha() throws ParseException {
+        System.out.println("Ingresando a validar fecha");
+        String fechaEntrada = emp.getDateOfBirth() + emp.getHiredDate() + emp.getReleased(); // Entrada recogida como sea (scanner)
+        DateFormat format = new SimpleDateFormat("DD/MM/YYYY"); // Creamos un formato de fecha
+        Date fecha = format.parse(fechaEntrada); // Creamos un date con la entrada en el formato especificado
+        System.out.println(fecha);
+    }
+
 }

@@ -53,7 +53,9 @@ public class InvoiceController implements Serializable {
     private @Getter
     @Setter
     FbInvoice currentIn = new FbInvoice();
-
+    private @Getter
+    @Setter
+    String status;
     private @Getter
     @Setter
     String invoiceModal = "0";
