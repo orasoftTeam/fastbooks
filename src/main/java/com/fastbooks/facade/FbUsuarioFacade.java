@@ -51,7 +51,7 @@ public class FbUsuarioFacade extends AbstractFacade<FbUsuario> {
             q.setParameter(2, pass);
             List<FbUsuario> resultList = q.getResultList();
             if (!resultList.isEmpty()) {
-              user = (FbUsuario) q.getResultList().get(0);  
+              user = resultList.get(0);  
             }
             
 

@@ -39,8 +39,10 @@ public class CompanyController implements Serializable {
     @Inject
     UserData userData;
     private GlobalParameters gp = new GlobalParameters();
-    private @Getter @Setter String appPath = gp.getAppPath();//System.getProperty("user.dir");
-    private final String destination = appPath + File.separator + "logo" + File.separator ;
+    private @Getter
+    @Setter
+    String appPath = gp.getAppPath();//System.getProperty("user.dir");
+    private String destination = appPath + File.separator + "logo" + File.separator ;
     private UploadedFile archivo;
     private String nameFileFinal;
     private String msgFile;
@@ -57,6 +59,7 @@ public class CompanyController implements Serializable {
     private String tel;
     private String website;
     private String logourl;
+    FileUploadEvent events;
 
     public UploadedFile getArchivo() {
         return archivo;
@@ -213,11 +216,11 @@ public class CompanyController implements Serializable {
                 userData.login();
             } else if (res.equals("-1")) {
                 //lanzar mensaje de registro repetido
-                
+
                 validationBean.lanzarMensaje("warn", "valErr", "repeatedEmail");
-            } else if (res.equals("-2"))  {
+            } else if (res.equals("-2")) {
                 //lanzar mensaje de ocurrio error inesperado
-               
+
                 validationBean.lanzarMensaje("error", "valErr", "unexpectedError");
             }
 
@@ -290,7 +293,15 @@ public class CompanyController implements Serializable {
     }
 
     public void handleFileUpload(FileUploadEvent event) {
-        String name;
+        archivo = event.getFile();
+        if (this.logourl == null || this.logourl.isEmpty()) {
+            uploadFile();
+        } else {
+            this.validationBean.ejecutarJavascript("$('.replaceModal').modal();");
+
+        }
+
+        /* String name;
         try {
             if (archivo == null) {
                 archivo = event.getFile();
@@ -333,12 +344,59 @@ public class CompanyController implements Serializable {
             
             validationBean.updateComponent("comForm:showLogo");
             e.printStackTrace();
+        }*/
+    }
+
+    public void uploadFile() {
+        String name;
+        try {
+            destination = destination + "cia" + this.userData.getCurrentCia().getIdCia().toString() + File.separator;
+            name = validationBean.generarRandom(archivo.getFileName());
+            File file = new File(destination);
+            file.mkdir();
+            File existe = new File(destination + nameFileFinal);
+            if (existe.exists()) {
+                    if (validationBean.deleteFile(destination + nameFileFinal)) {
+                    name = validationBean.generarRandom(archivo.getFileName());
+                    validationBean.copyFile(name, destination, archivo.getInputstream());
+                    this.logourl = "/logo/cia" + this.userData.getCurrentCia().getIdCia().toString() +"/"+ name;
+                    this.msgFile = validationBean.getMsgBundle("lblFileSuccess");
+                    validationBean.updateComponent("comForm:msgFile");
+                    System.out.println(this.logourl);
+                    validationBean.updateComponent("comForm:showLogo");
+                    nameFileFinal = name;
+                }
+            } else {
+                validationBean.copyFile(name, destination, archivo.getInputstream());
+                this.logourl = "/logo/cia" + this.userData.getCurrentCia().getIdCia().toString() +"/"+ name;
+                this.msgFile = validationBean.getMsgBundle("lblFileSuccess");
+
+                validationBean.updateComponent("comForm:msgFile");
+                System.out.println(this.logourl);
+                validationBean.updateComponent("comForm:showLogo");
+                this.nameFileFinal = name;
+            }
+
+           
+        } catch (Exception e) {
+            msgFile = validationBean.getMsgBundle("lblFileUploadError");
+            if (archivo != null) {
+                if (validationBean.deleteFile("/logo/cia" + this.userData.getCurrentCia().getIdCia().toString() +"/"+ archivo.getFileName())) {
+                    archivo = null;
+                }
+            }
+            this.logourl = "";
+            validationBean.updateComponent("comForm:msgFile");
+
+            validationBean.updateComponent("comForm:showLogo");
+            e.printStackTrace();
         }
+        
+        userData.getCurrentCia().setLogo(this.logourl);
 
     }
-    
-    
-    public boolean editVal(){
+
+    public boolean editVal() {
         boolean flag = false;
         int c = 0;
         if (!(validationBean.validarCampoVacio(this.email, "error", "valErr", "reqEmail")
@@ -350,26 +408,23 @@ public class CompanyController implements Serializable {
                 && validationBean.validarLongitudCampo(this.companyComName, 5, 50, "error", "valErr", "reqNomCom"))) {
             c++;
         }
-        
+
         if (!(validationBean.validarCampoVacio(this.companyLegName, "error", "valErr", "reqNomLeg")
                 && validationBean.validarLongitudCampo(this.companyLegName, 5, 50, "error", "valErr", "reqNomLeg"))) {
             c++;
         }
-        
-        
 
         if (c == 0) {
             flag = true;
         }
         this.naturalPerson = false;
         return flag;
-    
-    
+
     }
-    
-    public void save(){
+
+    public void save() {
         if (editVal()) {
-            
+
             this.company.setEmail(this.email);
             this.company.setGiro(giro);
             this.company.setLogo(this.logourl);
@@ -377,22 +432,22 @@ public class CompanyController implements Serializable {
             this.company.setNomLeg(this.companyLegName);
             this.company.setTelefono(tel);
             this.company.setWebsite(website);
-            String res = comFacade.actCompany(company, new FbUsuario(),"U");
+            String res = comFacade.actCompany(company, new FbUsuario(), "U");
             System.out.println("Resultado controller: " + res);
             if (res.equals("0")) {
                 validationBean.lanzarMensaje("info", "modComSuccess", "blank");
                 System.out.println("Exito!");
-            }else if(res.equals("-1")){
+            } else if (res.equals("-1")) {
                 validationBean.lanzarMensaje("warn", "modComFailRepeat", "blank");
-             System.out.println("Repetido!");
-            }else if(res.equals("-2")){
+                System.out.println("Repetido!");
+            } else if (res.equals("-2")) {
                 validationBean.lanzarMensaje("error", "unexpectedError", "blank");
-            System.out.println("Error!");
+                System.out.println("Error!");
             }
-        }else{
-        System.out.println("validation fail");
+        } else {
+            System.out.println("validation fail");
         }
-    
+
     }
 
 }

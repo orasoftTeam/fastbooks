@@ -26,17 +26,11 @@
                      padding: 0; margin: 0;">
                     <h1 style="padding-left: 2%">#{messages.Sales}</h1> 
                 </div>
-                <bnu:row>
-                    <bnu:column span="3">
-                        <bnu:navLink href="#{request.contextPath}/view/sales/producsNServices.xhtml" value="#{messages.lblProductsNServices}" />
-                    </bnu:column>
-                </bnu:row>
+
                 <br></br>
 
-
-                <bnu:tabView active-index="0">
-
-                    <bnu:tab title="#{messages.Sales}">
+                <bnu:tabView active-index="#{userData.salesIndex}">
+                    <bnu:tab title="#{messages.Sales}"  onclick="ajax:invoiceTableController.changeTab(0);"  >
                         <br></br>
                         <!-- Sales and customer panel -->
                         <bnu:row style="padding-left: 180px">
@@ -77,8 +71,8 @@
                                 </bnu:panel>
                             </bnu:column>
                         </bnu:row>
-                        <ui:include src="invoice.xhtml" />
-
+                        <ui:include src="invoice.xhtml"  />
+                        
                     </bnu:tab>
 
                     <bnu:tab title="#{messages.customer}">
@@ -175,15 +169,17 @@
                                 </bnu:dataTableColumn> 
                             </bnu:dataTable>
                         </h:form>
-                    </bnu:tab> 
-
+                    </bnu:tab>
+                    <bnu:tab title="#{messages.ProdNServ}"  onclick="ajax:invoiceTableController.changeTab(2);" >
+                        <ui:include src="product.xhtml"  />
+                    </bnu:tab>
                 </bnu:tabView>
-
                 <p:separator/>
+
 
                 <!--Modal add-->
                 <p:dialog  header="Customer Information" widgetVar="dlg2" modal="true" height="500" width="1000">
-                    <h:form id="prodForm"> 
+                    <h:form id="prodForm1"> 
                         <h:panelGrid>
                             <bnu:row>
                                 <bnu:panel span="7" >
@@ -371,21 +367,21 @@
 
                                 <bnu:tab title="Attachments">
                                     <h:form id="comForm">
-                                            <bnu:row>
-                                                <bnu:panel span="6">
-                                                    <bnu:column span="6">
-                                                        <p>Attachments</p>
-                                                        <p:fileUpload label="#{messages['lblImageUpload']}" invalidFileMessage="#{messages['lblFileInvalid']}" id="logoCust" fileUploadListener="#{customerController.handleFileUpload}" mode="advanced"
-                                                                      auto="true" sizeLimit="#{userData.GParameters.imgBytesSize}" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
-                                                        <p:outputLabel id="msgFile" value="#{customerController.msgFile}" />
-                                                        <p:graphicImage value="#{customerController.logourl}" id="showLogo" style="height: 70px;width: 70px" />
-                                                    </bnu:column>
-                                                    <bnu:column span="6">
-                                                        <p>Maximum size: 25MB</p>
-                                                    </bnu:column>
+                                        <bnu:row>
+                                            <bnu:panel span="6">
+                                                <bnu:column span="6">
+                                                    <p>Attachments</p>
+                                                    <p:fileUpload label="#{messages['lblImageUpload']}" invalidFileMessage="#{messages['lblFileInvalid']}" id="logoCust" fileUploadListener="#{customerController.handleFileUpload}" mode="advanced"
+                                                                  auto="true" sizeLimit="#{userData.GParameters.imgBytesSize}" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                                                    <p:outputLabel id="msgFile" value="#{customerController.msgFile}" />
+                                                    <p:graphicImage value="#{customerController.logourl}" id="showLogo" style="height: 70px;width: 70px" />
+                                                </bnu:column>
+                                                <bnu:column span="6">
+                                                    <p>Maximum size: 25MB</p>
+                                                </bnu:column>
 
-                                                </bnu:panel>
-                                            </bnu:row>
+                                            </bnu:panel>
+                                        </bnu:row>
                                     </h:form>
                                 </bnu:tab>
                             </bnu:tabView>

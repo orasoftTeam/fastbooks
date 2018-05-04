@@ -39,7 +39,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-//import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Base64;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.UploadedFile;
 
@@ -214,7 +214,7 @@ public class ValidationBean {
         return value;
     }
 
-    /* public String encriptar(String texto, String keymod) {
+     public String encriptar(String texto, String keymod) {
 
         String secretKey = keymod; //llave para encriptar datos
         String base64EncryptedString = "";
@@ -241,7 +241,7 @@ public class ValidationBean {
 
     public String Desencriptar(String textoEncriptado) throws Exception {
 
-        String secretKey = "infomedicsolutions"; //llave para encriptar datos
+        String secretKey = "fastbooks20"; //llave para encriptar datos
         String base64EncryptedString = "";
 
         try {
@@ -261,7 +261,7 @@ public class ValidationBean {
         } catch (Exception ex) {
         }
         return base64EncryptedString;
-    }*/
+    }
     public String obtenerFechaActual() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
