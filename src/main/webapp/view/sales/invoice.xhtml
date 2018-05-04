@@ -141,7 +141,7 @@
 
 
 
-                        <bnu:commandButton value="#{messages.lblInvoicePrint}" update="pdf"  styleClass="hidden-lg hidden-md"  action="#{invoiceTableController.print(in)}"  />
+                        <bnu:commandButton value="#{messages.lblInvoicePrint}" update="pdf"  styleClass="hidden-lg hidden-md"  action="#{invoiceTableController.print(in,request)}"  />
                         <bnu:commandButton value="#{messages.lblInvoiceCancel}"   styleClass="hidden-lg hidden-md"  onclick="ajax:invoiceTableController.assign(in);" rendered="#{invoiceTableController.showOptions(in.status)}"  />
                     </bnu:dataTableColumn>
 

@@ -154,11 +154,14 @@ public class InvoiceController implements Serializable {
     public void print(FbInvoice i,HttpServletRequest req) {
         try {
             this.invoiceModal = this.iFacade.generateInvoice(i,this.userData.getCurrentCia().getLogo(),this.iFacade.getCompiledFile("report1", req));
+            String[] split = this.invoiceModal.split(",");
+            this.invoiceModal = split[1];
+            this.validationBean.lanzarMensajeSinBundle("error", split[0], "");
         //this.userData.setSInvoice(invoiceModal);
         //this.validationBean.lanzarMensajeSinBundle("error", this.invoiceModal, "");
         this.currentIn = i;
        // this.validationBean.updateComponent("pdf");
-        this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
+        //this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.print()");
         }

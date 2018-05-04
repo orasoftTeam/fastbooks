@@ -195,7 +195,13 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         GlobalParameters gp = new GlobalParameters();
         File file = new File(gp.getAppPath() + File.separator + "pdf" + File.separator + "cia" + i.getIdCia().getIdCia().toString()
                 + File.separator);
+        /*String[] entries = file.list();
+        for (String s : entries) {
+            File currentFile = new File(file.getPath(),s);
+            currentFile.delete();
+        }*/
         file.mkdirs();
+        
         String destino = gp.getAppPath() + File.separator + "pdf" + File.separator + "cia" + i.getIdCia().getIdCia().toString()
                 + File.separator + "IN" + i.getNoDot() + i.getIdCia().getNomCom() + ".pdf";
 
