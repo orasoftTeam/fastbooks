@@ -33,44 +33,7 @@
                     <bnu:tab title="#{messages.Sales}"  onclick="ajax:invoiceTableController.changeTab(0);"  >
                         <br></br>
                         <!-- Sales and customer panel -->
-                        <bnu:row style="padding-left: 180px">
-                            <bnu:column span="1" style="height: 80px; width: 130px" >
-                                <bnu:panel style="background-color: #5bc0de; height: 80px; width: 130px" onmouseout="normalImg(this)"  onmouseover="bigImg(this)" >
-                                    <font color="white"><h4>USD$0.00</h4></font>
-                                    <font color="white"><h4>0 Cancelled</h4></font>
-                                    <!--<h:outputLabel value="Cancelled"></h:outputLabel> -->
-                                </bnu:panel>
-                            </bnu:column>
-                            <bnu:column span="1" style="height: 80px; width: 130px; border: 0">
-                                <bnu:panel style="background-color: #c0c0c0; height: 80px; width: 130px" onmouseover="bigImg(this)" onmouseout="normalImg(this)">
-                                    <font color="white"><h4>USD$40.00</h4></font>
-                                    <font color="white"><h4>1 Balance</h4></font>
-                                    <!--<h:outputLabel value="Open Balance"></h:outputLabel>-->
-                                </bnu:panel>
-                            </bnu:column>
-                            <bnu:column span="1" style="height: 80px; width: 130px">
-                                <bnu:panel style="background-color: orange; height: 80px; width: 130px" onmouseover="bigImg(this)" onmouseout="normalImg(this)">
-                                    <font color="white"><h4>USD$0.00</h4></font>
-                                    <font color="white"><h4>0 Overdue</h4></font>
-                                    <!--<h:outputLabel value="Overdue"></h:outputLabel>-->
-                                </bnu:panel>
-                            </bnu:column>
-                            <bnu:column span="1" style="height: 80px; width: 130px">
-                                <bnu:panel style="background-color: #0275d8; height: 80px; width: 130px" onmouseover="bigImg(this)" onmouseout="normalImg(this)">
-                                    <font color="white"><h4>USD$0.00</h4></font>
-                                    <font color="white"><h4>Partial</h4></font>
-                                    <!--<h:outputLabel value="Partial"></h:outputLabel>-->
-                                </bnu:panel>
-                            </bnu:column>
-                            <bnu:column span="1" style="height: 80px; width: 130px">
-                                <bnu:panel style="background-color: chartreuse; height: 80px; width: 130px" onmouseover="bigImg(this)" onmouseout="normalImg(this)">
-                                    <!--<h4>Closed</h4>-->
-                                    <font color="white"><h4>USD$0.00</h4></font>
-                                    <font color="white"><h4>Closed</h4></font>
-                                    <!--<h:outputLabel value="Closed"></h:outputLabel>-->
-                                </bnu:panel>
-                            </bnu:column>
-                        </bnu:row>
+                        
                         <ui:include src="invoice.xhtml"  />
                         
                     </bnu:tab>

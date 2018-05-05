@@ -190,6 +190,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
 
     public String generateInvoice(FbInvoice i, String logo, JasperReport report) {
         String res = "";
+        em.getEntityManagerFactory().getCache().evictAll();
         Connection cn = em.unwrap(java.sql.Connection.class);
         String dir = "view" + File.separator + "jasper" + File.separator + "report1.jrxml";
         GlobalParameters gp = new GlobalParameters();
@@ -310,5 +311,51 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         }
         return res;
     }
+    
+    
+    public String packingSlip(String idInvoices, String logo, JasperReport report, String idCia) {
+        String res = "";
+        try {
+
+            Connection cn = em.unwrap(java.sql.Connection.class);
+            String dir = "view" + File.separator + "jasper" + File.separator + "packingSlip.jrxml";
+            GlobalParameters gp = new GlobalParameters();
+            File file = new File(gp.getAppPath() + File.separator + "pdf" + File.separator + "cia" + idCia
+                    + File.separator);
+            file.mkdirs();
+            String destino = gp.getAppPath() + File.separator + "pdf" + File.separator + "cia" + idCia
+                    + File.separator + "packingSlip.pdf";
+            Map parametersMap = new HashMap();
+            parametersMap.put("idInvoices", idInvoices);
+            File logoFile = new File(gp.getAppPath() + logo);
+            if (!logoFile.exists()) {
+                logoFile = null;
+            }
+            parametersMap.put("logo", logoFile);
+
+            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+            String realPath = ec.getRealPath("/");
+            System.out.println(realPath + dir);
+            
+            File dest = new File(destino);
+            if (dest.exists()) {
+                dest.delete();
+            }
+            JasperPrint print = JasperFillManager.fillReport(report, parametersMap, cn);
+            JRExporter exporter = new JRPdfExporter();
+
+            exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, destino);
+            exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
+            exporter.exportReport();
+            System.out.println("File Created: " + destino);
+            res = "/pdf/" + "cia" + idCia
+                    + "/packingSlip.pdf";
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbInvoiceFacade.printTransactions()");
+            e.printStackTrace();
+            res = e.toString() + " ::: " + e.getMessage();
+        }
+        return res;
+    }    
 
 }

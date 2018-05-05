@@ -156,14 +156,12 @@ public class InvoiceController implements Serializable {
     public void print(FbInvoice i,HttpServletRequest req) {
         try {
             this.invoiceModal = this.iFacade.generateInvoice(i,this.userData.getCurrentCia().getLogo(),this.iFacade.getCompiledFile("report1", req));
-            String[] split = this.invoiceModal.split(",");
-            this.invoiceModal = split[1];
-            this.validationBean.lanzarMensajeSinBundle("error", split[0], "");
+            
         //this.userData.setSInvoice(invoiceModal);
         //this.validationBean.lanzarMensajeSinBundle("error", this.invoiceModal, "");
         this.currentIn = i;
        // this.validationBean.updateComponent("pdf");
-        //this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
+        this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.print()");
         }
@@ -371,6 +369,28 @@ public class InvoiceController implements Serializable {
         }
     }
     
+    public void packingSlip(HttpServletRequest req) {
+        String res = "";
+        try {
+            for (int i = 0; i < idInvoices.size(); i++) {
+                res += idInvoices.get(i);
+                if (i != idInvoices.size()-1) {
+                    res += ",";
+                }
+            }
+            this.invoiceModal = this.iFacade.printTransactions(res,this.userData.getCurrentCia().getLogo(),this.iFacade.getCompiledFile("packingSlip", req),this.userData.getCurrentCia().getIdCia().toString());
+        //this.userData.setSInvoice(invoiceModal);
+        //this.validationBean.lanzarMensajeSinBundle("error", this.invoiceModal, "");
+        //this.currentIn = i;
+       // this.validationBean.updateComponent("pdf");
+        this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
+        this.idInvoices = new ArrayList<>();
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.InvoiceController.print()");
+            e.printStackTrace();
+        }
+    }    
+    
     public boolean disableBatch(String op){
         boolean flag = true;
     /*
@@ -381,6 +401,10 @@ public class InvoiceController implements Serializable {
         
         */
         if (op.equals("PT")) {
+            if (!idInvoices.isEmpty()) {
+                flag = false;
+            }
+        }else if(op.equals("PP")){
             if (!idInvoices.isEmpty()) {
                 flag = false;
             }
