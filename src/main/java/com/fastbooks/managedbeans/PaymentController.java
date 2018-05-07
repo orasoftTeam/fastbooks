@@ -16,7 +16,7 @@ import com.fastbooks.modelo.FbInvoiceDetail;
 import com.fastbooks.modelo.FbInvoiceTaxes;
 import com.fastbooks.modelo.FbProduct;
 import com.fastbooks.modelo.FbTax;
-import com.fastbooks.modelo.Terms;
+import com.fastbooks.modelo.PaymentMethod;
 import com.fastbooks.util.ValidationBean;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -28,23 +28,19 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import javax.ejb.EJB;
+import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
-import javax.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 /**
  *
- * @author dell
+ * @author DELL
  */
-@Named(value = "invoiceController")
+@Named(value = "paymentController")
 @ViewScoped
-public class InvoiceFormController implements Serializable {
+public class PaymentController implements Serializable{
 
     private static final long serialVersionUID = 1L;
     @Inject
@@ -64,7 +60,7 @@ public class InvoiceFormController implements Serializable {
     List<FbCustomer> cList = new ArrayList<>();
     private @Getter
     @Setter
-    List<Terms> tList = new ArrayList<>();
+    List<PaymentMethod> tList = new ArrayList<>();
     private @Getter
     @Setter
     List<FbProduct> pList = new ArrayList<>();
@@ -173,10 +169,9 @@ public class InvoiceFormController implements Serializable {
     private @Getter
     @Setter
     boolean modStay = false;
-
-    public InvoiceFormController() {
+    public PaymentController() {
     }
-
+    
     public void init() {
         try {//this.userData.getCurrentCia().getIdCia().toString()
             cList = cFacade.getCustomersByIdCia(this.userData.getCurrentCia().getIdCia().toString());
@@ -186,11 +181,11 @@ public class InvoiceFormController implements Serializable {
                 hasTax = false;
             }
             if (this.tList.isEmpty()) {
-                this.tList.add(new Terms("1", "30", "Credits at 30 days"));
-                this.tList.add(new Terms("2", "0", "Due on receipt"));
-                this.tList.add(new Terms("3", "15", "Net 15"));
-                this.tList.add(new Terms("4", "30", "Net 30"));
-                this.tList.add(new Terms("5", "60", "Net 60"));
+                this.tList.add(new PaymentMethod("1", "Cash"));
+                this.tList.add(new PaymentMethod("2", "Cheque"));
+                this.tList.add(new PaymentMethod("3", "Credit Card"));
+                this.tList.add(new PaymentMethod("4", "Direct Debit"));
+                
             }
 
             DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -939,21 +934,5 @@ public class InvoiceFormController implements Serializable {
             e.printStackTrace();
         }
 
-    }
-    
-    public void refreshCombo(){
-        if (!this.userData.getFormInProdId().equals("0")) {
-            pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
-            for (FbProduct p : pList) {
-                if (p.getName().equals(this.userData.getFormInProdId())) {
-                    this.idProd = p.getIdProd().toString();
-                }
-            }
-            this.userData.setFormInProdId("0");
-            
-            this.validationBean.updateComponent("invoiceForm:prods");
-            this.validationBean.lanzarMensaje("info", "lblAddProdSuccess", "blank");
-        }
-    
     }
 }
