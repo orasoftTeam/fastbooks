@@ -70,6 +70,7 @@ public class UserData implements Serializable {
     private @Getter @Setter int salesIndex= 0;
     private @Getter @Setter String invoiceSql = "0";
     private @Getter @Setter String formInProdId = "0";
+    private @Getter @Setter String formInCustId = "0";
     
     public String getEmail() {
         return email;

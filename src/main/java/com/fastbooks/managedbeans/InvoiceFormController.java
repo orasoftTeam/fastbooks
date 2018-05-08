@@ -252,6 +252,7 @@ public class InvoiceFormController implements Serializable {
                             shAddress += currentCust.getCountryS() + ".";
                         }
 
+                        
                     }
                 }
             } else {
@@ -260,6 +261,7 @@ public class InvoiceFormController implements Serializable {
                 shAddress = null;
             }
 
+           
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.changeCust()");
             e.printStackTrace();
@@ -953,6 +955,24 @@ public class InvoiceFormController implements Serializable {
             
             this.validationBean.updateComponent("invoiceForm:prods");
             this.validationBean.lanzarMensaje("info", "lblAddProdSuccess", "blank");
+        }
+    
+    }
+    
+    public void refreshComboCust(){
+        if (!this.userData.getFormInCustId().equals("0")) {
+            cList = cFacade.getCustomersByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+            for (FbCustomer c : cList) {
+                if (c.getEmail().equals(this.userData.getFormInCustId())) {
+                    idCust = c.getIdCust().toString();
+                }
+            }
+            this.userData.setFormInCustId("0");
+            
+            this.validationBean.updateComponent("invoiceForm:custs");
+            this.changeCust();
+            this.validationBean.updateComponent("invoiceForm:custs");
+           // validationBean.lanzarMensaje("info", "custAdded", "blank");
         }
     
     }
