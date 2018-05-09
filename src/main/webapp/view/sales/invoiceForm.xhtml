@@ -253,8 +253,25 @@
             </bnu:row>
             <p:separator/>
         </bnu:container>
+             
             </h:form>
-        
+        <!-- bottom navbar-->
+         <bnu:navBar  inverse="true" position="bottom" fixed="true" >
+             <h:form styleClass="navbar-form navbar-left" >
+                 <bnu:commandButton value="Cancel" />
+                 <bnu:commandButton value="Clear" />
+             </h:form>
+             <bnu:navbarLinks >
+    <bnu:navLink value="Preview" href="#"  ></bnu:navLink>
+   
+  </bnu:navbarLinks>
+             <h:form styleClass="navbar-form navbar-right" >
+                 <bnu:commandButton value="#{messages.save}"  look="success"  style="width: 100%" action="#{invoiceController.save('A')}" rendered="#{!invoiceController.modStay}"  />
+                 <bnu:commandButton value="#{messages.lblUpdateIn}"  look="success"  style="width: 100%"  action="#{invoiceController.save('U')}" rendered="#{invoiceController.modStay}" />
+             </h:form>
+</bnu:navBar>
+         
+         <!-- fin navbar -->
         
         
         

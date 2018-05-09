@@ -783,8 +783,10 @@ public class InvoiceFormController implements Serializable {
                         in.setType("IN");
                         in.setNoDot(this.InNo);
                         in.setCustEmail(this.currentCust.getEmail());
-                        in.setInDate(sdf.format(sd.parse(this.invoiceDate)));
-                        in.setDueDate(sdf.format(sd.parse(this.dueDate)));
+                        //in.setInDate(sdf.format(sd.parse(this.invoiceDate)));
+                        in.setInDate(this.invoiceDate);
+                        in.setDueDate(this.dueDate);
+                        //in.setDueDate(sdf.format(sd.parse(this.dueDate)));
                         in.setActualBalance(this.rBalance);
                         in.setSubTotal(rSubTotal);
                         in.setTotal(rTotal);
