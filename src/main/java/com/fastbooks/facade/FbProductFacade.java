@@ -38,7 +38,7 @@ public class FbProductFacade extends AbstractFacade<FbProduct>{
     public List<FbProduct> getProductsByIdCia(String idCia){
     List<FbProduct> list = new ArrayList<>();
         try {
-            String sql = "select * from fb_product where id_cia = ? and status = 'A'";
+            String sql = "select * from fb_product where id_cia = ? and status = 'A' order by name asc";
             Query q = em.createNativeQuery(sql, FbProduct.class);
             q.setParameter(1, idCia);
             list = q.getResultList();

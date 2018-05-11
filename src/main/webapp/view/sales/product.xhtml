@@ -262,11 +262,11 @@
                                 <bnu:row>
                                     <bnu:column span="6">
                                         <bnu:commandButton value="#{messages.save}" style="width: 100%" look="success" 
-                                                           action="#{productController.addNew()}" update="@form"
+                                                           action="#{productController.addNew(true)}" update="@form"
                                                            rendered="#{!productController.bundle}"
                                                             />
                                         <bnu:commandButton value="#{messages.save}" style="width: 100%" look="success" 
-                                                           action="#{productController.addBundle()}" update="@form"
+                                                           action="#{productController.addBundle(true)}" update="@form"
                                                            rendered="#{productController.bundle}"
                                                             />
                                     </bnu:column>

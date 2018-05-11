@@ -46,7 +46,7 @@ public class CustomerController implements Serializable {
     @EJB
     FbCustomerFacade custF;
     private FbCustomer customer; //declarar modelo
-    private boolean sameSHA;
+    private boolean sameSHA = true;
     @Inject
     UserData userData;
 
@@ -374,5 +374,94 @@ public class CustomerController implements Serializable {
         customer = new FbCustomer();
         selectAllCustomers = false;
     }
+    
+    
+        //Adding a new customer in invoice form
+    public void registerCustomerInInvoice() {
+        if (valCamposInInvoice()) {
+            if (sameSHA) {
+                System.out.println("gettin sameSHA" + sameSHA);
+                customer.setStreetS(customer.getStreet());
+                customer.setCityS(customer.getCity());
+                customer.setEstateS(customer.getEstate());
+                customer.setPostalCodeS(customer.getPostalCode());
+                customer.setCountryS(customer.getCountry());
+            }
+            
+            if (customer.getStreetS().isEmpty()) {
+                customer.setStreetS(customer.getStreet());
+            }
+            
+            if (customer.getCityS().isEmpty()) {
+                customer.setCityS(customer.getCity());
+            }
+            
+            if (customer.getEstateS().isEmpty()) {
+                customer.setEstateS(customer.getEstate());
+            }
+            
+            if (customer.getCountryS().isEmpty()) {
+                customer.setPostalCodeS(customer.getPostalCode());
+            }
+            
+            if (customer.getPostalCodeS().isEmpty()) {
+                customer.setCountryS(customer.getCountry());
+            }
+
+            FbCompania com = new FbCompania();
+            com.setIdCia(BigDecimal.ZERO);
+            customer.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
+            customer.setIdCust(new BigDecimal("0"));
+            customer.setAtachment(this.logourl);
+            System.out.println("getting customer first name" + customer.getFirstname());
+            String res;
+            res = custF.actCustomer(customer, "A");
+            if (res.equals("0")) {
+                //validationBean.lanzarMensaje("info", "custAdded", "blank");
+                this.validationBean.ejecutarJavascript("PF('dlg2').hide();");
+                this.userData.setFormInCustId(customer.getEmail());
+                this.validationBean.updateComponent("invoiceForm:custs");
+            } else if (res.equals("-1")) {
+                validationBean.lanzarMensaje("error", "customerRepeatFail", "blank");
+            } else if (res.equals("-2")) {
+                validationBean.lanzarMensaje("error", "unexpectedError", "blank");
+            }
+            System.out.println("obteniendo valores de la shipping same as billing" + customer);
+            customer = new FbCustomer(); //limpiando formulario de add customer..
+        }
+
+    }
+    
+        //Validar campos en invoice form
+        public boolean valCamposInInvoice() {
+
+        boolean flag = false;
+        
+        if (validationBean.validarCampoVacio(this.customer.getCompany(), "warn", "valErr", "reqComp")
+                && validationBean.validarSoloLetras(this.customer.getCompany(), "warn", "valErr", "reqComp")
+                && validationBean.validarCampoVacio(this.customer.getEmail(), "warn", "valErr", "reqEmail")
+                && validationBean.validarEmail(this.customer.getEmail(), "warn", "valErr", "reqEmail")
+                && validationBean.validarCampoVacio(this.customer.getStreet(), "warn", "valErr", "reqStreet")
+                && validationBean.validarCampoVacio(this.customer.getCity(), "warn", "valErr", "reqCity")
+                && validationBean.validarSoloLetras(this.customer.getCity(), "warn", "valErr", "reqCity")
+                && validationBean.validarCampoVacio(this.customer.getEstate(), "warn", "valErr", "reqState")
+                && validationBean.validarSoloLetras(this.customer.getEstate(), "warn", "valErr", "reqState")
+                && validationBean.validarCampoVacio(this.customer.getPostalCode(), "warn", "valErr", "reqPostalC")
+                && validationBean.validarSoloNumeros(this.customer.getPostalCode(), "warn", "valErr", "reqPostalC")
+                && validationBean.validarCampoVacio(this.customer.getCountry(), "warn", "valErr", "reqCountry")
+                && validationBean.validarSoloLetras(this.customer.getCountry(), "warn", "valErr", "reqCountry")
+                && validationBean.validarCampoVacio(this.customer.getDisplayName(), "warn", "valErr", "lblReqCustomerName")
+                && validationBean.validarSoloLetras(this.customer.getDisplayName(), "warn", "valErr", "lblReqCustomerName")
+                && validationBean.validarCampoVacio(this.customer.getFirstname(), "warn", "valErr", "lblReqCustomerName")
+                && validationBean.validarSoloLetras(this.customer.getFirstname(), "warn", "valErr", "lblReqCustomerName")
+                && validationBean.validarCampoVacio(this.customer.getLastname(), "warn", "valErr", "lblReqCustomerLastName")
+                && validationBean.validarSoloLetras(this.customer.getLastname(), "warn", "valErr", "lblReqCustomerLastName")) {
+            flag = true;
+        }
+       
+        return flag;
+    }
+
+
 
 }

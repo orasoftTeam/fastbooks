@@ -25,7 +25,6 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -127,7 +126,9 @@ public class ProductController implements Serializable {
     private @Getter
     @Setter
     String bundleTotal = "0.00";
-    private @Getter @Setter BigDecimal bTotalReal;
+    private @Getter
+    @Setter
+    BigDecimal bTotalReal;
     private @Getter
     @Setter
     String bundleQuant = "1";
@@ -149,12 +150,12 @@ public class ProductController implements Serializable {
 
     public void init() {
         try {
-              pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
-        tList = tFacade.getTaxByIdCia(this.userData.getCurrentCia().getIdCia().toString());
-        if (!this.userData.getUses().equals("0")) {
-            this.vb.lanzarMensaje("info", this.userData.getUses(), "blank");
-            this.userData.setUses("0");
-        }
+            pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+            tList = tFacade.getTaxByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+            if (!this.userData.getUses().equals("0")) {
+                this.vb.lanzarMensaje("info", this.userData.getUses(), "blank");
+                this.userData.setUses("0");
+            }
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.ProductController.init()");
             e.printStackTrace();
@@ -224,16 +225,15 @@ public class ProductController implements Serializable {
                 nameF = vb.generarRandom(archivo.getFileName());
                 File file = new File(destination);
                 file.mkdir();
-                
+
                 file = new File(newDest);
                 file.mkdir();
-                
+
                 vb.copyFile(nameF, newDest, archivo.getInputstream());
                 //this.msgFile = vb.getMsgBundle("lblFileSuccess");
                 this.photoUrl = "/prodPhoto/" + ciaFolder + "/" + nameF;
-                
+
                 //vb.updateComponent("comForm:msgFile");
-                
                 vb.updateComponent("prodForm:showPhoto");
                 this.nameFileFinal = nameF;
             } else {
@@ -258,15 +258,14 @@ public class ProductController implements Serializable {
             }
             this.photoUrl = "";
 
-            
             vb.updateComponent("prodForm:showPhoto");
             e.printStackTrace();
-            
+
         }
 
     }
 
-    public void addNew() {
+    public void addNew(boolean isFormProd) {
 
         if (valNew()) {
             this.product = new FbProduct();
@@ -298,9 +297,15 @@ public class ProductController implements Serializable {
 
             switch (res) {
                 case "0":
-                    String message = this.operation.equals("A") ? "lblAddProdSuccess" : "lblUpdateProdSuccess";
-                    this.userData.setUses(message);
-                    this.vb.reload();
+                    if (isFormProd) {
+                        String message = this.operation.equals("A") ? "lblAddProdSuccess" : "lblUpdateProdSuccess";
+                        this.userData.setUses(message);
+                        this.vb.reload();
+                    } else {
+                        this.vb.ejecutarJavascript("$('.modalPseudoClass').modal('hide')");
+                        this.vb.updateComponent("invoiceForm:prods");
+                        this.userData.setFormInProdId(product.getName());
+                    }
                     /*String message = this.operation.equals("A")? "lblAddProdSuccess" : "lblUpdateProdSuccess";
                     this.vb.ejecutarJavascript("$('.modalType').modal('hide');");
                     this.vb.lanzarMensaje("info",message , "blank");
@@ -413,7 +418,7 @@ public class ProductController implements Serializable {
             this.product = prod;
             this.name = prod.getName();
             this.vb.ejecutarJavascript("$('.modalAddProd').modal();");
-        } else if (op.equals("U") && prod.getType().equals("BU")){
+        } else if (op.equals("U") && prod.getType().equals("BU")) {
             this.operation = "U";
             this.product = prod;
             this.idProd = prod.getIdProd().toString();
@@ -421,11 +426,11 @@ public class ProductController implements Serializable {
             this.sku = prod.getSku();
             this.desc = prod.getDescrip();
             this.bTotalReal = prod.getTotalBundle();
-            
+
             this.bundleItems = prod.getFbBundleItemsList();
             this.updateBundleTotal();
             for (FbBundleItems item : prod.getFbBundleItemsList()) {
-                System.out.println("::"+item.getItemName()+"::"+item.getQuant().toString());
+                System.out.println("::" + item.getItemName() + "::" + item.getQuant().toString());
             }
             this.photoUrl = prod.getPhoto();
             this.typeImg = "bundle.png";
@@ -442,7 +447,7 @@ public class ProductController implements Serializable {
         product.setIdCat(new FbCatProd(new BigDecimal("0")));
         product.setIdTax(new FbTax(BigDecimal.ZERO));
         product.setInitQuant(BigInteger.ZERO);
-        String res = this.product.getType().equals("BU")? this.pFacade.actBundle(product, "D"):this.pFacade.actProd(product, "D");
+        String res = this.product.getType().equals("BU") ? this.pFacade.actBundle(product, "D") : this.pFacade.actProd(product, "D");
 
         switch (res) {
             case "0":
@@ -542,7 +547,7 @@ public class ProductController implements Serializable {
         }
     }
 
-    public void addBundle() {
+    public void addBundle(boolean isFormProd) {
         try {
             if (valBundle()) {
                 this.product = new FbProduct();
@@ -559,10 +564,17 @@ public class ProductController implements Serializable {
 
                 switch (res) {
                     case "0":
-                        String message = this.operation.equals("A") ? "lblAddProdSuccess" : "lblUpdateProdSuccess";
-                        this.userData.setUses(message);
-                        pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
-                        this.vb.reload();
+                        if (isFormProd) {
+                            String message = this.operation.equals("A") ? "lblAddProdSuccess" : "lblUpdateProdSuccess";
+                            this.userData.setUses(message);
+                            pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+                            this.vb.reload();
+                        } else {
+                            this.vb.ejecutarJavascript("$('.modalPseudoClass').modal('hide')");
+                            this.vb.updateComponent("invoiceForm:prods");
+                            this.userData.setFormInProdId(product.getName());
+                        }
+
                         /*String message = this.operation.equals("A")? "lblAddProdSuccess" : "lblUpdateProdSuccess";
                     this.vb.ejecutarJavascript("$('.modalType').modal('hide');");
                     this.vb.lanzarMensaje("info",message , "blank");
@@ -608,10 +620,8 @@ public class ProductController implements Serializable {
         return flag;
     }
 
-    
-    
-    public String formatDouble(BigDecimal num){
-    Double number = Double.parseDouble(num.toString());
-    return String.format("%.2f", number);
+    public String formatDouble(BigDecimal num) {
+        Double number = Double.parseDouble(num.toString());
+        return String.format("%.2f", number);
     }
 }
