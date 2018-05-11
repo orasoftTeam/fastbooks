@@ -31,6 +31,7 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang.StringUtils;
@@ -50,7 +51,7 @@ public class InvoiceFormController implements Serializable {
     @Inject
     UserData userData;
     @EJB
-    ValidationBean validationBean;
+    @Getter ValidationBean validationBean;
     @EJB
     FbCustomerFacade cFacade;
     @EJB
@@ -173,6 +174,9 @@ public class InvoiceFormController implements Serializable {
     private @Getter
     @Setter
     boolean modStay = false;
+    private @Getter
+    @Setter
+    boolean isFormTouched = false;
 
     public InvoiceFormController() {
     }
@@ -252,16 +256,15 @@ public class InvoiceFormController implements Serializable {
                             shAddress += currentCust.getCountryS() + ".";
                         }
 
-                        
                     }
                 }
+                this.didUserTouchForm();
             } else {
                 email = null;
                 biAddress = null;
                 shAddress = null;
             }
 
-           
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.changeCust()");
             e.printStackTrace();
@@ -281,10 +284,11 @@ public class InvoiceFormController implements Serializable {
             //dt.plusDays(Integer.parseInt(this.termDays));
             this.dueDate = sdf.format(c.getTime());
             this.invoiceDate = sdf.format(sd.parse(this.invoiceDate));
-            if (!this.shipDate.isEmpty()) {
+            if (this.shipDate != null) {
                 this.shipDate = sdf.format(sd.parse(this.shipDate));
             }
             System.out.println("invoice date:" + this.invoiceDate + " :: days to add :" + this.termDays + ":: due date: " + this.dueDate);
+            this.didUserTouchForm();
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.updateDate()");
             e.printStackTrace();
@@ -301,7 +305,7 @@ public class InvoiceFormController implements Serializable {
             }
             this.invoiceDate = sdf.format(sd.parse(this.invoiceDate));
             this.dueDate = sdf.format(sd.parse(this.dueDate));
-            
+
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.parseDates()");
             //e.printStackTrace();
@@ -499,14 +503,12 @@ public class InvoiceFormController implements Serializable {
                         t = 0.00;
                         shCost = "0.00";
                     }
-                    
-                    
-                    
+
                     //if (StringUtils.isNumeric(shCost)) {
-                        ship = t;
-                   // } else {
-                      //  shCost = "0.00";
-                       // ship = 0.00;
+                    ship = t;
+                    // } else {
+                    //  shCost = "0.00";
+                    // ship = 0.00;
                     //}
 
                 }
@@ -519,6 +521,7 @@ public class InvoiceFormController implements Serializable {
                 //Double balanceDue = acum + ship;
 
                 this.rTotal = new BigDecimal((acum + ship + tax));
+                this.didUserTouchForm();
             } else {
                 this.validationBean.lanzarMensaje("error", "lblProdNoQuant", "blank");
 
@@ -577,10 +580,9 @@ public class InvoiceFormController implements Serializable {
             int a = 0;
             int c = 0;
             List<String> idTaxes = new ArrayList<>();
-            
-               taxesAmountList = new ArrayList<>(); 
-            
-            
+
+            taxesAmountList = new ArrayList<>();
+
             FbInvoiceTaxes it = new FbInvoiceTaxes();
             Double rate = 0.00;
             Double amount = 0.00;
@@ -799,7 +801,8 @@ public class InvoiceFormController implements Serializable {
                         in.setShipVia(shVia);
                         in.setShCost(new BigDecimal(this.shCost));
                         if (shipDate != null) {
-                            in.setShDate(sdf.format(sd.parse(shipDate)));
+                            in.setShDate(shipDate);
+                           // in.setShDate(sdf.format(sd.parse(shipDate)));
                         }
 
                         in.setMessageInvoice(messageInvoice);
@@ -810,8 +813,8 @@ public class InvoiceFormController implements Serializable {
                         String res = iFacade.actInvoice(in, op);
                         System.out.println("result: " + res);
                         if (res.equals("0")) {
-                            
-                            this.userData.setUses(op.equals("U")? "lblInUpdateSuccess":"lblInvoiceAddSuccess");
+
+                            this.userData.setUses(op.equals("U") ? "lblInUpdateSuccess" : "lblInvoiceAddSuccess");
                             this.validationBean.redirecionar("/view/sales/sales.xhtml");
                         } else {
                             //this.validationBean.lanzarMensajeSinBundle("error", res, " ");
@@ -828,7 +831,7 @@ public class InvoiceFormController implements Serializable {
             }
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.save()");
-           // this.validationBean.lanzarMensajeSinBundle("error", e.toString(), " ");
+            // this.validationBean.lanzarMensajeSinBundle("error", e.toString(), " ");
             e.printStackTrace();
         }
 
@@ -910,32 +913,29 @@ public class InvoiceFormController implements Serializable {
                     initQuant = Integer.parseInt(det.getIdProd().getInitQuant().toString());
                     itemQuant = Integer.parseInt(det.getItemQuant().toString());
                     det.getIdProd().setInitQuant(new BigInteger(String.valueOf(initQuant + itemQuant)));
-                    
-                    
+
                     for (FbProduct fbProduct : pList) {
                         if (fbProduct.getIdProd().toString().equals(det.getIdProd().getIdProd().toString())) {
                             initQuant = Integer.parseInt(fbProduct.getInitQuant().toString());
                             fbProduct.setInitQuant(new BigInteger(String.valueOf(initQuant + itemQuant)));
                         }
-                        
+
                         if (fbProduct.getType().equals("BU")) {
                             for (FbBundleItems fbBundleItems : fbProduct.getFbBundleItemsList()) {
                                 if (fbBundleItems.getIdProd().getIdProd().toString().equals(det.getIdProd().getIdProd().toString())) {
-                            initQuant = Integer.parseInt(fbBundleItems.getIdProd().getInitQuant().toString());
-                            fbBundleItems.getIdProd().setInitQuant(new BigInteger(String.valueOf(initQuant + itemQuant)));
-                        }
+                                    initQuant = Integer.parseInt(fbBundleItems.getIdProd().getInitQuant().toString());
+                                    fbBundleItems.getIdProd().setInitQuant(new BigInteger(String.valueOf(initQuant + itemQuant)));
+                                }
                             }
                         }
                     }
                 }
-                
-                
-                
+
                 mod = true;
                 modStay = true;
-                 updateTotal();
-                 this.userData.setFbInvoice(null);  
-                 mod = false;
+                updateTotal();
+                this.userData.setFbInvoice(null);
+                mod = false;
             }
 
         } catch (Exception e) {
@@ -944,8 +944,8 @@ public class InvoiceFormController implements Serializable {
         }
 
     }
-    
-    public void refreshCombo(){
+
+    public void refreshCombo() {
         if (!this.userData.getFormInProdId().equals("0")) {
             pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
             for (FbProduct p : pList) {
@@ -954,14 +954,14 @@ public class InvoiceFormController implements Serializable {
                 }
             }
             this.userData.setFormInProdId("0");
-            
+
             this.validationBean.updateComponent("invoiceForm:prods");
             this.validationBean.lanzarMensaje("info", "lblAddProdSuccess", "blank");
         }
-    
+
     }
-    
-    public void refreshComboCust(){
+
+    public void refreshComboCust() {
         if (!this.userData.getFormInCustId().equals("0")) {
             cList = cFacade.getCustomersByIdCia(this.userData.getCurrentCia().getIdCia().toString());
             for (FbCustomer c : cList) {
@@ -970,12 +970,33 @@ public class InvoiceFormController implements Serializable {
                 }
             }
             this.userData.setFormInCustId("0");
-            
+
             this.validationBean.updateComponent("invoiceForm:custs");
             this.changeCust();
             this.validationBean.updateComponent("invoiceForm:custs");
-           // validationBean.lanzarMensaje("info", "custAdded", "blank");
+            // validationBean.lanzarMensaje("info", "custAdded", "blank");
         }
+
+    }
+
+    public void didUserTouchForm() {
+        if (!this.isFormTouched) {
+            this.isFormTouched = true;
+            this.validationBean.updateComponent("clear");
+        }
+
+    }
     
+    public void exit(){
+        
+        if (this.isFormTouched) {
+            //confirm
+            this.validationBean.ejecutarJavascript("PF('dlg5').show();");
+        }else{
+            // exit
+            validationBean.redirecionar("/view/sales/sales.xhtml");
+        }
+        
+       
     }
 }

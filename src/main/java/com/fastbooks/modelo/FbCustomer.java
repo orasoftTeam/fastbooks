@@ -59,6 +59,25 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "FbCustomer.findByBalance", query = "SELECT f FROM FbCustomer f WHERE f.balance = :balance")})
 public class FbCustomer implements Serializable {
 
+    @Size(max = 50)
+    @Column(name = "TAXREGNO")
+    private String taxregno;
+    @Size(max = 50)
+    @Column(name = "PAYMENT_METHOD")
+    private String paymentMethod;
+    @Size(max = 50)
+    @Column(name = "DELIVERY_METHOD")
+    private String deliveryMethod;
+    @Size(max = 50)
+    @Column(name = "TERMS")
+    private String terms;
+    @Size(max = 50)
+    @Column(name = "AS_OF")
+    private String asOf;
+    @Size(max = 60)
+    @Column(name = "BILL_CUSTOMER")
+    private String billCustomer;
+
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
@@ -437,6 +456,54 @@ public class FbCustomer implements Serializable {
     @Override
     public String toString() {
         return "com.fastbooks.modelo.FbCustomer[ idCust=" + idCust + " ]";
+    }
+
+    public String getTaxregno() {
+        return taxregno;
+    }
+
+    public void setTaxregno(String taxregno) {
+        this.taxregno = taxregno;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getDeliveryMethod() {
+        return deliveryMethod;
+    }
+
+    public void setDeliveryMethod(String deliveryMethod) {
+        this.deliveryMethod = deliveryMethod;
+    }
+
+    public String getTerms() {
+        return terms;
+    }
+
+    public void setTerms(String terms) {
+        this.terms = terms;
+    }
+
+    public String getAsOf() {
+        return asOf;
+    }
+
+    public void setAsOf(String asOf) {
+        this.asOf = asOf;
+    }
+
+    public String getBillCustomer() {
+        return billCustomer;
+    }
+
+    public void setBillCustomer(String billCustomer) {
+        this.billCustomer = billCustomer;
     }
     
 }

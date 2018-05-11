@@ -57,6 +57,15 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "FbInvoice.findByFechaCreacion", query = "SELECT f FROM FbInvoice f WHERE f.fechaCreacion = :fechaCreacion")})
 public class FbInvoice implements Serializable {
 
+    @Column(name = "SHCOST_TAX_AMOUNT")
+    private BigDecimal shcostTaxAmount;
+    @Size(max = 100)
+    @Column(name = "SHCOST_TAX_NAME")
+    private String shcostTaxName;
+    @JoinColumn(name = "ID_SHCOST_TAX", referencedColumnName = "ID_TAX")
+    @ManyToOne
+    private FbTax idShcostTax;
+
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
@@ -370,6 +379,30 @@ public class FbInvoice implements Serializable {
     @Override
     public String toString() {
         return "com.fastbooks.modelo.FbInvoice[ idInvoice=" + idInvoice + " ]";
+    }
+
+    public BigDecimal getShcostTaxAmount() {
+        return shcostTaxAmount;
+    }
+
+    public void setShcostTaxAmount(BigDecimal shcostTaxAmount) {
+        this.shcostTaxAmount = shcostTaxAmount;
+    }
+
+    public String getShcostTaxName() {
+        return shcostTaxName;
+    }
+
+    public void setShcostTaxName(String shcostTaxName) {
+        this.shcostTaxName = shcostTaxName;
+    }
+
+    public FbTax getIdShcostTax() {
+        return idShcostTax;
+    }
+
+    public void setIdShcostTax(FbTax idShcostTax) {
+        this.idShcostTax = idShcostTax;
     }
     
 }
