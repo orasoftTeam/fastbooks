@@ -133,7 +133,8 @@ public class EmployeeController implements Serializable {
         System.out.println("obteniendo objeto action " + em);
 
         if (op.equals("U")) {
-            this.validationBean.ejecutarJavascript("$('.modalPseudoClass2').modal();");
+            this.validationBean.ejecutarJavascript("PF('dlg3').show();");
+            //this.validationBean.ejecutarJavascript("$('.modalPseudoClass2').modal();");
         } else {
             this.validationBean.ejecutarJavascript("$('.modalPseudoClass3').modal();");
         }
@@ -213,7 +214,7 @@ public class EmployeeController implements Serializable {
                 && validationBean.validarSoloNumeros(this.emp.getDateOfBirth(), "warn", "valErr", "reqBDay"))) {
             c++;
         }
-        */
+         */
         if (!(validationBean.validarCampoVacio(this.emp.getPhone(), "warn", "valErr", "reqPhone")
                 && validationBean.validarSoloNumeros(this.emp.getPhone(), "warn", "valErr", "reqPhone"))) {
             c++;

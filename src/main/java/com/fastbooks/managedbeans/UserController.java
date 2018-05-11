@@ -137,12 +137,8 @@ public class UserController implements Serializable{
                 && validationBean.validarSoloLetras(this.lastName, "error", "valErr", "reqLastName")
                 && validationBean.validarLongitudCampo(this.lastName, 4, 50, "error", "valErr", "reqLastName"))){   
         }
-        
-        
          return false;
-         
-         
-         
+   
      }
      
    

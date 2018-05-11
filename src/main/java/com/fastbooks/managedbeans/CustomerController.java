@@ -6,18 +6,18 @@
 package com.fastbooks.managedbeans;
 
 import com.fastbooks.facade.FbCustomerFacade;
+import com.fastbooks.modelo.BillCustomer;
+import com.fastbooks.modelo.DeliveryMethod;
 import com.fastbooks.modelo.FbCompania;
 import com.fastbooks.modelo.FbCustomer;
+import com.fastbooks.modelo.PaymentMethod;
+import com.fastbooks.modelo.Terms;
 import com.fastbooks.util.GlobalParameters;
 import com.fastbooks.util.ValidationBean;
 import java.io.File;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -79,6 +79,22 @@ public class CustomerController implements Serializable {
     private @Getter
     @Setter
     boolean selectAllCustomers;
+
+    private @Getter
+    @Setter
+    List<Terms> tList = new ArrayList<>();
+
+    private @Getter
+    @Setter
+    List<PaymentMethod> pList = new ArrayList<>();
+
+    private @Getter
+    @Setter
+    List<DeliveryMethod> dList = new ArrayList<>();
+    
+    private @Getter
+    @Setter
+    List<BillCustomer> bList = new ArrayList<>();
 
     public FbCustomer getCustomer() {
         return customer;
@@ -149,6 +165,33 @@ public class CustomerController implements Serializable {
                 this.validationBean.lanzarMensaje("info", this.userData.getUses(), "blank");
                 this.userData.setUses("0");
             }
+            System.out.println("Ingresando a terms customer");
+            if (this.tList.isEmpty()) {
+                this.tList.add(new Terms("1", "30", "Credits at 30 days"));
+                this.tList.add(new Terms("2", "0", "Due on receipt"));
+                this.tList.add(new Terms("3", "15", "Net 15"));
+                this.tList.add(new Terms("4", "30", "Net 30"));
+                this.tList.add(new Terms("5", "60", "Net 60"));
+            }
+
+            System.out.println("Ingresando a payment method customer");
+            if (this.pList.isEmpty()) {
+                this.pList.add(new PaymentMethod("1", "C", "Cash"));
+                this.pList.add(new PaymentMethod("2", "CQ", "Cheque"));
+                this.pList.add(new PaymentMethod("3", "CC", "Credit card"));
+                this.pList.add(new PaymentMethod("4", "DD", "Direct debit"));
+            }
+
+            System.out.println("Ingresando a delivery method customer");
+            if (this.dList.isEmpty()) {
+                this.dList.add(new DeliveryMethod("1", "NN", "None"));
+                this.dList.add(new DeliveryMethod("2", "PL", "Print Later"));
+                this.dList.add(new DeliveryMethod("3", "SL", "Send Later"));
+            }
+            if (this.bList.isEmpty()) {
+                this.bList.add(new BillCustomer("1", "BC", "Bill this customer"));
+                this.bList.add(new BillCustomer("2", "BP", "Bill with parent"));
+            }
 
         } catch (Exception e) {
             System.out.println("error obteniendo lista");
@@ -161,7 +204,8 @@ public class CustomerController implements Serializable {
         System.out.println("updating customer" + cu);
         this.cust = cu;
         if (op.equals("U")) {
-            this.validationBean.ejecutarJavascript("$('.modalPseudoClass2').modal();");
+            this.validationBean.ejecutarJavascript("PF('dlg3').show();");
+            //this.validationBean.ejecutarJavascript("$('.modalPseudoClass2').modal();");
         } else {
             this.validationBean.ejecutarJavascript("$('.modalPseudoClass3').modal();");
         }
@@ -328,8 +372,7 @@ public class CustomerController implements Serializable {
     public void limpiar() {
         sameSHA = false;
         customer = new FbCustomer();
+        selectAllCustomers = false;
     }
-
-
 
 }
