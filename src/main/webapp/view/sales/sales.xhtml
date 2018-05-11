@@ -26,17 +26,12 @@
                      padding: 0; margin: 0;">
                     <h1 style="padding-left: 2%">#{messages.Sales}</h1> 
                 </div>
-                <bnu:row>
-                    <bnu:column span="3">
-                        <bnu:navLink href="#{request.contextPath}/view/sales/producsNServices.xhtml" value="#{messages.lblProductsNServices}" />
-                    </bnu:column>
-                </bnu:row>
                 <br></br>
 
 
-                <bnu:tabView active-index="0">
+                <bnu:tabView active-index="#{userData.salesIndex}">
 
-                    <bnu:tab title="#{messages.Sales}">
+                    <bnu:tab title="#{messages.Sales}" onclick="ajax:invoiceTableController.changeTab(0);">
                         <br></br>
                         <!-- Sales and customer panel -->
                         <ui:include src="invoice.xhtml" />
@@ -147,11 +142,11 @@
                             <bnu:commandButton value="" iconAwesome="fa-clipboard" style="float: right" />
                             <bnu:commandButton value="" iconAwesome="fa-print" style="float: right" />
 
-                            
+
                             <bnu:dataTable  styleClass="table table-striped"
                                             value="#{customerController.custL}" 
                                             var="cust"
-                                            
+
                                             >
                                 <bnu:column>
                                     <f:facet name="header">
@@ -166,7 +161,7 @@
                                     </bnu:selectBooleanCheckbox>
                                 </bnu:column>
                                 <bnu:dataTableColumn label="#{messages.Tcampo1}">
-                                <bnu:navCommandLink  value="#{cust.firstname}" href="#{request.contextPath}/view/sales/editCustomer.xhtml"></bnu:navCommandLink>
+                                    <bnu:navCommandLink  value="#{cust.firstname}" href="#{request.contextPath}/view/sales/editCustomer.xhtml"></bnu:navCommandLink>
                                 </bnu:dataTableColumn>
                                 <bnu:dataTableColumn label="#{messages.Tcampo2}" value="#{cust.phone}"></bnu:dataTableColumn>
                                 <bnu:dataTableColumn label="#{messages.Tcampo3}" value="#{cust.balance.toString()}"></bnu:dataTableColumn>            
@@ -180,6 +175,9 @@
                             </bnu:dataTable>
                         </h:form>
                     </bnu:tab> 
+                    <bnu:tab title="#{messages.ProdNServ}"  onclick="ajax:invoiceTableController.changeTab(2);" >
+                        <ui:include src="product.xhtml"  />
+                    </bnu:tab>
 
                 </bnu:tabView>
 
@@ -187,7 +185,7 @@
 
                 <!--Modal add-->
                 <p:dialog  header="Customer Information" widgetVar="dlg2" modal="true" height="500" width="1000">
-                    <h:form id="prodForm"> 
+                    <h:form id="prodForm1"> 
                         <h:panelGrid>
                             <bnu:row>
                                 <bnu:panel span="7" >
@@ -249,13 +247,13 @@
                                         <bnu:selectOneMenu value="#{customerController.customer.idCust}" >
                                             <f:selectItem  itemLabel="#{messages.selectOne}" itemValue="0"/>
                                             <f:selectItems value="#{customerController.custL}" var="custList"
-                                           itemValue="#{custList.idCust}" itemLabel="#{custList.title} #{custList.firstname} #{custList.lastname}"  itemDescription="#{custList.company}" />
+                                                           itemValue="#{custList.idCust}" itemLabel="#{custList.title} #{custList.firstname} #{custList.lastname}"  itemDescription="#{custList.company}" />
                                         </bnu:selectOneMenu> 
                                     </bnu:column>
                                     <bnu:column span="6">
                                         <bnu:selectOneMenu value="#{customerController.customer.billCustomer}">
                                             <f:selectItems value="#{customerController.BList}" var="billC" 
-                                                                   itemLabel="#{billC.display}" itemValue="#{billC.name}" />
+                                                           itemLabel="#{billC.display}" itemValue="#{billC.name}" />
                                         </bnu:selectOneMenu> 
                                     </bnu:column>    
 
