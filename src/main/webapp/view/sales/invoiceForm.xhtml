@@ -198,8 +198,8 @@
                         <h4>#{messages.lblInShipCost}</h4>
                     </bnu:column>
                     <bnu:column span="2">
-                    <bnu:selectOneMenu  >
-                        <f:selectItem  itemLabel="#{messages.selectOne}" itemValue="0"  />
+                    <bnu:selectOneMenu   >
+                        <f:selectItem  itemLabel="Select shipping tax" itemValue="0"  />
                                     <f:selectItems value="#{invoiceController.taxList}" var="tax" itemLabel="#{tax.name} (#{tax.rate}%)" itemValue="#{tax.idTax.toString()}" />
                                 </bnu:selectOneMenu>
                     </bnu:column>
