@@ -60,8 +60,8 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
     public List<FbInvoice> getInvoicesByIdCia(String idCia) {
         List<FbInvoice> list = new ArrayList<>();
         try {
-            String sql = "select * from fb_invoice where id_cia = ?'";
-            Query q = em.createNativeQuery("select * from fb_invoice i where id_cia=? order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy')", FbInvoice.class);
+            String sql = "select * from fb_invoice i where id_cia=? order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy')";
+            Query q = em.createNativeQuery(sql, FbInvoice.class);
             q.setParameter(1, idCia);
             list = q.getResultList();
 

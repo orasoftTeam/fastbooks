@@ -39,6 +39,13 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "FbInvoiceTaxes.findByTaxAmount", query = "SELECT f FROM FbInvoiceTaxes f WHERE f.taxAmount = :taxAmount")})
 public class FbInvoiceTaxes implements Serializable {
 
+    @Size(max = 50)
+    @Column(name = "FROM_AMOUNT")
+    private BigDecimal fromAmount;
+    @Size(max = 50)
+    @Column(name = "TAX_AMOUNT")
+    private BigDecimal taxAmount;
+
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
@@ -52,10 +59,6 @@ public class FbInvoiceTaxes implements Serializable {
     @Column(name = "FECHA_CREACION")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
-    @Column(name = "FROM_AMOUNT")
-    private BigDecimal fromAmount;
-    @Column(name = "TAX_AMOUNT")
-    private BigDecimal taxAmount;
     @JoinColumn(name = "ID_INVOICE", referencedColumnName = "ID_INVOICE")
     @ManyToOne
     private FbInvoice idInvoice;
@@ -150,5 +153,7 @@ public class FbInvoiceTaxes implements Serializable {
     public String toString() {
         return "com.fastbooks.modelo.FbInvoiceTaxes[ idInvoiceTax=" + idInvoiceTax + " ]";
     }
+
+ 
     
 }

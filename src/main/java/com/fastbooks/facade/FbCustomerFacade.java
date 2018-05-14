@@ -83,11 +83,10 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer> {
         try {
             //Abrimos la conexion al Entity Manager
             Connection cn = em.unwrap(java.sql.Connection.class);//Conn EM
-            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_CUSTOMER (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}"); //28 elementos
+            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_CUSTOMER (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}"); //33 elementos
             cs.setInt(1, Integer.parseInt(String.valueOf(cust.getIdCia().getIdCia())));
             cs.setInt(2, Integer.parseInt(String.valueOf(cust.getIdCust())));
             cs.setString(3, cust.getTitle());
-            System.out.println("customer first name FACADE" + cust.getFirstname());
             cs.setString(4, cust.getFirstname());
             cs.setString(5, cust.getMiddlename());
             cs.setString(6, cust.getLastname());
@@ -111,10 +110,15 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer> {
             cs.setString(24, cust.getCountryS());
             cs.setString(25, cust.getAtachment());
             cs.setString(26, cust.getNote());
-            cs.setString(27, op);
-            cs.registerOutParameter(28, Types.VARCHAR);//setea parametro de salida --res
+            cs.setString(27, cust.getTaxregno());
+            cs.setString(28, cust.getPaymentMethod());
+            cs.setString(29, cust.getDeliveryMethod());
+            cs.setString(30, cust.getTerms());
+            cs.setString(31, cust.getAsOf());
+            cs.setString(32, op);
+            cs.registerOutParameter(33, Types.VARCHAR);//setea parametro de salida --res
             cs.execute();
-            res = cs.getString(28);
+            res = cs.getString(33);
             cs.close();
 
         } catch (Exception e) {

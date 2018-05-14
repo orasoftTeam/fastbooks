@@ -26,57 +26,44 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author dell
+ * @author DELL
  */
 @Entity
 @Table(name = "FB_CUSTOMER")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "FbCustomer.findAll", query = "SELECT f FROM FbCustomer f"),
-    @NamedQuery(name = "FbCustomer.findByIdCust", query = "SELECT f FROM FbCustomer f WHERE f.idCust = :idCust"),
-    @NamedQuery(name = "FbCustomer.findByTitle", query = "SELECT f FROM FbCustomer f WHERE f.title = :title"),
-    @NamedQuery(name = "FbCustomer.findByFirstname", query = "SELECT f FROM FbCustomer f WHERE f.firstname = :firstname"),
-    @NamedQuery(name = "FbCustomer.findByMiddlename", query = "SELECT f FROM FbCustomer f WHERE f.middlename = :middlename"),
-    @NamedQuery(name = "FbCustomer.findByLastname", query = "SELECT f FROM FbCustomer f WHERE f.lastname = :lastname"),
-    @NamedQuery(name = "FbCustomer.findBySuffixx", query = "SELECT f FROM FbCustomer f WHERE f.suffixx = :suffixx"),
-    @NamedQuery(name = "FbCustomer.findByEmail", query = "SELECT f FROM FbCustomer f WHERE f.email = :email"),
-    @NamedQuery(name = "FbCustomer.findByCompany", query = "SELECT f FROM FbCustomer f WHERE f.company = :company"),
-    @NamedQuery(name = "FbCustomer.findByPhone", query = "SELECT f FROM FbCustomer f WHERE f.phone = :phone"),
-    @NamedQuery(name = "FbCustomer.findByMobile", query = "SELECT f FROM FbCustomer f WHERE f.mobile = :mobile"),
-    @NamedQuery(name = "FbCustomer.findByFax", query = "SELECT f FROM FbCustomer f WHERE f.fax = :fax"),
-    @NamedQuery(name = "FbCustomer.findByDisplayName", query = "SELECT f FROM FbCustomer f WHERE f.displayName = :displayName"),
-    @NamedQuery(name = "FbCustomer.findByWebside", query = "SELECT f FROM FbCustomer f WHERE f.webside = :webside"),
-    @NamedQuery(name = "FbCustomer.findByAtachment", query = "SELECT f FROM FbCustomer f WHERE f.atachment = :atachment"),
-    @NamedQuery(name = "FbCustomer.findByStatus", query = "SELECT f FROM FbCustomer f WHERE f.status = :status"),
-    @NamedQuery(name = "FbCustomer.findByCity", query = "SELECT f FROM FbCustomer f WHERE f.city = :city"),
-    @NamedQuery(name = "FbCustomer.findByEstate", query = "SELECT f FROM FbCustomer f WHERE f.estate = :estate"),
-    @NamedQuery(name = "FbCustomer.findByPostalCode", query = "SELECT f FROM FbCustomer f WHERE f.postalCode = :postalCode"),
-    @NamedQuery(name = "FbCustomer.findByCountry", query = "SELECT f FROM FbCustomer f WHERE f.country = :country"),
-    @NamedQuery(name = "FbCustomer.findByCityS", query = "SELECT f FROM FbCustomer f WHERE f.cityS = :cityS"),
-    @NamedQuery(name = "FbCustomer.findByEstateS", query = "SELECT f FROM FbCustomer f WHERE f.estateS = :estateS"),
-    @NamedQuery(name = "FbCustomer.findByPostalCodeS", query = "SELECT f FROM FbCustomer f WHERE f.postalCodeS = :postalCodeS"),
-    @NamedQuery(name = "FbCustomer.findByCountryS", query = "SELECT f FROM FbCustomer f WHERE f.countryS = :countryS"),
-    @NamedQuery(name = "FbCustomer.findByBalance", query = "SELECT f FROM FbCustomer f WHERE f.balance = :balance")})
+    @NamedQuery(name = "FbCustomer.findAll", query = "SELECT f FROM FbCustomer f")
+    , @NamedQuery(name = "FbCustomer.findByIdCust", query = "SELECT f FROM FbCustomer f WHERE f.idCust = :idCust")
+    , @NamedQuery(name = "FbCustomer.findByTitle", query = "SELECT f FROM FbCustomer f WHERE f.title = :title")
+    , @NamedQuery(name = "FbCustomer.findByFirstname", query = "SELECT f FROM FbCustomer f WHERE f.firstname = :firstname")
+    , @NamedQuery(name = "FbCustomer.findByMiddlename", query = "SELECT f FROM FbCustomer f WHERE f.middlename = :middlename")
+    , @NamedQuery(name = "FbCustomer.findByLastname", query = "SELECT f FROM FbCustomer f WHERE f.lastname = :lastname")
+    , @NamedQuery(name = "FbCustomer.findBySuffixx", query = "SELECT f FROM FbCustomer f WHERE f.suffixx = :suffixx")
+    , @NamedQuery(name = "FbCustomer.findByEmail", query = "SELECT f FROM FbCustomer f WHERE f.email = :email")
+    , @NamedQuery(name = "FbCustomer.findByCompany", query = "SELECT f FROM FbCustomer f WHERE f.company = :company")
+    , @NamedQuery(name = "FbCustomer.findByPhone", query = "SELECT f FROM FbCustomer f WHERE f.phone = :phone")
+    , @NamedQuery(name = "FbCustomer.findByMobile", query = "SELECT f FROM FbCustomer f WHERE f.mobile = :mobile")
+    , @NamedQuery(name = "FbCustomer.findByFax", query = "SELECT f FROM FbCustomer f WHERE f.fax = :fax")
+    , @NamedQuery(name = "FbCustomer.findByDisplayName", query = "SELECT f FROM FbCustomer f WHERE f.displayName = :displayName")
+    , @NamedQuery(name = "FbCustomer.findByWebside", query = "SELECT f FROM FbCustomer f WHERE f.webside = :webside")
+    , @NamedQuery(name = "FbCustomer.findByAtachment", query = "SELECT f FROM FbCustomer f WHERE f.atachment = :atachment")
+    , @NamedQuery(name = "FbCustomer.findByStatus", query = "SELECT f FROM FbCustomer f WHERE f.status = :status")
+    , @NamedQuery(name = "FbCustomer.findByCity", query = "SELECT f FROM FbCustomer f WHERE f.city = :city")
+    , @NamedQuery(name = "FbCustomer.findByEstate", query = "SELECT f FROM FbCustomer f WHERE f.estate = :estate")
+    , @NamedQuery(name = "FbCustomer.findByPostalCode", query = "SELECT f FROM FbCustomer f WHERE f.postalCode = :postalCode")
+    , @NamedQuery(name = "FbCustomer.findByCountry", query = "SELECT f FROM FbCustomer f WHERE f.country = :country")
+    , @NamedQuery(name = "FbCustomer.findByCityS", query = "SELECT f FROM FbCustomer f WHERE f.cityS = :cityS")
+    , @NamedQuery(name = "FbCustomer.findByEstateS", query = "SELECT f FROM FbCustomer f WHERE f.estateS = :estateS")
+    , @NamedQuery(name = "FbCustomer.findByPostalCodeS", query = "SELECT f FROM FbCustomer f WHERE f.postalCodeS = :postalCodeS")
+    , @NamedQuery(name = "FbCustomer.findByCountryS", query = "SELECT f FROM FbCustomer f WHERE f.countryS = :countryS")
+    , @NamedQuery(name = "FbCustomer.findByBalance", query = "SELECT f FROM FbCustomer f WHERE f.balance = :balance")
+    , @NamedQuery(name = "FbCustomer.findByTaxregno", query = "SELECT f FROM FbCustomer f WHERE f.taxregno = :taxregno")
+    , @NamedQuery(name = "FbCustomer.findByPaymentMethod", query = "SELECT f FROM FbCustomer f WHERE f.paymentMethod = :paymentMethod")
+    , @NamedQuery(name = "FbCustomer.findByDeliveryMethod", query = "SELECT f FROM FbCustomer f WHERE f.deliveryMethod = :deliveryMethod")
+    , @NamedQuery(name = "FbCustomer.findByTerms", query = "SELECT f FROM FbCustomer f WHERE f.terms = :terms")
+    , @NamedQuery(name = "FbCustomer.findByAsOf", query = "SELECT f FROM FbCustomer f WHERE f.asOf = :asOf")
+    , @NamedQuery(name = "FbCustomer.findByBillCustomer", query = "SELECT f FROM FbCustomer f WHERE f.billCustomer = :billCustomer")})
 public class FbCustomer implements Serializable {
-
-    @Size(max = 50)
-    @Column(name = "TAXREGNO")
-    private String taxregno;
-    @Size(max = 50)
-    @Column(name = "PAYMENT_METHOD")
-    private String paymentMethod;
-    @Size(max = 50)
-    @Column(name = "DELIVERY_METHOD")
-    private String deliveryMethod;
-    @Size(max = 50)
-    @Column(name = "TERMS")
-    private String terms;
-    @Size(max = 50)
-    @Column(name = "AS_OF")
-    private String asOf;
-    @Size(max = 60)
-    @Column(name = "BILL_CUSTOMER")
-    private String billCustomer;
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -165,17 +152,35 @@ public class FbCustomer implements Serializable {
     private String countryS;
     @Column(name = "BALANCE")
     private BigDecimal balance;
-    @JoinColumn(name = "ID_DIRECCION", referencedColumnName = "ID_DIRECCION")
-    @ManyToOne
-    private FbDireccion idDireccion;
-    @JoinColumn(name = "ID_DIR_SHIP", referencedColumnName = "ID_DIRECCION")
-    @ManyToOne
-    private FbDireccion idDirShip;
+    @Size(max = 50)
+    @Column(name = "TAXREGNO")
+    private String taxregno;
+    @Size(max = 50)
+    @Column(name = "PAYMENT_METHOD")
+    private String paymentMethod;
+    @Size(max = 50)
+    @Column(name = "DELIVERY_METHOD")
+    private String deliveryMethod;
+    @Size(max = 50)
+    @Column(name = "TERMS")
+    private String terms;
+    @Size(max = 50)
+    @Column(name = "AS_OF")
+    private String asOf;
+    @Size(max = 60)
+    @Column(name = "BILL_CUSTOMER")
+    private String billCustomer;
+    @OneToMany(mappedBy = "idCust")
+    private List<FbInvoice> fbInvoiceList;
     @JoinColumn(name = "ID_CIA", referencedColumnName = "ID_CIA")
     @ManyToOne
     private FbCompania idCia;
-    @OneToMany(mappedBy = "idCust")
-    private List<FbInvoice> fbInvoiceList;
+    @JoinColumn(name = "ID_DIR_SHIP", referencedColumnName = "ID_DIRECCION")
+    @ManyToOne
+    private FbDireccion idDirShip;
+    @JoinColumn(name = "ID_DIRECCION", referencedColumnName = "ID_DIRECCION")
+    @ManyToOne
+    private FbDireccion idDireccion;
 
     public FbCustomer() {
     }
@@ -400,64 +405,6 @@ public class FbCustomer implements Serializable {
         this.balance = balance;
     }
 
-    public FbDireccion getIdDireccion() {
-        return idDireccion;
-    }
-
-    public void setIdDireccion(FbDireccion idDireccion) {
-        this.idDireccion = idDireccion;
-    }
-
-    public FbDireccion getIdDirShip() {
-        return idDirShip;
-    }
-
-    public void setIdDirShip(FbDireccion idDirShip) {
-        this.idDirShip = idDirShip;
-    }
-
-    public FbCompania getIdCia() {
-        return idCia;
-    }
-
-    public void setIdCia(FbCompania idCia) {
-        this.idCia = idCia;
-    }
-
-    @XmlTransient
-    public List<FbInvoice> getFbInvoiceList() {
-        return fbInvoiceList;
-    }
-
-    public void setFbInvoiceList(List<FbInvoice> fbInvoiceList) {
-        this.fbInvoiceList = fbInvoiceList;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idCust != null ? idCust.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof FbCustomer)) {
-            return false;
-        }
-        FbCustomer other = (FbCustomer) object;
-        if ((this.idCust == null && other.idCust != null) || (this.idCust != null && !this.idCust.equals(other.idCust))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.fastbooks.modelo.FbCustomer[ idCust=" + idCust + " ]";
-    }
-
     public String getTaxregno() {
         return taxregno;
     }
@@ -504,6 +451,64 @@ public class FbCustomer implements Serializable {
 
     public void setBillCustomer(String billCustomer) {
         this.billCustomer = billCustomer;
+    }
+
+    @XmlTransient
+    public List<FbInvoice> getFbInvoiceList() {
+        return fbInvoiceList;
+    }
+
+    public void setFbInvoiceList(List<FbInvoice> fbInvoiceList) {
+        this.fbInvoiceList = fbInvoiceList;
+    }
+
+    public FbCompania getIdCia() {
+        return idCia;
+    }
+
+    public void setIdCia(FbCompania idCia) {
+        this.idCia = idCia;
+    }
+
+    public FbDireccion getIdDirShip() {
+        return idDirShip;
+    }
+
+    public void setIdDirShip(FbDireccion idDirShip) {
+        this.idDirShip = idDirShip;
+    }
+
+    public FbDireccion getIdDireccion() {
+        return idDireccion;
+    }
+
+    public void setIdDireccion(FbDireccion idDireccion) {
+        this.idDireccion = idDireccion;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (idCust != null ? idCust.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof FbCustomer)) {
+            return false;
+        }
+        FbCustomer other = (FbCustomer) object;
+        if ((this.idCust == null && other.idCust != null) || (this.idCust != null && !this.idCust.equals(other.idCust))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "com.fastbooks.modelo.FbCustomer[ idCust=" + idCust + " ]";
     }
     
 }

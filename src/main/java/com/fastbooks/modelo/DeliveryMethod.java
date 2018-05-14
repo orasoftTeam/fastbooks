@@ -12,20 +12,19 @@ import lombok.Setter;
  *
  * @author DELL
  */
-public class PaymentMethod {
+public class DeliveryMethod {
     private @Getter @Setter String id;
     private @Getter @Setter String name;
     private @Getter @Setter String display;
 
-    public PaymentMethod(String id, String name, String display) {
+    public DeliveryMethod(String id, String name, String display) {
         this.id = id;
         this.name = name;
         this.display = display;
     }
 
-    public PaymentMethod() {
+    public DeliveryMethod() {
     }
-    
-    
+   
     
 }

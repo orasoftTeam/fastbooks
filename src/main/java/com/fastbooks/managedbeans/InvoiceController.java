@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -45,6 +46,12 @@ public class InvoiceController implements Serializable {
     private @Getter
     @Setter
     List<FbInvoice> iList = new ArrayList<>();
+    
+    private @Getter
+    @Setter
+    List<FbInvoice> testList = new ArrayList<>();
+    
+    
     private @Getter
     @Setter
     List<FbCustomer> cList = new ArrayList<>();
@@ -90,6 +97,12 @@ public class InvoiceController implements Serializable {
     @Setter
     String fDate = "0";
     private @Getter @Setter List<String> idInvoices = new ArrayList<>();
+    
+    
+   /* @PostConstruct
+    public void post(){
+            testList = iFacade.getInvoicesByIdCia("1");
+       }*/
 
     public void init() {
         try {
