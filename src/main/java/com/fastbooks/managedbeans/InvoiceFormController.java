@@ -170,6 +170,20 @@ public class InvoiceFormController implements Serializable {
     String shCost = "0.00";
     private @Getter
     @Setter
+    String shCostIdTax = "0";
+    private @Getter
+    @Setter
+    String dShCostTaxAmount = "0.00";
+    private @Getter
+    @Setter
+    String dShCostTaxName;
+    private @Getter
+    @Setter
+    BigDecimal rShCostTaxAmount = new BigDecimal(BigInteger.ZERO);
+    
+    
+    private @Getter
+    @Setter
     boolean mod = false;
     private @Getter
     @Setter
@@ -496,9 +510,26 @@ public class InvoiceFormController implements Serializable {
 
                 tax = Double.parseDouble(this.rTaxTotal.toString());
                 Double t = 0.00;
+                Double shTaxAmount  = 0.00;
                 if (!this.shCost.isEmpty()) {
                     try {
                         t = Double.parseDouble(shCost);
+                        boolean result = t <= 0.00;
+                        if (result) {
+                            t = 0.00;
+                            shCost = "0.00";
+                        }else{
+                        if (!this.shCostIdTax.equals("0")) {
+                            for (FbTax fbTax : taxList) {
+                                if (fbTax.getIdTax().toString().equals(this.shCostIdTax)) {
+                                    shTaxAmount = t * Double.parseDouble(fbTax.getRate());
+                                    this.dShCostTaxName = fbTax.getName() + "("+fbTax.getRate()+"%)";
+                                }
+                            }
+                        }
+                        }
+                        
+                        
                     } catch (Exception e) {
                         t = 0.00;
                         shCost = "0.00";
@@ -511,16 +542,18 @@ public class InvoiceFormController implements Serializable {
                     // ship = 0.00;
                     //}
 
+                }else{
+                this.shCost = "0.00";
                 }
 
-                this.dBalance = String.format("%.2f", (acum + ship + tax));
+                this.dBalance = String.format("%.2f", (acum + ship + tax + shTaxAmount));
+                //Double balanceDue = acum + ship;
+                this.dShCostTaxAmount = String.format("%.2f", shTaxAmount );
+                this.rBalance = new BigDecimal((acum + ship + tax + shTaxAmount ));
+                this.dTotal = String.format("%.2f", (acum + ship + tax + shTaxAmount ));
                 //Double balanceDue = acum + ship;
 
-                this.rBalance = new BigDecimal((acum + ship + tax));
-                this.dTotal = String.format("%.2f", (acum + ship + tax));
-                //Double balanceDue = acum + ship;
-
-                this.rTotal = new BigDecimal((acum + ship + tax));
+                this.rTotal = new BigDecimal((acum + ship + tax + shTaxAmount));
                 this.didUserTouchForm();
             } else {
                 this.validationBean.lanzarMensaje("error", "lblProdNoQuant", "blank");
@@ -810,6 +843,17 @@ public class InvoiceFormController implements Serializable {
 
                         in.setFbInvoiceDetailList(dList);
                         in.setFbInvoiceTaxesList(taxesAmountList);
+                        
+                        in.setShcostTaxAmount(rShCostTaxAmount);
+                        in.setShcostTaxName(dShCostTaxName);
+                        
+                        for (FbTax fbTax : taxList) {
+                            if (fbTax.getIdTax().toString().equals(this.shCostIdTax)) {
+                                in.setIdShcostTax(fbTax);
+                            }
+                        }
+                        
+                        
                         String res = iFacade.actInvoice(in, op);
                         System.out.println("result: " + res);
                         if (res.equals("0")) {
@@ -998,5 +1042,14 @@ public class InvoiceFormController implements Serializable {
         }
         
        
+    }
+    
+    public boolean showShTax(){
+        boolean flag = false;
+        if (!this.dShCostTaxAmount.equals("0.00")) {
+       
+            flag = true;
+        }
+        return flag;
     }
 }

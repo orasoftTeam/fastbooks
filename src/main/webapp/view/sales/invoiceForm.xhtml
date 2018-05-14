@@ -30,7 +30,7 @@
                 </bnu:row>
                 <bnu:row>
                     <bnu:column span="12">
-                       
+
                     </bnu:column>
                 </bnu:row>
                 <p:separator/>
@@ -180,84 +180,85 @@
                 </bnu:row>
                 <p:separator/>
                 <bnu:row>
-                    <bnu:column span="8" >
-                        <!--<bnu:inputTextarea label="Message displayed on invoice" />-->
-                    </bnu:column>
-                    <bnu:column span="2">
-                        <h4> #{messages.lblInvoiceSubTotal}</h4>
-                    </bnu:column>
-                    <bnu:column span="2">
-                        <h4> #{invoiceController.DSubTotal}</h4>
-                    </bnu:column>
-                </bnu:row>
-                <bnu:row>
-                    <bnu:column span="6">
-
-                    </bnu:column>
-                    <bnu:column span="2">
-                        <h4>#{messages.lblInShipCost}</h4>
-                    </bnu:column>
-                    <bnu:column span="2">
-                    <bnu:selectOneMenu   >
-                        <f:selectItem  itemLabel="Select shipping tax" itemValue="0"  />
+                    <bnu:column span="7"/>
+                    <bnu:column span="5">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-8" >
+                                #{messages.lblInvoiceSubTotal}
+                            </label>
+                            <div class="col-sm-4">
+                                #{invoiceController.DSubTotal}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2" >
+                                #{messages.lblInShipCost}
+                            </label>
+                            <div class="col-sm-6">
+                                <bnu:selectOneMenu  class="form-control" value="#{invoiceController.shCostIdTax}" onchange="ajax:invoiceController.updateTotal();" update="@form" >
+                                    <f:selectItem  itemLabel="#{messages.lblSelectShTax}" itemValue="0"  />
                                     <f:selectItems value="#{invoiceController.taxList}" var="tax" itemLabel="#{tax.name} (#{tax.rate}%)" itemValue="#{tax.idTax.toString()}" />
                                 </bnu:selectOneMenu>
-                    </bnu:column>
-                    
-                    
-                    <bnu:column span="2">
-                        <bnu:inputText value="#{invoiceController.shCost}" maxlength="6"  onblur="ajax:invoiceController.updateTotal();"  update="@form" />
-                    </bnu:column>
-                </bnu:row>
-                <ui:repeat value="#{invoiceController.taxesAmountList}" var="it">
-                    <bnu:row>
-                        <bnu:column span="8">
-
-                        </bnu:column>
-                        <bnu:column span="2">
-                            <h4>#{it.idTax.name} #{it.idTax.rate}% #{messages.lblInTaxOf} #{invoiceController.formatOutput(it.fromAmount)}</h4>
-                        </bnu:column>
-                        <bnu:column span="2">
-                            <h4>#{invoiceController.formatOutput(it.taxAmount)}</h4>
-                        </bnu:column>
-                    </bnu:row>
-
-                </ui:repeat>
-                <bnu:row>
-                    <bnu:column span="8">
-
-                    </bnu:column>
-                    <bnu:column span="2">
-                        <h4>#{messages.lblInvoiceTotal}</h4>
-                    </bnu:column>
-                    <bnu:column span="2">
-                        <h4>#{invoiceController.DTotal}</h4>
-                    </bnu:column>
-                </bnu:row>
-                <bnu:row>
-                    <bnu:column span="8">
-
-                    </bnu:column>
-                    <bnu:column span="2">
-                        <h4>#{messages.lblInvoiceBalanceDue}</h4>
-                    </bnu:column>
-                    <bnu:column span="2">
-                        <h4>#{invoiceController.DBalance}</h4>
-                    </bnu:column>
-                </bnu:row>
-                <p:separator/>
-                <bnu:row>
-                    <bnu:column span="3"></bnu:column>
-                    <bnu:column span="6"></bnu:column>
-                    <bnu:column span="3">
+                            </div>
+                            <div class="col-sm-4">
+                                <bnu:inputText value="#{invoiceController.shCost}" maxlength="6"  onblur="ajax:invoiceController.updateTotal();"  update="@form" class="form-control" /> 
+                            </div>
 
 
-                    </bnu:column>
-                    <!--<bnu:column span="3">
-                        <bnu:commandButton value="Close"  look="danger" size="lg" style="width: 100%" />
+                        </div>
                         
-                    </bnu:column>-->
-                </bnu:row>
+                        
+                        
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-8" >
+                                    <h:panelGrid rendered="#{invoiceController.showShTax()}" >
+                                    Shipping cost #{invoiceController.DShCostTaxName} of #{invoiceController.shCost}
+                                    </h:panelGrid>
+                                </label>
+                                <div class="col-sm-4">
+                                    <h:panelGrid rendered="#{invoiceController.showShTax()}" >
+                                    #{invoiceController.DShCostTaxAmount}
+                                    </h:panelGrid>
+                                </div>
+                            </div>
+                        
+                        
+                        
+                        
+                        
+                        
+                        <ui:repeat value="#{invoiceController.taxesAmountList}" var="it">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-8" >
+                                    #{it.idTax.name} #{it.idTax.rate}% #{messages.lblInTaxOf} #{invoiceController.formatOutput(it.fromAmount)}
+                                </label>
+                                <div class="col-sm-4">
+                                    #{invoiceController.formatOutput(it.taxAmount)}
+                                </div>
+                            </div>
+                        </ui:repeat>
+                        <div class="form-group row">
+                                <label class="col-form-label col-sm-8" >
+                                    #{messages.lblInvoiceTotal}
+                                </label>
+                                <div class="col-sm-4">
+                                    #{invoiceController.DTotal}
+                                </div>
+                            </div>
+                        <div class="form-group row">
+                                <label class="col-form-label col-sm-8" >
+                                    #{messages.lblInvoiceBalanceDue}
+                                </label>
+                                <div class="col-sm-4">
+                                    #{invoiceController.DBalance}
+                                </div>
+                            </div>
+                        <p:separator/>
+                    </bnu:column>
+                </bnu:row> 
+
+
+
                 <p:separator/>
             </bnu:container>
 
@@ -778,8 +779,8 @@
             function mensaje(e){
             alert(e);
             } 
-            
-           
+
+
 
 
         </h:outputScript>
