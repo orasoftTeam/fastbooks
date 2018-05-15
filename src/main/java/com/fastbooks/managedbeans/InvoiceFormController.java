@@ -549,6 +549,7 @@ public class InvoiceFormController implements Serializable {
                 this.dBalance = String.format("%.2f", (acum + ship + tax + shTaxAmount));
                 //Double balanceDue = acum + ship;
                 this.dShCostTaxAmount = String.format("%.2f", shTaxAmount );
+                this.rShCostTaxAmount =  new BigDecimal(shTaxAmount);
                 this.rBalance = new BigDecimal((acum + ship + tax + shTaxAmount ));
                 this.dTotal = String.format("%.2f", (acum + ship + tax + shTaxAmount ));
                 //Double balanceDue = acum + ship;

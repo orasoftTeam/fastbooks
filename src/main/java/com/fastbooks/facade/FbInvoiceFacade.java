@@ -111,7 +111,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         try {
             Connection cn = em.unwrap(java.sql.Connection.class);
-            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_INVOICE (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_INVOICE (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             cs.setInt(1, Integer.parseInt(in.getIdCia().getIdCia().toString()));
             cs.setInt(2, Integer.parseInt(in.getIdInvoice().toString()));
             cs.setInt(3, Integer.parseInt(in.getIdCust().getIdCust().toString()));
@@ -173,11 +173,22 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             cs.setString(27, pTaxAmounts);
             cs.setString(28, pTaxProdsIds);
             cs.setString(29, pItemTaxes);
-            cs.setString(30, op);
-            cs.registerOutParameter(31, Types.VARCHAR);
+            Integer idtax = null;
+            if (in.getIdShcostTax() != null) {
+                idtax = Integer.parseInt(in.getIdShcostTax().getIdTax().toString());
+            }
+            cs.setInt(30,idtax );
+            Double shtaxamount = Double.parseDouble(in.getShcostTaxAmount().toString());
+            
+                cs.setDouble(31,shtaxamount );
+            
+            
+            cs.setString(32, in.getShcostTaxName());
+            cs.setString(33, op);
+            cs.registerOutParameter(34, Types.VARCHAR);
 
             cs.execute();
-            res = cs.getString(31);
+            res = cs.getString(34);
             cs.close();
 
         } catch (Exception e) {
