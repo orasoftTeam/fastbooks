@@ -933,6 +933,20 @@ public class InvoiceFormController implements Serializable {
                 shCost = in.getShCost().toString();
                 idInvoice = in.getIdInvoice().toString();
                 this.dList = in.getFbInvoiceDetailList();
+                if (in.getIdShcostTax() != null) {
+                    this.shCostIdTax = in.getIdShcostTax().getIdTax().toString();
+                }
+                if (in.getShcostTaxAmount() != null) {
+                    this.dShCostTaxAmount = in.getShcostTaxAmount().toString();
+                this.dShCostTaxName = in.getShcostTaxName();
+                this.rShCostTaxAmount = in.getShcostTaxAmount();
+                }else{
+                this.dShCostTaxAmount = "0.00";
+                this.dShCostTaxName = "";
+                this.rShCostTaxAmount = new BigDecimal(BigInteger.ZERO);
+                }
+                
+                
 
                 if (in.getFbInvoiceTaxesList().isEmpty()) {
                     hasTax = false;

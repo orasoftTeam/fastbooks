@@ -154,6 +154,9 @@
 	<field name="IN_DATE" class="java.lang.String"/>
 	<field name="DUE_DATE" class="java.lang.String"/>
 	<field name="SH_DATE" class="java.lang.String"/>
+	<field name="ID_SHCOST_TAX" class="java.math.BigDecimal"/>
+	<field name="SHCOST_TAX_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="SHCOST_TAX_NAME" class="java.lang.String"/>
 	<field name="NOM_COM" class="java.lang.String"/>
 	<field name="NOM_LEG" class="java.lang.String"/>
 	<field name="GIRO" class="java.lang.String"/>
@@ -190,6 +193,10 @@
 	<field name="COUNTRY_S" class="java.lang.String"/>
 	<field name="BALANCE" class="java.math.BigDecimal"/>
 	<field name="TAXREGNO" class="java.lang.String"/>
+	<field name="PAYMENT_METHOD" class="java.lang.String"/>
+	<field name="DELIVERY_METHOD" class="java.lang.String"/>
+	<field name="AS_OF" class="java.lang.String"/>
+	<field name="BILL_CUSTOMER" class="java.lang.String"/>
 	<variable name="in" class="java.lang.String"/>
 	<group name="Invoice">
 		<groupExpression><![CDATA[$F{NO_DOT}]]></groupExpression>
@@ -534,6 +541,13 @@
 						<line>
 							<reportElement x="0" y="39" width="138" height="1" forecolor="#CCCCCC" uuid="cf2cdb31-0745-4084-b37d-05e844c6bc13"/>
 						</line>
+						<textField isBlankWhenNull="true">
+							<reportElement x="71" y="37" width="67" height="20" uuid="e63c0812-b822-445d-9e38-35f6fad1d2e7"/>
+							<textElement>
+								<font isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{SHCOST_TAX_AMOUNT}]]></textFieldExpression>
+						</textField>
 					</frame>
 					<componentElement>
 						<reportElement key="table" style="table" x="6" y="10" width="261" height="92" uuid="e139a9c2-cbdf-41e6-a2ce-79439f3c54a5"/>
@@ -612,6 +626,13 @@
 						</textElement>
 						<text><![CDATA[SUB TOTAL:]]></text>
 					</staticText>
+					<textField isBlankWhenNull="true">
+						<reportElement x="377" y="50" width="100" height="20" uuid="236d35a7-abde-47d8-b51e-b0915c7e61ec"/>
+						<textElement textAlignment="Center">
+							<font isBold="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{SHCOST_TAX_NAME}]]></textFieldExpression>
+					</textField>
 				</frame>
 			</band>
 		</groupFooter>

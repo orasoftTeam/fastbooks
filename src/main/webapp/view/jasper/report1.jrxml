@@ -96,6 +96,9 @@
 	<field name="IN_DATE" class="java.lang.String"/>
 	<field name="DUE_DATE" class="java.lang.String"/>
 	<field name="SH_DATE" class="java.lang.String"/>
+	<field name="ID_SHCOST_TAX" class="java.math.BigDecimal"/>
+	<field name="SHCOST_TAX_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="SHCOST_TAX_NAME" class="java.lang.String"/>
 	<field name="ID_DETAIL" class="java.math.BigDecimal"/>
 	<field name="ID_PROD" class="java.math.BigDecimal"/>
 	<field name="ITEM_NAME" class="java.lang.String"/>
@@ -140,6 +143,11 @@
 	<field name="POSTAL_CODE_S" class="java.lang.String"/>
 	<field name="COUNTRY_S" class="java.lang.String"/>
 	<field name="BALANCE" class="java.math.BigDecimal"/>
+	<field name="TAXREGNO" class="java.lang.String"/>
+	<field name="PAYMENT_METHOD" class="java.lang.String"/>
+	<field name="DELIVERY_METHOD" class="java.lang.String"/>
+	<field name="AS_OF" class="java.lang.String"/>
+	<field name="BILL_CUSTOMER" class="java.lang.String"/>
 	<group name="NO_DOT">
 		<groupExpression><![CDATA[$F{NO_DOT}]]></groupExpression>
 	</group>
@@ -429,12 +437,23 @@
 					<bottomPen lineWidth="1.25"/>
 					<rightPen lineWidth="1.25"/>
 				</box>
+				<textField isBlankWhenNull="true">
+					<reportElement x="381" y="49" width="90" height="20" uuid="5bed8363-c084-4b8e-ba5d-6220055ee64b"/>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SHCOST_TAX_NAME}]]></textFieldExpression>
+				</textField>
 			</frame>
 			<frame>
 				<reportElement mode="Opaque" x="406" y="103" width="138" height="20" backcolor="#F0F380" uuid="521f8bef-82b7-4c91-a898-5d07792b327e"/>
 			</frame>
 			<frame>
 				<reportElement mode="Opaque" x="406" y="11" width="138" height="77" backcolor="#FDFADB" uuid="ea444fbe-d726-4000-b3e1-caaadd2bf585"/>
+				<textField isBlankWhenNull="true">
+					<reportElement x="65" y="40" width="73" height="20" uuid="ff8949ea-68cb-45c0-affb-afd88e3d28d7"/>
+					<textFieldExpression><![CDATA[$F{SHCOST_TAX_AMOUNT}]]></textFieldExpression>
+				</textField>
 			</frame>
 			<componentElement>
 				<reportElement key="table" style="table" x="6" y="11" width="261" height="92" uuid="e139a9c2-cbdf-41e6-a2ce-79439f3c54a5"/>
