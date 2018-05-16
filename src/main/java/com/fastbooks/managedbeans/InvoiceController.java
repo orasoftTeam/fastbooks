@@ -103,6 +103,15 @@ public class InvoiceController implements Serializable {
     public void post(){
             testList = iFacade.getInvoicesByIdCia("1");
        }*/
+    
+    
+    
+    public void setType(String tipo, String url){
+    
+        this.userData.setInvoiceTypeForm(tipo);
+        
+        this.validationBean.redirecionar("/view/sales/invoiceForm.xhtml");
+    }
 
     public void init() {
         try {

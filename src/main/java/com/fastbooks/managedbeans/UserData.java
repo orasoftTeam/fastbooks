@@ -71,6 +71,7 @@ public class UserData implements Serializable {
     private @Getter @Setter String invoiceSql = "0";
     private @Getter @Setter String formInProdId = "0";
     private @Getter @Setter String formInCustId = "0";
+    private @Getter @Setter String invoiceTypeForm = "IN";
     
     public String getEmail() {
         return email;

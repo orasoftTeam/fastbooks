@@ -191,12 +191,36 @@ public class InvoiceFormController implements Serializable {
     private @Getter
     @Setter
     boolean isFormTouched = false;
-
+    private @Getter
+    @Setter
+    String type;
+    private @Getter
+    @Setter
+    String title;
+    private @Getter
+    @Setter
+    String estimateStatus;
+    
     public InvoiceFormController() {
     }
 
+    
+    public boolean showSegunType(String tipo){
+    boolean flag = false;
+        if (tipo.equals(type)) {
+            flag = true;
+        }
+    
+    return flag;
+    }
     public void init() {
         try {//this.userData.getCurrentCia().getIdCia().toString()
+            type = this.userData.getInvoiceTypeForm();
+            if (type.equals("IN")) {
+                title = this.validationBean.getMsgBundle("lblInvoiceTypeIn");
+            }else if(type.equals("ES")){
+                title = this.validationBean.getMsgBundle("lblEstimate");       
+            }
             cList = cFacade.getCustomersByIdCia(this.userData.getCurrentCia().getIdCia().toString());
             pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
             taxList = taxFacade.getTaxByIdCia(this.userData.getCurrentCia().getIdCia().toString());
@@ -816,7 +840,7 @@ public class InvoiceFormController implements Serializable {
                         in.setIdCia(this.userData.getCurrentCia());
                         in.setIdInvoice(new BigDecimal(idInvoice));
                         in.setIdCust(currentCust);
-                        in.setType("IN");
+                        in.setType(type);
                         in.setNoDot(this.InNo);
                         in.setCustEmail(this.currentCust.getEmail());
                         //in.setInDate(sdf.format(sd.parse(this.invoiceDate)));
@@ -827,7 +851,14 @@ public class InvoiceFormController implements Serializable {
                         in.setSubTotal(rSubTotal);
                         in.setTotal(rTotal);
                         in.setTaxTotal(rTaxTotal);
-                        in.setStatus("OP");//aqui
+                        
+                        if (type.equals("IN")) {
+                           in.setStatus("OP");//aqui 
+                        }else if (type.equals("ES")){
+                           in.setStatus(this.estimateStatus);//aqui 
+                        }
+                        
+                        
                         in.setBiAddress(biAddress);
                         in.setShAddress(shAddress);
                         in.setTerms(termDays);

@@ -22,7 +22,7 @@
 
                 <bnu:row>
                     <bnu:column span="12">
-                        <h3>#{messages.lblInvoiceTypeIn} <ui:fragment rendered="#{invoiceController.modStay}">#{invoiceController.inNo}</ui:fragment> </h3>
+                        <h3>#{invoiceController.title} <ui:fragment rendered="#{invoiceController.modStay}">#{invoiceController.inNo}</ui:fragment> </h3>
 
                     </bnu:column>
 
@@ -65,24 +65,38 @@
                                 value="#{messages.newC}" look="success" 
                                 onclick="PF('dlg2').show();"/>
                         </bnu:column>
+                        <bnu:column span="4"  rendered="#{invoiceController.showSegunType('ES')}">
+                            <bnu:selectOneMenu label="#{messages.lblInvoiceStatus}" >
+                                <f:selectItem itemValue="PE" itemLabel="#{messages.lblInvoiceStatusOpen}" />
+                                <f:selectItem itemValue="AC" itemLabel="#{messages.lblAccepted}" />
+                                <f:selectItem itemValue="CL" itemLabel="#{messages.lblClosed}" />
+                                <f:selectItem itemValue="RJ" itemLabel="#{messages.lblRejected}" />
+                            </bnu:selectOneMenu>
+                        </bnu:column>
                     </bnu:row>
                     <bnu:row>
                         <bnu:column span="4">
                             <bnu:inputTextarea label="#{messages.billingA}" maxlength="250" value="#{invoiceController.biAddress}" onblur="ajax:invoiceController.didUserTouchForm();" />
 
                         </bnu:column>
-                        <bnu:column span="2">
+                        <bnu:column span="2"  rendered="#{invoiceController.showSegunType('IN')}" >
                             <bnu:selectOneMenu label="#{messages.lblInvoiceTerms}" value="#{invoiceController.termDays}" onchange="ajax:invoiceController.updateDate();" update="@form" >
                                 <f:selectItems value="#{invoiceController.TList}" var="term"
                                                itemLabel="#{term.display}" itemValue="#{term.days}" />
                             </bnu:selectOneMenu>
                         </bnu:column>
                         <bnu:column span="2">
-                            <strong><h:outputText value="#{messages.lblInvoiceInDate}"  /></strong>
+                            <strong>
+                                <h:outputText value="#{messages.lblInvoiceInDate}" rendered="#{invoiceController.showSegunType('IN')}" />
+                                <h:outputText value="#{messages.lblEstimateDate}" rendered="#{invoiceController.showSegunType('ES')}" />
+                            </strong>
                             <bnu:datepicker style="margin-top: 4px;" value="#{invoiceController.invoiceDate}" ></bnu:datepicker>
                         </bnu:column>
                         <bnu:column span="2">
-                            <strong><h:outputText value="#{messages.lblIncoiceDueDate}"  /></strong>
+                            <strong>
+                                <h:outputText value="#{messages.lblIncoiceDueDate}" rendered="#{invoiceController.showSegunType('IN')}" />
+                                <h:outputText value="#{messages.lblEstimateExpDate}" rendered="#{invoiceController.showSegunType('ES')}" />
+                            </strong>
                             <bnu:datepicker style="margin-top: 4px;" value="#{invoiceController.dueDate}" ></bnu:datepicker>
                         </bnu:column>
                     </bnu:row>
