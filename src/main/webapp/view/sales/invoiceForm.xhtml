@@ -66,8 +66,8 @@
                                 onclick="PF('dlg2').show();"/>
                         </bnu:column>
                         <bnu:column span="4"  rendered="#{invoiceController.showSegunType('ES')}">
-                            <bnu:selectOneMenu label="#{messages.lblInvoiceStatus}" >
-                                <f:selectItem itemValue="PE" itemLabel="#{messages.lblInvoiceStatusOpen}" />
+                            <bnu:selectOneMenu label="#{messages.lblInvoiceStatus}" value="#{invoiceController.estimateStatus}" >
+                                <f:selectItem itemValue="PE" itemLabel="#{messages.lblESPending}" />
                                 <f:selectItem itemValue="AC" itemLabel="#{messages.lblAccepted}" />
                                 <f:selectItem itemValue="CL" itemLabel="#{messages.lblClosed}" />
                                 <f:selectItem itemValue="RJ" itemLabel="#{messages.lblRejected}" />

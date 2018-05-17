@@ -69,6 +69,7 @@
 	<subDataset name="New Dataset 1" uuid="a3e2aaec-c388-49d2-ab19-5bb311ddab7a"/>
 	<parameter name="idInvoice" class="java.lang.String"/>
 	<parameter name="logo" class="java.lang.String"/>
+	<parameter name="type" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select * from fb_invoice i inner join fb_invoice_detail d on d.id_invoice = i.id_invoice inner join fb_compania c on c.id_cia = i.id_cia inner join fb_customer q on q.id_cust = i.id_cust  where i.id_invoice = $P{idInvoice}]]>
 	</queryString>
@@ -172,19 +173,19 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$F{COMPANY}]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement x="14" y="7" width="153" height="21" forecolor="#3399FF" uuid="bec060ce-ea30-479c-8a3b-da467c430ccd"/>
-					<textElement>
-						<font fontName="SansSerif" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-					</textElement>
-					<text><![CDATA[Tax Invoice]]></text>
-				</staticText>
 				<textField>
 					<reportElement x="399" y="65" width="100" height="20" uuid="28d5dc18-4f60-4ca1-897a-03435353e9f0"/>
 					<textElement>
 						<font size="12" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{TERMS}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="14" y="7" width="197" height="21" forecolor="#3399FF" uuid="b4261834-0e41-4369-b4a0-32654722f937"/>
+					<textElement>
+						<font size="16" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{type}]]></textFieldExpression>
 				</textField>
 			</frame>
 			<frame>

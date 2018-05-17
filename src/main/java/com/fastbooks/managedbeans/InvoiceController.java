@@ -145,11 +145,18 @@ public class InvoiceController implements Serializable {
         String res = "";
         if (t.equals("IN")) {
             res = this.validationBean.getMsgBundle("lblInvoiceTypeIn");
+        }else if(t.equals("ES")){
+            res = this.validationBean.getMsgBundle("lblEstimate");
         }
 
         return res;
     }
-
+    /*
+    Pending = PE
+        Accepted = AC
+        Closed = CL
+        Rejected RJ
+    */
     public String formatStatus(String s) {
         String res = "";
         switch (s) {
@@ -168,6 +175,16 @@ public class InvoiceController implements Serializable {
             case "CL":
                 res = this.validationBean.getMsgBundle("lblInvoiceStatusClosed");
                 break;
+            case "PE":
+                res = this.validationBean.getMsgBundle("lblESPending");
+                break;
+            case "AC":
+                res = this.validationBean.getMsgBundle("lblAccepted");
+                break;
+            case "RJ":
+                res = this.validationBean.getMsgBundle("lblRejected");
+                break;    
+                
             default:
                 break;
         }
@@ -177,7 +194,7 @@ public class InvoiceController implements Serializable {
 
     public void print(FbInvoice i,HttpServletRequest req) {
         try {
-            this.invoiceModal = this.iFacade.generateInvoice(i,this.userData.getCurrentCia().getLogo(),this.iFacade.getCompiledFile("report1", req));
+            this.invoiceModal = this.iFacade.generateInvoice(i,this.userData.getCurrentCia().getLogo(),this.iFacade.getCompiledFile("report1", req),formatType(i.getType()));
             
         //this.userData.setSInvoice(invoiceModal);
         //this.validationBean.lanzarMensajeSinBundle("error", this.invoiceModal, "");
@@ -212,6 +229,7 @@ public class InvoiceController implements Serializable {
     
     public void edit(FbInvoice in){
     this.userData.setFbInvoice(in);
+    this.userData.setInvoiceTypeForm(in.getType());
     this.validationBean.redirecionar("/view/sales/invoiceForm.xhtml");
     }
     
@@ -231,11 +249,16 @@ public class InvoiceController implements Serializable {
     this.validationBean.ejecutarJavascript("$('.cancelModal').modal()");
     }
     
-    public boolean showOptions(String status){
+    public boolean showOptions(String status, String type){
         boolean flag = false;
     if(status.equals("OP")){
     flag = true;
+    }else if(type.equals("ES")){
+    flag = true;
     }
+    
+    
+    
     return flag;
     }
     

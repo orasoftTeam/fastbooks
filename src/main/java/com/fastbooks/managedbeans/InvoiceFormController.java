@@ -1020,6 +1020,12 @@ public class InvoiceFormController implements Serializable {
                         }
                     }
                 }
+                
+                if (in.getType().equals("ES")) {
+                    this.estimateStatus = in.getStatus();
+                }
+                
+                
 
                 mod = true;
                 modStay = true;

@@ -199,7 +199,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         return res;
     }
 
-    public String generateInvoice(FbInvoice i, String logo, JasperReport report) {
+    public String generateInvoice(FbInvoice i, String logo, JasperReport report, String type) {
         String res = "";
         em.getEntityManagerFactory().getCache().evictAll();
         Connection cn = em.unwrap(java.sql.Connection.class);
@@ -225,6 +225,8 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             logoFile = null;
         }
         parametersMap.put("logo", logoFile);
+       
+        parametersMap.put("type", type);
         try {
             ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
             String realPath = ec.getRealPath("/");

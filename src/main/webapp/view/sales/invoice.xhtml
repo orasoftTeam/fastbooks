@@ -173,12 +173,12 @@
                     <bnu:dataTableColumn label="#{messages.lblAction}">
 
                         <bnu:dropButton value="#{messages.edit}" look="primary" styleClass="hidden-xs hidden-sm" >
-                            <bnu:commandButton value="#{messages.edit}"  style="width:100%; border: none" action="#{invoiceTableController.edit(in)}" rendered="#{invoiceTableController.showOptions(in.status)}"  />
+                            <bnu:commandButton value="#{messages.edit}"  style="width:100%; border: none" action="#{invoiceTableController.edit(in)}" rendered="#{invoiceTableController.showOptions(in.status,in.type)}"  />
 
                             <bnu:commandButton value="#{messages.lblInvoicePrint}"  style="width:100%; border: none"  update="pdf" action="#{invoiceTableController.print(in,request)}"  />
                             
                         </bnu:dropButton>
-                        <bnu:commandButton value="#{messages.edit}"  look="warning" styleClass="hidden-lg hidden-md" action="#{invoiceTableController.edit(in)}" rendered="#{invoiceTableController.showOptions(in.status)}"   />
+                        <bnu:commandButton value="#{messages.edit}"  look="warning" styleClass="hidden-lg hidden-md" action="#{invoiceTableController.edit(in)}" rendered="#{invoiceTableController.showOptions(in.status,in.type)}"   />
 
 
 
