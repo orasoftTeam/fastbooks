@@ -100,6 +100,8 @@
 	<field name="ID_SHCOST_TAX" class="java.math.BigDecimal"/>
 	<field name="SHCOST_TAX_AMOUNT" class="java.math.BigDecimal"/>
 	<field name="SHCOST_TAX_NAME" class="java.lang.String"/>
+	<field name="ES_ACCBY" class="java.lang.String"/>
+	<field name="ES_ACCDATE" class="java.lang.String"/>
 	<field name="ID_DETAIL" class="java.math.BigDecimal"/>
 	<field name="ID_PROD" class="java.math.BigDecimal"/>
 	<field name="ITEM_NAME" class="java.lang.String"/>
@@ -428,9 +430,9 @@
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="137" splitType="Stretch">
+		<band height="149" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="0" y="1" width="554" height="136" forecolor="#000000" backcolor="#FFFFFF" uuid="b4a89c59-ca79-499c-9590-80e0f0195668"/>
+				<reportElement mode="Opaque" x="0" y="1" width="554" height="148" forecolor="#000000" backcolor="#FFFFFF" uuid="b4a89c59-ca79-499c-9590-80e0f0195668"/>
 				<box>
 					<pen lineWidth="1.25"/>
 					<topPen lineWidth="1.25"/>
@@ -445,6 +447,32 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$F{SHCOST_TAX_NAME}]]></textFieldExpression>
 				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="44" y="102" width="100" height="20" uuid="4e1494d2-e61b-4e36-b708-8047183a7e1b"/>
+					<textFieldExpression><![CDATA[$F{ES_ACCBY}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="44" y="122" width="100" height="20" uuid="6809a677-5fcf-4d1b-93d2-f08bd32c67c3"/>
+					<textFieldExpression><![CDATA[$F{ES_ACCDATE}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="6" y="102" width="100" height="20" uuid="45c85f80-42be-4bd0-b0cc-05efacf77001">
+						<printWhenExpression><![CDATA[$F{ES_ACCBY} != null]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[By]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="6" y="122" width="100" height="20" uuid="f37daf24-eb55-44db-a149-e350358ff504">
+						<printWhenExpression><![CDATA[$F{ES_ACCBY} != null]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Date]]></text>
+				</staticText>
 			</frame>
 			<frame>
 				<reportElement mode="Opaque" x="406" y="103" width="138" height="20" backcolor="#F0F380" uuid="521f8bef-82b7-4c91-a898-5d07792b327e"/>
