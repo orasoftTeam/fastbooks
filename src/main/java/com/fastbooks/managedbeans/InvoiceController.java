@@ -14,11 +14,13 @@ import com.fastbooks.util.SendMails;
 import com.fastbooks.util.ValidationBean;
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -46,12 +48,11 @@ public class InvoiceController implements Serializable {
     private @Getter
     @Setter
     List<FbInvoice> iList = new ArrayList<>();
-    
+
     private @Getter
     @Setter
     List<FbInvoice> testList = new ArrayList<>();
-    
-    
+
     private @Getter
     @Setter
     List<FbCustomer> cList = new ArrayList<>();
@@ -96,39 +97,51 @@ public class InvoiceController implements Serializable {
     private @Getter
     @Setter
     String fDate = "0";
-    private @Getter @Setter List<String> idInvoices = new ArrayList<>();
-    
-    
-   /* @PostConstruct
+    private @Getter
+    @Setter
+    List<String> idInvoices = new ArrayList<>();
+    private @Getter
+    @Setter
+    FbInvoice currenInvoice;
+    private @Getter
+    @Setter
+    String estimateStatus;
+    private @Getter
+    @Setter
+    String AccBy;
+    private @Getter
+    @Setter
+    String AccDate;
+    private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+    private DateFormat sd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+
+    /* @PostConstruct
     public void post(){
             testList = iFacade.getInvoicesByIdCia("1");
        }*/
-    
-    
-    
-    public void setType(String tipo, String url){
-    
+    public void setType(String tipo, String url) {
+
         this.userData.setInvoiceTypeForm(tipo);
-        
+
         this.validationBean.redirecionar("/view/sales/invoiceForm.xhtml");
     }
 
     public void init() {
         try {
             if (this.userData.getInvoiceSql().equals("0")) {
-              iList = iFacade.getInvoicesByIdCia(this.userData.getCurrentCia().getIdCia().toString());
-              DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-              Calendar cal = Calendar.getInstance();
-              this.fFrom= dateFormat.format(cal.getTime());
-            }else{
-              iList = iFacade.getInvoicesByIdCiaFilter(this.userData.getInvoiceSql());
+                iList = iFacade.getInvoicesByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+                DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                Calendar cal = Calendar.getInstance();
+                this.fFrom = dateFormat.format(cal.getTime());
+            } else {
+                iList = iFacade.getInvoicesByIdCiaFilter(this.userData.getInvoiceSql());
             }
-            
-             cList = cFacade.getCustomersByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+
+            cList = cFacade.getCustomersByIdCia(this.userData.getCurrentCia().getIdCia().toString());
             if (!this.userData.getUses().equals("0")) {
                 this.validationBean.lanzarMensaje("info", "lblInvoiceAddSuccess", "blank");
             }
-            
+
             System.out.println("com.fastbooks.managedbeans.InvoiceController.init()");
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.init()");
@@ -145,18 +158,19 @@ public class InvoiceController implements Serializable {
         String res = "";
         if (t.equals("IN")) {
             res = this.validationBean.getMsgBundle("lblInvoiceTypeIn");
-        }else if(t.equals("ES")){
+        } else if (t.equals("ES")) {
             res = this.validationBean.getMsgBundle("lblEstimate");
         }
 
         return res;
     }
+
     /*
     Pending = PE
         Accepted = AC
         Closed = CL
         Rejected RJ
-    */
+     */
     public String formatStatus(String s) {
         String res = "";
         switch (s) {
@@ -183,8 +197,8 @@ public class InvoiceController implements Serializable {
                 break;
             case "RJ":
                 res = this.validationBean.getMsgBundle("lblRejected");
-                break;    
-                
+                break;
+
             default:
                 break;
         }
@@ -192,15 +206,15 @@ public class InvoiceController implements Serializable {
         return res;
     }
 
-    public void print(FbInvoice i,HttpServletRequest req) {
+    public void print(FbInvoice i, HttpServletRequest req) {
         try {
-            this.invoiceModal = this.iFacade.generateInvoice(i,this.userData.getCurrentCia().getLogo(),this.iFacade.getCompiledFile("report1", req),formatType(i.getType()));
-            
-        //this.userData.setSInvoice(invoiceModal);
-        //this.validationBean.lanzarMensajeSinBundle("error", this.invoiceModal, "");
-        this.currentIn = i;
-       // this.validationBean.updateComponent("pdf");
-        this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
+            this.invoiceModal = this.iFacade.generateInvoice(i, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile("report1", req), formatType(i.getType()));
+
+            //this.userData.setSInvoice(invoiceModal);
+            //this.validationBean.lanzarMensajeSinBundle("error", this.invoiceModal, "");
+            this.currentIn = i;
+            // this.validationBean.updateComponent("pdf");
+            this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.print()");
         }
@@ -226,109 +240,118 @@ public class InvoiceController implements Serializable {
             e.printStackTrace();
         }
     }
-    
-    public void edit(FbInvoice in){
-    this.userData.setFbInvoice(in);
-    this.userData.setInvoiceTypeForm(in.getType());
-    this.validationBean.redirecionar("/view/sales/invoiceForm.xhtml");
+
+    public void edit(FbInvoice in) {
+        this.userData.setFbInvoice(in);
+        this.userData.setInvoiceTypeForm(in.getType());
+        this.validationBean.redirecionar("/view/sales/invoiceForm.xhtml");
     }
-    
-    
-    public void cancel(){
-    String res = this.iFacade.actInvoice(currentIn, "D");
+
+    public void cancel() {
+        String res = this.iFacade.actInvoice(currentIn, "D");
         if (res.equals("0")) {
             this.validationBean.lanzarMensaje("info", "lblInCancelSuccess", "blank");
-        }else{
-        this.validationBean.lanzarMensajeSinBundle("error", res, "");
+        } else {
+            this.validationBean.lanzarMensajeSinBundle("error", res, "");
         }
-    
+
     }
-    
-    public void assign(FbInvoice in){
-    currentIn = in;
-    this.validationBean.ejecutarJavascript("$('.cancelModal').modal()");
+
+    public void assign(FbInvoice in) {
+        currentIn = in;
+        this.validationBean.ejecutarJavascript("$('.cancelModal').modal()");
     }
-    
-    public boolean showOptions(String status, String type){
+
+    public boolean showOptions(String status, String type, String option) {
         boolean flag = false;
-    if(status.equals("OP")){
-    flag = true;
-    }else if(type.equals("ES")){
-    flag = true;
+
+        switch (option) {
+            case "PRINT":
+                flag = true;
+                break;
+
+            case "EDIT":
+                flag = true;
+                break;
+
+            case "ESTATUS":
+                if (type.equals("ES")) {
+                    flag = true;
+                }
+                break;
+
+            default:
+                System.out.println("You do nutin");
+                break;
+
+        }
+
+        return flag;
     }
-    
-    
-    
-    return flag;
+
+    public void changeTab(int index) {
+        this.userData.setSalesIndex(index);
+
     }
-    
-    
-    public void changeTab(int index){
-    this.userData.setSalesIndex(index);
-    
-    }
-    
-    
-    public void applyFilter(){
-    
-    
-    String query = "SELECT * FROM FB_INVOICE WHERE ID_CIA = " + this.userData.getCurrentCia().getIdCia().toString() + " ";
-    
+
+    public void applyFilter() {
+
+        String query = "SELECT * FROM FB_INVOICE WHERE ID_CIA = " + this.userData.getCurrentCia().getIdCia().toString() + " ";
+
         if (!this.fType.equals("0")) {
-            query += "AND TYPE = '" + this.fType+"' ";
+            query += "AND TYPE = '" + this.fType + "' ";
         }
-        
+
         if (!this.fStatus.equals("0")) {
-            query += "AND STATUS = '" + this.fStatus+"' ";
+            query += "AND STATUS = '" + this.fStatus + "' ";
         }
-        
+
         if (!this.fShiVia.isEmpty()) {
-            query += "AND SHIP_VIA = '" + this.fShiVia+"' ";
+            query += "AND SHIP_VIA = '" + this.fShiVia + "' ";
         }
-                
+
         /*if (!this.fDate.equals("0")) {
             query += "AND to_date(IN_DATE,'MM/dd/yyyy') = to_date('"+ this.fDate+"','MM/dd/yyyy') " ;
-        } */       
-        
+        } */
         if (!this.fDate.equals("0")) {
-            query += " AND to_date(IN_DATE,'MM/dd/yyyy') BETWEEN sysdate-"+ this.fDate+" AND sysdate " ;
+            query += " AND to_date(IN_DATE,'MM/dd/yyyy') BETWEEN sysdate-" + this.fDate + " AND sysdate ";
         }
-        
+
         if (this.fDate.equals("0")) {
             if (this.fFrom.isEmpty()) {
-            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-            Calendar cal = Calendar.getInstance();
-            this.fFrom= dateFormat.format(cal.getTime());
+                DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                Calendar cal = Calendar.getInstance();
+                this.fFrom = dateFormat.format(cal.getTime());
+            }
+
+            if (this.fTo.isEmpty()) {
+                query += " AND to_date(IN_DATE,'MM/dd/yyyy') >= to_date('" + this.fFrom + "','MM/dd/yyyy') ";
+            } else {
+                query += " AND to_date(IN_DATE,'MM/dd/yyyy') BETWEEN to_date('" + this.fFrom + "','MM/dd/yyyy') AND to_date('" + this.fTo + "','MM/dd/yyyy') ";
+            }
         }
-        
-        if (this.fTo.isEmpty()) {
-            query += " AND to_date(IN_DATE,'MM/dd/yyyy') >= to_date('"+ this.fFrom+"','MM/dd/yyyy') " ;
-        }else{
-            query += " AND to_date(IN_DATE,'MM/dd/yyyy') BETWEEN to_date('"+ this.fFrom+"','MM/dd/yyyy') AND to_date('"+ this.fTo+"','MM/dd/yyyy') " ;
-        }
-        }
-        
+
         if (!this.fIdCust.equals("0")) {
-            query += " AND ID_CUST =  " + this.fIdCust ;
+            query += " AND ID_CUST =  " + this.fIdCust;
         }
-        
+
         this.userData.setInvoiceSql(query);
         System.out.println("com.fastbooks.managedbeans.InvoiceController.applyFilter()");
-    
+
     }
-    
-    public void resetFilter(){
-    this.userData.setInvoiceSql("0");
-    fType = "0";
-    fStatus = "0";
-    fShiVia = "";
-    fFrom = "";
-    fTo = "";
-    fIdCust = "0";
-    fDate = "0";
+
+    public void resetFilter() {
+        this.userData.setInvoiceSql("0");
+        fType = "0";
+        fStatus = "0";
+        fShiVia = "";
+        fFrom = "";
+        fTo = "";
+        fIdCust = "0";
+        fDate = "0";
     }
-    
-    public boolean showFilters(String sec, String value){
+
+    public boolean showFilters(String sec, String value) {
         /*
         private @Getter
     @Setter
@@ -352,110 +375,149 @@ public class InvoiceController implements Serializable {
     @Setter
     String fDate = "0";
         
-        */
-    boolean flag = false;
-    DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-              Calendar cal = Calendar.getInstance();
-              String tmp= dateFormat.format(cal.getTime());
+         */
+        boolean flag = false;
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        Calendar cal = Calendar.getInstance();
+        String tmp = dateFormat.format(cal.getTime());
         if (sec.equals("enq")) {
-            if (fType.equals("0") && fStatus.equals("0") && fShiVia.isEmpty() && this.fFrom.equals(tmp) && this.fTo.isEmpty() &&  fIdCust.equals("0") && fDate.equals("0")) {
+            if (fType.equals("0") && fStatus.equals("0") && fShiVia.isEmpty() && this.fFrom.equals(tmp) && this.fTo.isEmpty() && fIdCust.equals("0") && fDate.equals("0")) {
                 System.out.println("no hay filtro");
-            }else{
-            System.out.println("si hay filtro");
-            flag = true;
+            } else {
+                System.out.println("si hay filtro");
+                flag = true;
             }
         }
-    
-    
-    return flag;
+
+        return flag;
     }
-    
-    public void addToInvoiceList(String idInvoice){
-    int c = 0;
+
+    public void addToInvoiceList(String idInvoice) {
+        int c = 0;
         for (String str : idInvoices) {
             if (str.equals(idInvoice)) {
                 c++;
             }
         }
-        
+
         if (c == 0) {
             idInvoices.add(idInvoice);
-        }else{
-             for (int i = 0; i < idInvoices.size(); i++) {
-                 if (idInvoices.get(i).equals(idInvoice)) {
-                     idInvoices.remove(i);
-                 }
+        } else {
+            for (int i = 0; i < idInvoices.size(); i++) {
+                if (idInvoices.get(i).equals(idInvoice)) {
+                    idInvoices.remove(i);
+                }
             }
-   
+
         }
         System.out.println("com.fastbooks.managedbeans.InvoiceController.addToInvoiceList()");
     }
-    
-    
+
     public void printTransactions(HttpServletRequest req) {
         String res = "";
         try {
             for (int i = 0; i < idInvoices.size(); i++) {
                 res += idInvoices.get(i);
-                if (i != idInvoices.size()-1) {
+                if (i != idInvoices.size() - 1) {
                     res += ",";
                 }
             }
-            this.invoiceModal = this.iFacade.printTransactions(res,this.userData.getCurrentCia().getLogo(),this.iFacade.getCompiledFile("multipleInvoice", req),this.userData.getCurrentCia().getIdCia().toString());
-        //this.userData.setSInvoice(invoiceModal);
-        //this.validationBean.lanzarMensajeSinBundle("error", this.invoiceModal, "");
-        //this.currentIn = i;
-       // this.validationBean.updateComponent("pdf");
-        this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
-        this.idInvoices = new ArrayList<>();
+            this.invoiceModal = this.iFacade.printTransactions(res, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile("multipleInvoice", req), this.userData.getCurrentCia().getIdCia().toString());
+            //this.userData.setSInvoice(invoiceModal);
+            //this.validationBean.lanzarMensajeSinBundle("error", this.invoiceModal, "");
+            //this.currentIn = i;
+            // this.validationBean.updateComponent("pdf");
+            this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
+            this.idInvoices = new ArrayList<>();
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.print()");
             e.printStackTrace();
         }
     }
-    
+
     public void packingSlip(HttpServletRequest req) {
         String res = "";
         try {
             for (int i = 0; i < idInvoices.size(); i++) {
                 res += idInvoices.get(i);
-                if (i != idInvoices.size()-1) {
+                if (i != idInvoices.size() - 1) {
                     res += ",";
                 }
             }
-            this.invoiceModal = this.iFacade.printTransactions(res,this.userData.getCurrentCia().getLogo(),this.iFacade.getCompiledFile("packingSlip", req),this.userData.getCurrentCia().getIdCia().toString());
-        //this.userData.setSInvoice(invoiceModal);
-        //this.validationBean.lanzarMensajeSinBundle("error", this.invoiceModal, "");
-        //this.currentIn = i;
-       // this.validationBean.updateComponent("pdf");
-        this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
-        this.idInvoices = new ArrayList<>();
+            this.invoiceModal = this.iFacade.printTransactions(res, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile("packingSlip", req), this.userData.getCurrentCia().getIdCia().toString());
+            //this.userData.setSInvoice(invoiceModal);
+            //this.validationBean.lanzarMensajeSinBundle("error", this.invoiceModal, "");
+            //this.currentIn = i;
+            // this.validationBean.updateComponent("pdf");
+            this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
+            this.idInvoices = new ArrayList<>();
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.print()");
             e.printStackTrace();
         }
-    }    
-    
-    public boolean disableBatch(String op){
+    }
+
+    public boolean disableBatch(String op) {
         boolean flag = true;
-    /*
+        /*
         PT = PRINT TRANSACTIONS
         PP = PRINT PACKING SLIP
         ST = SEND TRANSACTIONS
         SR = SEND REMINDER
         
-        */
+         */
         if (op.equals("PT")) {
             if (!idInvoices.isEmpty()) {
                 flag = false;
             }
-        }else if(op.equals("PP")){
+        } else if (op.equals("PP")) {
             if (!idInvoices.isEmpty()) {
                 flag = false;
             }
         }
-    
-        
+
         return flag;
     }
+
+    public void assignEstimate(FbInvoice in) {
+
+        this.currenInvoice = in;
+        this.estimateStatus = in.getStatus();
+        this.AccBy = in.getEsAccby();
+        this.AccDate = in.getEsAccdate();
+        String exp = "$('.updateStatusModal').modal();";
+        exp += !in.getStatus().equals("PE") ? "$('.updateEstimateStatus').show();" : "";
+        this.validationBean.ejecutarJavascript(exp);
+    }
+
+    public void updateEstimateStatus()  {
+
+        currenInvoice.setStatus(this.estimateStatus);
+        if (this.estimateStatus.equals("PE")) {
+            currenInvoice.setEsAccby("");
+            currenInvoice.setEsAccdate("");
+        }else{
+        currenInvoice.setEsAccby(AccBy);
+        
+            try {
+                 currenInvoice.setEsAccdate(sdf.format(sd.parse(AccDate)));
+            } catch (Exception e) {
+                currenInvoice.setEsAccdate("");
+                
+            }
+            
+        
+        }
+        
+        String res = this.iFacade.actInvoice(currenInvoice, "U");
+        if (res.equals("0")) {
+            this.userData.setUses("lblEsUpdateSuccess");
+        } else {
+            this.userData.setUses("unexpectedError");
+
+        }
+
+        // this.validationBean.redirecionar("/view/sales/sales.xhtml");
+    }
+
 }

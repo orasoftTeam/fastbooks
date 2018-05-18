@@ -57,6 +57,13 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "FbInvoice.findByFechaCreacion", query = "SELECT f FROM FbInvoice f WHERE f.fechaCreacion = :fechaCreacion")})
 public class FbInvoice implements Serializable {
 
+    @Size(max = 50)
+    @Column(name = "ES_ACCBY")
+    private String esAccby;
+    @Size(max = 50)
+    @Column(name = "ES_ACCDATE")
+    private String esAccdate;
+
     @Column(name = "SHCOST_TAX_AMOUNT")
     private BigDecimal shcostTaxAmount;
     @Size(max = 100)
@@ -403,6 +410,22 @@ public class FbInvoice implements Serializable {
 
     public void setIdShcostTax(FbTax idShcostTax) {
         this.idShcostTax = idShcostTax;
+    }
+
+    public String getEsAccby() {
+        return esAccby;
+    }
+
+    public void setEsAccby(String esAccby) {
+        this.esAccby = esAccby;
+    }
+
+    public String getEsAccdate() {
+        return esAccdate;
+    }
+
+    public void setEsAccdate(String esAccdate) {
+        this.esAccdate = esAccdate;
     }
     
 }

@@ -51,7 +51,8 @@ public class InvoiceFormController implements Serializable {
     @Inject
     UserData userData;
     @EJB
-    @Getter ValidationBean validationBean;
+    @Getter
+    ValidationBean validationBean;
     @EJB
     FbCustomerFacade cFacade;
     @EJB
@@ -180,8 +181,7 @@ public class InvoiceFormController implements Serializable {
     private @Getter
     @Setter
     BigDecimal rShCostTaxAmount = new BigDecimal(BigInteger.ZERO);
-    
-    
+
     private @Getter
     @Setter
     boolean mod = false;
@@ -200,26 +200,32 @@ public class InvoiceFormController implements Serializable {
     private @Getter
     @Setter
     String estimateStatus;
-    
+    private @Getter
+    @Setter
+    String AccBy;
+    private @Getter
+    @Setter
+    String AccDate;
+
     public InvoiceFormController() {
     }
 
-    
-    public boolean showSegunType(String tipo){
-    boolean flag = false;
+    public boolean showSegunType(String tipo) {
+        boolean flag = false;
         if (tipo.equals(type)) {
             flag = true;
         }
-    
-    return flag;
+
+        return flag;
     }
+
     public void init() {
         try {//this.userData.getCurrentCia().getIdCia().toString()
             type = this.userData.getInvoiceTypeForm();
             if (type.equals("IN")) {
                 title = this.validationBean.getMsgBundle("lblInvoiceTypeIn");
-            }else if(type.equals("ES")){
-                title = this.validationBean.getMsgBundle("lblEstimate");       
+            } else if (type.equals("ES")) {
+                title = this.validationBean.getMsgBundle("lblEstimate");
             }
             cList = cFacade.getCustomersByIdCia(this.userData.getCurrentCia().getIdCia().toString());
             pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
@@ -534,7 +540,7 @@ public class InvoiceFormController implements Serializable {
 
                 tax = Double.parseDouble(this.rTaxTotal.toString());
                 Double t = 0.00;
-                Double shTaxAmount  = 0.00;
+                Double shTaxAmount = 0.00;
                 if (!this.shCost.isEmpty()) {
                     try {
                         t = Double.parseDouble(shCost);
@@ -542,18 +548,17 @@ public class InvoiceFormController implements Serializable {
                         if (result) {
                             t = 0.00;
                             shCost = "0.00";
-                        }else{
-                        if (!this.shCostIdTax.equals("0")) {
-                            for (FbTax fbTax : taxList) {
-                                if (fbTax.getIdTax().toString().equals(this.shCostIdTax)) {
-                                    shTaxAmount = t * Double.parseDouble(fbTax.getRate());
-                                    this.dShCostTaxName = fbTax.getName() + "("+fbTax.getRate()+"%)";
+                        } else {
+                            if (!this.shCostIdTax.equals("0")) {
+                                for (FbTax fbTax : taxList) {
+                                    if (fbTax.getIdTax().toString().equals(this.shCostIdTax)) {
+                                        shTaxAmount = t * Double.parseDouble(fbTax.getRate());
+                                        this.dShCostTaxName = fbTax.getName() + "(" + fbTax.getRate() + "%)";
+                                    }
                                 }
                             }
                         }
-                        }
-                        
-                        
+
                     } catch (Exception e) {
                         t = 0.00;
                         shCost = "0.00";
@@ -566,16 +571,16 @@ public class InvoiceFormController implements Serializable {
                     // ship = 0.00;
                     //}
 
-                }else{
-                this.shCost = "0.00";
+                } else {
+                    this.shCost = "0.00";
                 }
 
                 this.dBalance = String.format("%.2f", (acum + ship + tax + shTaxAmount));
                 //Double balanceDue = acum + ship;
-                this.dShCostTaxAmount = String.format("%.2f", shTaxAmount );
-                this.rShCostTaxAmount =  new BigDecimal(shTaxAmount);
-                this.rBalance = new BigDecimal((acum + ship + tax + shTaxAmount ));
-                this.dTotal = String.format("%.2f", (acum + ship + tax + shTaxAmount ));
+                this.dShCostTaxAmount = String.format("%.2f", shTaxAmount);
+                this.rShCostTaxAmount = new BigDecimal(shTaxAmount);
+                this.rBalance = new BigDecimal((acum + ship + tax + shTaxAmount));
+                this.dTotal = String.format("%.2f", (acum + ship + tax + shTaxAmount));
                 //Double balanceDue = acum + ship;
 
                 this.rTotal = new BigDecimal((acum + ship + tax + shTaxAmount));
@@ -851,14 +856,27 @@ public class InvoiceFormController implements Serializable {
                         in.setSubTotal(rSubTotal);
                         in.setTotal(rTotal);
                         in.setTaxTotal(rTaxTotal);
-                        
+
                         if (type.equals("IN")) {
-                           in.setStatus("OP");//aqui 
-                        }else if (type.equals("ES")){
-                           in.setStatus(this.estimateStatus);//aqui 
+                            in.setStatus("OP");//aqui 
+                        } else if (type.equals("ES")) {
+                            in.setStatus(this.estimateStatus);//aqui 
+                            if (this.estimateStatus.equals("PE")) {
+                                in.setEsAccby("");
+                                in.setEsAccdate("");
+                            } else {
+                                in.setEsAccby(AccBy);
+
+                                try {
+                                    in.setEsAccdate(sdf.format(sd.parse(AccDate)));
+                                } catch (Exception e) {
+                                    in.setEsAccdate("");
+
+                                }
+
+                            }
                         }
-                        
-                        
+
                         in.setBiAddress(biAddress);
                         in.setShAddress(shAddress);
                         in.setTerms(termDays);
@@ -867,7 +885,7 @@ public class InvoiceFormController implements Serializable {
                         in.setShCost(new BigDecimal(this.shCost));
                         if (shipDate != null) {
                             in.setShDate(shipDate);
-                           // in.setShDate(sdf.format(sd.parse(shipDate)));
+                            // in.setShDate(sdf.format(sd.parse(shipDate)));
                         }
 
                         in.setMessageInvoice(messageInvoice);
@@ -875,22 +893,35 @@ public class InvoiceFormController implements Serializable {
 
                         in.setFbInvoiceDetailList(dList);
                         in.setFbInvoiceTaxesList(taxesAmountList);
-                        
+
                         in.setShcostTaxAmount(rShCostTaxAmount);
                         in.setShcostTaxName(dShCostTaxName);
-                        
+
                         for (FbTax fbTax : taxList) {
                             if (fbTax.getIdTax().toString().equals(this.shCostIdTax)) {
                                 in.setIdShcostTax(fbTax);
                             }
                         }
-                        
-                        
+
                         String res = iFacade.actInvoice(in, op);
                         System.out.println("result: " + res);
                         if (res.equals("0")) {
+                            String message = "unexpectedError";
+                            if (op.equals("A")) {
+                                if (type.equals("IN")) {
+                                    message = "lblInvoiceAddSuccess";
+                                } else if (type.equals("ES")) {
+                                    message = "lblEstimateAddSuccess";
+                                }
+                            } else if (op.equals("U")) {
+                                if (type.equals("IN")) {
+                                    message = "lblInUpdateSuccess";
+                                } else if (type.equals("ES")) {
+                                    message = "lblEsUpdateSuccess";
+                                }
+                            }
 
-                            this.userData.setUses(op.equals("U") ? "lblInUpdateSuccess" : "lblInvoiceAddSuccess");
+                            this.userData.setUses(message);
                             this.validationBean.redirecionar("/view/sales/sales.xhtml");
                         } else {
                             //this.validationBean.lanzarMensajeSinBundle("error", res, " ");
@@ -969,15 +1000,13 @@ public class InvoiceFormController implements Serializable {
                 }
                 if (in.getShcostTaxAmount() != null) {
                     this.dShCostTaxAmount = in.getShcostTaxAmount().toString();
-                this.dShCostTaxName = in.getShcostTaxName();
-                this.rShCostTaxAmount = in.getShcostTaxAmount();
-                }else{
-                this.dShCostTaxAmount = "0.00";
-                this.dShCostTaxName = "";
-                this.rShCostTaxAmount = new BigDecimal(BigInteger.ZERO);
+                    this.dShCostTaxName = in.getShcostTaxName();
+                    this.rShCostTaxAmount = in.getShcostTaxAmount();
+                } else {
+                    this.dShCostTaxAmount = "0.00";
+                    this.dShCostTaxName = "";
+                    this.rShCostTaxAmount = new BigDecimal(BigInteger.ZERO);
                 }
-                
-                
 
                 if (in.getFbInvoiceTaxesList().isEmpty()) {
                     hasTax = false;
@@ -1020,12 +1049,16 @@ public class InvoiceFormController implements Serializable {
                         }
                     }
                 }
-                
+
                 if (in.getType().equals("ES")) {
                     this.estimateStatus = in.getStatus();
+                    if (!this.estimateStatus.equals("PE")) {
+                        this.AccBy = in.getEsAccby();
+                        this.AccDate = in.getEsAccdate();
+                        this.validationBean.ejecutarJavascript("show('" + in.getStatus() + "');");
+
+                    }
                 }
-                
-                
 
                 mod = true;
                 modStay = true;
@@ -1082,24 +1115,23 @@ public class InvoiceFormController implements Serializable {
         }
 
     }
-    
-    public void exit(){
-        
+
+    public void exit() {
+
         if (this.isFormTouched) {
             //confirm
             this.validationBean.ejecutarJavascript("PF('dlg5').show();");
-        }else{
+        } else {
             // exit
             validationBean.redirecionar("/view/sales/sales.xhtml");
         }
-        
-       
+
     }
-    
-    public boolean showShTax(){
+
+    public boolean showShTax() {
         boolean flag = false;
         if (!this.dShCostTaxAmount.equals("0.00")) {
-       
+
             flag = true;
         }
         return flag;

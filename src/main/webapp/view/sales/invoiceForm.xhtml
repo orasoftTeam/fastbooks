@@ -65,14 +65,32 @@
                                 value="#{messages.newC}" look="success" 
                                 onclick="PF('dlg2').show();"/>
                         </bnu:column>
-                        <bnu:column span="4"  rendered="#{invoiceController.showSegunType('ES')}">
-                            <bnu:selectOneMenu label="#{messages.lblInvoiceStatus}" value="#{invoiceController.estimateStatus}" >
+                        <bnu:column span="2"  rendered="#{invoiceController.showSegunType('ES')}">
+                            <bnu:selectOneMenu label="#{messages.lblInvoiceStatus}" value="#{invoiceController.estimateStatus}" onchange="show(this.value);" >
                                 <f:selectItem itemValue="PE" itemLabel="#{messages.lblESPending}" />
                                 <f:selectItem itemValue="AC" itemLabel="#{messages.lblAccepted}" />
                                 <f:selectItem itemValue="CL" itemLabel="#{messages.lblClosed}" />
                                 <f:selectItem itemValue="RJ" itemLabel="#{messages.lblRejected}" />
                             </bnu:selectOneMenu>
                         </bnu:column>
+                        <div class="updateEstimateStatus" style="display: none;" >
+                            <bnu:column span="2" >
+                            <bnu:inputText label="By" maxlength="30"  value="#{invoiceController.accBy}" />
+                            </bnu:column>
+                            <bnu:column span="2"  >
+                            <strong>
+                                <h:outputText value="Date"  />
+
+                            </strong>
+                            <bnu:datepicker value="#{invoiceController.accDate}"    />
+                            </bnu:column>
+                        </div>
+                        
+
+                        
+                        
+
+                        
                     </bnu:row>
                     <bnu:row>
                         <bnu:column span="4">
@@ -220,27 +238,27 @@
 
 
                         </div>
-                        
-                        
-                        
-                            <div class="form-group row">
-                                <label class="col-form-label col-sm-8" >
-                                    <h:panelGrid rendered="#{invoiceController.showShTax()}" >
+
+
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-8" >
+                                <h:panelGrid rendered="#{invoiceController.showShTax()}" >
                                     Shipping cost #{invoiceController.DShCostTaxName} of #{invoiceController.shCost}
-                                    </h:panelGrid>
-                                </label>
-                                <div class="col-sm-4">
-                                    <h:panelGrid rendered="#{invoiceController.showShTax()}" >
+                                </h:panelGrid>
+                            </label>
+                            <div class="col-sm-4">
+                                <h:panelGrid rendered="#{invoiceController.showShTax()}" >
                                     #{invoiceController.DShCostTaxAmount}
-                                    </h:panelGrid>
-                                </div>
+                                </h:panelGrid>
                             </div>
-                        
-                        
-                        
-                        
-                        
-                        
+                        </div>
+
+
+
+
+
+
                         <ui:repeat value="#{invoiceController.taxesAmountList}" var="it">
                             <div class="form-group row">
                                 <label class="col-form-label col-sm-8" >
@@ -252,21 +270,21 @@
                             </div>
                         </ui:repeat>
                         <div class="form-group row">
-                                <label class="col-form-label col-sm-8" >
-                                    #{messages.lblInvoiceTotal}
-                                </label>
-                                <div class="col-sm-4">
-                                    #{invoiceController.DTotal}
-                                </div>
+                            <label class="col-form-label col-sm-8" >
+                                #{messages.lblInvoiceTotal}
+                            </label>
+                            <div class="col-sm-4">
+                                #{invoiceController.DTotal}
                             </div>
+                        </div>
                         <div class="form-group row">
-                                <label class="col-form-label col-sm-8" >
-                                    #{messages.lblInvoiceBalanceDue}
-                                </label>
-                                <div class="col-sm-4">
-                                    #{invoiceController.DBalance}
-                                </div>
+                            <label class="col-form-label col-sm-8" >
+                                #{messages.lblInvoiceBalanceDue}
+                            </label>
+                            <div class="col-sm-4">
+                                #{invoiceController.DBalance}
                             </div>
+                        </div>
                         <p:separator/>
                     </bnu:column>
                 </bnu:row> 
@@ -795,6 +813,16 @@
             } 
 
 
+             function show(value){
+        
+        if(value == "PE"){
+        $(".updateEstimateStatus").hide();
+        //alert(value);
+        }else{
+        $(".updateEstimateStatus").show();
+        //alert(value);
+        }
+        }
 
 
         </h:outputScript>
