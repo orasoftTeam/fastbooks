@@ -1059,9 +1059,12 @@ public class InvoiceFormController implements Serializable {
 
                     }
                 }
-
                 mod = true;
-                modStay = true;
+                if (!in.getNoDot().equals("copy")) {
+                    
+                    modStay = true;
+                }
+
                 updateTotal();
                 this.userData.setFbInvoice(null);
                 mod = false;

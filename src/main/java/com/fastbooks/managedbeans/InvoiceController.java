@@ -13,6 +13,7 @@ import com.fastbooks.util.GlobalParameters;
 import com.fastbooks.util.SendMails;
 import com.fastbooks.util.ValidationBean;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -246,6 +247,14 @@ public class InvoiceController implements Serializable {
         this.userData.setInvoiceTypeForm(in.getType());
         this.validationBean.redirecionar("/view/sales/invoiceForm.xhtml");
     }
+    
+    public void copy(FbInvoice in) {
+        in.setIdInvoice(BigDecimal.ZERO);
+        in.setNoDot("copy");
+        this.userData.setFbInvoice(in);
+        this.userData.setInvoiceTypeForm(in.getType());
+        this.validationBean.redirecionar("/view/sales/invoiceForm.xhtml");
+    }
 
     public void cancel() {
         String res = this.iFacade.actInvoice(currentIn, "D");
@@ -279,6 +288,9 @@ public class InvoiceController implements Serializable {
                     flag = true;
                 }
                 break;
+            case "COPY":
+                flag = true;
+                break;    
 
             default:
                 System.out.println("You do nutin");

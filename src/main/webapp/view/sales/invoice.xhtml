@@ -180,6 +180,9 @@
 
                             <bnu:commandButton value="Update status"  style="width:100%; border: none"  
                                                rendered="#{invoiceTableController.showOptions(in.status,in.type,'ESTATUS')}" action="#{invoiceTableController.assignEstimate(in)}"   />
+                            
+                            <bnu:commandButton value="Copy"  style="width:100%; border: none"  
+                                               rendered="#{invoiceTableController.showOptions(in.status,in.type,'COPY')}" action="#{invoiceTableController.copy(in)}"   />
 
                         </bnu:dropButton>
                         <bnu:commandButton value="#{messages.edit}"  look="warning" styleClass="hidden-lg hidden-md" action="#{invoiceTableController.edit(in)}" rendered="#{invoiceTableController.showOptions(in.status,in.type,'EDIT')}"   />
@@ -189,6 +192,9 @@
 
                         <bnu:commandButton value="#{messages.lblInvoicePrint}" update="pdf"  styleClass="hidden-lg hidden-md"  action="#{invoiceTableController.print(in,request)}" rendered="#{invoiceTableController.showOptions(in.status,in.type,'PRINT')}"  />
 
+                        <bnu:commandButton value="Copy"  style="width:100%; border: none" styleClass="hidden-lg hidden-md" 
+                                               rendered="#{invoiceTableController.showOptions(in.status,in.type,'COPY')}" action="#{invoiceTableController.copy(in)}"   />
+                        
                     </bnu:dataTableColumn>
 
                 </bnu:dataTable>
