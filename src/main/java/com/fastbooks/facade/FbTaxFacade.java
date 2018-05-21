@@ -57,7 +57,7 @@ public class FbTaxFacade extends AbstractFacade<FbTax> {
 
         try {
             Connection cn = em.unwrap(java.sql.Connection.class);//Conn EM
-            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_TAX (?,?,?,?,?,?,?)}");
+            CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_TAX (?,?,?,?,?,?,?)}");
             cs.setInt(1, Integer.parseInt(String.valueOf(tx.getIdCia().getIdCia())));
             cs.setInt(2, Integer.parseInt(String.valueOf(tx.getIdTax())));
             cs.setString(3, tx.getName());

@@ -39,10 +39,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "FbInvoiceTaxes.findByTaxAmount", query = "SELECT f FROM FbInvoiceTaxes f WHERE f.taxAmount = :taxAmount")})
 public class FbInvoiceTaxes implements Serializable {
 
-    @Size(max = 50)
+    
     @Column(name = "FROM_AMOUNT")
     private BigDecimal fromAmount;
-    @Size(max = 50)
+   
     @Column(name = "TAX_AMOUNT")
     private BigDecimal taxAmount;
 
@@ -153,6 +153,8 @@ public class FbInvoiceTaxes implements Serializable {
     public String toString() {
         return "com.fastbooks.modelo.FbInvoiceTaxes[ idInvoiceTax=" + idInvoiceTax + " ]";
     }
+
+ 
 
  
     

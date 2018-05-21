@@ -37,6 +37,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "FbUsuarioXCia.findByFechaCreacion", query = "SELECT f FROM FbUsuarioXCia f WHERE f.fechaCreacion = :fechaCreacion")})
 public class FbUsuarioXCia implements Serializable {
 
+    @Column(name = "IS_OWNER")
+    private Integer isOwner;
+
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected FbUsuarioXCiaPK fbUsuarioXCiaPK;
@@ -127,6 +130,14 @@ public class FbUsuarioXCia implements Serializable {
     @Override
     public String toString() {
         return "com.fastbooks.modelo.FbUsuarioXCia[ fbUsuarioXCiaPK=" + fbUsuarioXCiaPK + " ]";
+    }
+
+    public Integer getIsOwner() {
+        return isOwner;
+    }
+
+    public void setIsOwner(Integer isOwner) {
+        this.isOwner = isOwner;
     }
     
 }

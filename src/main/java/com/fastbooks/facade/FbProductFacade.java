@@ -73,7 +73,7 @@ public class FbProductFacade extends AbstractFacade<FbProduct>{
     String res = "";
         try {
             Connection cn = em.unwrap(java.sql.Connection.class);
-            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_PRODUCT (?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_PRODUCT (?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             cs.setInt(1, Integer.parseInt(prod.getIdCia().getIdCia().toString()));
             cs.setInt(2, Integer.parseInt(prod.getIdProd().toString()));
             cs.setString(3, prod.getName());
@@ -107,7 +107,7 @@ public class FbProductFacade extends AbstractFacade<FbProduct>{
     String res = "";
         try {
             Connection cn = em.unwrap(java.sql.Connection.class);
-            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_BUNDLE (?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_BUNDLE (?,?,?,?,?,?,?,?,?,?,?,?)}");
             cs.setInt(1, Integer.parseInt(prod.getIdCia().getIdCia().toString()));
             cs.setInt(2, Integer.parseInt(prod.getIdProd().toString()));
             cs.setString(3, prod.getName());

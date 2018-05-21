@@ -55,7 +55,7 @@ public class FbCatProdFacade extends AbstractFacade<FbCatProd>{
     String res = "";
         try {
             Connection cn = em.unwrap(java.sql.Connection.class);
-            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_CAT_PROD (?,?,?,?,?,?)}");
+            CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_CAT_PROD (?,?,?,?,?,?)}");
             cs.setInt(1, Integer.parseInt(cat.getIdCia().getIdCia().toString()));
             cs.setInt(2, Integer.parseInt(cat.getIdCat().toString()));
             cs.setString(3, cat.getName());

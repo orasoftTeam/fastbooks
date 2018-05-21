@@ -58,7 +58,7 @@ public class FbEmployeeFacade extends AbstractFacade<FbEmployee> {
 
         try {
             Connection cn = em.unwrap(java.sql.Connection.class);//Conn EM
-            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_EMPLOYEE (?,?,?,?,?,?,?,?,?,?,?,?,?,?,"
+            CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_EMPLOYEE (?,?,?,?,?,?,?,?,?,?,?,?,?,?,"
                     + "?,?,?,?,?,?,?,?,?,?,?,?)}"); //26 elementos
 
             cs.setInt(1, Integer.parseInt(String.valueOf(emp.getIdCia().getIdCia())));

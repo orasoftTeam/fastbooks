@@ -83,7 +83,7 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer> {
         try {
             //Abrimos la conexion al Entity Manager
             Connection cn = em.unwrap(java.sql.Connection.class);//Conn EM
-            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_CUSTOMER (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}"); //33 elementos
+            CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_CUSTOMER (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}"); //33 elementos
             cs.setInt(1, Integer.parseInt(String.valueOf(cust.getIdCia().getIdCia())));
             cs.setInt(2, Integer.parseInt(String.valueOf(cust.getIdCust())));
             cs.setString(3, cust.getTitle());

@@ -36,7 +36,7 @@ public class FbCompaniaFacade extends AbstractFacade<FbCompania> {
     String res = "";
         try {
             Connection cn = em.unwrap(java.sql.Connection.class);
-            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_COMPANIA (?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_COMPANIA (?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             cs.setInt(1, Integer.parseInt(String.valueOf(com.getIdCia())));
             cs.setString(2, com.getNomCom());
             cs.setString(3, com.getNomLeg());

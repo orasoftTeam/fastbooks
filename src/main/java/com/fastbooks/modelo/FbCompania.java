@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -47,6 +48,13 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "FbCompania.findByFechaCreacion", query = "SELECT f FROM FbCompania f WHERE f.fechaCreacion = :fechaCreacion"),
     @NamedQuery(name = "FbCompania.findByTelefono", query = "SELECT f FROM FbCompania f WHERE f.telefono = :telefono")})
 public class FbCompania implements Serializable {
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fbCompania")
+    private List<FbPerfilXUsuario> fbPerfilXUsuarioList;
+    @OneToMany(mappedBy = "idCia")
+    private List<FbEmployee> fbEmployeeList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fbCompania")
+    private List<FbUsuarioXCia> fbUsuarioXCiaList;
 
     @OneToMany(mappedBy = "idCia")
     private List<FbCustomer> fbCustomerList;
@@ -280,6 +288,33 @@ public class FbCompania implements Serializable {
 
     public void setFbInvoiceList(List<FbInvoice> fbInvoiceList) {
         this.fbInvoiceList = fbInvoiceList;
+    }
+
+    @XmlTransient
+    public List<FbPerfilXUsuario> getFbPerfilXUsuarioList() {
+        return fbPerfilXUsuarioList;
+    }
+
+    public void setFbPerfilXUsuarioList(List<FbPerfilXUsuario> fbPerfilXUsuarioList) {
+        this.fbPerfilXUsuarioList = fbPerfilXUsuarioList;
+    }
+
+    @XmlTransient
+    public List<FbEmployee> getFbEmployeeList() {
+        return fbEmployeeList;
+    }
+
+    public void setFbEmployeeList(List<FbEmployee> fbEmployeeList) {
+        this.fbEmployeeList = fbEmployeeList;
+    }
+
+    @XmlTransient
+    public List<FbUsuarioXCia> getFbUsuarioXCiaList() {
+        return fbUsuarioXCiaList;
+    }
+
+    public void setFbUsuarioXCiaList(List<FbUsuarioXCia> fbUsuarioXCiaList) {
+        this.fbUsuarioXCiaList = fbUsuarioXCiaList;
     }
     
 }

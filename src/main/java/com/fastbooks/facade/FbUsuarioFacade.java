@@ -119,7 +119,7 @@ public class FbUsuarioFacade extends AbstractFacade<FbUsuario> {
     String res = "";
         try {
             Connection cn = em.unwrap(java.sql.Connection.class);//Conn EM
-            CallableStatement cs = cn.prepareCall("{call HOLOGRAM.PROCS_FASTBOOKS.PR_ACT_USUARIO (?,?,?,?,?,?,?,?,?,?,?)}"); //llamada al PR
+            CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_USUARIO (?,?,?,?,?,?,?,?,?,?,?)}"); //llamada al PR
             cs.setInt(1, Integer.parseInt(String.valueOf(user.getIdUsuario())));
             cs.setString(2, user.getEmail());
             cs.setInt(3, Integer.parseInt(String.valueOf(com.getIdCia())));
