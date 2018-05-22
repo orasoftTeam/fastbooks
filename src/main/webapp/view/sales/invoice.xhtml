@@ -88,8 +88,8 @@
                         <bnu:selectOneMenu label="#{messages.lblType}" style="width: 150px;margin: 10px" value="#{invoiceTableController.FType}" >
                             <f:selectItem itemValue="0" itemLabel="#{messages.selectOne}"  />
                             <f:selectItem itemLabel="#{messages.invoice}" itemValue="IN" />
-                            <!--<f:selectItem itemLabel="Dos"/>
-                            <f:selectItem itemLabel="Tres"/>-->
+                            <f:selectItem itemLabel="#{messages.lblEstimate}" itemValue="ES" />
+                            <!--<f:selectItem itemLabel="Tres"/>-->
                         </bnu:selectOneMenu><br></br>
                         <bnu:selectOneMenu label="#{messages.lblInvoiceStatus}" style="width: 150px;margin: 10px"  value="#{invoiceTableController.FStatus}" >
                             <f:selectItem itemValue="0" itemLabel="#{messages.selectOne}"  />
@@ -131,8 +131,8 @@
                 <bnu:iconAwesome name="fa-long-arrow-down" size="2x"  style="margin-right: 15px" />
 
                 <bnu:dropButton value="#{messages.lblBatchOptions}" style="margin-bottom:15px" class="batchOptions"  >
-                    <bnu:commandButton value="#{messages.lblPrintTranc}" action="#{invoiceTableController.printTransactions(request)}" style="width: 100%" disabled="#{invoiceTableController.disableBatch('PT')}"   ></bnu:commandButton>
-                    <bnu:commandButton value="#{messages.lblPrintPackingSlip}" action="#{invoiceTableController.packingSlip(request)}" style="width: 100%" disabled="#{invoiceTableController.disableBatch('PP')}"   ></bnu:commandButton>
+                    <bnu:commandButton value="#{messages.lblPrintTranc}" action="#{invoiceTableController.printTransactions(request)}" style="width: 100%;border: none" disabled="#{invoiceTableController.disableBatch('PT')}"   ></bnu:commandButton>
+                    <bnu:commandButton value="#{messages.lblPrintPackingSlip}" action="#{invoiceTableController.packingSlip(request)}" style="width: 100%;border: none" disabled="#{invoiceTableController.disableBatch('PP')}"   ></bnu:commandButton>
 
                     <bnu:navLink value="#{messages.lblSendTranc}" href="#"></bnu:navLink>
                     <bnu:navLink value="#{messages.lblSendRemind}" ></bnu:navLink>
@@ -159,7 +159,7 @@
 
                     >
                     <bnu:dataTableColumn label="#{messages.lblInvoiceDate}"   >
-                        <bnu:selectBooleanCheckbox style="margin-right: 10px" update="@(.batchOptions)" onclick="ajax:invoiceTableController.addToInvoiceList(in.idInvoice);"  />#{in.inDate}
+                        <bnu:selectBooleanCheckbox style="margin-right: 10px" update="@(.batchOptions)" onclick="ajax:invoiceTableController.addToInvoiceList(in);"  />#{in.inDate}
                     </bnu:dataTableColumn>
                     <bnu:dataTableColumn  label="#{messages.lblType}" value="#{invoiceTableController.formatType(in.type)}" ></bnu:dataTableColumn>
                     <bnu:dataTableColumn   label="#{messages.lblInvoiceNo}"  value="#{in.noDot}" ></bnu:dataTableColumn>

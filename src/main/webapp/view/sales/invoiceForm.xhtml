@@ -75,23 +75,34 @@
                         </bnu:column>
                         <div class="updateEstimateStatus" style="display: none;" >
                             <bnu:column span="2" >
-                            <bnu:inputText label="By" maxlength="30"  value="#{invoiceController.accBy}" />
+                                <bnu:inputText label="By" maxlength="30"  value="#{invoiceController.accBy}" />
                             </bnu:column>
                             <bnu:column span="2"  >
-                            <strong>
-                                <h:outputText value="Date"  />
+                                <strong>
+                                    <h:outputText value="Date"  />
 
-                            </strong>
-                            <bnu:datepicker value="#{invoiceController.accDate}"    />
+                                </strong>
+                                <bnu:datepicker value="#{invoiceController.accDate}"    />
                             </bnu:column>
                         </div>
-                        
 
-                        
-                        
 
-                        
+
+
+
+
                     </bnu:row>
+                    <bnu:row rendered="#{invoiceController.copy}" >
+                        <bnu:column span="8">
+                            <bnu:alert severity="info" title="This is a copy" >
+                                #{messages.lblCopy1} #{invoiceController.title}. #{messages.lblCopy2} #{invoiceController.title}.  
+                            </bnu:alert >
+
+                        </bnu:column>
+
+                    </bnu:row>
+
+
                     <bnu:row>
                         <bnu:column span="4">
                             <bnu:inputTextarea label="#{messages.billingA}" maxlength="250" value="#{invoiceController.biAddress}" onblur="ajax:invoiceController.didUserTouchForm();" />
@@ -813,16 +824,16 @@
             } 
 
 
-             function show(value){
-        
-        if(value == "PE"){
-        $(".updateEstimateStatus").hide();
-        //alert(value);
-        }else{
-        $(".updateEstimateStatus").show();
-        //alert(value);
-        }
-        }
+            function show(value){
+
+            if(value == "PE"){
+            $(".updateEstimateStatus").hide();
+            //alert(value);
+            }else{
+            $(".updateEstimateStatus").show();
+            //alert(value);
+            }
+            }
 
 
         </h:outputScript>

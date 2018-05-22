@@ -12,6 +12,7 @@ import com.fastbooks.modelo.FbInvoice;
 import com.fastbooks.util.GlobalParameters;
 import com.fastbooks.util.SendMails;
 import com.fastbooks.util.ValidationBean;
+import com.fastbooks.util.WriteXMLFile;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -100,7 +101,7 @@ public class InvoiceController implements Serializable {
     String fDate = "0";
     private @Getter
     @Setter
-    List<String> idInvoices = new ArrayList<>();
+    List<FbInvoice> idInvoices = new ArrayList<>();
     private @Getter
     @Setter
     FbInvoice currenInvoice;
@@ -131,6 +132,8 @@ public class InvoiceController implements Serializable {
         try {
             if (this.userData.getInvoiceSql().equals("0")) {
                 iList = iFacade.getInvoicesByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+                WriteXMLFile xml = new WriteXMLFile();
+                xml.crearXML(iList);
                 DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
                 Calendar cal = Calendar.getInstance();
                 this.fFrom = dateFormat.format(cal.getTime());
@@ -404,10 +407,10 @@ public class InvoiceController implements Serializable {
         return flag;
     }
 
-    public void addToInvoiceList(String idInvoice) {
+    public void addToInvoiceList(FbInvoice idInvoice) {
         int c = 0;
-        for (String str : idInvoices) {
-            if (str.equals(idInvoice)) {
+        for (FbInvoice str : idInvoices) {
+            if (str.getIdInvoice().toString().equals(idInvoice.getIdInvoice().toString())) {
                 c++;
             }
         }
@@ -416,7 +419,7 @@ public class InvoiceController implements Serializable {
             idInvoices.add(idInvoice);
         } else {
             for (int i = 0; i < idInvoices.size(); i++) {
-                if (idInvoices.get(i).equals(idInvoice)) {
+                if (idInvoices.get(i).getIdInvoice().toString().equals(idInvoice.getIdInvoice().toString())) {
                     idInvoices.remove(i);
                 }
             }
@@ -485,7 +488,16 @@ public class InvoiceController implements Serializable {
         } else if (op.equals("PP")) {
             if (!idInvoices.isEmpty()) {
                 flag = false;
+                for (FbInvoice fbInvoice : idInvoices) {
+                    if (fbInvoice.getType().equals("ES")) {
+                        flag = true;
+                    }
+                }
             }
+            
+                
+            
+            
         }
 
         return flag;

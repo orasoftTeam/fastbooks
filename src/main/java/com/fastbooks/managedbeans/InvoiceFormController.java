@@ -25,6 +25,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import javax.ejb.EJB;
@@ -190,6 +191,9 @@ public class InvoiceFormController implements Serializable {
     boolean modStay = false;
     private @Getter
     @Setter
+    boolean copy = false;
+    private @Getter
+    @Setter
     boolean isFormTouched = false;
     private @Getter
     @Setter
@@ -206,6 +210,9 @@ public class InvoiceFormController implements Serializable {
     private @Getter
     @Setter
     String AccDate;
+    private @Getter
+    @Setter
+    String invoiceStatus = "OP";
 
     public InvoiceFormController() {
     }
@@ -858,7 +865,21 @@ public class InvoiceFormController implements Serializable {
                         in.setTaxTotal(rTaxTotal);
 
                         if (type.equals("IN")) {
-                            in.setStatus("OP");//aqui 
+                            
+                            Date date = null;
+                            try {
+                                date = sdf.parse(this.dueDate);
+                            } catch (Exception e) {
+                                date = sd.parse(this.dueDate);
+                            }
+
+                            if (date.before(new Date())) {
+                                this.invoiceStatus = "OV";
+                            } else {
+                                this.invoiceStatus = "OP";
+                            }
+
+                            in.setStatus(this.invoiceStatus);//aqui 
                         } else if (type.equals("ES")) {
                             in.setStatus(this.estimateStatus);//aqui 
                             if (this.estimateStatus.equals("PE")) {
@@ -1058,11 +1079,26 @@ public class InvoiceFormController implements Serializable {
                         this.validationBean.ejecutarJavascript("show('" + in.getStatus() + "');");
 
                     }
+                } else if (in.getType().equals("IN")) {
+                    this.invoiceStatus = in.getStatus();
                 }
                 mod = true;
                 if (!in.getNoDot().equals("copy")) {
-                    
+
                     modStay = true;
+
+                } else {
+                    copy = true;
+                    DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                    Calendar cal = Calendar.getInstance();
+                    invoiceDate = dateFormat.format(cal.getTime());
+                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+
+                    Calendar c = Calendar.getInstance();
+                    c.setTime(sdf.parse(this.invoiceDate));
+                    c.add(Calendar.DATE, Integer.parseInt(this.termDays));
+                    //dt.plusDays(Integer.parseInt(this.termDays));
+                    this.dueDate = sdf.format(c.getTime());
                 }
 
                 updateTotal();
