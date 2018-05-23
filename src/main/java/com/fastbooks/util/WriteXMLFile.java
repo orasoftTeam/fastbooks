@@ -6,6 +6,7 @@
 package com.fastbooks.util;
 import com.fastbooks.modelo.FbInvoice;
 import com.fastbooks.modelo.FbInvoiceDetail;
+import com.fastbooks.modelo.FbInvoiceTaxes;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
@@ -235,7 +236,7 @@ public class WriteXMLFile {
                 
                 
                 org.w3c.dom.Element terms = doc.createElement("terms");
-                terms.appendChild(doc.createTextNode(String.valueOf(in.getShAddress())));
+                terms.appendChild(doc.createTextNode(String.valueOf(in.getTerms())));
                 invoice.appendChild(terms);
                 
                 org.w3c.dom.Element trackNum = doc.createElement("trackNum");
@@ -285,7 +286,7 @@ public class WriteXMLFile {
                     org.w3c.dom.Element fbDetail = doc.createElement("FbInvoiceDetail");
                     
                     org.w3c.dom.Element idIn= doc.createElement("idIn");
-                    idIn.appendChild(doc.createTextNode(String.valueOf(det.getIdInvoice() )));
+                    idIn.appendChild(doc.createTextNode(String.valueOf(det.getIdInvoice().getIdInvoice() )));
                     fbDetail.appendChild(idIn);
                     
                     
@@ -313,6 +314,14 @@ public class WriteXMLFile {
                     rate.appendChild(doc.createTextNode(String.valueOf(det.getItemRate() )));
                     fbDetail.appendChild(rate);
                     
+                    org.w3c.dom.Element amount = doc.createElement("amount");
+                    amount.appendChild(doc.createTextNode(String.valueOf(det.getItemAmount() )));
+                    fbDetail.appendChild(amount);
+                    
+                    org.w3c.dom.Element tax = doc.createElement("tax");
+                    tax.appendChild(doc.createTextNode(String.valueOf(det.getItemTax() )));
+                    fbDetail.appendChild(tax);
+                    
                     fbDetails.appendChild(fbDetail);
                 }
                 
@@ -321,13 +330,40 @@ public class WriteXMLFile {
                 
                 invoice.appendChild(fbDetails);
                 
-               /* org.w3c.dom.Element nomdepto = doc.createElement("nomdepto");
-                nomdepto.appendChild(doc.createTextNode(String.valueOf(dg.getNomdepto())));
-                Details.appendChild(nomdepto);
-
-                org.w3c.dom.Element nompartido = doc.createElement("nompartido");
-                nompartido.appendChild(doc.createTextNode(String.valueOf(dg.getNompartido())));
-                Details.appendChild(nompartido);*/
+                org.w3c.dom.Element fbTaxes = doc.createElement("FbInvoiceTaxes");
+                
+                
+                for (FbInvoiceTaxes tax : in.getFbInvoiceTaxesList()) {
+                    org.w3c.dom.Element fbTax = doc.createElement("FbInvoiceTax");
+                    
+                    org.w3c.dom.Element idInvoiceTax = doc.createElement("idInvoiceTax");
+                    idInvoiceTax.appendChild(doc.createTextNode(String.valueOf(tax.getIdInvoice().getIdInvoice() )));
+                    fbTax.appendChild(idInvoiceTax);
+                    
+                    org.w3c.dom.Element idTax = doc.createElement("idTax");
+                    idTax.appendChild(doc.createTextNode(String.valueOf(tax.getIdTax().getIdTax() )));
+                    fbTax.appendChild(idTax);
+                    
+                    org.w3c.dom.Element fromAmount = doc.createElement("fromAmount");
+                    fromAmount.appendChild(doc.createTextNode(String.valueOf(tax.getFromAmount() )));
+                    fbTax.appendChild(fromAmount);
+                    
+                    org.w3c.dom.Element taxAmount = doc.createElement("taxAmount");
+                    taxAmount.appendChild(doc.createTextNode(String.valueOf(tax.getTaxAmount() )));
+                    fbTax.appendChild(taxAmount);
+                    
+                    org.w3c.dom.Element idProds = doc.createElement("idProds");
+                    idProds.appendChild(doc.createTextNode(String.valueOf(tax.getIdProds())));
+                    fbTax.appendChild(idProds);
+                    
+                    
+                    fbTaxes.appendChild(fbTax);
+                }
+                
+                
+                
+                invoice.appendChild(fbTaxes);
+               
             }
 
             TransformerFactory tranFactory = TransformerFactory.newInstance();

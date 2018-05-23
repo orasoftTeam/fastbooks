@@ -16,6 +16,7 @@ import com.fastbooks.modelo.FbInvoiceDetail;
 import com.fastbooks.modelo.FbInvoiceTaxes;
 import com.fastbooks.modelo.FbProduct;
 import com.fastbooks.modelo.FbTax;
+import com.fastbooks.modelo.PaymentMethod;
 import com.fastbooks.modelo.Terms;
 import com.fastbooks.util.ValidationBean;
 import java.io.Serializable;
@@ -83,6 +84,11 @@ public class InvoiceFormController implements Serializable {
     private @Getter
     @Setter
     List<FbInvoiceTaxes> taxesModList = new ArrayList<>();
+    
+    private @Getter
+    @Setter
+    List<PaymentMethod> pMethodList = new ArrayList<>();
+    
     private @Getter
     @Setter
     FbCustomer currentCust;
@@ -229,10 +235,23 @@ public class InvoiceFormController implements Serializable {
     public void init() {
         try {//this.userData.getCurrentCia().getIdCia().toString()
             type = this.userData.getInvoiceTypeForm();
-            if (type.equals("IN")) {
-                title = this.validationBean.getMsgBundle("lblInvoiceTypeIn");
-            } else if (type.equals("ES")) {
-                title = this.validationBean.getMsgBundle("lblEstimate");
+            switch (type) {
+                case "IN":
+                    title = this.validationBean.getMsgBundle("lblInvoiceTypeIn");
+                    break;
+                case "ES":
+                    title = this.validationBean.getMsgBundle("lblEstimate");
+                    break;
+                case "SR":
+                    title = this.validationBean.getMsgBundle("salesR");
+                    if (this.pMethodList.isEmpty()) {
+                        this.pMethodList.add(new PaymentMethod("1", "", this.validationBean.getMsgBundle("lblCash")));
+                        this.pMethodList.add(new PaymentMethod("2", "", this.validationBean.getMsgBundle("lblCreditCard")));
+                        this.pMethodList.add(new PaymentMethod("3", "", this.validationBean.getMsgBundle("lblDirectDebit")));
+                        this.pMethodList.add(new PaymentMethod("4", "", this.validationBean.getMsgBundle("lblCheque")));
+                    }   break;
+                default:
+                    break;
             }
             cList = cFacade.getCustomersByIdCia(this.userData.getCurrentCia().getIdCia().toString());
             pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
@@ -864,38 +883,41 @@ public class InvoiceFormController implements Serializable {
                         in.setTotal(rTotal);
                         in.setTaxTotal(rTaxTotal);
 
-                        if (type.equals("IN")) {
-                            
-                            Date date = null;
-                            try {
-                                date = sdf.parse(this.dueDate);
-                            } catch (Exception e) {
-                                date = sd.parse(this.dueDate);
-                            }
-
-                            if (date.before(new Date())) {
-                                this.invoiceStatus = "OV";
-                            } else {
-                                this.invoiceStatus = "OP";
-                            }
-
-                            in.setStatus(this.invoiceStatus);//aqui 
-                        } else if (type.equals("ES")) {
-                            in.setStatus(this.estimateStatus);//aqui 
-                            if (this.estimateStatus.equals("PE")) {
-                                in.setEsAccby("");
-                                in.setEsAccdate("");
-                            } else {
-                                in.setEsAccby(AccBy);
-
+                        switch (type) {
+                            case "IN":
+                                Date date = null;
                                 try {
-                                    in.setEsAccdate(sdf.format(sd.parse(AccDate)));
+                                    date = sdf.parse(this.dueDate);
                                 } catch (Exception e) {
+                                    date = sd.parse(this.dueDate);
+                                }   if (date.before(new Date())) {
+                                    this.invoiceStatus = "OV";
+                                } else {
+                                    this.invoiceStatus = "OP";
+                                }   in.setStatus(this.invoiceStatus);//aqui 
+                                break;
+                            case "ES":
+                                in.setStatus(this.estimateStatus);//aqui 
+                                if (this.estimateStatus.equals("PE")) {
+                                    in.setEsAccby("");
                                     in.setEsAccdate("");
-
-                                }
-
-                            }
+                                } else {
+                                    in.setEsAccby(AccBy);
+                                    
+                                    try {
+                                        in.setEsAccdate(sdf.format(sd.parse(AccDate)));
+                                    } catch (Exception e) {
+                                        in.setEsAccdate("");
+                                        
+                                    }
+                                    
+                                }   break;
+                            case "SR":
+                                in.setStatus("PD");
+                                in.setDueDate(this.invoiceDate);
+                                break;
+                            default:
+                                break;
                         }
 
                         in.setBiAddress(biAddress);

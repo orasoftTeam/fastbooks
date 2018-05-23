@@ -116,12 +116,13 @@
                         </bnu:column>
                         <bnu:column span="2">
                             <strong>
+                                <h:outputText value="#{messages.lblSalesReceiptDate}" rendered="#{invoiceController.showSegunType('SR')}" />
                                 <h:outputText value="#{messages.lblInvoiceInDate}" rendered="#{invoiceController.showSegunType('IN')}" />
                                 <h:outputText value="#{messages.lblEstimateDate}" rendered="#{invoiceController.showSegunType('ES')}" />
                             </strong>
                             <bnu:datepicker style="margin-top: 4px;" value="#{invoiceController.invoiceDate}" ></bnu:datepicker>
                         </bnu:column>
-                        <bnu:column span="2">
+                        <bnu:column span="2"  rendered="#{invoiceController.showSegunType('IN') || invoiceController.showSegunType('ES')}" >
                             <strong>
                                 <h:outputText value="#{messages.lblIncoiceDueDate}" rendered="#{invoiceController.showSegunType('IN')}" />
                                 <h:outputText value="#{messages.lblEstimateExpDate}" rendered="#{invoiceController.showSegunType('ES')}" />
@@ -146,7 +147,18 @@
                         </bnu:column>
                     </bnu:row>
                 </h:panelGroup>
-
+                
+                <bnu:row  rendered="#{invoiceController.showSegunType('SR')}">
+                    <bnu:column span="4" >
+                        <bnu:selectOneMenu label="#{messages.lblPaymentMethod}">
+                            <f:selectItems value="#{invoiceController.PMethodList}" var="pm"
+                                           itemValue="#{pm.display}" itemLabel="#{pm.display}" />
+                        </bnu:selectOneMenu>
+                    </bnu:column>
+                    <bnu:column span="4" >
+                        <bnu:inputText label="#{messages.lblReferenceNo}" onkeyup="soloNumeros(this);" maxlength="20" />
+                    </bnu:column>
+                </bnu:row>
 
 
 

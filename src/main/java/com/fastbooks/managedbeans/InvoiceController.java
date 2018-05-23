@@ -132,8 +132,8 @@ public class InvoiceController implements Serializable {
         try {
             if (this.userData.getInvoiceSql().equals("0")) {
                 iList = iFacade.getInvoicesByIdCia(this.userData.getCurrentCia().getIdCia().toString());
-                WriteXMLFile xml = new WriteXMLFile();
-                xml.crearXML(iList);
+                /*WriteXMLFile xml = new WriteXMLFile();
+                xml.crearXML(iList);*/
                 DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
                 Calendar cal = Calendar.getInstance();
                 this.fFrom = dateFormat.format(cal.getTime());
@@ -164,6 +164,8 @@ public class InvoiceController implements Serializable {
             res = this.validationBean.getMsgBundle("lblInvoiceTypeIn");
         } else if (t.equals("ES")) {
             res = this.validationBean.getMsgBundle("lblEstimate");
+        } else if (t.equals("SR")) {
+            res = this.validationBean.getMsgBundle("salesR");
         }
 
         return res;
@@ -201,6 +203,10 @@ public class InvoiceController implements Serializable {
                 break;
             case "RJ":
                 res = this.validationBean.getMsgBundle("lblRejected");
+                break;
+
+            case "PD":
+                res = this.validationBean.getMsgBundle("lblPaid");
                 break;
 
             default:
@@ -250,7 +256,7 @@ public class InvoiceController implements Serializable {
         this.userData.setInvoiceTypeForm(in.getType());
         this.validationBean.redirecionar("/view/sales/invoiceForm.xhtml");
     }
-    
+
     public void copy(FbInvoice in) {
         in.setIdInvoice(BigDecimal.ZERO);
         in.setNoDot("copy");
@@ -293,7 +299,7 @@ public class InvoiceController implements Serializable {
                 break;
             case "COPY":
                 flag = true;
-                break;    
+                break;
 
             default:
                 System.out.println("You do nutin");
@@ -494,10 +500,7 @@ public class InvoiceController implements Serializable {
                     }
                 }
             }
-            
-                
-            
-            
+
         }
 
         return flag;
@@ -514,25 +517,24 @@ public class InvoiceController implements Serializable {
         this.validationBean.ejecutarJavascript(exp);
     }
 
-    public void updateEstimateStatus()  {
+    public void updateEstimateStatus() {
 
         currenInvoice.setStatus(this.estimateStatus);
         if (this.estimateStatus.equals("PE")) {
             currenInvoice.setEsAccby("");
             currenInvoice.setEsAccdate("");
-        }else{
-        currenInvoice.setEsAccby(AccBy);
-        
+        } else {
+            currenInvoice.setEsAccby(AccBy);
+
             try {
-                 currenInvoice.setEsAccdate(sdf.format(sd.parse(AccDate)));
+                currenInvoice.setEsAccdate(sdf.format(sd.parse(AccDate)));
             } catch (Exception e) {
                 currenInvoice.setEsAccdate("");
-                
+
             }
-            
-        
+
         }
-        
+
         String res = this.iFacade.actInvoice(currenInvoice, "U");
         if (res.equals("0")) {
             this.userData.setUses("lblEsUpdateSuccess");
