@@ -310,19 +310,19 @@ public class InvoiceFormController implements Serializable {
                         }
 
                         shAddress = "";
-                        if (currentCust.getStreet() != null) {
+                        if (currentCust.getStreetS() != null) {
                             shAddress += currentCust.getStreetS() + " ";
                         }
-                        if (currentCust.getPostalCode() != null) {
+                        if (currentCust.getPostalCodeS() != null) {
                             shAddress += currentCust.getPostalCodeS() + " ";
                         }
-                        if (currentCust.getCity() != null) {
+                        if (currentCust.getCityS() != null) {
                             shAddress += currentCust.getCityS() + " ";
                         }
-                        if (currentCust.getEstate() != null) {
+                        if (currentCust.getEstateS() != null) {
                             shAddress += currentCust.getEstateS() + " ";
                         }
-                        if (currentCust.getCountry() != null) {
+                        if (currentCust.getCountryS() != null) {
                             shAddress += currentCust.getCountryS() + ".";
                         }
 
@@ -330,6 +330,8 @@ public class InvoiceFormController implements Serializable {
                 }
                 this.didUserTouchForm();
             } else {
+                this.idCust = "0";
+                currentCust = null;
                 email = null;
                 biAddress = null;
                 shAddress = null;
@@ -852,8 +854,13 @@ public class InvoiceFormController implements Serializable {
     public void save(String op) {
         try {
             if (this.validationBean.validarSoloNumerosConPunto(this.shCost, "error", "lblInShCostFail", "blank")) {
-                if (this.currentCust != null) {
-
+                if (this.currentCust != null || type.equals("SR")) {
+                    
+                    if (this.currentCust == null) {
+                        currentCust = new FbCustomer();
+                        currentCust.setIdCust(BigDecimal.ZERO);
+                    }
+                    
                     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
                     DateFormat sd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
                     if (!this.dList.isEmpty()) {
@@ -914,7 +921,7 @@ public class InvoiceFormController implements Serializable {
                                 }   break;
                             case "SR":
                                 in.setStatus("PD");
-                                in.setDueDate(this.invoiceDate);
+                                in.setDueDate(" ");
                                 break;
                             default:
                                 break;
@@ -955,13 +962,20 @@ public class InvoiceFormController implements Serializable {
                                     message = "lblInvoiceAddSuccess";
                                 } else if (type.equals("ES")) {
                                     message = "lblEstimateAddSuccess";
-                                }
+                                }else if(type.equals("SR")) {
+                                    message = "lblSalesRAddSuccess";
+                                } 
+                                
+                                
+                                
                             } else if (op.equals("U")) {
                                 if (type.equals("IN")) {
                                     message = "lblInUpdateSuccess";
                                 } else if (type.equals("ES")) {
                                     message = "lblEsUpdateSuccess";
-                                }
+                                }else if(type.equals("SR")) {
+                                    message = "lblSalesRUpdateSuccess";
+                                } 
                             }
 
                             this.userData.setUses(message);
@@ -991,11 +1005,12 @@ public class InvoiceFormController implements Serializable {
         FbInvoice in = this.userData.getFbInvoice();
         try {
             if (in != null) {
+                this.type = in.getType();
                 this.currentCust = in.getIdCust();
-                this.idCust = in.getIdCust().getIdCust().toString();
-                this.email = in.getIdCust().getEmail();
-                this.InNo = in.getNoDot();
-                biAddress = "";
+                if (in.getIdCust() != null) {
+                    this.idCust = in.getIdCust().getIdCust().toString();
+                    this.email = in.getIdCust().getEmail();
+                     biAddress = "";
                 if (currentCust.getStreet() != null) {
                     biAddress += currentCust.getStreet() + " ";
                 }
@@ -1013,21 +1028,29 @@ public class InvoiceFormController implements Serializable {
                 }
 
                 shAddress = "";
-                if (currentCust.getStreet() != null) {
+                if (currentCust.getStreetS() != null) {
                     shAddress += currentCust.getStreetS() + " ";
                 }
-                if (currentCust.getPostalCode() != null) {
+                if (currentCust.getPostalCodeS() != null) {
                     shAddress += currentCust.getPostalCodeS() + " ";
                 }
-                if (currentCust.getCity() != null) {
+                if (currentCust.getCityS() != null) {
                     shAddress += currentCust.getCityS() + " ";
                 }
-                if (currentCust.getEstate() != null) {
+                if (currentCust.getEstateS() != null) {
                     shAddress += currentCust.getEstateS() + " ";
                 }
-                if (currentCust.getCountry() != null) {
+                if (currentCust.getCountryS() != null) {
                     shAddress += currentCust.getCountryS() + ".";
                 }
+                }else{
+                    this.idCust = "0";
+                }
+                
+                
+                
+                this.InNo = in.getNoDot();
+               
 
                 termDays = in.getTerms();
                 invoiceDate = in.getInDate();

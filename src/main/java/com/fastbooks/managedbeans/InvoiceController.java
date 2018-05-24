@@ -218,7 +218,9 @@ public class InvoiceController implements Serializable {
 
     public void print(FbInvoice i, HttpServletRequest req) {
         try {
-            this.invoiceModal = this.iFacade.generateInvoice(i, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile("report1", req), formatType(i.getType()));
+            String jasperFile = i.getIdCust() == null? "salesReceiptSinCust": "report1";
+            
+            this.invoiceModal = this.iFacade.generateInvoice(i, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile(jasperFile, req), formatType(i.getType()));
 
             //this.userData.setSInvoice(invoiceModal);
             //this.validationBean.lanzarMensajeSinBundle("error", this.invoiceModal, "");

@@ -71,7 +71,7 @@
 	<parameter name="logo" class="java.lang.String"/>
 	<parameter name="type" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select * from fb_invoice i inner join fb_invoice_detail d on d.id_invoice = i.id_invoice inner join fb_compania c on c.id_cia = i.id_cia inner join fb_customer q on q.id_cust = i.id_cust  where i.id_invoice = $P{idInvoice}]]>
+		<![CDATA[select * from fb_invoice i inner join fb_invoice_detail d on d.id_invoice = i.id_invoice inner join fb_compania c on c.id_cia = i.id_cia  where i.id_invoice = $P{idInvoice}]]>
 	</queryString>
 	<field name="ID_INVOICE" class="java.math.BigDecimal"/>
 	<field name="ID_CIA" class="java.math.BigDecimal"/>
@@ -121,36 +121,6 @@
 	<field name="WEBSITE" class="java.lang.String"/>
 	<field name="ID_DIRECCION" class="java.math.BigDecimal"/>
 	<field name="TELEFONO" class="java.lang.String"/>
-	<field name="TITLE" class="java.lang.String"/>
-	<field name="FIRSTNAME" class="java.lang.String"/>
-	<field name="MIDDLENAME" class="java.lang.String"/>
-	<field name="LASTNAME" class="java.lang.String"/>
-	<field name="SUFFIXX" class="java.lang.String"/>
-	<field name="COMPANY" class="java.lang.String"/>
-	<field name="PHONE" class="java.lang.String"/>
-	<field name="MOBILE" class="java.lang.String"/>
-	<field name="FAX" class="java.lang.String"/>
-	<field name="DISPLAY_NAME" class="java.lang.String"/>
-	<field name="WEBSIDE" class="java.lang.String"/>
-	<field name="ID_DIR_SHIP" class="java.math.BigDecimal"/>
-	<field name="NOTE" class="oracle.jdbc.OracleClob"/>
-	<field name="ATACHMENT" class="java.lang.String"/>
-	<field name="STREET" class="oracle.jdbc.OracleClob"/>
-	<field name="CITY" class="java.lang.String"/>
-	<field name="ESTATE" class="java.lang.String"/>
-	<field name="POSTAL_CODE" class="java.lang.String"/>
-	<field name="COUNTRY" class="java.lang.String"/>
-	<field name="STREET_S" class="oracle.jdbc.OracleClob"/>
-	<field name="CITY_S" class="java.lang.String"/>
-	<field name="ESTATE_S" class="java.lang.String"/>
-	<field name="POSTAL_CODE_S" class="java.lang.String"/>
-	<field name="COUNTRY_S" class="java.lang.String"/>
-	<field name="BALANCE" class="java.math.BigDecimal"/>
-	<field name="TAXREGNO" class="java.lang.String"/>
-	<field name="PAYMENT_METHOD" class="java.lang.String"/>
-	<field name="DELIVERY_METHOD" class="java.lang.String"/>
-	<field name="AS_OF" class="java.lang.String"/>
-	<field name="BILL_CUSTOMER" class="java.lang.String"/>
 	<group name="NO_DOT">
 		<groupExpression><![CDATA[$F{NO_DOT}]]></groupExpression>
 	</group>
@@ -169,25 +139,9 @@
 					<rightPen lineWidth="1.25"/>
 				</box>
 				<textField>
-					<reportElement x="14" y="68" width="100" height="20" uuid="6d46ea40-7c19-4140-b7b3-439337cea7af"/>
+					<reportElement x="14" y="7" width="257" height="57" forecolor="#3399FF" uuid="b4261834-0e41-4369-b4a0-32654722f937"/>
 					<textElement>
-						<font size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{COMPANY}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement x="399" y="65" width="100" height="20" uuid="28d5dc18-4f60-4ca1-897a-03435353e9f0">
-						<printWhenExpression><![CDATA[$F{TYPE} != "SR"]]></printWhenExpression>
-					</reportElement>
-					<textElement>
-						<font size="12" isBold="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{TERMS}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement x="14" y="7" width="197" height="21" forecolor="#3399FF" uuid="b4261834-0e41-4369-b4a0-32654722f937"/>
-					<textElement>
-						<font size="16" isBold="true"/>
+						<font size="20" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{type}]]></textFieldExpression>
 				</textField>
@@ -227,25 +181,11 @@
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="229" y="17" width="233" height="26" uuid="096408fc-e267-463b-91dc-6767145e0df6"/>
+				<reportElement x="252" y="47" width="233" height="26" uuid="096408fc-e267-463b-91dc-6767145e0df6"/>
 				<textElement>
 					<font size="16" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{NOM_LEG}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="229" y="64" width="142" height="19" uuid="948f0b65-ef3e-4ef4-a359-cbc923a1a801"/>
-				<textElement>
-					<font size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{WEBSIDE}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="229" y="83" width="142" height="20" uuid="99346fbd-4393-497d-9fd0-9f26b0ebd922"/>
-				<textElement>
-					<font size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{EMAIL}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="322" y="124" width="100" height="20" forecolor="#000000" uuid="12f53fe6-4a69-490b-914e-cefeed4400b2"/>
@@ -261,15 +201,6 @@
 				</textElement>
 				<text><![CDATA[DATE:]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="322" y="164" width="100" height="20" forecolor="#000000" uuid="27529c59-2a3b-4f73-b625-d5cc797e1f14">
-					<printWhenExpression><![CDATA[$F{TYPE} != "SR"]]></printWhenExpression>
-				</reportElement>
-				<textElement>
-					<font size="12" isBold="true"/>
-				</textElement>
-				<text><![CDATA[DUE DATE:]]></text>
-			</staticText>
 			<textField>
 				<reportElement x="399" y="123" width="123" height="33" uuid="26acbc41-6958-477c-8039-85f74f895eee"/>
 				<textElement>
@@ -278,54 +209,11 @@
 				<textFieldExpression><![CDATA[$F{NO_DOT}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="399" y="164" width="100" height="20" uuid="038b3952-c8da-42ed-8465-08b5d2ca9f71">
-					<printWhenExpression><![CDATA[$F{TYPE} != "SR"]]></printWhenExpression>
-				</reportElement>
-				<textElement>
-					<font size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{DUE_DATE}]]></textFieldExpression>
-			</textField>
-			<textField>
 				<reportElement x="399" y="144" width="100" height="20" uuid="2bb366d2-0957-4ea0-8320-ef0da436cefc"/>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{IN_DATE}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="14" y="144" width="100" height="20" forecolor="#000000" uuid="0b09496f-c3f3-4e67-8956-bfd96ba31e07"/>
-				<textElement>
-					<font size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-				</textElement>
-				<text><![CDATA[BILL TO:]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="14" y="164" width="100" height="20" uuid="5dab9495-d189-4dea-a32e-898490c47cc4"/>
-				<textElement>
-					<font size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{FIRSTNAME}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="229" y="44" width="60" height="20" uuid="ce904a00-08fc-4fad-8bbe-c4fd3520d9bd"/>
-				<textFieldExpression><![CDATA[$F{CITY}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="289" y="44" width="64" height="20" uuid="9bc03ee0-5bcb-42dc-a255-6629ce15b71f"/>
-				<textFieldExpression><![CDATA[$F{ESTATE}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="422" y="44" width="100" height="20" uuid="14cdc74f-c6ab-4d93-a237-f8b2e86578de"/>
-				<textFieldExpression><![CDATA[$F{POSTAL_CODE}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="371" y="83" width="100" height="20" uuid="6e3bfc28-4f02-40f1-b03d-da5dc474d782"/>
-				<textFieldExpression><![CDATA[$F{PHONE}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="353" y="44" width="100" height="20" uuid="0bc825b2-f10b-4829-9d5a-a296e6a9b103"/>
-				<textFieldExpression><![CDATA[$F{COUNTRY}]]></textFieldExpression>
 			</textField>
 			<frame>
 				<reportElement x="0" y="17" width="211" height="86" uuid="75e67538-aa76-4f6b-a2f5-198a9831a4d6"/>
@@ -337,19 +225,6 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 			</frame>
-			<textField>
-				<reportElement x="114" y="164" width="100" height="17" uuid="73d41cb3-65f5-4399-98d3-9b97de53ac3e"/>
-				<textFieldExpression><![CDATA[$F{LASTNAME}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="322" y="181" width="100" height="20" forecolor="#000000" uuid="a48229a6-b761-473d-9ced-1447ae890056">
-					<printWhenExpression><![CDATA[$F{TYPE} != "SR"]]></printWhenExpression>
-				</reportElement>
-				<textElement>
-					<font size="12" isBold="true"/>
-				</textElement>
-				<text><![CDATA[TERMS:]]></text>
-			</staticText>
 		</band>
 	</title>
 	<columnHeader>
@@ -455,32 +330,6 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$F{SHCOST_TAX_NAME}]]></textFieldExpression>
 				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="44" y="102" width="100" height="20" uuid="4e1494d2-e61b-4e36-b708-8047183a7e1b"/>
-					<textFieldExpression><![CDATA[$F{ES_ACCBY}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="44" y="122" width="100" height="20" uuid="6809a677-5fcf-4d1b-93d2-f08bd32c67c3"/>
-					<textFieldExpression><![CDATA[$F{ES_ACCDATE}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="6" y="102" width="100" height="20" uuid="45c85f80-42be-4bd0-b0cc-05efacf77001">
-						<printWhenExpression><![CDATA[$F{ES_ACCBY} != null]]></printWhenExpression>
-					</reportElement>
-					<textElement>
-						<font size="12" isBold="true"/>
-					</textElement>
-					<text><![CDATA[By]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="6" y="122" width="100" height="20" uuid="f37daf24-eb55-44db-a149-e350358ff504">
-						<printWhenExpression><![CDATA[$F{ES_ACCBY} != null]]></printWhenExpression>
-					</reportElement>
-					<textElement>
-						<font size="12" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Date]]></text>
-				</staticText>
 			</frame>
 			<frame>
 				<reportElement mode="Opaque" x="406" y="103" width="138" height="20" backcolor="#F0F380" uuid="521f8bef-82b7-4c91-a898-5d07792b327e"/>
