@@ -250,6 +250,9 @@ public class InvoiceFormController implements Serializable {
                         this.pMethodList.add(new PaymentMethod("3", "", this.validationBean.getMsgBundle("lblDirectDebit")));
                         this.pMethodList.add(new PaymentMethod("4", "", this.validationBean.getMsgBundle("lblCheque")));
                     }   break;
+                    case "CN":
+                    title = this.validationBean.getMsgBundle("creditN");
+                    break;
                 default:
                     break;
             }
