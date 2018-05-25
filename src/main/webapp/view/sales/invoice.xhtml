@@ -24,10 +24,11 @@
             <bnu:column large-screen="2" medium-screen="1" small-screen="12" tiny-screen="12">
                 <bnu:dropButton value="#{messages.lblNewTrans}"  look="success" style="margin-top:20px;" >
                     <bnu:commandButton value="#{messages.lblInvoiceTypeIn}"  action="#{invoiceTableController.setType('IN','/view/sales/invoiceForm.xhtml' )}" style="width: 100%; border: none" />
+                    <bnu:commandButton value="#{messages.lblPayment}"   style="width: 100%; border: none" />
                     <bnu:commandButton value="#{messages.lblEstimate}"  action="#{invoiceTableController.setType('ES','/view/sales/invoiceForm.xhtml' )}" style="width: 100%; border: none" />
                     <bnu:commandButton value="#{messages.salesR}"  action="#{invoiceTableController.setType('SR','/view/sales/invoiceForm.xhtml' )}" style="width: 100%; border: none" />
-                    <bnu:commandButton value="#{messages.creditN}"  action="#{invoiceTableController.setType('CN','/view/sales/invoiceForm.xhtml' )}" style="width: 100%; border: none" />
-<!--   <bnu:navLink value="#{messages.lblPayment}" href="#{request.contextPath}/view/sales/payments/receivePayment.xhtml" ></bnu:navLink>
+                  <!-- 
+   <bnu:navLink value="#{messages.lblPayment}" href="#{request.contextPath}/view/sales/payments/receivePayment.xhtml" ></bnu:navLink>
 
  <bnu:navLink value="Sales Receipt"></bnu:navLink>
  <bnu:navLink value="Credit Note"></bnu:navLink>
