@@ -58,6 +58,17 @@ import javax.xml.bind.annotation.XmlTransient;
 public class FbInvoice implements Serializable {
 
     @Size(max = 50)
+    @Column(name = "PAY_METHOD")
+    private String payMethod;
+    @Size(max = 50)
+    @Column(name = "PAY_REFERENCE_NO")
+    private String payReferenceNo;
+    @OneToMany(mappedBy = "idPayment")
+    private List<FbPaymentDetail> fbPaymentDetailList;
+    @OneToMany(mappedBy = "idInvoice")
+    private List<FbPaymentDetail> fbPaymentDetailList1;
+
+    @Size(max = 50)
     @Column(name = "ES_ACCBY")
     private String esAccby;
     @Size(max = 50)
@@ -426,6 +437,40 @@ public class FbInvoice implements Serializable {
 
     public void setEsAccdate(String esAccdate) {
         this.esAccdate = esAccdate;
+    }
+
+    public String getPayMethod() {
+        return payMethod;
+    }
+
+    public void setPayMethod(String payMethod) {
+        this.payMethod = payMethod;
+    }
+
+    public String getPayReferenceNo() {
+        return payReferenceNo;
+    }
+
+    public void setPayReferenceNo(String payReferenceNo) {
+        this.payReferenceNo = payReferenceNo;
+    }
+
+    @XmlTransient
+    public List<FbPaymentDetail> getFbPaymentDetailList() {
+        return fbPaymentDetailList;
+    }
+
+    public void setFbPaymentDetailList(List<FbPaymentDetail> fbPaymentDetailList) {
+        this.fbPaymentDetailList = fbPaymentDetailList;
+    }
+
+    @XmlTransient
+    public List<FbPaymentDetail> getFbPaymentDetailList1() {
+        return fbPaymentDetailList1;
+    }
+
+    public void setFbPaymentDetailList1(List<FbPaymentDetail> fbPaymentDetailList1) {
+        this.fbPaymentDetailList1 = fbPaymentDetailList1;
     }
     
 }

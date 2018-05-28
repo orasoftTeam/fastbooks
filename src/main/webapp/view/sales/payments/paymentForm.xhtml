@@ -11,246 +11,175 @@
         <title>Fastbooks</title>
     </h:head>
     <h:body>
-        
-        <h:form id="invoiceForm">
-            <bnu:commandButton value="aja" action="#{paymentController.init()} " />
+        <h:form id="paymentForm" >
             <bnu:container styleClass="marco">
-        #{paymentController.init()}        
-        #{paymentController.assign()}
-        #{paymentController.parseDates()}
-        
-        <bnu:row>
-            <bnu:column span="12">
-                <h3>Receive Payment  </h3>
-                
-            </bnu:column>
-            
-            
-        </bnu:row>
                 <bnu:row>
-                        <bnu:column span="12">
-                            <bnu:navLink href="#{request.contextPath}/view/sales/sales.xhtml" value="#{messages.lblBackToSales}" />
+                    <bnu:column span="12">
+                        <h3>#{paymentController.title} </h3>
+
+                    </bnu:column>
+
+
+                </bnu:row> 
+                <p:separator/>
+                <h:panelGroup id="custs">
+                    <bnu:row>
+                        <bnu:column span="4">
+                            <bnu:selectOneMenu label="#{messages.lblInvocieCustomer}" value="#{paymentController.idCust}" onchange="ajax:paymentController.changeCust();" update="@form" >
+                                <f:selectItem  itemLabel="#{messages.selectOne}" itemValue="0"  />
+                                <f:selectItems value="#{paymentController.CList}" var="cust"
+                                               itemValue="#{cust.idCust}" itemLabel="#{cust.title} #{cust.firstname} #{cust.lastname}"  itemDescription="#{cust.company}" />
+                            </bnu:selectOneMenu>
+
+
+                        </bnu:column>
+                        <bnu:column span="3">
+                            <bnu:inputText label="#{messages.email}" value="#{paymentController.email}"  id="email" placeholder="Customer email" maxlength="20"  />
+
+                        </bnu:column>
+                        <bnu:column span="3">
+
+                        </bnu:column>
+                        <bnu:column span="2">
+                            <h4 style="margin-top: -5px">#{messages.lblAmountReceived}</h4>
+                            <h1 style="margin-top: -5px" >#{paymentController.DAmount}</h1>
                         </bnu:column>
                     </bnu:row>
-            <p:separator/>
-        <bnu:row>
-            <bnu:column span="4">
-                <bnu:selectOneMenu label="#{messages.lblInvocieCustomer}" value="#{paymentController.idCust}" onchange="ajax:paymentController.changeCust();" update="@form" >
-                    <f:selectItem  itemLabel="#{messages.selectOne}" itemValue="0"  />
-            <f:selectItems value="#{paymentController.CList}" var="cust"
-                           itemValue="#{cust.idCust}" itemLabel="#{cust.title} #{cust.firstname} #{cust.lastname}"  itemDescription="#{cust.company}" />
-        </bnu:selectOneMenu>
-                
-            </bnu:column>
-            <bnu:column span="3">
-                <bnu:inputText label="#{messages.email}" value="#{paymentController.email}"  id="email" placeholder="Customer email" maxlength="20" />
-            </bnu:column>
-            <bnu:column span="3">
-                
-            </bnu:column>
-            <bnu:column span="2">
-                <h4 style="margin-top: -5px">Amount Received</h4>
-                <h1 style="margin-top: -5px" >#{paymentController.DBalance}</h1>
-            </bnu:column>
-        </bnu:row>
-            <bnu:row>
-            
-          
-            <bnu:column span="2">
-                <strong><h:outputText value="Payment date"  /></strong>
-                <bnu:datepicker style="margin-top: 4px;" value="#{paymentController.invoiceDate}" ></bnu:datepicker>
-            </bnu:column>
-             
-        </bnu:row>
-            <bnu:row>
-            <bnu:column span="2">
-                <bnu:selectOneMenu label="Payment method" value="#{paymentController.termDays}" >
-                    <f:selectItem  itemLabel="#{messages.selectOne}" itemValue="0"  />
-                    <f:selectItems value="#{paymentController.TList}" var="pm"
-                                   itemLabel="#{pm.display}" itemValue="#{pm.id}" />
-                </bnu:selectOneMenu>
-            </bnu:column>
-            <bnu:column span="2">
-                <bnu:inputText label="Reference no." maxlength="15" value="#{paymentController.shVia}" />
-            </bnu:column>
-            <bnu:column span="2">
-                <bnu:selectOneMenu label="Deposit to"    >
-                   <f:selectItem  itemLabel="#{messages.selectOne}" itemValue="0"  />
-                </bnu:selectOneMenu>
-            </bnu:column>
-                <bnu:column span="4">
-                    
-                </bnu:column>
-              <bnu:column span="2">
-                  <bnu:inputText value="#{paymentController.shCost}" maxlength="6"  onblur="ajax:paymentController.updateTotal();"  update="@form" label="Amount Received" />
-                </bnu:column> 
-        </bnu:row>
-            <p:separator/>
-            <bnu:row>
-            <bnu:column span="12">
-                <bnu:messages />
-                
-            </bnu:column>
-            
-            
-        </bnu:row>
-            <bnu:row>
-                <bnu:column span="6">
-                    <bnu:selectOneMenu label="#{messages.lblProductComplete}" value="#{paymentController.idProd}" style="font-weight: bold" >
-                        <f:selectItem  itemLabel="#{messages.selectOne}" itemValue="0"  />
-                        <f:selectItems value="#{paymentController.PList}" var="prod" 
-                                       itemLabel="#{paymentController.formatProdDisplay(prod)}" itemValue="#{prod.idProd}" />
-                    </bnu:selectOneMenu>
-                    
-                </bnu:column>
-                <!--<bnu:column span="4">
-                    <bnu:inputText label="Quantity"  onkeyup="soloNumeros(this)" maxlength="4" />
-                    
-                </bnu:column>-->
-                <bnu:column span="6">
-                    <bnu:commandButton ajax="true" update="@form" value="#{messages.lblAddProductBundle}" look="success" style="margin-top: 25px;width: 100%" action="#{paymentController.addDetail()}" />
-                    
-                </bnu:column>
-            </bnu:row>
-            
-            <p:separator/>
-            <bnu:row>
-                <bnu:column span="4">
-                    <bnu:selectOneMenu  update="@form" value="#{paymentController.hasTax}" onchange="ajax:paymentController.updateTotal();" >
-                        <f:selectItem itemLabel="#{messages.lblInvoiceWTax}" itemValue="true" />
-                        <f:selectItem itemLabel="#{messages.lblInvoiceWTTax}" itemValue="false" />
-                    </bnu:selectOneMenu>
-                    
-                </bnu:column>
-            </bnu:row>
-            <bnu:row>
-                <bnu:column span="12">
-            <bnu:dataTable
-                paginated="false"
-                searching="false"
-                responsive="true"
-                id="tblDetail"
-                value="#{paymentController.DList}"
-                var="det">
-                <bnu:dataTableColumn label="#{messages.lblProductComplete}" value="#{det.itemName}" />
-                <bnu:dataTableColumn label="#{messages.lblSKU}" value="#{det.itemSku}" />
-                <bnu:dataTableColumn label="#{messages.lblDesc}" value="#{det.itemDesc}" />
-                <bnu:dataTableColumn label="#{messages.lblQuant}"  >
-                    <bnu:inputText  value="#{det.itemQuant}"  tooltip="#{paymentController.tooltipQuant(det.idProd)}" onkeyup="soloNumeros(this)" maxlength="4"   onblur="ajax:paymentController.updateTotal();"  update="@form" />
-                </bnu:dataTableColumn>
-                <bnu:dataTableColumn label="#{messages.lblInDetRate}" value="#{det.itemRate}" />
-                <bnu:dataTableColumn label="#{messages.lblInDetAmount}" value="#{paymentController.formatOutput(det.itemAmount)}" />
-                <bnu:dataTableColumn label="#{messages.lblInvoiceTax}" rendered="#{paymentController.hasTax}" >
-                    <bnu:selectOneMenu value="#{det.itemTax}" update="@form" onchange="ajax:paymentController.updateTotal();" >
-                        <f:selectItems value="#{paymentController.taxList}" var="tax" itemLabel="#{tax.name} (#{tax.rate}%)" itemValue="#{tax.idTax.toString()}" />
-                    </bnu:selectOneMenu>
-                </bnu:dataTableColumn>
-                <bnu:dataTableColumn label="" >
-                    <bnu:commandButton icon-awesome="fa-trash" value="" icon-size="lg" ajax="true" update="@form" action="#{paymentController.removeDetail(det)}"  />
-                </bnu:dataTableColumn>
-            </bnu:dataTable>
+                </h:panelGroup>
+                <bnu:row>
+                    <bnu:column span="2" >
+                        <strong>
+                            <h:outputText value="#{messages.lblPaymentDate}"  />
+
+                        </strong>
+                        <bnu:datepicker style="margin-top: 4px;" value="#{paymentController.paymentDate}" ></bnu:datepicker>
                     </bnu:column>
-            </bnu:row>
-            <p:separator/>
-            <bnu:row>
-                <bnu:column span="8" >
-                    <!--<bnu:inputTextarea label="Message displayed on invoice" />-->
-                </bnu:column>
-                <bnu:column span="2">
-                    <h4> #{messages.lblInvoiceSubTotal}</h4>
-                </bnu:column>
-                <bnu:column span="2">
-                    <h4> #{paymentController.DSubTotal}</h4>
-                </bnu:column>
-            </bnu:row>
-            <bnu:row>
-                <bnu:column span="8">
+                </bnu:row>
+                <bnu:row>
+                    <bnu:column span="4" >
+                        <bnu:selectOneMenu label="#{messages.lblPaymentMethod}">
+                            <f:selectItems value="#{paymentController.PMethodList}" var="pm"
+                                           itemValue="#{pm.display}" itemLabel="#{pm.display}" />
+                        </bnu:selectOneMenu>
+                    </bnu:column>
+                    <bnu:column span="2" >
+                        <bnu:inputText label="#{messages.lblReferenceNo}" onkeyup="soloNumeros(this);" maxlength="20" />
+                    </bnu:column>
+                    <bnu:column span="4" >
+
+                    </bnu:column>
+                    <bnu:column span="2" >
+                        <bnu:inputText label="#{messages.lblAmountReceivedLower}" value="#{paymentController.DAmount}" onblur="ajax:paymentController.calcularPagos();" update="@form" id="amount" />
+                    </bnu:column>
+                </bnu:row>
+                <p:separator />
+                
+                
+                <h:panelGroup id="TblTransactions"   >
                     
-                </bnu:column>
-                <bnu:column span="2">
-                    <h4>#{messages.lblInShipCost}</h4>
-                </bnu:column>
-                <bnu:column span="2">
-                    <bnu:inputText value="#{paymentController.shCost}" maxlength="6"  onblur="ajax:paymentController.updateTotal();"  update="@form" />
-                </bnu:column>
-            </bnu:row>
-            <ui:repeat value="#{paymentController.taxesAmountList}" var="it">
-            <bnu:row>
-                <bnu:column span="8">
+                    <h:panelGroup rendered="#{paymentController.renderMaster('TBL')}" >
+                    <bnu:dataTable
+                        
+                        value="#{paymentController.payDetailList}"
+                        var="pd"
+                         >
+                        <bnu:dataTableColumn label="DESCRIPCION">
+                            <h:commandLink action="#{invoiceTableController.edit(pd.idInvoice)}" >  #{pd.descrip} </h:commandLink>
+                        </bnu:dataTableColumn>
+                        <bnu:dataTableColumn label="DUE DATE">
+                            #{pd.dueDate}
+                        </bnu:dataTableColumn>
+                        <bnu:dataTableColumn label="ORIGINAL AMOUNT">
+                            #{paymentController.formatDoubleMaster(pd.originalAmount)}
+                        </bnu:dataTableColumn>
+                        <bnu:dataTableColumn label="OPEN BALANCE">
+                            #{paymentController.formatDoubleMaster(pd.openBalance)}
+                        </bnu:dataTableColumn>
+                        <bnu:dataTableColumn label="PAYMENT">
+                            <bnu:inputText value="#{pd.payment}" onblur="ajax:paymentController.calcularPagos(this.value);" />
+                        </bnu:dataTableColumn>
+                    </bnu:dataTable>
                     
-                </bnu:column>
-                <bnu:column span="2">
-                    <h4>#{it.idTax.name} #{it.idTax.rate}% #{messages.lblInTaxOf} #{paymentController.formatOutput(it.fromAmount)}</h4>
-                </bnu:column>
-                <bnu:column span="2">
-                    <h4>#{paymentController.formatOutput(it.taxAmount)}</h4>
-                </bnu:column>
-            </bnu:row>
-            
-            </ui:repeat>
-            <bnu:row>
-                <bnu:column span="8">
+                    <bnu:row>
+                        <bnu:column span="7"/>
+                        <bnu:column span="5">
+                            <div class="form-group row">
+                            <label class="col-form-label col-sm-4" >
+                                
+                            </label>
+                                <label class="col-form-label col-sm-6" >
+                                #{messages.lblAmountToApply}
+                            </label>
+                            <div class="col-sm-2">
+                                #{paymentController.DAmountApply}
+                            </div>
+                        </div>
+                            
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4" >
+                                
+                            </label>
+                            <label class="col-form-label col-sm-6" >
+                                #{messages.lblAmountToCredit}
+                            </label>
+                            <div class="col-sm-2">
+                                #{paymentController.DAmountCredit}
+                            </div>
+                        </div>
+                            
+                            <div class="form-group row">
+                            <label class="col-form-label col-sm-8" >
+                               
+                            </label>
+                            <div class="col-sm-4">
+                                <bnu:commandButton value="#{messages.lblClearPayment}" />
+                            </div>
+                        </div>
+                        </bnu:column>
+                    </bnu:row>
+                    </h:panelGroup>
                     
-                </bnu:column>
-                <bnu:column span="2">
-                    <h4>#{messages.lblInvoiceTotal}</h4>
-                </bnu:column>
-                <bnu:column span="2">
-                    <h4>#{paymentController.DTotal}</h4>
-                </bnu:column>
-            </bnu:row>
-            <bnu:row>
-                <bnu:column span="8">
                     
-                </bnu:column>
-                <bnu:column span="2">
-                    <h4>#{messages.lblInvoiceBalanceDue}</h4>
-                </bnu:column>
-                <bnu:column span="2">
-                    <h4>#{paymentController.DBalance}</h4>
-                </bnu:column>
-            </bnu:row>
-            <p:separator/>
-            <bnu:row>
-                <bnu:column span="3"></bnu:column>
-                <bnu:column span="6"></bnu:column>
-                <bnu:column span="3">
+                    <bnu:row rendered="#{paymentController.renderMaster('NO_DATA')}" >
+                        <bnu:column span="8">
+                            <bnu:alert severity="info" title="#{messages.lblNoTransactionTitle}" >
+                                #{messages.lblNoTransactionBody}
+                            </bnu:alert >
+
+                        </bnu:column>
+
+                    </bnu:row>
                     
-                    <bnu:commandButton value="#{messages.save}"  look="success" size="lg" style="width: 100%" action="#{paymentController.save('A')}" rendered="#{!paymentController.modStay}"  />
-                    <bnu:commandButton value="#{messages.lblUpdateIn}"  look="success" size="lg" style="width: 100%"  action="#{paymentController.save('U')}" rendered="#{paymentController.modStay}" />
-                </bnu:column>
-                <!--<bnu:column span="3">
-                    <bnu:commandButton value="Close"  look="danger" size="lg" style="width: 100%" />
                     
-                </bnu:column>-->
-            </bnu:row>
-            <p:separator/>
-        </bnu:container>
-            </h:form>
-        <h:outputScript>
-                    function soloNumeros(obj) 
-                    { 
-                    obj.value = (obj.value + '').replace(/[^0-9]/g, '');
-                    }
-                     //$.blockUI({ message: 'Hold on!' });      
-                    function mensaje(e){
-                    alert(e);
-                    } 
-                </h:outputScript>
-        <style>
-            body{
-                background-color: #ccffff;
-            }
-            .marco{
-                background-color: #ffffff;
-            }
-        </style>
+                </h:panelGroup>
+                
+                
+                <bnu:row>
+                    <bnu:column  span="4" >
+                        <bnu:inputTextarea label="Memo" />
+                    </bnu:column>
+                </bnu:row>
+                <bnu:row>
+                    <bnu:column  span="4" >
+                        <bnu:inputTextarea label="Attachments" />
+                    </bnu:column>
+                </bnu:row>
+                
+                
+                
+            </bnu:container>
+
+        </h:form>
         
-       <!-- <h:outputStylesheet>
-             body{
-                background-color: #20b2aa;
+        
+        
+        <h:outputScript>
+            function soloNumeros(obj) 
+            { 
+            obj.value = (obj.value + '').replace(/[^0-9]/g, '');
             }
-        </h:outputStylesheet>-->
+        </h:outputScript>
+        
     </h:body>
 </html>
 

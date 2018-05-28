@@ -24,7 +24,7 @@
             <bnu:column large-screen="2" medium-screen="1" small-screen="12" tiny-screen="12">
                 <bnu:dropButton value="#{messages.lblNewTrans}"  look="success" style="margin-top:20px;" >
                     <bnu:commandButton value="#{messages.lblInvoiceTypeIn}"  action="#{invoiceTableController.setType('IN','/view/sales/invoiceForm.xhtml' )}" style="width: 100%; border: none" />
-                    <bnu:commandButton value="#{messages.lblPayment}"   style="width: 100%; border: none" />
+                    <bnu:commandButton value="#{messages.lblPayment}"   style="width: 100%; border: none" action="#{invoiceController.pagar()}" />
                     <bnu:commandButton value="#{messages.lblEstimate}"  action="#{invoiceTableController.setType('ES','/view/sales/invoiceForm.xhtml' )}" style="width: 100%; border: none" />
                     <bnu:commandButton value="#{messages.salesR}"  action="#{invoiceTableController.setType('SR','/view/sales/invoiceForm.xhtml' )}" style="width: 100%; border: none" />
                   <!-- 
@@ -98,7 +98,7 @@
                             <f:selectItem itemLabel="#{messages.lblInvoiceStatusOpen}"  itemValue="OP" />
                             <f:selectItem itemLabel="#{messages.lblInvoiceStatusPartial}" itemValue="PA" />
                             <f:selectItem itemLabel="#{messages.lblInvoiceStatusClosed}" itemValue="CL" />
-                            <f:selectItem itemLabel="#{messages.lblInvoiceStatusCancel}" itemValue="CA" />
+                           <!-- <f:selectItem itemLabel="#{messages.lblInvoiceStatusCancel}" itemValue="CA" /> -->
                             <f:selectItem itemLabel="#{messages.lblInvoiceStatusOverdue}" itemValue="OV" />
                         </bnu:selectOneMenu>
 

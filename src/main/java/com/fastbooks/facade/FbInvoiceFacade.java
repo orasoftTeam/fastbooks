@@ -72,6 +72,23 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
 
         return list;
     }
+    
+    public List<FbInvoice> getInvoicesForPayment(String idCia,String idCust) {
+        List<FbInvoice> list = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM FB_INVOICE i WHERE ID_CIA = ? AND ID_CUST = ? AND STATUS IN('OV','PA','OP') AND TYPE = 'IN' ORDER BY TO_NUMBER(i.NO_DOT) ASC";
+            Query q = em.createNativeQuery(sql, FbInvoice.class);
+            q.setParameter(1, idCia);
+            q.setParameter(2, idCust);
+            list = q.getResultList();
+
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbProductFacade.getInvoicesForPayment()");
+            e.printStackTrace();
+        }
+
+        return list;
+    }    
 
     public List<FbInvoice> getInvoicesByIdCiaFilter(String sql) {
         List<FbInvoice> list = new ArrayList<>();
@@ -89,15 +106,6 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         return list;
     }
 
-    /*
-     PROCEDURE PR_ACT_INVOICE
- (pIdCia IN INT, pIdInvoice IN INT, pIdCust IN INT, pType IN VARCHAR2,pNo IN VARCHAR2, pEmail IN VARCHAR2,
-    pInDate IN VARCHAR2,pDueDate IN VARCHAR2,pActBalance IN DECIMAL,pSubTotal IN DECIMAL,pTaxTotal IN DECIMAL,
-     pTotal IN DECIMAL,pStatus IN VARCHAR2,pBiAdd IN VARCHAR2,pShAdd IN VARCHAR2,pTerms IN VARCHAR2,pTrackNum IN VARCHAR2,
-      pShipVia IN VARCHAR2,pShDate IN VARCHAR2,pShCost IN DECIMAL,pMessageInvoice IN VARCHAR2,pAttachment IN VARCHAR2,
-      pProdIds IN VARCHAR2,pQuants IN VARCHAR2,pIdTaxes IN VARCHAR2,pFromAmounts IN VARCHAR2,pTaxAmounts IN VARCHAR2,
-        pTaxProdIds IN VARCHAR2, op IN VARCHAR2, res OUT VARCHAR2); 
-     */
     public String actInvoice(FbInvoice in, String op) {
         String res = "";
         String pProdsIds = "";

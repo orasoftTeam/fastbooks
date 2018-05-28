@@ -12,11 +12,11 @@
 
             <ui:define name="content">
                 <h:form>
-                    <h:commandButton value="prueba" action="#{payController.setTitle('Prueba')}" />
+                    <h:commandButton value="prueba" action="#{paymentController.setTitle('Prueba')}" />
                 </h:form>
-                <h:outputText value="#{payController.title}" />
-                <h:outputText value="#{taxController.modalTitle}" />
                 
+                <h:outputText value="#{taxController.modalTitle}" />
+                <h:outputText value="#{paymentController.title}" />
             </ui:define>
 
 

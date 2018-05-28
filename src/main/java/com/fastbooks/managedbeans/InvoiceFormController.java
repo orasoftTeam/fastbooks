@@ -1222,5 +1222,11 @@ public class InvoiceFormController implements Serializable {
             flag = true;
         }
         return flag;
+        
+        
+    }
+    
+    public void pagar(){
+    this.validationBean.redirecionar("/view/sales/payments/paymentForm.xhtml");
     }
 }

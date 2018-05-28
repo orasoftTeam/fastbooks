@@ -24,4 +24,9 @@
         <exception-type>javax.faces.application.ViewExpiredException</exception-type>
         <location>/index.xhtml</location>
     </error-page>
+    <managed-bean>
+        <managed-bean-name>paymentController</managed-bean-name>
+        <managed-bean-class>com.fastbooks.managedbeans.PaymentController</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
 </faces-config>
