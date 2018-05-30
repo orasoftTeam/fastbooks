@@ -65,6 +65,12 @@ public class FbPaymentDetail implements Serializable {
     private BigDecimal openBalance;
     @Column(name = "PAYMENT")
     private BigDecimal payment;
+    
+    
+    private String paymentString;
+    
+    private boolean checkbox;
+    
     @JoinColumn(name = "ID_PAYMENT", referencedColumnName = "ID_INVOICE")
     @ManyToOne
     private FbInvoice idPayment;
@@ -73,6 +79,22 @@ public class FbPaymentDetail implements Serializable {
     private FbInvoice idInvoice;
 
     public FbPaymentDetail() {
+    }
+
+    public boolean isCheckbox() {
+        return checkbox;
+    }
+
+    public void setCheckbox(boolean checkbox) {
+        this.checkbox = checkbox;
+    }
+
+    public String getPaymentString() {
+        return paymentString;
+    }
+
+    public void setPaymentString(String paymentString) {
+        this.paymentString = paymentString;
     }
 
     public FbPaymentDetail(BigDecimal idDetail) {

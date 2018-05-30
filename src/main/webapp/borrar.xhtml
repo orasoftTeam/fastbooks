@@ -11,12 +11,22 @@
         <ui:composition template="./template/template.xhtml">
 
             <ui:define name="content">
+                
                 <h:form>
-                    <h:commandButton value="prueba" action="#{paymentController.setTitle('Prueba')}" />
+                    <bnu:inputText id="behemoth" onblur="hey();" />
                 </h:form>
                 
-                <h:outputText value="#{taxController.modalTitle}" />
-                <h:outputText value="#{paymentController.title}" />
+                <script>
+                    
+                   function hey(){
+                      alert('vinny'); 
+                       
+                   }
+                    
+                    
+                    
+                </script>
+                
             </ui:define>
 
 

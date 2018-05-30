@@ -4,8 +4,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:bnu="http://bootsfaces.net/ui"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:p="http://primefaces.org/ui">
     <f:view locale="#{ userData.locale}"/>
     <h:head>
         <title>Fastbooks</title>
@@ -25,7 +24,7 @@
                 <h:panelGroup id="custs">
                     <bnu:row>
                         <bnu:column span="4">
-                            <bnu:selectOneMenu label="#{messages.lblInvocieCustomer}" value="#{paymentController.idCust}" onchange="ajax:paymentController.changeCust();" update="@form" >
+                            <bnu:selectOneMenu label="#{messages.lblInvocieCustomer}" value="#{paymentController.idCust}" onchange="ajax:paymentController.changeCust();" update="@(.campos)" >
                                 <f:selectItem  itemLabel="#{messages.selectOne}" itemValue="0"  />
                                 <f:selectItems value="#{paymentController.CList}" var="cust"
                                                itemValue="#{cust.idCust}" itemLabel="#{cust.title} #{cust.firstname} #{cust.lastname}"  itemDescription="#{cust.company}" />
@@ -68,14 +67,15 @@
                     <bnu:column span="4" >
 
                     </bnu:column>
-                    <bnu:column span="2" >
-                        <bnu:inputText label="#{messages.lblAmountReceivedLower}" value="#{paymentController.DAmount}" onblur="ajax:paymentController.calcularPagos();" update="@form" id="amount" />
+                    <bnu:column span="2" class="campos" >
+                        <bnu:inputText label="#{messages.lblAmountReceivedLower}" value="#{paymentController.DAmount}" onblur="ajax:paymentController.calcularPagos();" update="@(.campos)"
+                                       id="amount" />
                     </bnu:column>
                 </bnu:row>
                 <p:separator />
                 
                 
-                <h:panelGroup id="TblTransactions"   >
+                <h:panelGroup id="TblTransactions" class="campos"   >
                     
                     <h:panelGroup rendered="#{paymentController.renderMaster('TBL')}" >
                     <bnu:dataTable
@@ -83,6 +83,9 @@
                         value="#{paymentController.payDetailList}"
                         var="pd"
                          >
+                        <bnu:dataTableColumn label="PAY">
+                            <bnu:selectBooleanCheckbox  value="#{pd.checkbox}" onclick="ajax:paymentController.aplicarPagoCheck('#{pd.idInvoice.idInvoice}');" update="@(.campos)" />
+                        </bnu:dataTableColumn>
                         <bnu:dataTableColumn label="DESCRIPCION">
                             <h:commandLink action="#{invoiceTableController.edit(pd.idInvoice)}" >  #{pd.descrip} </h:commandLink>
                         </bnu:dataTableColumn>
@@ -96,7 +99,7 @@
                             #{paymentController.formatDoubleMaster(pd.openBalance)}
                         </bnu:dataTableColumn>
                         <bnu:dataTableColumn label="PAYMENT">
-                            <bnu:inputText value="#{pd.payment}" onblur="ajax:paymentController.calcularPagos(this.value);" />
+                            <bnu:inputText value="#{pd.paymentString}" onblur="ajax:paymentController.aplicarPagoADetalle();" update="@(.campos)" />
                         </bnu:dataTableColumn>
                     </bnu:dataTable>
                     
@@ -178,6 +181,9 @@
             { 
             obj.value = (obj.value + '').replace(/[^0-9]/g, '');
             }
+            
+           
+           
         </h:outputScript>
         
     </h:body>
