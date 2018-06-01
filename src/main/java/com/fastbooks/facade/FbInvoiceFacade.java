@@ -8,6 +8,7 @@ package com.fastbooks.facade;
 import com.fastbooks.modelo.FbInvoice;
 import com.fastbooks.modelo.FbInvoiceDetail;
 import com.fastbooks.modelo.FbInvoiceTaxes;
+import com.fastbooks.modelo.FbPaymentDetail;
 import com.fastbooks.util.GlobalParameters;
 import java.io.File;
 import java.io.IOException;
@@ -104,6 +105,52 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         }
 
         return list;
+    }
+    
+    
+    
+    public String actPayment(FbInvoice in, String op){
+    String res = "";
+    String pIdInvoices = "";
+    String pPayAmounts = "";
+    /*
+    PROCEDURE PR_ACT_PAYMENT(pIdCia IN INT,pIdPayment IN INT,pIdCust IN INT, pReferenceNo IN VARCHAR2,pEmail IN VARCHAR2,
+                            pPayDate IN VARCHAR2,pPaymentTotal IN DECIMAL,pMethod IN VARCHAR2,pIdInvoices IN VARCHAR2,
+                                pPayAmounts IN VARCHAR2,op IN VARCHAR2,res OUT VARCHAR2);
+    */
+        try {
+            Connection cn = em.unwrap(java.sql.Connection.class);
+            CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_PAYMENT(?,?,?,?,?,?,?,?,?,?,?,?)}");
+            cs.setInt(1, Integer.parseInt(in.getIdCia().getIdCia().toString()));
+            cs.setInt(2, Integer.parseInt(in.getIdInvoice().toString()));
+            cs.setInt(3, Integer.parseInt(in.getIdCust().getIdCust().toString()));
+            cs.setString(4, in.getPayReferenceNo());
+            cs.setString(5, in.getCustEmail());
+            cs.setString(6, in.getInDate());
+            cs.setDouble(7, in.getTotal().doubleValue());
+            cs.setString(8, in.getPayMethod());
+            
+            for (FbPaymentDetail pd : in.getFbPaymentDetailList()) {
+                pIdInvoices += pd.getIdInvoice().getIdInvoice().toString() + ",";
+                pPayAmounts += pd.getPaymentString() + ",";
+            }
+            
+            
+            cs.setString(9, pIdInvoices);
+            cs.setString(10, pPayAmounts);
+            cs.setString(11, op);
+            cs.registerOutParameter(12, Types.VARCHAR);
+            cs.execute();
+            res = cs.getString(12);
+            cs.close();
+            
+        } catch (Exception e) {
+            res = e.getMessage();
+            System.out.println("com.fastbooks.facade.FbInvoiceFacade.actPayment()");
+            e.printStackTrace();
+        }
+    
+    return res;
     }
 
     public String actInvoice(FbInvoice in, String op) {

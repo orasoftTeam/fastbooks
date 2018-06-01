@@ -26,6 +26,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
 
 import javax.faces.context.FacesContext;
@@ -305,5 +306,9 @@ public class UserData implements Serializable {
         return requestContext.getRequestURI().contains(pag.toLowerCase());
     }
     
+    @PreDestroy
+    public void destory(){
+    this.validationBean.redirecionar("/");
+    }
    
 }
