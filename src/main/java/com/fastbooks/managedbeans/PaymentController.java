@@ -86,6 +86,10 @@ public class PaymentController implements Serializable {
     private @Getter
     @Setter
     List<PaymentMethod> pMethodList = new ArrayList<>();
+    
+    private @Getter
+    @Setter
+    boolean formTouched = false;
 
     /**
      * Creates a new instance of PaymentController
@@ -144,8 +148,10 @@ public class PaymentController implements Serializable {
 
                 //vb.ejecutarJavascript("$('#TblTransactions').css('display','block')");
                 //vb.updateComponent("paymentForm:TblTransactions");
+                this.formTouched = true;
             } else {
-
+                    this.payDetailList = new ArrayList<>();
+                    this.email = "";
             }
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.PaymentController.changeCust()");
@@ -169,7 +175,7 @@ public class PaymentController implements Serializable {
                 break;
 
             default:
-
+                System.out.println("com.fastbooks.managedbeans.PaymentController.renderMaster(default)");
                 break;
         }
 
@@ -213,14 +219,24 @@ public class PaymentController implements Serializable {
             }
             
             Double remanent = 0.00;
+            Double lastValue = amount;
             for (FbPaymentDetail pd : payDetailList) {
             
-            remanent = Double.parseDouble(pd.getOpenBalance().toString()) - amount;
+            remanent =  lastValue - Double.parseDouble(pd.getOpenBalance().toString());
             
-                if (remanent >= 0.00) {
-                    //aqui termina
-                }else if(remanent < 0.00){
-                    // si es negativo se pasa al siguiente
+                if (remanent > 0.00) {
+                    
+                    pd.setPaymentString(pd.getOpenBalance().toString());
+                    pd.setPayment(pd.getOpenBalance());
+                    pd.setCheckbox(true);
+                    lastValue = remanent;
+                }else if(remanent <= 0.00){
+                    
+                    pd.setPaymentString(this.formatDoubleMaster(new BigDecimal(lastValue.toString())));
+                    pd.setPayment(new BigDecimal(lastValue));
+                    pd.setCheckbox(true);
+                    break;
+                    
                 }
             
             }
@@ -230,7 +246,7 @@ public class PaymentController implements Serializable {
         if (amount == 0) {
             this.limpiarTodo();
         }
-
+        this.formTouched = true;
         actualizarResults();
         //System.out.println("com.fastbooks.managedbeans.PaymentController.calcularPagos() : " + amount);
         //this.vb.updateComponent("paymentForm:TblTransactions");

@@ -1,0 +1,372 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:bnu="http://bootsfaces.net/ui"
+             xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+             xmlns:p="http://primefaces.org/ui">
+
+    <ui:remove>
+        <!--
+                    Hint to editors: The menus follow the Chicago style of capitalization. Please capitalize everything but the "smaller" words. 
+        -->
+    </ui:remove>
+
+    <bnu:form id="tblInvoiceForm" inline="true">
+        #{invoiceTableController.init()}
+        #{invoiceTableController.showInvoice()}
+        <bnu:row>
+            <bnu:column large-screen="10" medium-screen="11" small-screen="12" tiny-screen="12" >
+                <h2>#{messages.lblSalesTrans}</h2>
+            </bnu:column>
+            <bnu:column large-screen="2" medium-screen="1" small-screen="12" tiny-screen="12">
+                <bnu:dropButton value="#{messages.lblNewTrans}"  look="success" style="margin-top:20px;" >
+                    <bnu:commandButton value="#{messages.lblInvoiceTypeIn}"  action="#{invoiceTableController.setType('IN','/view/sales/invoiceForm.xhtml' )}" style="width: 100%; border: none" />
+                    <bnu:commandButton value="#{messages.lblPayment}"   style="width: 100%; border: none" action="#{invoiceController.pagar()}" />
+                    <bnu:commandButton value="#{messages.lblEstimate}"  action="#{invoiceTableController.setType('ES','/view/sales/invoiceForm.xhtml' )}" style="width: 100%; border: none" />
+                    <bnu:commandButton value="#{messages.salesR}"  action="#{invoiceTableController.setType('SR','/view/sales/invoiceForm.xhtml' )}" style="width: 100%; border: none" />
+                  <!-- 
+   <bnu:navLink value="#{messages.lblPayment}" href="#{request.contextPath}/view/sales/payments/receivePayment.xhtml" ></bnu:navLink>
+
+ <bnu:navLink value="Sales Receipt"></bnu:navLink>
+ <bnu:navLink value="Credit Note"></bnu:navLink>
+ <bnu:navLink value="Delayed Charged"></bnu:navLink>
+ <bnu:navLink value="Time Activity"></bnu:navLink>-->
+                </bnu:dropButton> 
+            </bnu:column>
+        </bnu:row> 
+        <bnu:row style="padding-left: 180px">
+            <bnu:column span="1" style="height: 80px; width: 130px" >
+                <bnu:panel style="background-color: #5bc0de; height: 80px; width: 130px" onmouseout="normalImg(this)"  onmouseover="bigImg(this)" >
+                    <font color="white"><h4>USD$0.00</h4></font>
+                    <font color="white"><h4>0 Cancelled</h4></font>
+                    <!--<h:outputLabel value="Cancelled"></h:outputLabel> -->
+                </bnu:panel>
+            </bnu:column>
+            <bnu:column span="1" style="height: 80px; width: 130px; border: 0">
+                <bnu:panel style="background-color: #c0c0c0; height: 80px; width: 130px" onmouseover="bigImg(this)" onmouseout="normalImg(this)">
+                    <font color="white"><h4>USD$40.00</h4></font>
+                    <font color="white"><h4>1 Balance</h4></font>
+                    <!--<h:outputLabel value="Open Balance"></h:outputLabel>-->
+                </bnu:panel>
+            </bnu:column>
+            <bnu:column span="1" style="height: 80px; width: 130px">
+                <bnu:panel style="background-color: orange; height: 80px; width: 130px" onmouseover="bigImg(this)" onmouseout="normalImg(this)">
+                    <font color="white"><h4>USD$0.00</h4></font>
+                    <font color="white"><h4>0 Overdue</h4></font>
+                    <!--<h:outputLabel value="Overdue"></h:outputLabel>-->
+                </bnu:panel>
+            </bnu:column>
+            <bnu:column span="1" style="height: 80px; width: 130px">
+                <bnu:panel style="background-color: #0275d8; height: 80px; width: 130px" onmouseover="bigImg(this)" onmouseout="normalImg(this)">
+                    <font color="white"><h4>USD$0.00</h4></font>
+                    <font color="white"><h4>Partial</h4></font>
+                    <!--<h:outputLabel value="Partial"></h:outputLabel>-->
+                </bnu:panel>
+            </bnu:column>
+            <bnu:column span="1" style="height: 80px; width: 130px">
+                <bnu:panel style="background-color: chartreuse; height: 80px; width: 130px" onmouseover="bigImg(this)" onmouseout="normalImg(this)">
+                    <!--<h4>Closed</h4>-->
+                    <font color="white"><h4>USD$0.00</h4></font>
+                    <font color="white"><h4>Closed</h4></font>
+                    <!--<h:outputLabel value="Closed"></h:outputLabel>-->
+                </bnu:panel>
+            </bnu:column>
+        </bnu:row>
+        <bnu:row>
+            <bnu:column span="12">
+                <bnu:messages  />
+            </bnu:column>
+        </bnu:row>
+        <p:separator/>
+        <bnu:row >
+            <bnu:column span="5">
+                <div class="dropdown">
+                    <bnu:button onclick="myFunction()" value="#{messages.lblFilter}" style="margin-bottom: 15px"  class="dropLi" iconAwesome="fa-angle-down" icon-align="right" />
+                    <div id="myDropdown" class="dropdown-content dropLi">
+
+                        <bnu:selectOneMenu label="#{messages.lblType}" style="width: 150px;margin: 10px" value="#{invoiceTableController.FType}" >
+                            <f:selectItem itemValue="0" itemLabel="#{messages.selectOne}"  />
+                            <f:selectItem itemLabel="#{messages.invoice}" itemValue="IN" />
+                            <f:selectItem itemLabel="#{messages.lblEstimate}" itemValue="ES" />
+                            <!--<f:selectItem itemLabel="Tres"/>-->
+                        </bnu:selectOneMenu><br></br>
+                        <bnu:selectOneMenu label="#{messages.lblInvoiceStatus}" style="width: 150px;margin: 10px"  value="#{invoiceTableController.FStatus}" >
+                            <f:selectItem itemValue="0" itemLabel="#{messages.selectOne}"  />
+                            <f:selectItem itemLabel="#{messages.lblInvoiceStatusOpen}"  itemValue="OP" />
+                            <f:selectItem itemLabel="#{messages.lblInvoiceStatusPartial}" itemValue="PA" />
+                            <f:selectItem itemLabel="#{messages.lblInvoiceStatusClosed}" itemValue="CL" />
+                           <!-- <f:selectItem itemLabel="#{messages.lblInvoiceStatusCancel}" itemValue="CA" /> -->
+                            <f:selectItem itemLabel="#{messages.lblInvoiceStatusOverdue}" itemValue="OV" />
+                        </bnu:selectOneMenu>
+
+                        <bnu:inputText label="#{messages.lblInvoiceShipVia}" style="width: 150px;margin: 10px"  value="#{invoiceTableController.FShiVia}"  />
+                        <br></br>
+                        <bnu:selectOneMenu label="#{messages.lblInvoiceDate}" style="width: 150px;margin: 10px" value="#{invoiceTableController.FDate}"  >
+                            <f:selectItem itemValue="0" itemLabel="#{messages.selectOne}"  />
+                            <f:selectItem itemLabel="#{messages.lblLastYear}" itemValue="365" />
+                            <f:selectItem itemLabel="#{messages.lblSixMonths}" itemValue="180" />
+                            <f:selectItem itemLabel="#{messages.lblThreeMonths}"  itemValue="90"/>
+                            <f:selectItem itemLabel="#{messages.lblLastMonth}" itemValue="30" />
+                        </bnu:selectOneMenu>
+                        <bnu:inputText label="#{messages.lblFrom}" style="width: 115px;margin: 10px" value="#{invoiceTableController.FFrom}" placeholder="mm/dd/yyyy" onblur="soloDate(this)" />
+                        <bnu:inputText label="#{messages.lblTo}" style="width: 115px;margin: 10px" value="#{invoiceTableController.FTo}"   placeholder="mm/dd/yyyy"  onblur="soloDate(this)" />
+                        <br></br>
+                        <bnu:selectOneMenu label="#{messages.lblCustomer}"  style="width: 150px;margin: 10px" value="#{invoiceTableController.FIdCust}" >
+                            <f:selectItem itemValue="0" itemLabel="#{messages.selectOne}"  />
+                            <f:selectItems value="#{invoiceTableController.CList}" var="cust" itemValue="#{cust.idCust}" itemLabel="#{cust.displayName}"/>
+                        </bnu:selectOneMenu><br></br>
+                        <bnu:commandButton value="#{messages.lblApply}" action="#{invoiceTableController.applyFilter()}" style="margin: 10px" look="success"/> 
+                        <bnu:commandButton style="margin: 10px" value="#{messages.lblReset}" look="danger" action="#{invoiceTableController.resetFilter()}" /> 
+
+                    </div>
+                </div>
+            </bnu:column>
+
+        </bnu:row>
+        <bnu:row  >
+            <bnu:column span="12">
+
+
+                <bnu:iconAwesome name="fa-long-arrow-down" size="2x"  style="margin-right: 15px" />
+
+                <bnu:dropButton value="#{messages.lblBatchOptions}" style="margin-bottom:15px" class="batchOptions"  >
+                    <bnu:commandButton value="#{messages.lblPrintTranc}" action="#{invoiceTableController.printTransactions(request)}" style="width: 100%;border: none" disabled="#{invoiceTableController.disableBatch('PT')}"   ></bnu:commandButton>
+                    <bnu:commandButton value="#{messages.lblPrintPackingSlip}" action="#{invoiceTableController.packingSlip(request)}" style="width: 100%;border: none" disabled="#{invoiceTableController.disableBatch('PP')}"   ></bnu:commandButton>
+
+                    <bnu:navLink value="#{messages.lblSendTranc}" href="#"></bnu:navLink>
+                    <bnu:navLink value="#{messages.lblSendRemind}" ></bnu:navLink>
+                </bnu:dropButton>
+
+            </bnu:column>
+        </bnu:row>
+       
+        <bnu:row>
+            <bnu:column span="12">
+                <bnu:dataTable
+                    value="#{invoiceTableController.IList}"
+                    id="tblInvoice"
+                    var="in"
+
+
+
+                    >
+                    <bnu:dataTableColumn label="#{messages.lblInvoiceDate}"   >
+                        <bnu:selectBooleanCheckbox style="margin-right: 10px" update="@(.batchOptions)" onclick="ajax:invoiceTableController.addToInvoiceList(in);"  />#{in.inDate}
+                    </bnu:dataTableColumn>
+                    <bnu:dataTableColumn  label="#{messages.lblType}" value="#{invoiceTableController.formatType(in.type)}" ></bnu:dataTableColumn>
+                    <bnu:dataTableColumn   label="#{messages.lblInvoiceNo}"  value="#{in.noDot}" ></bnu:dataTableColumn>
+                    <bnu:dataTableColumn label="#{messages.lblInvocieCustomer }" value="#{in.idCust.displayName}" ></bnu:dataTableColumn>
+                    <bnu:dataTableColumn label="#{messages.lblIncoiceDueDate}" value="#{in.dueDate}" ></bnu:dataTableColumn>
+                    <bnu:dataTableColumn label="#{messages.lblInvoiceBalance}" value="#{in.actualBalance}" ></bnu:dataTableColumn>
+                    <bnu:dataTableColumn label="#{messages.lblInvoiceTotalBTax}" value="#{in.subTotal}" ></bnu:dataTableColumn>
+                    <bnu:dataTableColumn label="#{messages.lblInvoiceTax}" value="#{in.taxTotal}"  ></bnu:dataTableColumn>
+                    <bnu:dataTableColumn label="#{messages.lblInvoiceTotal}"  value="#{in.total}" ></bnu:dataTableColumn>
+                    <bnu:dataTableColumn label="#{messages.lblInvoiceStatus}" value="#{invoiceTableController.formatStatus(in.status)}" ></bnu:dataTableColumn>
+                    <bnu:dataTableColumn label="#{messages.lblAction}">
+
+                        <bnu:dropButton value="#{messages.edit}" look="primary" styleClass="hidden-xs hidden-sm" >
+                            <bnu:commandButton value="#{messages.edit}"  style="width:100%; border: none" action="#{invoiceTableController.edit(in)}" rendered="#{invoiceTableController.showOptions(in.status,in.type,'EDIT')}"  />
+
+                            <bnu:commandButton value="#{messages.lblInvoicePrint}"  style="width:100%; border: none"  update="pdf" action="#{invoiceTableController.print(in,request)}"
+                                               rendered="#{invoiceTableController.showOptions(in.status,in.type,'PRINT')}"  />
+
+                            <bnu:commandButton value="Update status"  style="width:100%; border: none"  
+                                               rendered="#{invoiceTableController.showOptions(in.status,in.type,'ESTATUS')}" action="#{invoiceTableController.assignEstimate(in)}"   />
+                            
+                            <bnu:commandButton value="Copy"  style="width:100%; border: none"  
+                                               rendered="#{invoiceTableController.showOptions(in.status,in.type,'COPY')}" action="#{invoiceTableController.copy(in)}"   />
+
+                        </bnu:dropButton>
+                        <bnu:commandButton value="#{messages.edit}"  look="warning" styleClass="hidden-lg hidden-md" action="#{invoiceTableController.edit(in)}" rendered="#{invoiceTableController.showOptions(in.status,in.type,'EDIT')}"   />
+
+                        <bnu:commandButton value="Update status"  style="width:100%; border: none"   styleClass="hidden-lg hidden-md"
+                                           rendered="#{invoiceTableController.showOptions(in.status,in.type,'ESTATUS')}" action="#{invoiceTableController.assignEstimate(in)}"   />
+
+                        <bnu:commandButton value="#{messages.lblInvoicePrint}" update="pdf"  styleClass="hidden-lg hidden-md"  action="#{invoiceTableController.print(in,request)}" rendered="#{invoiceTableController.showOptions(in.status,in.type,'PRINT')}"  />
+
+                        <bnu:commandButton value="Copy"  style="width:100%; border: none" styleClass="hidden-lg hidden-md" 
+                                               rendered="#{invoiceTableController.showOptions(in.status,in.type,'COPY')}" action="#{invoiceTableController.copy(in)}"   />
+                        
+                    </bnu:dataTableColumn>
+
+                </bnu:dataTable>
+            </bnu:column>
+        </bnu:row>
+
+    </bnu:form>
+    <p:separator/>
+    <bnu:modal  id="invoiceModal" title="#{messages.invoice}" styleClass="invoiceModal"  close-on-escape="false" backdrop="false"  >
+        <h:panelGroup id="pdf">
+
+            <p:media value="#{invoiceTableController.invoiceModal}" width="100%" height="500px" rendered="#{not(invoiceTableController.invoiceModal eq '0')}"  />     
+
+
+        </h:panelGroup>
+    </bnu:modal>   
+
+    <bnu:modal  id="cancelModal" title="#{messages.invoice}" styleClass="cancelModal"  close-on-escape="false" backdrop="false"  >
+        <h:panelGroup id="can">
+            <h:form>
+                <bnu:row>
+                    <bnu:column span="12">
+                        <h5>#{messages.lblInCancelConfirm }</h5>
+                    </bnu:column>
+                </bnu:row>
+                <bnu:row>
+                    <bnu:column span="6"><bnu:commandButton value="#{messages.yes}" look="danger" style="width: 100%" action="#{invoiceTableController.cancel()}" />
+                    </bnu:column>
+                    <bnu:column span="6"><bnu:commandButton value="#{messages.No}" style="width: 100%" look="success"/></bnu:column>
+                </bnu:row>
+
+
+            </h:form>
+        </h:panelGroup>
+    </bnu:modal> 
+
+
+    <bnu:modal  id="updateStatusModal" title="#{messages.lblEstimate}" styleClass="updateStatusModal"   >
+        
+            <h:form  >
+                <bnu:selectOneMenu label="#{messages.lblInvoiceStatus}" value="#{invoiceTableController.estimateStatus}" onchange="show(this.value);" >
+                    
+                    <f:selectItem itemValue="PE" itemLabel="#{messages.lblESPending}" />
+                    <f:selectItem itemValue="AC" itemLabel="#{messages.lblAccepted}" />
+                    <f:selectItem itemValue="CL" itemLabel="#{messages.lblClosed}" />
+                    <f:selectItem itemValue="RJ" itemLabel="#{messages.lblRejected}" />
+                </bnu:selectOneMenu>
+                <div class="updateEstimateStatus" style="display: none;" >
+                    <bnu:inputText label="By" maxlength="30"  value="#{invoiceTableController.accBy}" />
+                <strong>
+                    <h:outputText value="Date"  />
+
+                </strong>
+                <bnu:datepicker value="#{invoiceTableController.accDate}"    />
+                </div>
+                <p:separator/>
+
+                <bnu:commandButton value="Cancel" style="margin-right: 10px;" />
+                <bnu:commandButton value="Ok" look="success"  action="#{invoiceTableController.updateEstimateStatus()}" />
+
+            </h:form>
+        
+    </bnu:modal>
+
+
+    <style>
+        /* Dropdown Button */
+        .dropbtn {
+            background-color: #3498DB;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dropbtn:hover, .dropbtn:focus {
+            background-color: #2980B9;
+        }
+
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 600px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+
+        .dropdown-content span {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content span:hover {background-color: #ddd}
+
+        .show {display:block;}
+
+    </style>
+
+    <h:outputScript>
+        $( document ).ready(function() {
+        var w = $( document ).width();
+
+        if(w &lt;= 768){
+
+        $('.dropdown-content').css('min-width','200px');
+        }
+
+        });
+
+
+        function myFunction() {
+        $(".dropdown-content").show();
+        };
+
+        $(document).on("click",function(event) {
+
+        var str = $(event.target).parent().parent().parent().attr('class')+' '+$(event.target).parent().parent().attr('class')+' '+$(event.target).parent().attr('class') + ' ' + $(event.target).attr('class');
+        //alert(str.indexOf("dropLi")>=0);
+        if(str.indexOf("dropLi")>=0){
+
+
+        }else{
+        //alert(str);
+        $(".dropdown-content").hide();
+        }
+
+
+
+        });
+
+
+        function soloDate(obj) 
+        { 
+        //alert(obj.value);
+        var str = obj.value;
+        var patt = new RegExp("^((0?[1-9]|1[012])[- /.](0?[1-9]|[12][0-9]|3[01])[- /.](19|20)?[0-9]{2})*$");
+        var res = patt.test(str);
+        if(res){
+        }else{
+        obj.value = '';
+        }
+        //obj.value = (obj.value + '').replace(/^((0?[1-9]|1[012])[- /.](0?[1-9]|[12][0-9]|3[01])[- /.](19|20)?[0-9]{2})*$/g, '');
+        }
+        
+        
+        
+        function show(value){
+        
+        if(value == "PE"){
+        $(".updateEstimateStatus").hide();
+        //alert(value);
+        }else{
+        $(".updateEstimateStatus").show();
+        //alert(value);
+        }
+        }
+
+    </h:outputScript>
+
+
+
+
+
+
+</ui:fragment>
+

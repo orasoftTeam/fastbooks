@@ -135,7 +135,7 @@
                                
                             </label>
                             <div class="col-sm-4">
-                                <bnu:commandButton value="#{messages.lblClearPayment}" />
+                                <bnu:commandButton value="#{messages.lblClearPayment}" action="#{invoiceController.validationBean.redirecionar('/view/sales/payments/paymentForm.xhtml')}" />
                             </div>
                         </div>
                         </bnu:column>
@@ -174,6 +174,53 @@
 
         </h:form>
         
+        <!--navbar begin-->
+        <bnu:navBar  inverse="true" position="bottom" fixed="true" >
+            <h:panelGroup id="clear" class="campos" >
+                <h:form styleClass="navbar-form navbar-left"  id="navBtn1" >
+                    <bnu:commandButton value="Cancel" styleClass="btnBottom"  action="#{invoiceController.validationBean.redirecionar('/view/sales/sales.xhtml')}" rendered="#{!paymentController.formTouched}" />
+                    <bnu:button value="Cancel" styleClass="btnBottom"  onclick="PF('dlg5').show();" rendered="#{paymentController.formTouched}" />
+                    <bnu:button value="Clear" style="margin-left: 10px" styleClass="btnBottom" onclick="PF('dlg6').show();"  rendered="#{paymentController.formTouched}"  />
+                </h:form>
+            </h:panelGroup>
+            <bnu:navbarLinks >
+                <bnu:navLink value="Preview" href="#"  ></bnu:navLink>
+
+            </bnu:navbarLinks>
+            <h:form styleClass="navbar-form navbar-right" >
+                <bnu:commandButton value="#{messages.save}"  look="success"  style="width: 100%"  />
+                
+            </h:form>
+        </bnu:navBar>
+        
+        
+        
+        <!-- navbar end -->
+        
+        
+         <!-- modal confirm exit -->
+        <p:dialog header="Modal Dialog" widgetVar="dlg5" modal="true" height="100">
+            <h:outputText value="Do you want to leave without saving?" /><br/>
+            <p:separator />
+
+            <h:form id="confirmModal">
+                <bnu:button value="No" onclick="PF('dlg5').hide();" />
+                <bnu:commandButton value="Yes" look="success" action="#{invoiceController.validationBean.redirecionar('/view/sales/sales.xhtml')}" style="margin-left: 10px" />
+            </h:form>
+        </p:dialog> 
+
+
+        <p:dialog header="Modal Dialog" widgetVar="dlg6" modal="true" height="100">
+            <h:outputText value="Are you sure you want to clear this transaction?" /><br/>
+            <p:separator />
+
+            <h:form id="confirmModalReset">
+                <bnu:button value="No" onclick="PF('dlg6').hide();" />
+                <bnu:commandButton value="Yes" look="success" action="#{invoiceController.validationBean.redirecionar('/view/sales/payments/paymentForm.xhtml')}" style="margin-left: 10px"  />
+            </h:form>
+        </p:dialog> 
+
+        <!-- end modal exit-->
         
         
         <h:outputScript>
@@ -185,6 +232,26 @@
            
            
         </h:outputScript>
+        
+        <style>
+            body{
+                background-color: #ccffff;
+            }
+            .marco{
+                background-color: #ffffff;
+            }
+
+            .btnBottom{
+                background-color: black;
+                color: white;
+
+            }
+
+            .btnBottom:hover{
+                background-color: #666666;
+
+            }
+        </style>
         
     </h:body>
 </html>
