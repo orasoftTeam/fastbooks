@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Inject;
@@ -64,6 +65,15 @@ public class PaymentController implements Serializable {
     private @Getter
     @Setter
     String paymentDate;
+    
+    private @Getter
+    @Setter
+    String pMethod;
+    
+    
+    private @Getter
+    @Setter
+    String pReferenceNo;
 
     @EJB
     FbCustomerFacade cFacade;
@@ -86,10 +96,13 @@ public class PaymentController implements Serializable {
     private @Getter
     @Setter
     List<PaymentMethod> pMethodList = new ArrayList<>();
-    
+
     private @Getter
     @Setter
     boolean formTouched = false;
+    
+    private DateFormat sd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+    private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
     /**
      * Creates a new instance of PaymentController
@@ -130,7 +143,7 @@ public class PaymentController implements Serializable {
                 for (FbCustomer fbCustomer : cList) {
                     if (fbCustomer.getIdCust().toString().equals(idCust)) {
                         this.email = fbCustomer.getEmail();
-                        System.out.println("email: " + this.email );
+                        System.out.println("email: " + this.email);
                     }
                 }
 
@@ -150,8 +163,8 @@ public class PaymentController implements Serializable {
                 //vb.updateComponent("paymentForm:TblTransactions");
                 this.formTouched = true;
             } else {
-                    this.payDetailList = new ArrayList<>();
-                    this.email = "";
+                this.payDetailList = new ArrayList<>();
+                this.email = "";
             }
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.PaymentController.changeCust()");
@@ -211,36 +224,36 @@ public class PaymentController implements Serializable {
             this.DAmountCredit = amount.toString();
         } else {
             // aplicar pagos Y LIMPIAR PAGOS
-            
+
             for (FbPaymentDetail pd : payDetailList) {
                 pd.setPaymentString("");
                 pd.setPayment(null);
                 pd.setCheckbox(false);
             }
-            
+
             Double remanent = 0.00;
             Double lastValue = amount;
             for (FbPaymentDetail pd : payDetailList) {
-            
-            remanent =  lastValue - Double.parseDouble(pd.getOpenBalance().toString());
-            
+
+                remanent = lastValue - Double.parseDouble(pd.getOpenBalance().toString());
+
                 if (remanent > 0.00) {
-                    
+
                     pd.setPaymentString(pd.getOpenBalance().toString());
                     pd.setPayment(pd.getOpenBalance());
                     pd.setCheckbox(true);
                     lastValue = remanent;
-                }else if(remanent <= 0.00){
-                    
+                } else if (remanent <= 0.00) {
+
                     pd.setPaymentString(this.formatDoubleMaster(new BigDecimal(lastValue.toString())));
                     pd.setPayment(new BigDecimal(lastValue));
                     pd.setCheckbox(true);
                     break;
-                    
+
                 }
-            
+
             }
-            
+
         }
 
         if (amount == 0) {
@@ -265,12 +278,11 @@ public class PaymentController implements Serializable {
                         payment = 0.00;
                     } else if (payment > 0.00 && payment <= Double.parseDouble(pd.getOpenBalance().toString())) {
                         //aplicar
-                        
+
                         if (pd.getPayment() != null) {
                             this.DAmount = this.formatDoubleMaster(new BigDecimal(String.valueOf(Double.parseDouble(this.DAmount) - Double.valueOf(pd.getPayment().toString()))));
                         }
-                        
-                        
+
                         pd.setPayment(new BigDecimal(payment));
                         pd.setCheckbox(true);
                         this.DAmount = this.formatDoubleMaster(new BigDecimal(String.valueOf(Double.parseDouble(this.DAmount) + Double.valueOf(pd.getPayment().toString()))));
@@ -306,9 +318,9 @@ public class PaymentController implements Serializable {
                     this.DAmount = this.formatDoubleMaster(new BigDecimal(String.valueOf(Double.parseDouble(this.DAmount) - Double.valueOf(pd.getPayment().toString()))));
                     pd.setPaymentString("");
                     pd.setPayment(null);
-                    
+
                 } else {
-                    
+
                     pd.setPaymentString(pd.getOpenBalance().toString());
                     pd.setPayment(pd.getOriginalAmount());
                     this.DAmount = this.formatDoubleMaster(new BigDecimal(String.valueOf(Double.parseDouble(this.DAmount) + Double.valueOf(pd.getPayment().toString()))));
@@ -336,6 +348,70 @@ public class PaymentController implements Serializable {
 
         this.DAmountApply = this.formatDoubleMaster(new BigDecimal(acum.toString()));
         this.DAmountCredit = this.formatDoubleMaster(new BigDecimal(amount.toString()));
+
+    }
+
+    public void save(String op) {
+        try {
+            if (!this.idCust.equals("0")) {
+
+                if (!this.DAmount.equals("0.00")) {
+                    FbInvoice payment = new FbInvoice();
+                    payment.setIdCia(this.userData.getCurrentCia());
+                    payment.setIdCust(new FbCustomer(new BigDecimal(this.idCust)));
+                    if (op.equals("A")) {
+                        payment.setIdInvoice(BigDecimal.ZERO);
+                    }
+                    payment.setTotal(new BigDecimal(this.formatDoubleMaster(new BigDecimal(this.DAmount))));
+                    payment.setPayMethod(this.pMethod);
+                    payment.setPayReferenceNo(this.pReferenceNo);
+                    payment.setInDate(sdf.format(sd.parse(this.paymentDate)));
+                    
+                    List<FbPaymentDetail> finalList = new ArrayList<>();
+                    
+                    for (FbPaymentDetail pd : payDetailList) {
+                        if (pd.getPayment() != null) {
+                            finalList.add(pd);
+                        }
+                    }
+                    
+                    
+                    
+                    payment.setFbPaymentDetailList(finalList);
+                    payment.setCustEmail(email);
+
+                    String res = iFacade.actPayment(payment, op);
+                    String message = "lblPaymentSuccess";
+                    if (op.equals("A")) {
+                        message = "lblPaymentSuccess";
+                    }
+                    switch(res){
+                        case "0":
+                            this.vb.redirecionar("/view/sales/sales.xhtml");
+                            this.userData.setUses(message);
+                            break;
+                        case "-1":
+                            this.vb.lanzarMensaje("error", "unexpectedError", "unexpectedError");
+                            break;
+                        case "-2":
+                            this.vb.lanzarMensaje("error", "unexpectedError", "unexpectedError");
+                            break;
+                        default:
+                            break;    
+                    }
+                    
+                } else {
+                    this.vb.lanzarMensaje("error", "lblPaymentInvalid", "lblPaymentInvalid");
+
+                }
+
+            } else {
+                this.vb.lanzarMensaje("error", "lblSelectCust", "lblSelectCust");
+            }
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.PaymentController.save()");
+            e.printStackTrace();
+        }
 
     }
 

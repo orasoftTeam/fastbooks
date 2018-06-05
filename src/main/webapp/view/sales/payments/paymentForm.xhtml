@@ -56,13 +56,13 @@
                 </bnu:row>
                 <bnu:row>
                     <bnu:column span="4" >
-                        <bnu:selectOneMenu label="#{messages.lblPaymentMethod}">
+                        <bnu:selectOneMenu label="#{messages.lblPaymentMethod}" value="#{paymentController.PMethod}" >
                             <f:selectItems value="#{paymentController.PMethodList}" var="pm"
                                            itemValue="#{pm.display}" itemLabel="#{pm.display}" />
                         </bnu:selectOneMenu>
                     </bnu:column>
                     <bnu:column span="2" >
-                        <bnu:inputText label="#{messages.lblReferenceNo}" onkeyup="soloNumeros(this);" maxlength="20" />
+                        <bnu:inputText label="#{messages.lblReferenceNo}" value="#{paymentController.PReferenceNo}" onkeyup="soloNumeros(this);" maxlength="20" />
                     </bnu:column>
                     <bnu:column span="4" >
 
@@ -73,8 +73,13 @@
                     </bnu:column>
                 </bnu:row>
                 <p:separator />
-                
-                
+                <h:panelGroup id="messages" class="messages" >
+                <bnu:row>
+                    <bnu:column span="12">
+                        <bnu:messages />
+                    </bnu:column>
+                </bnu:row>
+                </h:panelGroup>
                 <h:panelGroup id="TblTransactions" class="campos"   >
                     
                     <h:panelGroup rendered="#{paymentController.renderMaster('TBL')}" >
@@ -162,11 +167,11 @@
                         <bnu:inputTextarea label="Memo" />
                     </bnu:column>
                 </bnu:row>
-                <bnu:row>
+                <!--<bnu:row>
                     <bnu:column  span="4" >
                         <bnu:inputTextarea label="Attachments" />
                     </bnu:column>
-                </bnu:row>
+                </bnu:row>-->
                 
                 
                 
@@ -188,7 +193,7 @@
 
             </bnu:navbarLinks>
             <h:form styleClass="navbar-form navbar-right" >
-                <bnu:commandButton value="#{messages.save}"  look="success"  style="width: 100%"  />
+                <bnu:commandButton value="#{messages.save}"  look="success"  style="width: 100%" action="#{paymentController.save('A')}" update="@(.messages)"  />
                 
             </h:form>
         </bnu:navBar>

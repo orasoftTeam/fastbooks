@@ -149,7 +149,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             System.out.println("com.fastbooks.facade.FbInvoiceFacade.actPayment()");
             e.printStackTrace();
         }
-    
+    System.out.println("res: " + res);
     return res;
     }
 

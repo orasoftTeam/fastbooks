@@ -63,9 +63,9 @@ public class FbInvoice implements Serializable {
     @Size(max = 50)
     @Column(name = "PAY_REFERENCE_NO")
     private String payReferenceNo;
-    @OneToMany(mappedBy = "idPayment")
+    @OneToMany(mappedBy = "idPayment",fetch = FetchType.LAZY)
     private List<FbPaymentDetail> fbPaymentDetailList;
-    @OneToMany(mappedBy = "idInvoice")
+    @OneToMany(mappedBy = "idInvoice",fetch = FetchType.LAZY)
     private List<FbPaymentDetail> fbPaymentDetailList1;
 
     @Size(max = 50)

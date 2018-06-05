@@ -160,12 +160,21 @@ public class InvoiceController implements Serializable {
 
     public String formatType(String t) {
         String res = "";
-        if (t.equals("IN")) {
-            res = this.validationBean.getMsgBundle("lblInvoiceTypeIn");
-        } else if (t.equals("ES")) {
-            res = this.validationBean.getMsgBundle("lblEstimate");
-        } else if (t.equals("SR")) {
-            res = this.validationBean.getMsgBundle("salesR");
+        switch (t) {
+            case "IN":
+                res = this.validationBean.getMsgBundle("lblInvoiceTypeIn");
+                break;
+            case "ES":
+                res = this.validationBean.getMsgBundle("lblEstimate");
+                break;
+            case "SR":
+                res = this.validationBean.getMsgBundle("salesR");
+                break;
+            case "PA":
+                res = this.validationBean.getMsgBundle("payment");
+                break;
+            default:
+                break;
         }
 
         return res;
@@ -208,6 +217,9 @@ public class InvoiceController implements Serializable {
             case "PD":
                 res = this.validationBean.getMsgBundle("lblPaid");
                 break;
+            case "UN":
+                res = this.validationBean.getMsgBundle("lblUnapplied");
+                break;
 
             default:
                 break;
@@ -218,8 +230,8 @@ public class InvoiceController implements Serializable {
 
     public void print(FbInvoice i, HttpServletRequest req) {
         try {
-            String jasperFile = i.getIdCust() == null? "salesReceiptSinCust": "report1";
-            
+            String jasperFile = i.getIdCust() == null ? "salesReceiptSinCust" : "report1";
+
             this.invoiceModal = this.iFacade.generateInvoice(i, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile(jasperFile, req), formatType(i.getType()));
 
             //this.userData.setSInvoice(invoiceModal);
@@ -287,7 +299,10 @@ public class InvoiceController implements Serializable {
 
         switch (option) {
             case "PRINT":
-                flag = true;
+                if (!type.equals("PA")) {
+                    flag = true;
+                }
+
                 break;
 
             case "EDIT":
@@ -300,7 +315,9 @@ public class InvoiceController implements Serializable {
                 }
                 break;
             case "COPY":
-                flag = true;
+                if (!type.equals("PA")) {
+                    flag = true;
+                }
                 break;
 
             default:
