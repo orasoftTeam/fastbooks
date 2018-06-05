@@ -120,7 +120,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
     */
         try {
             Connection cn = em.unwrap(java.sql.Connection.class);
-            CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_PAYMENT(?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_PAYMENT(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             cs.setInt(1, Integer.parseInt(in.getIdCia().getIdCia().toString()));
             cs.setInt(2, Integer.parseInt(in.getIdInvoice().toString()));
             cs.setInt(3, Integer.parseInt(in.getIdCust().getIdCust().toString()));
@@ -138,10 +138,11 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             
             cs.setString(9, pIdInvoices);
             cs.setString(10, pPayAmounts);
-            cs.setString(11, op);
-            cs.registerOutParameter(12, Types.VARCHAR);
+            cs.setString(11, in.getMessageInvoice());
+            cs.setString(12, op);
+            cs.registerOutParameter(13, Types.VARCHAR);
             cs.execute();
-            res = cs.getString(12);
+            res = cs.getString(13);
             cs.close();
             
         } catch (Exception e) {

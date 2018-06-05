@@ -306,8 +306,14 @@
                             <h:panelGroup rendered="#{invoiceController.showSegunType('CN')}" ><label class="col-form-label col-sm-8" >
                                 #{messages.lblTotalCredit}
                             </label></h:panelGroup>
-                            <h:panelGroup rendered="#{!invoiceController.showSegunType('CN')}" ><label class="col-form-label col-sm-8" >
+                            <h:panelGroup rendered="#{invoiceController.showSegunType('IN')}" ><label class="col-form-label col-sm-8" >
                                 #{messages.lblInvoiceBalanceDue}
+                            </label></h:panelGroup>
+                            <h:panelGroup rendered="#{invoiceController.showSegunType('SR')}" ><label class="col-form-label col-sm-8" >
+                                #{messages.lblInvoiceBalanceDue}
+                            </label></h:panelGroup>
+                            <h:panelGroup rendered="#{invoiceController.showSegunType('ES')}" ><label class="col-form-label col-sm-8" >
+                                #{messages.lblEstimateTotal}
                             </label></h:panelGroup>
                             <div class="col-sm-4">
                                 #{invoiceController.DBalance}

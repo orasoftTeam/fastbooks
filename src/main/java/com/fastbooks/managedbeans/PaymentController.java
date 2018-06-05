@@ -103,6 +103,9 @@ public class PaymentController implements Serializable {
     
     private DateFormat sd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
     private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+    
+    
+    private @Getter @Setter String memo;
 
     /**
      * Creates a new instance of PaymentController
@@ -366,7 +369,7 @@ public class PaymentController implements Serializable {
                     payment.setPayMethod(this.pMethod);
                     payment.setPayReferenceNo(this.pReferenceNo);
                     payment.setInDate(sdf.format(sd.parse(this.paymentDate)));
-                    
+                    payment.setMessageInvoice(this.memo);
                     List<FbPaymentDetail> finalList = new ArrayList<>();
                     
                     for (FbPaymentDetail pd : payDetailList) {
@@ -411,6 +414,24 @@ public class PaymentController implements Serializable {
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.PaymentController.save()");
             e.printStackTrace();
+        }
+
+    }
+    
+        public void refreshComboCust() {
+        if (!this.userData.getFormInCustId().equals("0")) {
+            cList = cFacade.getCustomersByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+            for (FbCustomer c : cList) {
+                if (c.getEmail().equals(this.userData.getFormInCustId())) {
+                    idCust = c.getIdCust().toString();
+                }
+            }
+            this.userData.setFormInCustId("0");
+
+            this.vb.updateComponent("paymentForm:custs");
+            this.changeCust();
+            this.vb.updateComponent("paymentForm:custs");
+            // validationBean.lanzarMensaje("info", "custAdded", "blank");
         }
 
     }

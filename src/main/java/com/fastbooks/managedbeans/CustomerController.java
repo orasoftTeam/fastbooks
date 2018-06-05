@@ -432,6 +432,61 @@ public class CustomerController implements Serializable {
 
     }
     
+    
+        public void registerCustomerInPayment() {
+        if (valCamposInInvoice()) {
+            if (sameSHA) {
+                System.out.println("gettin sameSHA" + sameSHA);
+                customer.setStreetS(customer.getStreet());
+                customer.setCityS(customer.getCity());
+                customer.setEstateS(customer.getEstate());
+                customer.setPostalCodeS(customer.getPostalCode());
+                customer.setCountryS(customer.getCountry());
+            }
+            
+            if (customer.getStreetS().isEmpty()) {
+                customer.setStreetS(customer.getStreet());
+            }
+            
+            if (customer.getCityS().isEmpty()) {
+                customer.setCityS(customer.getCity());
+            }
+            
+            if (customer.getEstateS().isEmpty()) {
+                customer.setEstateS(customer.getEstate());
+            }
+            
+            if (customer.getCountryS().isEmpty()) {
+                customer.setPostalCodeS(customer.getPostalCode());
+            }
+            
+            if (customer.getPostalCodeS().isEmpty()) {
+                customer.setCountryS(customer.getCountry());
+            }
+
+            FbCompania com = new FbCompania();
+            com.setIdCia(BigDecimal.ZERO);
+            customer.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
+            customer.setIdCust(new BigDecimal("0"));
+            customer.setAtachment(this.logourl);
+            System.out.println("getting customer first name" + customer.getFirstname());
+            String res;
+            res = custF.actCustomer(customer, "A");
+            if (res.equals("0")) {
+                //validationBean.lanzarMensaje("info", "custAdded", "blank");
+                this.validationBean.ejecutarJavascript("PF('dlg2').hide();");
+                this.userData.setFormInCustId(customer.getEmail());
+                this.validationBean.updateComponent("paymentForm:custs");
+            } else if (res.equals("-1")) {
+                validationBean.lanzarMensaje("error", "customerRepeatFail", "blank");
+            } else if (res.equals("-2")) {
+                validationBean.lanzarMensaje("error", "unexpectedError", "blank");
+            }
+            System.out.println("obteniendo valores de la shipping same as billing" + customer);
+            customer = new FbCustomer(); //limpiando formulario de add customer..
+        }
+
+    }
         //Validar campos en invoice form
         public boolean valCamposInInvoice() {
 
