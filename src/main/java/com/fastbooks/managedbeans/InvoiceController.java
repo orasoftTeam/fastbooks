@@ -267,8 +267,12 @@ public class InvoiceController implements Serializable {
 
     public void edit(FbInvoice in) {
         this.userData.setFbInvoice(in);
-        this.userData.setInvoiceTypeForm(in.getType());
-        this.validationBean.redirecionar("/view/sales/invoiceForm.xhtml");
+        if (!in.getType().equals("PA")) {
+            this.userData.setInvoiceTypeForm(in.getType());
+            this.validationBean.redirecionar("/view/sales/invoiceForm.xhtml");
+        }else if(in.getType().equals("PA")){
+            this.validationBean.redirecionar("/view/sales/payments/paymentForm.xhtml");
+        }
     }
 
     public void copy(FbInvoice in) {

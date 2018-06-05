@@ -101,6 +101,10 @@ public class PaymentController implements Serializable {
     @Setter
     boolean formTouched = false;
     
+    private @Getter
+    @Setter
+    boolean isMod = false;    
+    
     private DateFormat sd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
     private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
     
@@ -132,6 +136,9 @@ public class PaymentController implements Serializable {
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         Calendar cal = Calendar.getInstance();
         paymentDate = dateFormat.format(cal.getTime());
+        
+        
+        this.assignEdit();
     }
 
     public void changeCust() {
@@ -435,5 +442,19 @@ public class PaymentController implements Serializable {
         }
 
     }
+        
+     public void assignEdit(){
+     FbInvoice in = this.userData.getFbInvoice();
+         try {
+             if (in != null) {
+                 isMod = true;
+                 title = "Editar";
+                 this.userData.setFbInvoice(null);
+             }
+         } catch (Exception e) {
+             System.out.println("com.fastbooks.managedbeans.PaymentController.assignEdit()");
+             e.printStackTrace();
+         }
+     }
 
 }
