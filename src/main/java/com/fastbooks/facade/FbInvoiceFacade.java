@@ -110,7 +110,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
     
     
     public String actPayment(FbInvoice in, String op){
-    String res = "";
+    String res = "def";
     String pIdInvoices = "";
     String pPayAmounts = "";
     /*
@@ -132,7 +132,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             
             for (FbPaymentDetail pd : in.getFbPaymentDetailList()) {
                 pIdInvoices += pd.getIdInvoice().getIdInvoice().toString() + ",";
-                pPayAmounts += pd.getPaymentString() + ",";
+                pPayAmounts += String.format("%.2f", pd.getPayment()) + ";";
             }
             
             
@@ -143,6 +143,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             cs.registerOutParameter(13, Types.VARCHAR);
             cs.execute();
             res = cs.getString(13);
+           // res = pIdInvoices+" :: "+pPayAmounts;
             cs.close();
             
         } catch (Exception e) {
