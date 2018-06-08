@@ -24,6 +24,9 @@ public class GlobalParameters {
     private @Getter @Setter String pass = "orasoft123";
     private @Getter @Setter String imgBytesSize = "1000000";
     private @Getter @Setter String key = "fastbooks20";
+    private @Getter @Setter String title = "HUBB";
+    private @Getter @Setter String logoFront = "676x250.png";
+    private @Getter @Setter String logoBack = "62x20.png";
 
    /* public GlobalParameters() {
         try {

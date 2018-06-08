@@ -19,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -48,6 +49,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "FbCompania.findByFechaCreacion", query = "SELECT f FROM FbCompania f WHERE f.fechaCreacion = :fechaCreacion"),
     @NamedQuery(name = "FbCompania.findByTelefono", query = "SELECT f FROM FbCompania f WHERE f.telefono = :telefono")})
 public class FbCompania implements Serializable {
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "fbCompania")
+    private FbCompaniaPref fbCompaniaPref;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fbCompania")
     private List<FbPerfilXUsuario> fbPerfilXUsuarioList;
@@ -315,6 +319,14 @@ public class FbCompania implements Serializable {
 
     public void setFbUsuarioXCiaList(List<FbUsuarioXCia> fbUsuarioXCiaList) {
         this.fbUsuarioXCiaList = fbUsuarioXCiaList;
+    }
+
+    public FbCompaniaPref getFbCompaniaPref() {
+        return fbCompaniaPref;
+    }
+
+    public void setFbCompaniaPref(FbCompaniaPref fbCompaniaPref) {
+        this.fbCompaniaPref = fbCompaniaPref;
     }
     
 }

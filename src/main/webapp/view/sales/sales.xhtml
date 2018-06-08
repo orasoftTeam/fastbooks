@@ -127,7 +127,7 @@
                                     <bnu:navCommandLink  value="#{cust.firstname}" href="#{request.contextPath}/view/sales/editCustomer.xhtml"></bnu:navCommandLink>
                                 </bnu:dataTableColumn>
                                 <bnu:dataTableColumn label="#{messages.Tcampo2}" value="#{cust.phone}"></bnu:dataTableColumn>
-                                <bnu:dataTableColumn label="#{messages.Tcampo3}" value="#{cust.balance.toString()}"></bnu:dataTableColumn>            
+                                <bnu:dataTableColumn label="#{messages.Tcampo3}" value="#{userData.formatMaster(cust.balance.toString())}"></bnu:dataTableColumn>            
                                 <bnu:dataTableColumn label="#{messages.Tcampo4}">
                                     <bnu:dropButton value="#{messages.edit}" look="primary" >
                                         <bnu:commandButton value="#{messages.edit}" action="#{customerController.editCustomer(cust, 'U')}" style="width:100%" />

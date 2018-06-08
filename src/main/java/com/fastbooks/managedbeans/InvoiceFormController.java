@@ -645,18 +645,18 @@ public class InvoiceFormController implements Serializable {
         switch (p.getType()) {
             case "IN":
                 res = p.getName() + " (" + validationBean.getMsgBundle("lblPrice") + ":"
-                        + p.getPrice().toString() + ", " + validationBean.getMsgBundle("lblQuant")
+                        + userData.formatMaster(p.getPrice().toString()) + ", " + validationBean.getMsgBundle("lblQuant")
                         + ":" + p.getInitQuant().toString();
 
                 break;
             case "BU":
                 res = p.getName() + " (" + validationBean.getMsgBundle("lblPrice") + ":"
-                        + p.getTotalBundle().toString();
+                        + userData.formatMaster(p.getTotalBundle().toString());
 
                 break;
             default:
                 res = p.getName() + " (" + validationBean.getMsgBundle("lblPrice") + ":"
-                        + p.getPrice().toString();
+                        + userData.formatMaster(p.getPrice().toString());
                 break;
 
         }

@@ -57,7 +57,7 @@
                         <bnu:column span="2">
                             <h:panelGroup rendered="#{invoiceController.showSegunType('CN')}" ><h4 style="margin-top: -5px">#{messages.lblAmountToRefund}</h4></h:panelGroup>
                             <h:panelGroup rendered="#{!invoiceController.showSegunType('CN')}" ><h4 style="margin-top: -5px">#{messages.lblInvoiceBalanceDue}</h4></h:panelGroup>
-                            <h1 style="margin-top: -5px" >#{invoiceController.DBalance}</h1>
+                            <h1 style="margin-top: -5px" >#{userData.formatMaster(invoiceController.DBalance)}</h1>
                         </bnu:column>
                     </bnu:row>
                     <bnu:row>
@@ -222,8 +222,8 @@
                             <bnu:dataTableColumn label="#{messages.lblQuant}"  >
                                 <bnu:inputText  value="#{det.itemQuant}"  tooltip="#{invoiceController.tooltipQuant(det.idProd)}" onkeyup="soloNumeros(this)" maxlength="4"   onblur="ajax:invoiceController.updateTotal();"  update="@form" />
                             </bnu:dataTableColumn>
-                            <bnu:dataTableColumn label="#{messages.lblInDetRate}" value="#{det.itemRate}" />
-                            <bnu:dataTableColumn label="#{messages.lblInDetAmount}" value="#{invoiceController.formatOutput(det.itemAmount)}" />
+                            <bnu:dataTableColumn label="#{messages.lblInDetRate}" value="#{userData.formatMaster(det.itemRate)}" />
+                            <bnu:dataTableColumn label="#{messages.lblInDetAmount}" value="#{userData.formatMaster(det.itemAmount)}" />
                             <bnu:dataTableColumn label="#{messages.lblInvoiceTax}" rendered="#{invoiceController.hasTax}" >
                                 <bnu:selectOneMenu value="#{det.itemTax}" update="@form" onchange="ajax:invoiceController.updateTotal();" >
                                     <f:selectItems value="#{invoiceController.taxList}" var="tax" itemLabel="#{tax.name} (#{tax.rate}%)" itemValue="#{tax.idTax.toString()}" />
@@ -244,7 +244,7 @@
                                 #{messages.lblInvoiceSubTotal}
                             </label>
                             <div class="col-sm-4">
-                                #{invoiceController.DSubTotal}
+                                #{userData.formatMaster(invoiceController.DSubTotal)}
                             </div>
                         </div>
                         <div class="form-group row">
@@ -269,12 +269,12 @@
                         <div class="form-group row">
                             <label class="col-form-label col-sm-8" >
                                 <h:panelGrid rendered="#{invoiceController.showShTax()}" >
-                                    Shipping cost #{invoiceController.DShCostTaxName} of #{invoiceController.shCost}
+                                    Shipping cost #{invoiceController.DShCostTaxName} of #{userData.formatMaster(invoiceController.shCost)}
                                 </h:panelGrid>
                             </label>
                             <div class="col-sm-4">
                                 <h:panelGrid rendered="#{invoiceController.showShTax()}" >
-                                    #{invoiceController.DShCostTaxAmount}
+                                    #{userData.formatMaster(invoiceController.DShCostTaxAmount)}
                                 </h:panelGrid>
                             </div>
                         </div>
@@ -287,10 +287,10 @@
                         <ui:repeat value="#{invoiceController.taxesAmountList}" var="it">
                             <div class="form-group row">
                                 <label class="col-form-label col-sm-8" >
-                                    #{it.idTax.name} #{it.idTax.rate}% #{messages.lblInTaxOf} #{invoiceController.formatOutput(it.fromAmount)}
+                                    #{it.idTax.name} #{it.idTax.rate}% #{messages.lblInTaxOf} #{userData.formatMaster(it.fromAmount)}
                                 </label>
                                 <div class="col-sm-4">
-                                    #{invoiceController.formatOutput(it.taxAmount)}
+                                    #{userData.formatMaster(it.taxAmount)}
                                 </div>
                             </div>
                         </ui:repeat>
@@ -299,7 +299,7 @@
                                 #{messages.lblInvoiceTotal}
                             </label>
                             <div class="col-sm-4">
-                                #{invoiceController.DTotal}
+                                #{userData.formatMaster(invoiceController.DTotal)}
                             </div>
                         </div>
                         <div class="form-group row">
@@ -316,7 +316,7 @@
                                 #{messages.lblEstimateTotal}
                             </label></h:panelGroup>
                             <div class="col-sm-4">
-                                #{invoiceController.DBalance}
+                                #{userData.formatMaster(invoiceController.DBalance)}
                             </div>
                         </div>
                         <p:separator/>

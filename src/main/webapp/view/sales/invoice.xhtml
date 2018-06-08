@@ -160,10 +160,10 @@
                     <bnu:dataTableColumn   label="#{messages.lblInvoiceNo}"  value="#{in.noDot}" ></bnu:dataTableColumn>
                     <bnu:dataTableColumn label="#{messages.lblInvocieCustomer }" value="#{in.idCust.displayName}" ></bnu:dataTableColumn>
                     <bnu:dataTableColumn label="#{messages.lblIncoiceDueDate}" value="#{in.dueDate}" ></bnu:dataTableColumn>
-                    <bnu:dataTableColumn label="#{messages.lblInvoiceBalance}" value="#{in.actualBalance}" ></bnu:dataTableColumn>
-                    <bnu:dataTableColumn label="#{messages.lblInvoiceTotalBTax}" value="#{in.subTotal}" ></bnu:dataTableColumn>
-                    <bnu:dataTableColumn label="#{messages.lblInvoiceTax}" value="#{in.taxTotal}"  ></bnu:dataTableColumn>
-                    <bnu:dataTableColumn label="#{messages.lblInvoiceTotal}"  value="#{in.total}" ></bnu:dataTableColumn>
+                    <bnu:dataTableColumn label="#{messages.lblInvoiceBalance}" value="#{userData.formatMaster(in.actualBalance.toString())}" ></bnu:dataTableColumn>
+                    <bnu:dataTableColumn label="#{messages.lblInvoiceTotalBTax}" value="#{userData.formatMaster(in.subTotal.toString())}" ></bnu:dataTableColumn>
+                    <bnu:dataTableColumn label="#{messages.lblInvoiceTax}" value="#{userData.formatMaster(in.taxTotal.toString())}"  ></bnu:dataTableColumn>
+                    <bnu:dataTableColumn label="#{messages.lblInvoiceTotal}"  value="#{userData.formatMaster(in.total.toString())}" ></bnu:dataTableColumn>
                     <bnu:dataTableColumn label="#{messages.lblInvoiceStatus}" value="#{invoiceTableController.formatStatus(in.status)}" ></bnu:dataTableColumn>
                     <bnu:dataTableColumn label="#{messages.lblAction}">
 

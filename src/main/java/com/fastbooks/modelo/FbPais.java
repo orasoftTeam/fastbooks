@@ -39,6 +39,13 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "FbPais.findByFechaCreacion", query = "SELECT f FROM FbPais f WHERE f.fechaCreacion = :fechaCreacion")})
 public class FbPais implements Serializable {
 
+    @Size(max = 10)
+    @Column(name = "LOCALE")
+    private String locale;
+    @Size(max = 10)
+    @Column(name = "LANG")
+    private String lang;
+
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
@@ -125,6 +132,22 @@ public class FbPais implements Serializable {
     @Override
     public String toString() {
         return "com.fastbooks.modelo.FbPais[ idPais=" + idPais + " ]";
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
     }
     
 }

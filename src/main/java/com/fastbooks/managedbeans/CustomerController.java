@@ -127,7 +127,7 @@ public class CustomerController implements Serializable {
 
     //Adding a new customer
     public void registerC() {
-        if (valCampos()) {
+        if (valCamposInInvoice()) {
             if (sameSHA) {
                 System.out.println("gettin sameSHA" + sameSHA);
                 customer.setStreetS(customer.getStreet());
@@ -144,6 +144,9 @@ public class CustomerController implements Serializable {
             customer.setAtachment(this.logourl);
             System.out.println("getting customer first name" + customer.getFirstname());
             String res;
+            if (customer.getDisplayName().isEmpty()) {
+                customer.setDisplayName(customer.getFirstname() + " " + customer.getLastname());
+            }
             res = custF.actCustomer(customer, "A");
             if (res.equals("0")) {
                 validationBean.lanzarMensaje("info", "custAdded", "blank");
@@ -415,6 +418,9 @@ public class CustomerController implements Serializable {
             customer.setAtachment(this.logourl);
             System.out.println("getting customer first name" + customer.getFirstname());
             String res;
+            if (customer.getDisplayName().isEmpty()) {
+                customer.setDisplayName(customer.getFirstname() + " " + customer.getLastname());
+            }
             res = custF.actCustomer(customer, "A");
             if (res.equals("0")) {
                 //validationBean.lanzarMensaje("info", "custAdded", "blank");
@@ -469,6 +475,11 @@ public class CustomerController implements Serializable {
             customer.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
             customer.setIdCust(new BigDecimal("0"));
             customer.setAtachment(this.logourl);
+            
+            if (customer.getDisplayName().isEmpty()) {
+                customer.setDisplayName(customer.getFirstname() + " " + customer.getLastname());
+            }
+            
             System.out.println("getting customer first name" + customer.getFirstname());
             String res;
             res = custF.actCustomer(customer, "A");
@@ -493,8 +504,8 @@ public class CustomerController implements Serializable {
         boolean flag = false;
         
         if (validationBean.validarCampoVacio(this.customer.getCompany(), "warn", "valErr", "reqComp")
-                && validationBean.validarSoloLetras(this.customer.getCompany(), "warn", "valErr", "reqComp")
-                && validationBean.validarCampoVacio(this.customer.getEmail(), "warn", "valErr", "reqEmail")
+               // && validationBean.validarSoloLetras(this.customer.getCompany(), "warn", "valErr", "reqComp")
+                //&& validationBean.validarCampoVacio(this.customer.getEmail(), "warn", "valErr", "reqEmail")
                 && validationBean.validarEmail(this.customer.getEmail(), "warn", "valErr", "reqEmail")
                 && validationBean.validarCampoVacio(this.customer.getStreet(), "warn", "valErr", "reqStreet")
                 && validationBean.validarCampoVacio(this.customer.getCity(), "warn", "valErr", "reqCity")
@@ -502,11 +513,11 @@ public class CustomerController implements Serializable {
                 && validationBean.validarCampoVacio(this.customer.getEstate(), "warn", "valErr", "reqState")
                 && validationBean.validarSoloLetras(this.customer.getEstate(), "warn", "valErr", "reqState")
                 && validationBean.validarCampoVacio(this.customer.getPostalCode(), "warn", "valErr", "reqPostalC")
-                && validationBean.validarSoloNumeros(this.customer.getPostalCode(), "warn", "valErr", "reqPostalC")
+                //&& validationBean.validarSoloNumeros(this.customer.getPostalCode(), "warn", "valErr", "reqPostalC")
                 && validationBean.validarCampoVacio(this.customer.getCountry(), "warn", "valErr", "reqCountry")
                 && validationBean.validarSoloLetras(this.customer.getCountry(), "warn", "valErr", "reqCountry")
-                && validationBean.validarCampoVacio(this.customer.getDisplayName(), "warn", "valErr", "lblReqCustomerName")
-                && validationBean.validarSoloLetras(this.customer.getDisplayName(), "warn", "valErr", "lblReqCustomerName")
+                //&& validationBean.validarCampoVacio(this.customer.getDisplayName(), "warn", "valErr", "lblReqCustomerName")
+                //&& validationBean.validarSoloLetras(this.customer.getDisplayName(), "warn", "valErr", "lblReqCustomerName")
                 && validationBean.validarCampoVacio(this.customer.getFirstname(), "warn", "valErr", "lblReqCustomerName")
                 && validationBean.validarSoloLetras(this.customer.getFirstname(), "warn", "valErr", "lblReqCustomerName")
                 && validationBean.validarCampoVacio(this.customer.getLastname(), "warn", "valErr", "lblReqCustomerLastName")

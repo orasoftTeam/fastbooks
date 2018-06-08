@@ -7,7 +7,7 @@
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
         <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
-        <title>Fastbooks</title>
+        <title>#{userData.GParameters.title}</title>
         <link rel="stylesheet" id="modernize-style-css" href="./assets/style.css" type="text/css" media="all"></link>
         <script type="text/javascript" src="./assets/jquery.js"></script>
         <script type="text/javascript" src="./assets/jquery-migrate.min.js"></script>
@@ -27,7 +27,7 @@
                     </ul>
                 </h:panelGroup>
                 <a href="index.xhtml" class="custom-logo-link" rel="home" itemprop="url">
-                    <img width="676" height="250" src="./assets/logo-fastbooks.svg" class="custom-logo" alt="Fastbooks" itemprop="logo" />
+                    <img width="676" height="250" src="resources/img/#{userData.GParameters.logoFront}" class="custom-logo" alt="#{userData.GParameters.title}" itemprop="logo" />
                 </a>
                 <a href="javascript:void(0);" class="mm-toggle"><img src="./assets/Menu-512.png" /></a>
                 <div class="mm-container">
@@ -240,7 +240,7 @@
                     <div class="col-md-4 text-center">
                         <img src="./assets/cloud.png"></img>
                         <h3 class="mont">Automatic backups</h3>
-                        <h4 class="mont mont-light">FastBooks Online backs up your data every day, so your figures are always up-to-date</h4>
+                        <h4 class="mont mont-light">#{userData.GParameters.title} Online backs up your data every day, so your figures are always up-to-date</h4>
                     </div>
                     <div class="col-md-4 text-center">
                         <img src="./assets/security.png"></img>
@@ -263,18 +263,18 @@
 
             <div class="container">
                 <div class="padder mont mont-light" style="text-align:justify;">
-                    1. FastBooks Online requires a computer with Internet Explorer 10, Firefox, Chrome, or Safari 6 and an Internet connection
-                    (a high-speed connection is recommended). The FastBooks Online mobile app works with iPhone, iPad, and Android phones and
-                    tablets. FastBooks Online is accessible on mobile browsers on iOS, Android, and Blackberry mobile devices. Devices sold separately;
-                    data plan required. Not all features are available on the mobile apps and mobile browser. FastBooks Online mobile access
-                    is included with your FastBooks Online subscription at no additional cost. Data access is subject to cellular-internet provider
+                    1. #{userData.GParameters.title} Online requires a computer with Internet Explorer 10, Firefox, Chrome, or Safari 6 and an Internet connection
+                    (a high-speed connection is recommended). The #{userData.GParameters.title} Online mobile app works with iPhone, iPad, and Android phones and
+                    tablets. #{userData.GParameters.title} Online is accessible on mobile browsers on iOS, Android, and Blackberry mobile devices. Devices sold separately;
+                    data plan required. Not all features are available on the mobile apps and mobile browser. #{userData.GParameters.title} Online mobile access
+                    is included with your #{userData.GParameters.title} Online subscription at no additional cost. Data access is subject to cellular-internet provider
                     network availability and occasional downtime due to system and server maintenance and events beyond your control. Product
-                    registration required. 2. Requires your accountant to subscribe to FastBooks Online Accountant, sold separately. Alternatively
-                    with FastBooks Online Essentials and Plus you can designate your accountant as one of your users. 3. Data access is subject
+                    registration required. 2. Requires your accountant to subscribe to #{userData.GParameters.title} Online Accountant, sold separately. Alternatively
+                    with #{userData.GParameters.title} Online Essentials and Plus you can designate your accountant as one of your users. 3. Data access is subject
                     to Internet or cellular provider network availability and occasional downtime due to events beyond our control. 4. 128-bit
                     Secure Sockets Layer (SSL) is the same encryption technology used by some of the world's top banking institutions to secure
                     data that is sent over the Internet. 5. Support is free during the 30-day trial and included with your paid subscription
-                    to FastBooks Online, available Monday through Friday between 7 am - 12 am (GMT+8). Your subscription must be current. Intuit
+                    to #{userData.GParameters.title} Online, available Monday through Friday between 7 am - 12 am (GMT+8). Your subscription must be current. Intuit
                     reserves the right to limit the length of the call. Terms, conditions, features, pricing, service and support are subject
                     to change without notice.
                     <br></br>
@@ -305,9 +305,9 @@
                         </div>
                         <div class="col-md-3">
                             <h3 class="mont color-success">Learn &amp; Support</h3>
-                            <a href="#"><h4 class="mont mont-light text-white no-margin">FastBooks Online Support</h4></a>
-                            <a href="#"><h4 class="mont mont-light text-white no-margin">Contact FastBooks Online Support</h4></a>
-                            <a href="#"><h4 class="mont mont-light text-white no-margin">FastBooks Online FAQ</h4></a>
+                            <a href="#"><h4 class="mont mont-light text-white no-margin">#{userData.GParameters.title} Online Support</h4></a>
+                            <a href="#"><h4 class="mont mont-light text-white no-margin">Contact #{userData.GParameters.title} Online Support</h4></a>
+                            <a href="#"><h4 class="mont mont-light text-white no-margin">#{userData.GParameters.title} Online FAQ</h4></a>
                         </div>
                     </div>
                     <br></br>
@@ -328,7 +328,7 @@
                     <div class="row">
                         <div class="col-md-8">
                             <h5 class="mont mont-light">
-                                © 2018 FastBooks <br></br>
+                                © 2018 #{userData.GParameters.title} <br></br>
                                 All rights reserved. Terms and conditions, features, support, pricing, and service options subject to change<br></br>
                                 without notice.
                             </h5>

@@ -44,7 +44,7 @@
                                 <bnu:dataTableColumn label="#{messages.firstName}" value="#{prod.name}" ></bnu:dataTableColumn>
                                 <bnu:dataTableColumn label="#{messages.lblSKU}" value="#{prod.sku}" ></bnu:dataTableColumn>
                                 <bnu:dataTableColumn label="#{messages.lblType}" value="#{productController.convertType(prod.type)}" ></bnu:dataTableColumn>
-                                <bnu:dataTableColumn label="#{messages.lblPrice}" value="#{prod.price}" ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblPrice}" value="#{userData.formatMaster(prod.price)}" ></bnu:dataTableColumn>
                                 <bnu:dataTableColumn label="#{messages.lblDesc}" value="#{prod.descrip}" ></bnu:dataTableColumn>
                                 <bnu:dataTableColumn label="#{messages.lblQuant}" value="#{prod.initQuant}" ></bnu:dataTableColumn>
                                 <bnu:dataTableColumn label="#{messages.lblCate}" value="#{prod.idCat.name}" ></bnu:dataTableColumn>
@@ -233,9 +233,9 @@
                                             var="bi"
                                             >
                                             <bnu:dataTableColumn label="#{messages.lblProductComplete}"  value="#{bi.itemName}" />
-                                            <bnu:dataTableColumn label="#{messages.lblPrice}"  value="#{productController.formatDouble(bi.itemPrice)}"/>
+                                            <bnu:dataTableColumn label="#{messages.lblPrice}"  value="#{userData.formatMaster(bi.itemPrice)}"/>
                                             <bnu:dataTableColumn label="#{messages.lblQuant}" value="#{bi.quant}" />
-                                            <bnu:dataTableColumn label="#{messages.lblTotal}" value="#{bi.total}" />
+                                            <bnu:dataTableColumn label="#{messages.lblTotal}" value="#{userData.formatMaster(bi.total)}" />
                                             <bnu:dataTableColumn label="#{messages.lblAction}">
                                                 <bnu:commandButton icon-awesome="fa-trash" value="" icon-size="lg" ajax="true" action="#{productController.removeItemBundle(bi)}" />
                                                 
@@ -249,7 +249,7 @@
                                         <h:outputText value="#{messages.lblTotal}" style="font-weight: bold;" />
                                         </bnu:column>
                                     <bnu:column span="2">
-                                        <h:outputText value="#{productController.bundleTotal}" />
+                                        <h:outputText value="#{userData.formatMaster(productController.bundleTotal)}" />
                                         </bnu:column>
                                 </bnu:row>
                                     </h:panelGroup>

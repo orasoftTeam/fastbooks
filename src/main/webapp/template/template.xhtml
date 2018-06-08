@@ -12,7 +12,7 @@
 
         <!--<h:outputStylesheet name="css/default.css" />
         <h:outputStylesheet name="css/cssLayout.css" />-->
-        <title>FastBooks</title>
+        <title>#{userData.GParameters.title}</title>
     </h:head>
 
     <h:body>
@@ -22,7 +22,7 @@
                 <bnu:navBar  brandHref="index.xhtml" style="background-color: #2c3d38" fixed="top" fluid="true">
                    <bnu:navbarLinks pull="left" styleClass="hidden-xs hidden-sm logo" >
                        <bnu:navLink value="" href="#{request.contextPath}/index.xhtml"  >
-                            <p:graphicImage name="img/Sin-título-2.png" width="62" height="20" />
+                           <p:graphicImage name="img/#{userData.GParameters.logoBack}" width="62" height="20" />
                         </bnu:navLink>
                     </bnu:navbarLinks>
                     <bnu:navbarLinks  style="margin-left: 125px" pull="left"  styleClass="hidden-xs hidden-sm btnGrp"   >
@@ -34,14 +34,14 @@
                     </bnu:navbarLinks>          
                     <bnu:navbarLinks pull="right">
                         <bnu:dropMenu value="Menu" icon-awesome="" styleClass="hidden-lg hidden-md" >
-                            <bnu:navLink href="/Fastbooks/view/dashboard.xhtml" value="#{messages.Dashboard}" active="true"/>
+                            <bnu:navLink href="#{request.contextPath}/view/dashboard.xhtml" value="#{messages.Dashboard}" active="true"/>
                             <!-- <bnu:navLink href="#" value="#{messages.Banking}" /> -->
                             <bnu:navLink href="#{request.contextPath}/view/sales/sales.xhtml" value="#{messages.Sales}" />
                             <!--<bnu:navLink href="#" value="#{messages.Expenses}" /> -->
 
-                            <bnu:navLink value="#{messages.Employees}" href="/Fastbooks/view/employee/employee.xhtml" />
+                            <bnu:navLink value="#{messages.Employees}" href="#{request.contextPath}/view/employee/employee.xhtml" />
                            <!-- <bnu:navLink value="#{messages.Reports}" /> -->
-                            <bnu:navLink value="#{messages.Taxes}" href="/Fastbooks/view/taxes/tax.xhtml"/>
+                            <bnu:navLink value="#{messages.Taxes}" href="#{request.contextPath}/view/taxes/tax.xhtml"/>
                            <!-- <bnu:navLink value="#{messages.Accounting}" href="/Fastbooks/view/accounting/accounting.xhtml" /> -->
                         </bnu:dropMenu>
                         <bnu:dropMenu  value="" iconAwesome="fa-cog" rendered="#{userData.loggedUser != null}" styleClass="test" >

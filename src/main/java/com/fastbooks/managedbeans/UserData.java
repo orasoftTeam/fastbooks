@@ -26,6 +26,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
 
@@ -73,6 +74,9 @@ public class UserData implements Serializable {
     private @Getter @Setter String formInProdId = "0";
     private @Getter @Setter String formInCustId = "0";
     private @Getter @Setter String invoiceTypeForm = "IN";
+    private @Getter @Setter String autoLocale = "";
+    private @Getter @Setter Locale country;
+    
     
     public String getEmail() {
         return email;
@@ -137,6 +141,24 @@ public class UserData implements Serializable {
 
         
     }
+    
+    /* @PostConstruct
+    public void init(){
+       System.out.println("INITIALIZATING SESSION BEAN!!!!");
+        Locale requestLocale = new Locale("en", "us");//FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
+        System.out.println(requestLocale.toString());
+        System.out.println(requestLocale.getDisplayName());
+        System.out.println(requestLocale.getCountry());
+        System.out.println(requestLocale.getLanguage());
+        System.out.println(requestLocale.getDisplayLanguage());
+        System.out.println(requestLocale.getDisplayCountry());
+        
+        System.out.println("-------------------------------------------------------");
+        BigDecimal doble = new BigDecimal("0");
+        java.text.NumberFormat format = java.text.NumberFormat.getCurrencyInstance(requestLocale);
+        System.out.println(format.format(doble));
+        System.out.println("-------------------------------------------------------");
+    }*/
 
     public List<Country> getList() {
         return list;
@@ -200,15 +222,6 @@ public class UserData implements Serializable {
             user = userFacade.login(email, pass);
             System.out.println(user.toString());
             if (!String.valueOf(user.getIdUsuario()).equals("0")) {
-                /*loggedUser = new UserForm();
-           loggedUser.setIdUsuario(String.valueOf(user.getIdUsuario()));
-           loggedUser.setEmail(user.getEmail());
-           loggedUser.setPassword(user.getClave());
-           loggedUser.setFirstName(user.getFirstname());
-           loggedUser.setLastName(user.getLastname());
-           System.out.println(loggedUser.toString());
-           loggedUser.setCias(userFacade.getUserCompaniasById(loggedUser.getIdUsuario()));
-           System.err.println("cias: " + loggedUser.getCias().toString());*/
                 loggedUser = user;
                 this.email = "";
                 this.pass = "";
@@ -217,6 +230,13 @@ public class UserData implements Serializable {
                     //redirect to dashboard and set id_cia and profile
                     currentCia = loggedUser.getFbUsuarioXCiaList().get(0).getFbCompania();
                     perfil = loggedUser.getFbPerfilXUsuarioList().get(0).getFbPerfiles();
+                    
+                    if (currentCia.getFbCompaniaPref() != null) {
+                        country = new Locale(currentCia.getFbCompaniaPref().getLang(), currentCia.getFbCompaniaPref().getCountry());
+                    }else{
+                        country = new Locale("en", "us");
+                    }
+                    
                     validationBean.redirecionar("/view/dashboard.xhtml");
                 } else {
                     //redirect to chooseCompany and set id_cia and profile with the selected
@@ -296,6 +316,7 @@ public class UserData implements Serializable {
         //list.add(new Country("France", "French", "fr", new Locale("fr")));
         list.add(new Country("El Salvador", validationBean.getMsgBundle("lblSpanish"), "es", new Locale("es")));
     
+        System.out.println("INIT LANGUAGES!!");
     }
     
     public boolean activo(String pag){
@@ -306,9 +327,30 @@ public class UserData implements Serializable {
         return requestContext.getRequestURI().contains(pag.toLowerCase());
     }
     
+    public String formatMaster(String obj){
+        java.text.NumberFormat format = java.text.NumberFormat.getCurrencyInstance(country);
+        //obj = "249.57";
+        String res = "";
+        if(!obj.isEmpty()){
+        Double dobbs = Double.parseDouble(obj);
+        res = format.format(dobbs);
+            if (dobbs < 0) {
+                //formatear para negativo
+               res = res.substring(1, 2) + " -" + res.substring(2, res.length()-1);
+                
+                
+            }
+        
+        
+        }
+        
+        return res;
+    }
+    
     @PreDestroy
     public void destory(){
     this.validationBean.redirecionar("/");
+        System.out.println("com.fastbooks.managedbeans.UserData.destory()");
     }
    
 }

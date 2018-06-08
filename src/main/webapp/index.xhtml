@@ -7,7 +7,7 @@
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
         <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
-        <title>Fastbooks</title>
+        <title>#{userData.GParameters.title}</title>
         <link rel="stylesheet" id="modernize-style-css" href="./assets/style.css" type="text/css" media="all"></link>
         <script type="text/javascript" src="./assets/jquery.js"></script>
         <script type="text/javascript" src="./assets/jquery-migrate.min.js"></script>
@@ -39,7 +39,7 @@
                     </ul>-->
                 </h:panelGroup>
                 <a href="index.xhtml" class="custom-logo-link" rel="home" itemprop="url">
-                    <img width="676" height="250" src="./assets/logo-fastbooks.svg" class="custom-logo" alt="Fastbooks" itemprop="logo" />
+                    <img width="676" height="250" src="resources/img/#{userData.GParameters.logoFront}" class="custom-logo" alt="#{userData.GParameters.title}" itemprop="logo" />
                 </a>
                 <a href="javascript:void(0);" class="mm-toggle"><img src="./assets/Menu-512.png" /></a>
                 <div class="mm-container">
@@ -71,7 +71,7 @@
 
             <div class="home-section-one">
                 <div class="container text-center">
-                    <h1 class="text-center mont mont-light mt-large">#{messages.fb1}<strong>#{messages.fb2}</strong> #{messages.fb3}</h1>
+                    <h1 class="text-center mont mont-light mt-large"><strong>#{userData.GParameters.title}</strong> #{messages.fb3}</h1>
                     <a class="big-btn mont mont-light btn btn-bordered" href="#">#{messages.BtnlearnMOF}</a>
                     <div class="row">
                         <h2 class="mt-large mont text-left section-two-title"><strong>#{messages.fb4}<br></br>#{messages.fb5}</strong></h2>

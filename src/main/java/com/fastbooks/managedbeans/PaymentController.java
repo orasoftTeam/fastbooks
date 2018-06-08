@@ -467,8 +467,18 @@ public class PaymentController implements Serializable {
          try {
              if (in != null) {
                  isMod = true;
-                 title = "Editar";
+                 title = this.vb.getMsgBundle("lblEditPayment");
                  this.userData.setFbInvoice(null);
+                 
+                 this.idCust = in.getIdCust().getIdCust().toString();
+                 this.changeCust();
+                 
+                 this.DAmount = in.getTotal().toString();
+                 this.paymentDate = in.getInDate();
+                 
+                 System.out.println(in.getFbPaymentDetailList().size() + ":: 1:" + in.getFbPaymentDetailList1().size());
+                 
+                 this.actualizarResults();
              }
          } catch (Exception e) {
              System.out.println("com.fastbooks.managedbeans.PaymentController.assignEdit()");
