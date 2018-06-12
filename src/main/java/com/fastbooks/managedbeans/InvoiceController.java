@@ -131,6 +131,7 @@ public class InvoiceController implements Serializable {
     public void init() {
         try {
             if (this.userData.getInvoiceSql().equals("0")) {
+                //iList =  iFacade.getInvoicesByIdCiaNonJpa(this.userData.getCurrentCia().getIdCia().toString());
                 iList = iFacade.getInvoicesByIdCia(this.userData.getCurrentCia().getIdCia().toString());
                 /*WriteXMLFile xml = new WriteXMLFile();
                 xml.crearXML(iList);*/

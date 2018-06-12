@@ -24,6 +24,7 @@ import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -66,12 +67,11 @@ public class PaymentController implements Serializable {
     private @Getter
     @Setter
     String paymentDate;
-    
+
     private @Getter
     @Setter
     String pMethod;
-    
-    
+
     private @Getter
     @Setter
     String pReferenceNo;
@@ -101,16 +101,25 @@ public class PaymentController implements Serializable {
     private @Getter
     @Setter
     boolean formTouched = false;
-    
+
     private @Getter
     @Setter
-    boolean isMod = false;    
-    
+    boolean isMod = false;
+
     private DateFormat sd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
     private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-    
-    
-    private @Getter @Setter String memo;
+
+    private @Getter
+    @Setter
+    String memo;
+
+    private @Getter
+    @Setter
+    String dMemo;
+
+    private @Getter
+    @Setter
+    String idPayment = "0";
 
     /**
      * Creates a new instance of PaymentController
@@ -137,8 +146,7 @@ public class PaymentController implements Serializable {
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         Calendar cal = Calendar.getInstance();
         paymentDate = dateFormat.format(cal.getTime());
-        
-        
+
         this.assignEdit();
     }
 
@@ -279,7 +287,7 @@ public class PaymentController implements Serializable {
     public void aplicarPagoADetalle() {
         for (FbPaymentDetail pd : payDetailList) {
             Double payment = 0.00;
-           
+
             //System.out.println("pago " + pd.getPaymentString());
             try {
                 if (pd.getPaymentString() != null && !pd.getPaymentString().isEmpty()) {
@@ -318,8 +326,8 @@ public class PaymentController implements Serializable {
             }
 
         }
-        
-        actualizarResults(); 
+
+        actualizarResults();
     }
 
     public void aplicarPagoCheck(String id) {
@@ -365,11 +373,11 @@ public class PaymentController implements Serializable {
 
     public void save(String op) {
         try {
-            
+
             if (!this.idCust.equals("0")) {
-            
+
                 if (!this.DAmount.equals("0.00")) {
-                    
+
                     FbInvoice payment = new FbInvoice();
                     payment.setIdCia(this.userData.getCurrentCia());
                     //this.vb.lanzarMensajeSinBundle("info", this.userData.getCurrentCia().getNomCom(), DAmount);//
@@ -379,44 +387,55 @@ public class PaymentController implements Serializable {
                     if (op.equals("A")) {
                         payment.setIdInvoice(BigDecimal.ZERO);
                     }
-                    String property = System.getProperty("java.version");
-                    
+
+                    if (isMod) {
+                        payment.setIdInvoice(new BigDecimal(this.idPayment));
+                        op = "U";
+                    }
+
+                    //String property = System.getProperty("java.version");
                     payment.setTotal(new BigDecimal(this.DAmount));
                     //this.vb.lanzarMensajeSinBundle("info", op, "386");//
                     payment.setPayMethod(this.pMethod);
-                    
+
                     //this.vb.lanzarMensajeSinBundle("info",this.pMethod, DAmount);//
                     payment.setPayReferenceNo(this.pReferenceNo);
-                    
+
                     //this.vb.lanzarMensajeSinBundle("info", sdf.format(sd.parse(this.paymentDate)), DAmount); //
-                    payment.setInDate(sdf.format(sd.parse(this.paymentDate)));
-                    
+                    try {
+                        payment.setInDate(sdf.format(sd.parse(this.paymentDate)));
+                    } catch (Exception e) {
+                        payment.setInDate(this.paymentDate);
+                    }
+                    HttpServletRequest req = (HttpServletRequest) vb.getRequestContext();
+                    this.memo = req.getParameter("memo");
                     payment.setMessageInvoice(this.memo);
                     List<FbPaymentDetail> finalList = new ArrayList<>();
-                    
+
                     for (FbPaymentDetail pd : payDetailList) {
                         if (pd.getPayment() != null) {
                             finalList.add(pd);
                         }
                     }
-                    
-                    
-                    
+
                     payment.setFbPaymentDetailList(finalList);
                     payment.setCustEmail(email);
                     //this.vb.lanzarMensajeSinBundle("info", "entre despues de setear email linea 407", email + " " + op);
                     //this.vb.lanzarMensajeSinBundle("info", finalList.toString(), finalList.toString());//  
                     String res = iFacade.actPayment(payment, op);
-                    this.vb.lanzarMensajeSinBundle("info", "entre despues de facade linea 410", "res: " + res);
+                    //this.vb.lanzarMensajeSinBundle("info", "entre despues de facade linea 410", "res: " + res);
                     //this.vb.lanzarMensajeSinBundle("info", res, res); //
                     String message = "lblPaymentSuccess";
                     if (op.equals("A")) {
                         message = "lblPaymentSuccess";
+                    } else if (op.equals("U")) {
+                        message = "lblEditPaymentSuccess";
                     }
-                    switch(res){
+                    switch (res) {
                         case "0":
-                            this.vb.redirecionar("/view/sales/sales.xhtml");
                             this.userData.setUses(message);
+                            this.vb.redirecionar("/view/sales/sales.xhtml");
+
                             break;
                         case "-1":
                             this.vb.lanzarMensaje("error", "unexpectedError", "unexpectedError");
@@ -425,9 +444,9 @@ public class PaymentController implements Serializable {
                             this.vb.lanzarMensaje("error", "unexpectedError", "unexpectedError");
                             break;
                         default:
-                            break;    
+                            break;
                     }
-                    
+
                 } else {
                     this.vb.lanzarMensaje("error", "lblPaymentInvalid", "lblPaymentInvalid");
 
@@ -443,8 +462,8 @@ public class PaymentController implements Serializable {
         }
 
     }
-    
-        public void refreshComboCust() {
+
+    public void refreshComboCust() {
         if (!this.userData.getFormInCustId().equals("0")) {
             cList = cFacade.getCustomersByIdCia(this.userData.getCurrentCia().getIdCia().toString());
             for (FbCustomer c : cList) {
@@ -461,29 +480,62 @@ public class PaymentController implements Serializable {
         }
 
     }
-        
-     public void assignEdit(){
-     FbInvoice in = this.userData.getFbInvoice();
-         try {
-             if (in != null) {
-                 isMod = true;
-                 title = this.vb.getMsgBundle("lblEditPayment");
-                 this.userData.setFbInvoice(null);
-                 
-                 this.idCust = in.getIdCust().getIdCust().toString();
-                 this.changeCust();
-                 
-                 this.DAmount = in.getTotal().toString();
-                 this.paymentDate = in.getInDate();
-                 
-                 System.out.println(in.getFbPaymentDetailList().size() + ":: 1:" + in.getFbPaymentDetailList1().size());
-                 
-                 this.actualizarResults();
-             }
-         } catch (Exception e) {
-             System.out.println("com.fastbooks.managedbeans.PaymentController.assignEdit()");
-             e.printStackTrace();
-         }
-     }
+
+    public void assignEdit() {
+        FbInvoice in = this.userData.getFbInvoice();
+        try {
+            if (in != null) {
+                isMod = true;
+                title = this.vb.getMsgBundle("lblEditPayment");
+                this.userData.setFbInvoice(null);
+                this.idPayment = in.getIdInvoice().toString();
+                this.memo = in.getMessageInvoice();
+                this.dMemo = in.getMessageInvoice();
+                this.idCust = in.getIdCust().getIdCust().toString();
+                this.changeCust();
+                in.setFbPaymentDetailList(this.iFacade.getPaymentDetailsByIdPayment(in.getIdInvoice().toString()));
+                this.DAmount = in.getTotal().toString();
+                this.paymentDate = in.getInDate();
+                this.pReferenceNo = in.getPayReferenceNo();
+                this.pMethod = in.getPayMethod();
+
+                int c = 0;
+                for (FbPaymentDetail pBaseDetail : in.getFbPaymentDetailList()) {
+
+                    pBaseDetail.setCheckbox(true);
+                    pBaseDetail.setPaymentString(pBaseDetail.getPayment().toString());
+                    //pBaseDetail.setOpenBalance(pBaseDetail.getIdInvoice().getActualBalance().add(pBaseDetail.getPayment()));
+                    Double openBalance = this.iFacade.getInvoiceByIdInvoice(pBaseDetail.getIdInvoice().getIdInvoice().toString()).getActualBalance().doubleValue();
+                    Double payment = pBaseDetail.getPayment().doubleValue();
+                    pBaseDetail.setOpenBalance(new BigDecimal(openBalance + payment));
+                    pBaseDetail.setDescrip(this.vb.getMsgBundle("invoice") + pBaseDetail.getDescrip());
+
+                }
+
+                for (FbPaymentDetail pFormDetail : payDetailList) {
+                    c = 0;
+                    for (FbPaymentDetail pBaseDetail : in.getFbPaymentDetailList()) {
+                        if (pBaseDetail.getIdInvoice().toString().equals(pFormDetail.getIdInvoice().toString())) {
+                            c++;
+
+                        }
+
+                    }
+
+                    if (c == 0) {
+                        in.getFbPaymentDetailList().add(pFormDetail);
+                    }
+
+                }
+
+                this.payDetailList = in.getFbPaymentDetailList();
+
+                this.actualizarResults();
+            }
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.PaymentController.assignEdit()");
+            e.printStackTrace();
+        }
+    }
 
 }

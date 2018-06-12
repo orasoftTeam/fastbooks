@@ -6,6 +6,7 @@
 package com.fastbooks.managedbeans;
 
 import com.fastbooks.facade.FbCustomerFacade;
+
 import com.fastbooks.facade.FbInvoiceFacade;
 import com.fastbooks.facade.FbProductFacade;
 import com.fastbooks.facade.FbTaxFacade;
@@ -14,10 +15,12 @@ import com.fastbooks.modelo.FbCustomer;
 import com.fastbooks.modelo.FbInvoice;
 import com.fastbooks.modelo.FbInvoiceDetail;
 import com.fastbooks.modelo.FbInvoiceTaxes;
+import com.fastbooks.modelo.FbPaymentDetail;
 import com.fastbooks.modelo.FbProduct;
 import com.fastbooks.modelo.FbTax;
 import com.fastbooks.modelo.PaymentMethod;
 import com.fastbooks.modelo.Terms;
+import com.fastbooks.service.InvoiceService;
 import com.fastbooks.util.ValidationBean;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -33,13 +36,8 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 /**
  *
@@ -63,9 +61,17 @@ public class InvoiceFormController implements Serializable {
     FbProductFacade pFacade;
     @EJB
     FbTaxFacade taxFacade;
+
+    InvoiceService invoiceService;
+
     private @Getter
     @Setter
     List<FbCustomer> cList = new ArrayList<>();
+
+    private @Getter
+    @Setter
+    List<FbPaymentDetail> paymentDetailList = new ArrayList<>();
+
     private @Getter
     @Setter
     List<Terms> tList = new ArrayList<>();
@@ -84,11 +90,11 @@ public class InvoiceFormController implements Serializable {
     private @Getter
     @Setter
     List<FbInvoiceTaxes> taxesModList = new ArrayList<>();
-    
+
     private @Getter
     @Setter
     List<PaymentMethod> pMethodList = new ArrayList<>();
-    
+
     private @Getter
     @Setter
     FbCustomer currentCust;
@@ -249,8 +255,9 @@ public class InvoiceFormController implements Serializable {
                         this.pMethodList.add(new PaymentMethod("2", "", this.validationBean.getMsgBundle("lblCreditCard")));
                         this.pMethodList.add(new PaymentMethod("3", "", this.validationBean.getMsgBundle("lblDirectDebit")));
                         this.pMethodList.add(new PaymentMethod("4", "", this.validationBean.getMsgBundle("lblCheque")));
-                    }   break;
-                    case "CN":
+                    }
+                    break;
+                case "CN":
                     title = this.validationBean.getMsgBundle("creditN");
                     break;
                 default:
@@ -645,18 +652,18 @@ public class InvoiceFormController implements Serializable {
         switch (p.getType()) {
             case "IN":
                 res = p.getName() + " (" + validationBean.getMsgBundle("lblPrice") + ":"
-                        + userData.formatMaster(p.getPrice().toString()) + ", " + validationBean.getMsgBundle("lblQuant")
+                        + p.getPrice().toString() + ", " + validationBean.getMsgBundle("lblQuant")
                         + ":" + p.getInitQuant().toString();
 
                 break;
             case "BU":
                 res = p.getName() + " (" + validationBean.getMsgBundle("lblPrice") + ":"
-                        + userData.formatMaster(p.getTotalBundle().toString());
+                        + p.getTotalBundle().toString();
 
                 break;
             default:
                 res = p.getName() + " (" + validationBean.getMsgBundle("lblPrice") + ":"
-                        + userData.formatMaster(p.getPrice().toString());
+                        + p.getPrice().toString();
                 break;
 
         }
@@ -858,12 +865,12 @@ public class InvoiceFormController implements Serializable {
         try {
             if (this.validationBean.validarSoloNumerosConPunto(this.shCost, "error", "lblInShCostFail", "blank")) {
                 if (this.currentCust != null || type.equals("SR")) {
-                    
+
                     if (this.currentCust == null) {
                         currentCust = new FbCustomer();
                         currentCust.setIdCust(BigDecimal.ZERO);
                     }
-                    
+
                     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
                     DateFormat sd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
                     if (!this.dList.isEmpty()) {
@@ -885,7 +892,12 @@ public class InvoiceFormController implements Serializable {
                         in.setNoDot(this.InNo);
                         in.setCustEmail(this.currentCust.getEmail());
                         //in.setInDate(sdf.format(sd.parse(this.invoiceDate)));
-                        in.setInDate(this.invoiceDate);
+                        try {
+                            in.setInDate(sdf.format(sd.parse(this.invoiceDate)));
+                        } catch (Exception e) {
+                            in.setInDate(this.invoiceDate);
+                        }
+
                         in.setDueDate(this.dueDate);
                         //in.setDueDate(sdf.format(sd.parse(this.dueDate)));
                         in.setActualBalance(this.rBalance);
@@ -900,11 +912,13 @@ public class InvoiceFormController implements Serializable {
                                     date = sdf.parse(this.dueDate);
                                 } catch (Exception e) {
                                     date = sd.parse(this.dueDate);
-                                }   if (date.before(new Date())) {
+                                }
+                                if (date.before(new Date())) {
                                     this.invoiceStatus = "OV";
                                 } else {
                                     this.invoiceStatus = "OP";
-                                }   in.setStatus(this.invoiceStatus);//aqui 
+                                }
+                                in.setStatus(this.invoiceStatus);//aqui 
                                 break;
                             case "ES":
                                 in.setStatus(this.estimateStatus);//aqui 
@@ -913,15 +927,16 @@ public class InvoiceFormController implements Serializable {
                                     in.setEsAccdate("");
                                 } else {
                                     in.setEsAccby(AccBy);
-                                    
+
                                     try {
                                         in.setEsAccdate(sdf.format(sd.parse(AccDate)));
                                     } catch (Exception e) {
                                         in.setEsAccdate("");
-                                        
+
                                     }
-                                    
-                                }   break;
+
+                                }
+                                break;
                             case "SR":
                                 in.setStatus("PD");
                                 in.setDueDate(" ");
@@ -965,20 +980,18 @@ public class InvoiceFormController implements Serializable {
                                     message = "lblInvoiceAddSuccess";
                                 } else if (type.equals("ES")) {
                                     message = "lblEstimateAddSuccess";
-                                }else if(type.equals("SR")) {
+                                } else if (type.equals("SR")) {
                                     message = "lblSalesRAddSuccess";
-                                } 
-                                
-                                
-                                
+                                }
+
                             } else if (op.equals("U")) {
                                 if (type.equals("IN")) {
                                     message = "lblInUpdateSuccess";
                                 } else if (type.equals("ES")) {
                                     message = "lblEsUpdateSuccess";
-                                }else if(type.equals("SR")) {
+                                } else if (type.equals("SR")) {
                                     message = "lblSalesRUpdateSuccess";
-                                } 
+                                }
                             }
 
                             this.userData.setUses(message);
@@ -1010,50 +1023,66 @@ public class InvoiceFormController implements Serializable {
             if (in != null) {
                 this.type = in.getType();
                 this.currentCust = in.getIdCust();
+                invoiceService = new InvoiceService();
+                //in.setFbInvoiceDetailList(invoiceService.getFbInvoiceDetailByIdInvoice(in.getIdInvoice()));
+                //in.setFbInvoiceTaxesList(invoiceService.getFbInvoiceTaxesByIdInvoice(in.getIdInvoice()));
+
+                if (in.getType().equals("IN")) {
+                    System.out.println("idInvoice:" +in.getIdInvoice().toString() );
+                    this.paymentDetailList = this.iFacade.getPaymentDetailsByIdInvoice(in.getIdInvoice().toString());
+                    if (!this.paymentDetailList.isEmpty()) {
+                        System.out.println("TIENE PAGOS");
+                        for (FbPaymentDetail pd : this.paymentDetailList) {
+                            System.out.println("id:" + pd.getIdDetail().toString() + "  date: " + pd.getIdPayment().getInDate() + " amount: " + pd.getPayment().toString());
+                        }
+                    } else {
+                        System.out.println("NO TIENE PAGOS");
+                    }
+                }
+
+                in.setFbInvoiceDetailList(this.iFacade.getInvoiceDetailsByIdInvoice(in.getIdInvoice().toString()));
+                in.setFbInvoiceTaxesList(this.iFacade.getInvoiceTaxesByIdInvoice(in.getIdInvoice().toString()));
                 if (in.getIdCust() != null) {
                     this.idCust = in.getIdCust().getIdCust().toString();
                     this.email = in.getIdCust().getEmail();
-                     biAddress = "";
-                if (currentCust.getStreet() != null) {
-                    biAddress += currentCust.getStreet() + " ";
-                }
-                if (currentCust.getPostalCode() != null) {
-                    biAddress += currentCust.getPostalCode() + " ";
-                }
-                if (currentCust.getCity() != null) {
-                    biAddress += currentCust.getCity() + " ";
-                }
-                if (currentCust.getEstate() != null) {
-                    biAddress += currentCust.getEstate() + " ";
-                }
-                if (currentCust.getCountry() != null) {
-                    biAddress += currentCust.getCountry() + ".";
-                }
+                    biAddress = "";
+                    if (currentCust.getStreet() != null) {
+                        biAddress += currentCust.getStreet() + " ";
+                    }
+                    if (currentCust.getPostalCode() != null) {
+                        biAddress += currentCust.getPostalCode() + " ";
+                    }
+                    if (currentCust.getCity() != null) {
+                        biAddress += currentCust.getCity() + " ";
+                    }
+                    if (currentCust.getEstate() != null) {
+                        biAddress += currentCust.getEstate() + " ";
+                    }
+                    if (currentCust.getCountry() != null) {
+                        biAddress += currentCust.getCountry() + ".";
+                    }
 
-                shAddress = "";
-                if (currentCust.getStreetS() != null) {
-                    shAddress += currentCust.getStreetS() + " ";
-                }
-                if (currentCust.getPostalCodeS() != null) {
-                    shAddress += currentCust.getPostalCodeS() + " ";
-                }
-                if (currentCust.getCityS() != null) {
-                    shAddress += currentCust.getCityS() + " ";
-                }
-                if (currentCust.getEstateS() != null) {
-                    shAddress += currentCust.getEstateS() + " ";
-                }
-                if (currentCust.getCountryS() != null) {
-                    shAddress += currentCust.getCountryS() + ".";
-                }
-                }else{
+                    shAddress = "";
+                    if (currentCust.getStreetS() != null) {
+                        shAddress += currentCust.getStreetS() + " ";
+                    }
+                    if (currentCust.getPostalCodeS() != null) {
+                        shAddress += currentCust.getPostalCodeS() + " ";
+                    }
+                    if (currentCust.getCityS() != null) {
+                        shAddress += currentCust.getCityS() + " ";
+                    }
+                    if (currentCust.getEstateS() != null) {
+                        shAddress += currentCust.getEstateS() + " ";
+                    }
+                    if (currentCust.getCountryS() != null) {
+                        shAddress += currentCust.getCountryS() + ".";
+                    }
+                } else {
                     this.idCust = "0";
                 }
-                
-                
-                
+
                 this.InNo = in.getNoDot();
-               
 
                 termDays = in.getTerms();
                 invoiceDate = in.getInDate();
@@ -1222,11 +1251,10 @@ public class InvoiceFormController implements Serializable {
             flag = true;
         }
         return flag;
-        
-        
+
     }
-    
-    public void pagar(){
-    this.validationBean.redirecionar("/view/sales/payments/paymentForm.xhtml");
+
+    public void pagar() {
+        this.validationBean.redirecionar("/view/sales/payments/paymentForm.xhtml");
     }
 }

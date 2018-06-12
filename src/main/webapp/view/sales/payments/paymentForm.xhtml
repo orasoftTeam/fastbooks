@@ -172,7 +172,7 @@
                 
                 <bnu:row>
                     <bnu:column  span="4" >
-                        <bnu:inputTextarea label="Memo" value="#{paymentController.memo}" maxlength="500" />
+                        <bnu:inputTextarea label="Memo" onkeyup="document.getElementById('memo').value = this.value;" maxlength="500" value="#{paymentController.DMemo}" />
                     </bnu:column>
                 </bnu:row>
                 <!--<bnu:row>
@@ -200,6 +200,7 @@
 
             </bnu:navbarLinks>
             <h:form styleClass="navbar-form navbar-right" >
+                <input type="hidden" name="memo"  id="memo" />
                 <bnu:commandButton value="#{messages.save}"  look="success"  style="width: 100%" action="#{paymentController.save('A')}" update="@(.messages)"  />
                 
             </h:form>

@@ -13,8 +13,13 @@ import com.fastbooks.util.GlobalParameters;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +54,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
     @PersistenceContext(unitName = "com_Fastbooks_war_1.0PU")
     private EntityManager em;
 
+    //FbCustomerFacade cFacade;
     @Override
     protected EntityManager getEntityManager() {
         return em;
@@ -61,11 +67,14 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
     public List<FbInvoice> getInvoicesByIdCia(String idCia) {
         List<FbInvoice> list = new ArrayList<>();
         try {
-            String sql = "select * from fb_invoice i where id_cia=? order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy')";
+
+            String sql = "select * from fb_invoice i where id_cia=? order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
             Query q = em.createNativeQuery(sql, FbInvoice.class);
             q.setParameter(1, idCia);
             list = q.getResultList();
-
+            for (FbInvoice fbInvoice : list) {
+                em.refresh(fbInvoice);
+            }
         } catch (Exception e) {
             System.out.println("com.fastbooks.facade.FbProductFacade.getProductsByIdCia()");
             e.printStackTrace();
@@ -74,7 +83,103 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         return list;
     }
     
-    public List<FbInvoice> getInvoicesForPayment(String idCia,String idCust) {
+    public FbInvoice getInvoiceByIdInvoice(String idInvoice) {
+        List<FbInvoice> list = new ArrayList<>();
+        try {
+
+            String sql = "select * from fb_invoice where id_invoice=?";
+            Query q = em.createNativeQuery(sql, FbInvoice.class);
+            q.setParameter(1, idInvoice);
+            list = q.getResultList();
+            for (FbInvoice fbInvoice : list) {
+                em.refresh(fbInvoice);
+            }
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbProductFacade.getProductsByIdCia()");
+            e.printStackTrace();
+        }
+
+        return list.get(0);
+    }    
+    
+    public List<FbInvoice> getInvoicesByIdCust(String idCust) {
+        List<FbInvoice> list = new ArrayList<>();
+        try {
+
+            String sql = "select * from fb_invoice i where id_cust=? order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
+            Query q = em.createNativeQuery(sql, FbInvoice.class);
+            q.setParameter(1, idCust);
+            list = q.getResultList();
+            for (FbInvoice fbInvoice : list) {
+                em.refresh(fbInvoice);
+            }
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbProductFacade.getProductsByIdCia()");
+            e.printStackTrace();
+        }
+
+        return list;
+    }    
+    
+    
+
+    public List<FbInvoice> getInvoicesByIdCiaNonJpa(String idCia) throws SQLException, ClassNotFoundException {
+        List<FbInvoice> list = new ArrayList<>();
+
+        //Connection cn = em.unwrap(java.sql.Connection.class);
+        Connection cn = null;
+        try {
+            Class.forName("oracle.jdbc.driver.OracleDriver");
+            cn = DriverManager.getConnection("jdbc:oracle:thin:@192.168.0.41:1551:dbprod1", "fastbooks", "fastbooks1979");
+            String sql = "select * from fb_invoice i where id_cia=? order by to_date(i.in_date,'MM/dd/yyyy') desc";
+            PreparedStatement ps = cn.prepareStatement(sql);
+            ps.setInt(1, Integer.parseInt(idCia));
+            ResultSet rs = ps.executeQuery();
+            int c = 0;
+            while (rs.next()) {
+                FbInvoice in = new FbInvoice();
+                in.setIdInvoice(new BigDecimal(rs.getInt("ID_INVOICE")));
+                in.setType(rs.getString("TYPE"));
+                in.setStatus(rs.getString("STATUS"));
+                in.setInDate(rs.getString("IN_DATE"));
+                in.setNoDot(rs.getString("NO_DOT"));
+                in.setDueDate(rs.getString("DUE_DATE"));
+                in.setTerms(rs.getString("TERMS"));
+                in.setTotal(new BigDecimal(rs.getDouble("TOTAL")));
+                in.setShCost(new BigDecimal(rs.getDouble("SH_COST")));
+                in.setSubTotal(new BigDecimal(rs.getDouble("SUB_TOTAL")));
+                in.setTaxTotal(new BigDecimal(rs.getDouble("TAX_TOTAL")));
+                in.setActualBalance(new BigDecimal(rs.getDouble("ACTUAL_BALANCE")));
+                in.setCustEmail(rs.getString("CUST_EMAIL"));
+                in.setBiAddress(rs.getString("BI_ADDRESS"));
+                in.setShAddress(rs.getString("SH_ADDRESS"));
+                in.setMessageInvoice(rs.getString("MESSAGE_INVOICE"));
+                in.setEsAccby(rs.getString("ES_ACCBY"));
+                in.setEsAccdate(rs.getString("ES_ACCDATE"));
+                in.setShDate(rs.getString("SH_DATE"));
+                in.setShcostTaxAmount(rs.getBigDecimal("SHCOST_TAX_AMOUNT"));
+                in.setShipVia(rs.getString("SHIP_VIA"));
+                in.setShcostTaxName(rs.getString("SHCOST_TAX_NAME"));
+                in.setPayMethod(rs.getString("PAY_METHOD"));
+                in.setPayReferenceNo(rs.getString("PAY_REFERENCE_NO"));
+                in.setTrackNum(rs.getString("TRACK_NUM"));
+                //in.setIdCust(this.cFacade.find(rs.getBigDecimal("ID_CUST")));
+                list.add(in);
+            }
+
+        } catch (NumberFormatException | SQLException e) {
+            System.out.println("com.fastbooks.facade.FbProductFacade.getProductsByIdCia()");
+            e.printStackTrace();
+        } finally {
+            if (cn != null) {
+                cn.close();
+            }
+        }
+
+        return list;
+    }
+
+    public List<FbInvoice> getInvoicesForPayment(String idCia, String idCust) {
         List<FbInvoice> list = new ArrayList<>();
         try {
             String sql = "SELECT * FROM FB_INVOICE i WHERE ID_CIA = ? AND ID_CUST = ? AND STATUS IN('OV','PA','OP') AND TYPE = 'IN' ORDER BY TO_NUMBER(i.NO_DOT) ASC";
@@ -82,6 +187,10 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             q.setParameter(1, idCia);
             q.setParameter(2, idCust);
             list = q.getResultList();
+            
+            for (FbInvoice fbInvoice : list) {
+                em.refresh(fbInvoice);
+            }
 
         } catch (Exception e) {
             System.out.println("com.fastbooks.facade.FbProductFacade.getInvoicesForPayment()");
@@ -89,7 +198,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         }
 
         return list;
-    }    
+    }
 
     public List<FbInvoice> getInvoicesByIdCiaFilter(String sql) {
         List<FbInvoice> list = new ArrayList<>();
@@ -106,18 +215,16 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
 
         return list;
     }
-    
-    
-    
-    public String actPayment(FbInvoice in, String op){
-    String res = "def";
-    String pIdInvoices = "";
-    String pPayAmounts = "";
-    /*
+
+    public String actPayment(FbInvoice in, String op) {
+        String res = "def";
+        String pIdInvoices = "";
+        String pPayAmounts = "";
+        /*
     PROCEDURE PR_ACT_PAYMENT(pIdCia IN INT,pIdPayment IN INT,pIdCust IN INT, pReferenceNo IN VARCHAR2,pEmail IN VARCHAR2,
                             pPayDate IN VARCHAR2,pPaymentTotal IN DECIMAL,pMethod IN VARCHAR2,pIdInvoices IN VARCHAR2,
                                 pPayAmounts IN VARCHAR2,op IN VARCHAR2,res OUT VARCHAR2);
-    */
+         */
         try {
             Connection cn = em.unwrap(java.sql.Connection.class);
             CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_PAYMENT(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
@@ -129,13 +236,12 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             cs.setString(6, in.getInDate());
             cs.setDouble(7, in.getTotal().doubleValue());
             cs.setString(8, in.getPayMethod());
-            
+
             for (FbPaymentDetail pd : in.getFbPaymentDetailList()) {
                 pIdInvoices += pd.getIdInvoice().getIdInvoice().toString() + ",";
                 pPayAmounts += String.format("%.2f", pd.getPayment()) + ";";
             }
-            
-            
+
             cs.setString(9, pIdInvoices);
             cs.setString(10, pPayAmounts);
             cs.setString(11, in.getMessageInvoice());
@@ -143,16 +249,16 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             cs.registerOutParameter(13, Types.VARCHAR);
             cs.execute();
             res = cs.getString(13);
-           // res = pIdInvoices+" :: "+pPayAmounts;
+            // res = pIdInvoices+" :: "+pPayAmounts;
             cs.close();
-            
+
         } catch (Exception e) {
             res = e.getMessage();
             System.out.println("com.fastbooks.facade.FbInvoiceFacade.actPayment()");
             e.printStackTrace();
         }
-    System.out.println("res: " + res);
-    return res;
+        System.out.println("res: " + res);
+        return res;
     }
 
     public String actInvoice(FbInvoice in, String op) {
@@ -234,15 +340,14 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             if (in.getIdShcostTax() != null) {
                 idtax = Integer.parseInt(in.getIdShcostTax().getIdTax().toString());
             }
-            
-            cs.setInt(30,idtax );
+
+            cs.setInt(30, idtax);
             Double shtaxamount = Double.parseDouble(in.getShcostTaxAmount().toString());
-            
-                cs.setDouble(31,shtaxamount );
-            
-            
+
+            cs.setDouble(31, shtaxamount);
+
             cs.setString(32, in.getShcostTaxName());
-            
+
             cs.setString(33, in.getEsAccby());
             cs.setString(34, in.getEsAccdate());
             cs.setString(35, op);
@@ -274,7 +379,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             currentFile.delete();
         }*/
         file.mkdirs();
-        
+
         String destino = gp.getAppPath() + File.separator + "pdf" + File.separator + "cia" + i.getIdCia().getIdCia().toString()
                 + File.separator + "IN" + i.getNoDot() + i.getIdCia().getNomCom() + ".pdf";
 
@@ -286,7 +391,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             logoFile = null;
         }
         parametersMap.put("logo", logoFile);
-       
+
         parametersMap.put("type", type);
         try {
             ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
@@ -364,7 +469,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
             String realPath = ec.getRealPath("/");
             System.out.println(realPath + dir);
-            
+
             File dest = new File(destino);
             if (dest.exists()) {
                 dest.delete();
@@ -385,8 +490,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         }
         return res;
     }
-    
-    
+
     public String packingSlip(String idInvoices, String logo, JasperReport report, String idCia) {
         String res = "";
         try {
@@ -410,7 +514,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
             String realPath = ec.getRealPath("/");
             System.out.println(realPath + dir);
-            
+
             File dest = new File(destino);
             if (dest.exists()) {
                 dest.delete();
@@ -430,6 +534,82 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             res = e.toString() + " ::: " + e.getMessage();
         }
         return res;
+    }
+
+    public List<FbInvoiceDetail> getInvoiceDetailsByIdInvoice(String idInvoice) {
+        List<FbInvoiceDetail> list = new ArrayList<>();
+        try {
+
+            String sql = "select * from fb_invoice_detail where id_invoice = ? order by id_detail asc";
+            Query q = em.createNativeQuery(sql, FbInvoiceDetail.class);
+            q.setParameter(1, idInvoice);
+            list = q.getResultList();
+            for (FbInvoiceDetail fbInvoice : list) {
+                em.refresh(fbInvoice);
+            }
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbProductFacade.getProductsByIdCia()");
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public List<FbInvoiceTaxes> getInvoiceTaxesByIdInvoice(String idInvoice) {
+        List<FbInvoiceTaxes> list = new ArrayList<>();
+        try {
+
+            String sql = "select * from fb_invoice_taxes where id_invoice = ? order by ID_INVOICE_TAX asc";
+            Query q = em.createNativeQuery(sql, FbInvoiceTaxes.class);
+            q.setParameter(1, idInvoice);
+            list = q.getResultList();
+            for (FbInvoiceTaxes fbInvoice : list) {
+                em.refresh(fbInvoice);
+            }
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbProductFacade.getProductsByIdCia()");
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public List<FbPaymentDetail> getPaymentDetailsByIdPayment(String idPayment) {
+        List<FbPaymentDetail> list = new ArrayList<>();
+        try {
+
+            String sql = "select * from fb_payment_detail where id_payment = ? order by id_detail asc";
+            Query q = em.createNativeQuery(sql, FbPaymentDetail.class);
+            q.setParameter(1, idPayment);
+            list = q.getResultList();
+            for (FbPaymentDetail fbInvoice : list) {
+                em.refresh(fbInvoice);
+            }
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbProductFacade.getProductsByIdCia()");
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+    
+    public List<FbPaymentDetail> getPaymentDetailsByIdInvoice(String idInvoice) {
+        List<FbPaymentDetail> list = new ArrayList<>();
+        try {
+
+            String sql = "select * from fb_payment_detail where id_invoice = ? order by id_detail asc";
+            Query q = em.createNativeQuery(sql, FbPaymentDetail.class);
+            q.setParameter(1, idInvoice);
+            list = q.getResultList();
+            for (FbPaymentDetail fbInvoice : list) {
+                em.refresh(fbInvoice);
+            }
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbProductFacade.getProductsByIdCia()");
+            e.printStackTrace();
+        }
+
+        return list;
     }    
 
 }

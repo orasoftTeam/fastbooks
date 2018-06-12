@@ -152,9 +152,9 @@ public class FbInvoice implements Serializable {
     @JoinColumn(name = "ID_CUST", referencedColumnName = "ID_CUST")
     @ManyToOne
     private FbCustomer idCust;
-    @OneToMany(mappedBy = "idInvoice", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "idInvoice", fetch = FetchType.LAZY)
     private List<FbInvoiceDetail> fbInvoiceDetailList;
-    @OneToMany(mappedBy = "idInvoice", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "idInvoice", fetch = FetchType.LAZY)
     private List<FbInvoiceTaxes> fbInvoiceTaxesList;
 
     public FbInvoice() {

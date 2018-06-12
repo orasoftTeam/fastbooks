@@ -43,6 +43,10 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer> {
             Query q = em.createNativeQuery(sql, FbCustomer.class);
             q.setParameter(1, idCust);
             listC = q.getResultList();
+            
+            for (FbCustomer fbCustomer : listC) {
+                em.refresh(fbCustomer);
+            }
 
         } catch (Exception e) {
             System.out.println("com.fastbooks.facade.FbUsuarioFacade.getUserbyCia()");
