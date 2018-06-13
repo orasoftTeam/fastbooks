@@ -102,6 +102,10 @@ public class InvoiceFormController implements Serializable {
     private @Getter
     @Setter
     String idCust = "0";
+    
+    private @Getter
+    @Setter
+    String idOGCust = "0";    
 
     private @Getter
     @Setter
@@ -1076,6 +1080,7 @@ public class InvoiceFormController implements Serializable {
                 in.setFbInvoiceDetailList(this.iFacade.getInvoiceDetailsByIdInvoice(in.getIdInvoice().toString()));
                 in.setFbInvoiceTaxesList(this.iFacade.getInvoiceTaxesByIdInvoice(in.getIdInvoice().toString()));
                 if (in.getIdCust() != null) {
+                    this.idOGCust = in.getIdCust().getIdCust().toString();
                     this.idCust = in.getIdCust().getIdCust().toString();
                     this.email = in.getIdCust().getEmail();
                     biAddress = "";
@@ -1290,5 +1295,19 @@ public class InvoiceFormController implements Serializable {
 
     public void pagar() {
         this.validationBean.redirecionar("/view/sales/payments/paymentForm.xhtml");
+    }
+    
+    
+    public boolean showReceivePayment(){
+    boolean flag = false;
+        if (modStay) {
+            if (this.type.equals("IN")) {
+                if (this.invoiceStatus.equals("OV") || this.invoiceStatus.equals("PA") || this.invoiceStatus.equals("OP")) {
+                    flag = true;
+                }
+            }
+        }
+    
+    return flag;
     }
 }
