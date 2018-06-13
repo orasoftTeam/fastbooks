@@ -58,7 +58,41 @@
                             <h:panelGroup rendered="#{invoiceController.showSegunType('CN')}" ><h4 style="margin-top: -5px">#{messages.lblAmountToRefund}</h4></h:panelGroup>
                             <h:panelGroup rendered="#{!invoiceController.showSegunType('CN')}" ><h4 style="margin-top: -5px">#{messages.lblInvoiceBalanceDue}</h4></h:panelGroup>
                             <h1 style="margin-top: -5px" >#{invoiceController.DBalance}</h1>
-                            <h:panelGroup rendered="#{invoiceController.paymentDetailList.size() > 0}" >  Hay #{invoiceController.paymentDetailList.size()} paguitos</h:panelGroup>
+                            <h:panelGroup rendered="#{invoiceController.paymentDetailList.size() > 0}" ><h:outputText escape="false" value="#{invoiceController.paymentMade}" />
+                                <div id="myDropdown" class="dropdown-content dropLi">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th align="center" >
+                                                    <h:outputText value="Date " />
+                                                </th>
+                                                <th align="center" >
+                                                    <h:outputText value="Amount applied" />
+                                                </th>
+                                                <th align="center" style="padding: 5px" >
+                                                    <h:outputText value="Payment no. " />
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <ui:repeat value="#{invoiceController.paymentDetailList}" var="pay">
+                                                <tr  >
+                                                    <td align="center" >
+                                                        <h:commandLink action="#{invoiceTableController.edit(pay.idPayment)}" ><h:outputText value="#{pay.idPayment.inDate} " /></h:commandLink>
+                                                    </td>
+                                                    <td align="center" >
+                                                        <h:outputText value="#{userData.formatMaster(pay.payment.toString())} " />
+                                                    </td>
+                                                    <td align="center" >
+                                                        <h:outputText value="#{pay.idPayment.payReferenceNo}" />
+                                                    </td>
+                                                </tr>
+                                            </ui:repeat>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </h:panelGroup>
+
                         </bnu:column>
                     </bnu:row>
                     <bnu:row>
@@ -150,7 +184,7 @@
                         </bnu:column>
                     </bnu:row>
                 </h:panelGroup>
-                
+
                 <bnu:row  rendered="#{invoiceController.showSegunType('SR')}">
                     <bnu:column span="4" >
                         <bnu:selectOneMenu label="#{messages.lblPaymentMethod}">
@@ -305,17 +339,17 @@
                         </div>
                         <div class="form-group row">
                             <h:panelGroup rendered="#{invoiceController.showSegunType('CN')}" ><label class="col-form-label col-sm-8" >
-                                #{messages.lblTotalCredit}
-                            </label></h:panelGroup>
+                                    #{messages.lblTotalCredit}
+                                </label></h:panelGroup>
                             <h:panelGroup rendered="#{invoiceController.showSegunType('IN')}" ><label class="col-form-label col-sm-8" >
-                                #{messages.lblInvoiceBalanceDue}
-                            </label></h:panelGroup>
+                                    #{messages.lblInvoiceBalanceDue}
+                                </label></h:panelGroup>
                             <h:panelGroup rendered="#{invoiceController.showSegunType('SR')}" ><label class="col-form-label col-sm-8" >
-                                #{messages.lblInvoiceBalanceDue}
-                            </label></h:panelGroup>
+                                    #{messages.lblInvoiceBalanceDue}
+                                </label></h:panelGroup>
                             <h:panelGroup rendered="#{invoiceController.showSegunType('ES')}" ><label class="col-form-label col-sm-8" >
-                                #{messages.lblEstimateTotal}
-                            </label></h:panelGroup>
+                                    #{messages.lblEstimateTotal}
+                                </label></h:panelGroup>
                             <div class="col-sm-4">
                                 #{invoiceController.DBalance}
                             </div>
@@ -859,6 +893,25 @@
             }
             }
 
+            function myFunction() {
+            $(".dropdown-content").show();
+            };            
+
+            $(document).on("click",function(event) {
+
+            var str = $(event.target).parent().parent().parent().attr('class')+' '+$(event.target).parent().parent().attr('class')+' '+$(event.target).parent().attr('class') + ' ' + $(event.target).attr('class');
+            //alert(str.indexOf("dropLi")>=0);
+            if(str.indexOf("dropLi")>=0){
+
+
+            }else{
+            //alert(str);
+            $(".dropdown-content").hide();
+            }
+
+
+
+            });
 
         </h:outputScript>
 
@@ -879,6 +932,18 @@
             .btnBottom:hover{
                 background-color: #666666;
 
+            }
+
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                background-color: #f1f1f1;
+                min-width: 300px;
+                overflow: auto;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
+                padding: 10px;
+                border: 1px solid #ddd;
             }
         </style>
 

@@ -36,6 +36,7 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -101,6 +102,11 @@ public class InvoiceFormController implements Serializable {
     private @Getter
     @Setter
     String idCust = "0";
+
+    private @Getter
+    @Setter
+    String paymentMade = "";
+
     private @Getter
     @Setter
     String idInvoice = "0";
@@ -897,8 +903,14 @@ public class InvoiceFormController implements Serializable {
                         } catch (Exception e) {
                             in.setInDate(this.invoiceDate);
                         }
+                        
+                        try {
+                            in.setDueDate(sdf.format(sd.parse(this.dueDate)));
+                        } catch (Exception e) {
+                            in.setDueDate(this.dueDate);
+                        }
 
-                        in.setDueDate(this.dueDate);
+                        
                         //in.setDueDate(sdf.format(sd.parse(this.dueDate)));
                         in.setActualBalance(this.rBalance);
                         in.setSubTotal(rSubTotal);
@@ -1019,6 +1031,10 @@ public class InvoiceFormController implements Serializable {
 
     public void assign() {
         FbInvoice in = this.userData.getFbInvoice();
+        
+        HttpServletRequest req = (HttpServletRequest) validationBean.getRequestContext();
+        System.out.println("id:"+req.getParameter("id"));
+        
         try {
             if (in != null) {
                 this.type = in.getType();
@@ -1028,13 +1044,30 @@ public class InvoiceFormController implements Serializable {
                 //in.setFbInvoiceTaxesList(invoiceService.getFbInvoiceTaxesByIdInvoice(in.getIdInvoice()));
 
                 if (in.getType().equals("IN")) {
-                    System.out.println("idInvoice:" +in.getIdInvoice().toString() );
+                    System.out.println("idInvoice:" + in.getIdInvoice().toString());
                     this.paymentDetailList = this.iFacade.getPaymentDetailsByIdInvoice(in.getIdInvoice().toString());
                     if (!this.paymentDetailList.isEmpty()) {
                         System.out.println("TIENE PAGOS");
                         for (FbPaymentDetail pd : this.paymentDetailList) {
                             System.out.println("id:" + pd.getIdDetail().toString() + "  date: " + pd.getIdPayment().getInDate() + " amount: " + pd.getPayment().toString());
                         }
+                        
+                        
+                        
+                        //Formateando mensaje de salida
+                        String cadena = "";
+                        if (this.paymentDetailList.size() > 1) {
+                            cadena = this.validationBean.getMsgBundle("lblPaymentPlural");
+                        }else{
+                            cadena = this.validationBean.getMsgBundle("lblPaymentLower");
+                        }
+                            this.paymentMade = "<a onclick='myFunction();' class='dropLi' >" + this.paymentDetailList.size() + " " + cadena + "</a> " + this.validationBean.getMsgBundle("lblPaymentMade") 
+                                    + " " + this.paymentDetailList.get(this.paymentDetailList.size() - 1).getIdPayment().getInDate();
+                        
+                        
+                        
+                        
+                        
                     } else {
                         System.out.println("NO TIENE PAGOS");
                     }
@@ -1158,6 +1191,7 @@ public class InvoiceFormController implements Serializable {
                     }
                 } else if (in.getType().equals("IN")) {
                     this.invoiceStatus = in.getStatus();
+                    System.out.println("status: " + this.invoiceStatus);
                 }
                 mod = true;
                 if (!in.getNoDot().equals("copy")) {
