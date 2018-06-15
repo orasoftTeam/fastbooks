@@ -148,6 +148,7 @@ public class PaymentController implements Serializable {
         paymentDate = dateFormat.format(cal.getTime());
 
         this.assignEdit();
+        this.recievePayment();
     }
 
     public void changeCust() {
@@ -483,9 +484,15 @@ public class PaymentController implements Serializable {
 
     public void assignEdit() {
         FbInvoice in = this.userData.getFbInvoice();
+
+        HttpServletRequest req = (HttpServletRequest) vb.getRequestContext();
+        System.out.println("id:" + req.getParameter("id"));
+
         try {
             if (in != null) {
+
                 isMod = true;
+
                 title = this.vb.getMsgBundle("lblEditPayment");
                 this.userData.setFbInvoice(null);
                 this.idPayment = in.getIdInvoice().toString();
@@ -536,6 +543,34 @@ public class PaymentController implements Serializable {
             System.out.println("com.fastbooks.managedbeans.PaymentController.assignEdit()");
             e.printStackTrace();
         }
+    }
+
+    public void recievePayment() {
+        HttpServletRequest req = (HttpServletRequest) vb.getRequestContext();
+        System.out.println("idCust:" + req.getParameter("idc"));
+        System.out.println("idInvoice:" + req.getParameter("idi"));
+        String pIdCust = req.getParameter("idc");
+        String pIdInvoice = req.getParameter("idi");
+        try {
+            if (pIdCust != null && pIdInvoice != null) {
+                this.idCust = pIdCust;
+                this.changeCust();
+                for (FbPaymentDetail pd : this.payDetailList) {
+                    if (pd.getIdInvoice().getIdInvoice().toString().equals(pIdInvoice)) {
+                        pd.setPaymentString(pd.getOpenBalance().toString());
+                        pd.setPayment(pd.getOpenBalance());
+                        pd.setCheckbox(true);
+                        this.DAmount = String.valueOf(Double.parseDouble(this.DAmount) + Double.valueOf(pd.getPayment().toString()));
+                    }
+                }
+            }
+            this.actualizarResults();
+
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.PaymentController.recievePayment()");
+            e.printStackTrace();
+        }
+
     }
 
 }

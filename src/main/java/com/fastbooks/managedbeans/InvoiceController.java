@@ -271,7 +271,7 @@ public class InvoiceController implements Serializable {
         if (!in.getType().equals("PA")) {
             this.userData.setInvoiceTypeForm(in.getType());
             this.validationBean.redirecionar("/view/sales/invoiceForm.xhtml?id=" + in.getIdInvoice().toString());
-        }else if(in.getType().equals("PA")){
+        } else if (in.getType().equals("PA")) {
             this.validationBean.redirecionar("/view/sales/payments/paymentForm.xhtml?id=" + in.getIdInvoice().toString());
         }
     }
@@ -324,6 +324,15 @@ public class InvoiceController implements Serializable {
                     flag = true;
                 }
                 break;
+            case "REPAY":
+                if (type.equals("IN")) {
+                    if (status.equals("OV") || status.equals("OP") || status.equals("PA")) {
+                        flag = true;
+                    }
+                    
+                    
+                }
+                break;                
 
             default:
                 System.out.println("You do nutin");
@@ -568,6 +577,10 @@ public class InvoiceController implements Serializable {
         }
 
         // this.validationBean.redirecionar("/view/sales/sales.xhtml");
+    }
+
+    public void recievePayment(String idCust, String idInvoice) {
+        this.validationBean.redirecionar("/view/sales/payments/paymentForm.xhtml?idc="+idCust+"&idi="+idInvoice);
     }
 
 }

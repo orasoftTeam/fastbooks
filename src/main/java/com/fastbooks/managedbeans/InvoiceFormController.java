@@ -102,10 +102,10 @@ public class InvoiceFormController implements Serializable {
     private @Getter
     @Setter
     String idCust = "0";
-    
+
     private @Getter
     @Setter
-    String idOGCust = "0";    
+    String idOGCust = "0";
 
     private @Getter
     @Setter
@@ -236,6 +236,12 @@ public class InvoiceFormController implements Serializable {
     @Setter
     String invoiceStatus = "OP";
 
+    private @Getter
+    @Setter
+    Double totalPayment = 0.00;
+    
+    private @Getter @Setter FbInvoice editInvoice;
+
     public InvoiceFormController() {
     }
 
@@ -348,6 +354,10 @@ public class InvoiceFormController implements Serializable {
 
                     }
                 }
+                if (modStay) {
+                    this.setPagos(editInvoice);
+                }
+                
                 this.didUserTouchForm();
             } else {
                 this.idCust = "0";
@@ -356,6 +366,9 @@ public class InvoiceFormController implements Serializable {
                 biAddress = null;
                 shAddress = null;
             }
+            
+            
+            
 
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.changeCust()");
@@ -632,6 +645,7 @@ public class InvoiceFormController implements Serializable {
                 //Double balanceDue = acum + ship;
 
                 this.rTotal = new BigDecimal((acum + ship + tax + shTaxAmount));
+
                 this.didUserTouchForm();
             } else {
                 this.validationBean.lanzarMensaje("error", "lblProdNoQuant", "blank");
@@ -907,14 +921,13 @@ public class InvoiceFormController implements Serializable {
                         } catch (Exception e) {
                             in.setInDate(this.invoiceDate);
                         }
-                        
+
                         try {
                             in.setDueDate(sdf.format(sd.parse(this.dueDate)));
                         } catch (Exception e) {
                             in.setDueDate(this.dueDate);
                         }
 
-                        
                         //in.setDueDate(sdf.format(sd.parse(this.dueDate)));
                         in.setActualBalance(this.rBalance);
                         in.setSubTotal(rSubTotal);
@@ -1035,48 +1048,20 @@ public class InvoiceFormController implements Serializable {
 
     public void assign() {
         FbInvoice in = this.userData.getFbInvoice();
-        
+
         HttpServletRequest req = (HttpServletRequest) validationBean.getRequestContext();
-        System.out.println("id:"+req.getParameter("id"));
-        
+        System.out.println("id:" + req.getParameter("id"));
+
         try {
             if (in != null) {
                 this.type = in.getType();
                 this.currentCust = in.getIdCust();
-                invoiceService = new InvoiceService();
+                //invoiceService = new InvoiceService();
                 //in.setFbInvoiceDetailList(invoiceService.getFbInvoiceDetailByIdInvoice(in.getIdInvoice()));
                 //in.setFbInvoiceTaxesList(invoiceService.getFbInvoiceTaxesByIdInvoice(in.getIdInvoice()));
 
-                if (in.getType().equals("IN")) {
-                    System.out.println("idInvoice:" + in.getIdInvoice().toString());
-                    this.paymentDetailList = this.iFacade.getPaymentDetailsByIdInvoice(in.getIdInvoice().toString());
-                    if (!this.paymentDetailList.isEmpty()) {
-                        System.out.println("TIENE PAGOS");
-                        for (FbPaymentDetail pd : this.paymentDetailList) {
-                            System.out.println("id:" + pd.getIdDetail().toString() + "  date: " + pd.getIdPayment().getInDate() + " amount: " + pd.getPayment().toString());
-                        }
-                        
-                        
-                        
-                        //Formateando mensaje de salida
-                        String cadena = "";
-                        if (this.paymentDetailList.size() > 1) {
-                            cadena = this.validationBean.getMsgBundle("lblPaymentPlural");
-                        }else{
-                            cadena = this.validationBean.getMsgBundle("lblPaymentLower");
-                        }
-                            this.paymentMade = "<a onclick='myFunction();' class='dropLi' >" + this.paymentDetailList.size() + " " + cadena + "</a> " + this.validationBean.getMsgBundle("lblPaymentMade") 
-                                    + " " + this.paymentDetailList.get(this.paymentDetailList.size() - 1).getIdPayment().getInDate();
-                        
-                        
-                        
-                        
-                        
-                    } else {
-                        System.out.println("NO TIENE PAGOS");
-                    }
-                }
-
+                this.editInvoice = in;
+                
                 in.setFbInvoiceDetailList(this.iFacade.getInvoiceDetailsByIdInvoice(in.getIdInvoice().toString()));
                 in.setFbInvoiceTaxesList(this.iFacade.getInvoiceTaxesByIdInvoice(in.getIdInvoice().toString()));
                 if (in.getIdCust() != null) {
@@ -1116,6 +1101,8 @@ public class InvoiceFormController implements Serializable {
                     if (currentCust.getCountryS() != null) {
                         shAddress += currentCust.getCountryS() + ".";
                     }
+                    
+                    this.setPagos(in);
                 } else {
                     this.idCust = "0";
                 }
@@ -1296,18 +1283,74 @@ public class InvoiceFormController implements Serializable {
     public void pagar() {
         this.validationBean.redirecionar("/view/sales/payments/paymentForm.xhtml");
     }
-    
-    
-    public boolean showReceivePayment(){
-    boolean flag = false;
+
+    public boolean showReceivePayment() {
+        boolean flag = false;
         if (modStay) {
             if (this.type.equals("IN")) {
                 if (this.invoiceStatus.equals("OV") || this.invoiceStatus.equals("PA") || this.invoiceStatus.equals("OP")) {
-                    flag = true;
+                    if (this.idCust.equals(idOGCust)) {
+                        flag = true;
+                    }
+
                 }
             }
         }
-    
-    return flag;
+
+        return flag;
     }
+
+    public String showBalanceDue() {
+        String res = "";
+        Double dob = 0.00;
+        if (modStay) {
+            //res = String.format("%.2f", (this.rBalance.doubleValue() - totalPayment));
+            dob = this.rBalance.doubleValue() - totalPayment;
+            
+            if (dob == 0) {
+                res = this.validationBean.getMsgBundle("lblPaid");
+            }else if(dob != 0){
+                res =  String.format("%.2f",dob);
+            }
+        }else{
+         res = this.dBalance;
+        }
+        return res;
+    }
+    
+    public void setPagos(FbInvoice in){
+            if (this.idCust.equals(idOGCust)) {
+                                if (in.getType().equals("IN")) {
+                    System.out.println("idInvoice:" + in.getIdInvoice().toString());
+                    this.paymentDetailList = this.iFacade.getPaymentDetailsByIdInvoice(in.getIdInvoice().toString());
+                    if (!this.paymentDetailList.isEmpty()) {
+                        System.out.println("TIENE PAGOS");
+                        this.totalPayment = 0.00;
+                        for (FbPaymentDetail pd : this.paymentDetailList) {
+                            System.out.println("id:" + pd.getIdDetail().toString() + "  date: " + pd.getIdPayment().getInDate() + " amount: " + pd.getPayment().toString());
+                            this.totalPayment += pd.getPayment().doubleValue();
+
+                        }
+                        System.out.println("total pago: " + this.totalPayment);
+
+                        //Formateando mensaje de salida
+                        String cadena = "";
+                        if (this.paymentDetailList.size() > 1) {
+                            cadena = this.validationBean.getMsgBundle("lblPaymentPlural");
+                        } else {
+                            cadena = this.validationBean.getMsgBundle("lblPaymentLower");
+                        }
+                        this.paymentMade = "<a onclick='myFunction();' class='dropLi' >" + this.paymentDetailList.size() + " " + cadena + "</a> " + this.validationBean.getMsgBundle("lblPaymentMade")
+                                + " " + this.paymentDetailList.get(this.paymentDetailList.size() - 1).getIdPayment().getInDate();
+
+                    } else {
+                        System.out.println("NO TIENE PAGOS");
+                    }
+                }
+        }else{
+            this.totalPayment = 0.00;
+            this.paymentDetailList = new ArrayList<>();
+            }
+    }
+
 }

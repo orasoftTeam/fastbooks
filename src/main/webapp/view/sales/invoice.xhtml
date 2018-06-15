@@ -180,6 +180,9 @@
                             
                             <bnu:commandButton value="Copy"  style="width:100%; border: none"  
                                                rendered="#{invoiceTableController.showOptions(in.status,in.type,'COPY')}" action="#{invoiceTableController.copy(in)}"   />
+                            
+                            <bnu:commandButton value="Receive Payment"  style="width:100%; border: none"  
+                                               rendered="#{invoiceTableController.showOptions(in.status,in.type,'REPAY')}" action="#{invoiceTableController.recievePayment(in.idCust.idCust.toString(), in.idInvoice.toString())}"   />
 
                         </bnu:dropButton>
                         <bnu:commandButton value="#{messages.edit}"  look="warning" styleClass="hidden-lg hidden-md" action="#{invoiceTableController.edit(in)}" rendered="#{invoiceTableController.showOptions(in.status,in.type,'EDIT')}"   />
@@ -191,7 +194,8 @@
 
                         <bnu:commandButton value="Copy"  style="width:100%; border: none" styleClass="hidden-lg hidden-md" 
                                                rendered="#{invoiceTableController.showOptions(in.status,in.type,'COPY')}" action="#{invoiceTableController.copy(in)}"   />
-                        
+                        <bnu:commandButton value="Receive Payment"  style="width:100%; border: none"  styleClass="hidden-lg hidden-md"
+                                               rendered="#{invoiceTableController.showOptions(in.status,in.type,'REPAY')}" action="#{invoiceTableController.recievePayment(in.idCust.idCust.toString(), in.idInvoice.toString())}"   />
                     </bnu:dataTableColumn>
 
                 </bnu:dataTable>

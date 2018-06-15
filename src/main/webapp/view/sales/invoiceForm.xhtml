@@ -57,8 +57,8 @@
                         <bnu:column span="2">
                             <h:panelGroup rendered="#{invoiceController.showSegunType('CN')}" ><h4 style="margin-top: -5px">#{messages.lblAmountToRefund}</h4></h:panelGroup>
                             <h:panelGroup rendered="#{!invoiceController.showSegunType('CN')}" ><h4 style="margin-top: -5px">#{messages.lblInvoiceBalanceDue}</h4></h:panelGroup>
-                            <h1 style="margin-top: -5px" >#{invoiceController.DBalance}</h1>
-                            <bnu:commandButton value="Receive Payment" rendered="#{invoiceController.showReceivePayment()}" /><br/>
+                            <h1 style="margin-top: -5px" >#{invoiceController.showBalanceDue()}</h1>
+                            <bnu:commandButton value="Receive Payment" rendered="#{invoiceController.showReceivePayment()}" action="#{invoiceTableController.recievePayment(invoiceController.idCust, invoiceController.idInvoice)}" /><br/>
                             <h:panelGroup rendered="#{invoiceController.paymentDetailList.size() > 0}" ><h:outputText escape="false" value="#{invoiceController.paymentMade}" />
                                 <div id="myDropdown" class="dropdown-content dropLi">
                                     <table>
