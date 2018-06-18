@@ -240,6 +240,10 @@ public class InvoiceFormController implements Serializable {
     @Setter
     Double totalPayment = 0.00;
     
+    private @Getter
+    @Setter
+    boolean linked = false;    
+    
     private @Getter @Setter FbInvoice editInvoice;
 
     public InvoiceFormController() {
@@ -645,7 +649,12 @@ public class InvoiceFormController implements Serializable {
                 //Double balanceDue = acum + ship;
 
                 this.rTotal = new BigDecimal((acum + ship + tax + shTaxAmount));
-
+                
+               /* if (modStay && this.paymentDetailList.size() != 0) {
+                    this.rBalance = new BigDecimal(this.rBalance.doubleValue() - this.totalPayment);
+                }*/
+                
+                
                 this.didUserTouchForm();
             } else {
                 this.validationBean.lanzarMensaje("error", "lblProdNoQuant", "blank");
@@ -929,7 +938,14 @@ public class InvoiceFormController implements Serializable {
                         }
 
                         //in.setDueDate(sdf.format(sd.parse(this.dueDate)));
-                        in.setActualBalance(this.rBalance);
+                        Double resultado = 0.00;
+                        if (modStay && this.paymentDetailList.size() != 0) {
+                            resultado = this.rBalance.doubleValue() - this.totalPayment;
+                            in.setActualBalance(new BigDecimal(resultado));
+                        }else{
+                            in.setActualBalance(this.rBalance);
+                        }
+                        
                         in.setSubTotal(rSubTotal);
                         in.setTotal(rTotal);
                         in.setTaxTotal(rTaxTotal);
@@ -946,6 +962,15 @@ public class InvoiceFormController implements Serializable {
                                     this.invoiceStatus = "OV";
                                 } else {
                                     this.invoiceStatus = "OP";
+                                }
+                                
+                                if (modStay && this.paymentDetailList.size() != 0) {
+                                    Double result = this.rBalance.doubleValue() - this.totalPayment;
+                                    if (result == 0 || result < 0) {
+                                        this.invoiceStatus = "PD";
+                                    }else if(result > 0){
+                                        this.invoiceStatus = "PA";
+                                    }
                                 }
                                 in.setStatus(this.invoiceStatus);//aqui 
                                 break;
@@ -999,8 +1024,8 @@ public class InvoiceFormController implements Serializable {
                                 in.setIdShcostTax(fbTax);
                             }
                         }
-
-                        String res = iFacade.actInvoice(in, op);
+                        String res = "def";
+                        res = iFacade.actInvoice(in, op);
                         System.out.println("result: " + res);
                         if (res.equals("0")) {
                             String message = "unexpectedError";
@@ -1103,6 +1128,9 @@ public class InvoiceFormController implements Serializable {
                     }
                     
                     this.setPagos(in);
+                    if (!this.paymentDetailList.isEmpty()) {
+                        linked = true;
+                    }
                 } else {
                     this.idCust = "0";
                 }

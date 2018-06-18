@@ -352,7 +352,7 @@
                                     #{messages.lblEstimateTotal}
                                 </label></h:panelGroup>
                             <div class="col-sm-4">
-                                #{invoiceController.DBalance}
+                                #{invoiceController.showBalanceDue()}
                             </div>
                         </div>
                         <p:separator/>
@@ -380,7 +380,8 @@
             </bnu:navbarLinks>
             <h:form styleClass="navbar-form navbar-right" >
                 <bnu:commandButton value="#{messages.save}"  look="success"  style="width: 100%" action="#{invoiceController.save('A')}" rendered="#{!invoiceController.modStay}"  />
-                <bnu:commandButton value="#{messages.lblUpdateIn}"  look="success"  style="width: 100%"  action="#{invoiceController.save('U')}" rendered="#{invoiceController.modStay}" />
+                <bnu:commandButton value="#{messages.lblUpdateIn}"  look="success"  style="width: 100%"  action="#{invoiceController.save('U')}" rendered="#{invoiceController.modStay and  (not invoiceController.linked)}" />
+                <bnu:button value="#{messages.lblUpdateIn}"  look="success"  style="width: 100%"  onclick="PF('dlg7').show();" rendered="#{invoiceController.linked}" />
             </h:form>
         </bnu:navBar>
 
@@ -839,7 +840,7 @@
 
 
         <!-- modal confirm exit -->
-        <p:dialog header="Modal Dialog" widgetVar="dlg5" modal="true" height="100">
+        <p:dialog header="Confirmation" widgetVar="dlg5" modal="true" height="100">
             <h:outputText value="Do you want to leave without saving?" /><br/>
             <p:separator />
 
@@ -850,7 +851,7 @@
         </p:dialog> 
 
 
-        <p:dialog header="Modal Dialog" widgetVar="dlg6" modal="true" height="100">
+        <p:dialog header="Confirmation" widgetVar="dlg6" modal="true" height="100">
             <h:outputText value="Are you sure you want to clear this transaction?" /><br/>
             <p:separator />
 
@@ -859,6 +860,18 @@
                 <bnu:commandButton value="Yes" look="success" action="#{invoiceController.validationBean.redirecionar('/view/sales/invoiceForm.xhtml')}" style="margin-left: 10px"  />
             </h:form>
         </p:dialog> 
+        
+        <p:dialog header="Confirmation" widgetVar="dlg7" modal="true" height="100">
+            <h:outputText value="This transaction is linked to payments, are you sure that you want to save? saving would update all the linked payments" /><br/>
+            <p:separator />
+
+            <h:form id="confirmModalSaveLink">
+                <bnu:button value="No" onclick="PF('dlg7').hide();" />
+                
+                <bnu:commandButton value="Yes"  look="success"  style="margin-left: 10px" action="#{invoiceController.save('U')}" rendered="#{invoiceController.modStay}" />
+                
+            </h:form>
+        </p:dialog>         
 
         <!-- end modal exit-->
 
