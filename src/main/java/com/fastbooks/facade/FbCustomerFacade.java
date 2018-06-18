@@ -38,7 +38,7 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer> {
     public List<FbCustomer> getCustomersByIdCia(String idCust) {
         List<FbCustomer> listC = new ArrayList<>();
         try {
-            String sql = "select * from fb_customer where id_cia = ? and status = 'A'";
+            String sql = "select * from fb_customer where id_cia = ? and status = 'A' order by firstname asc";
             //tambien q muestre el perfil
             Query q = em.createNativeQuery(sql, FbCustomer.class);
             q.setParameter(1, idCust);
@@ -62,7 +62,7 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer> {
         try {
             String sql = "select * from fb_customer \n"
                     + " where id_cia = ?"
-                    + " and status = 'A'";
+                    + " and status = 'A' order by firstname asc";
             Query q = em.createNativeQuery(sql, FbCustomer.class);
             q.setParameter(1, idCia);
             listC = q.getResultList();

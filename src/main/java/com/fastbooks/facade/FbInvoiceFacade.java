@@ -68,7 +68,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         List<FbInvoice> list = new ArrayList<>();
         try {
 
-            String sql = "select * from fb_invoice i where id_cia=? order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
+            String sql = "select * from fb_invoice i where id_cia=? and status != 'DEL' order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
             Query q = em.createNativeQuery(sql, FbInvoice.class);
             q.setParameter(1, idCia);
             list = q.getResultList();
@@ -87,7 +87,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         List<FbInvoice> list = new ArrayList<>();
         try {
 
-            String sql = "select * from fb_invoice where id_invoice=?";
+            String sql = "select * from fb_invoice where id_invoice=? and status != 'DEL'";
             Query q = em.createNativeQuery(sql, FbInvoice.class);
             q.setParameter(1, idInvoice);
             list = q.getResultList();
@@ -106,7 +106,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         List<FbInvoice> list = new ArrayList<>();
         try {
 
-            String sql = "select * from fb_invoice i where id_cust=? order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
+            String sql = "select * from fb_invoice i where id_cust=? and status != 'DEL' order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
             Query q = em.createNativeQuery(sql, FbInvoice.class);
             q.setParameter(1, idCust);
             list = q.getResultList();
@@ -123,7 +123,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
     
     
 
-    public List<FbInvoice> getInvoicesByIdCiaNonJpa(String idCia) throws SQLException, ClassNotFoundException {
+ /*   public List<FbInvoice> getInvoicesByIdCiaNonJpa(String idCia) throws SQLException, ClassNotFoundException {
         List<FbInvoice> list = new ArrayList<>();
 
         //Connection cn = em.unwrap(java.sql.Connection.class);
@@ -177,7 +177,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         }
 
         return list;
-    }
+    }*/
 
     public List<FbInvoice> getInvoicesForPayment(String idCia, String idCust) {
         List<FbInvoice> list = new ArrayList<>();
@@ -274,7 +274,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         try {
             Connection cn = em.unwrap(java.sql.Connection.class);
-            CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_INVOICE (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_INVOICE (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             cs.setInt(1, Integer.parseInt(in.getIdCia().getIdCia().toString()));
             cs.setInt(2, Integer.parseInt(in.getIdInvoice().toString()));
             cs.setInt(3, Integer.parseInt(in.getIdCust().getIdCust().toString()));
@@ -352,9 +352,11 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             cs.setString(34, in.getEsAccdate());
             cs.setString(35, op);
             cs.registerOutParameter(36, Types.VARCHAR);
-
+            cs.registerOutParameter(37, Types.VARCHAR);
             cs.execute();
             res = cs.getString(36);
+            String resId = cs.getString(37);
+            System.out.println("Id de invoice recien insertada: " + resId);
             cs.close();
 
         } catch (Exception e) {
@@ -364,6 +366,115 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         System.out.println("Facade Resultado de operacion: " + res);
         return res;
     }
+    
+    
+    public String actInvoiceWithReturnId(FbInvoice in, String op) {
+        String res = "";
+        String pProdsIds = "";
+        String pQuants = "";
+        String pIdTaxes = "";
+        String pFromAmounts = "";
+        String pTaxAmounts = "";
+        String pTaxProdsIds = "";
+        String pItemTaxes = "";
+        String temp = null;
+        String resId = "-1";
+        //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Connection cn = em.unwrap(java.sql.Connection.class);
+            CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_INVOICE (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            cs.setInt(1, Integer.parseInt(in.getIdCia().getIdCia().toString()));
+            cs.setInt(2, Integer.parseInt(in.getIdInvoice().toString()));
+            cs.setInt(3, Integer.parseInt(in.getIdCust().getIdCust().toString()));
+            cs.setString(4, in.getType());
+            cs.setString(5, in.getNoDot());
+            cs.setString(6, in.getCustEmail());
+            if (in.getInDate() != null) {
+                temp = in.getInDate();
+            }
+
+            cs.setString(7, temp);
+            if (in.getDueDate() != null) {
+                temp = in.getDueDate();
+            }
+
+            cs.setString(8, temp);
+            cs.setDouble(9, Double.parseDouble(in.getActualBalance().toString()));
+            cs.setDouble(10, Double.parseDouble(in.getSubTotal().toString()));
+            cs.setDouble(11, Double.parseDouble(in.getTaxTotal().toString()));
+            cs.setDouble(12, Double.parseDouble(in.getTotal().toString()));
+            cs.setString(13, in.getStatus());
+            cs.setString(14, in.getBiAddress());
+            cs.setString(15, in.getShAddress());
+            cs.setString(16, in.getTerms());
+            cs.setString(17, in.getTrackNum());
+            cs.setString(18, in.getShipVia());
+            if (in.getShDate() != null) {
+                temp = in.getShDate();
+            }
+
+            cs.setString(19, temp);
+            cs.setDouble(20, Double.parseDouble(in.getShCost().toString()));
+            cs.setString(21, in.getMessageInvoice());
+            cs.setString(22, in.getAttachment());
+
+            for (FbInvoiceDetail fbInvoiceDetail : in.getFbInvoiceDetailList()) {
+                pProdsIds += fbInvoiceDetail.getIdProd().getIdProd().toString() + ",";
+                pQuants += fbInvoiceDetail.getItemQuant().toString() + ",";
+                for (FbInvoiceTaxes fbInvoiceTax : in.getFbInvoiceTaxesList()) {
+                    if (fbInvoiceTax.getIdTax().getIdTax().toString().equals(fbInvoiceDetail.getItemTax())) {
+                        fbInvoiceDetail.setItemTax(fbInvoiceTax.getIdTax().getName());
+                    }
+                }
+                pItemTaxes += fbInvoiceDetail.getItemTax() + ",";
+            }
+
+            for (FbInvoiceTaxes fbInvoiceDetail : in.getFbInvoiceTaxesList()) {
+                pIdTaxes += fbInvoiceDetail.getIdTax().getIdTax().toString() + ",";
+                pFromAmounts += fbInvoiceDetail.getFromAmount().toString() + ",";
+                pTaxAmounts += fbInvoiceDetail.getTaxAmount().toString() + ",";
+                pTaxProdsIds += fbInvoiceDetail.getIdProds() + ",";
+
+            }
+
+            cs.setString(23, pProdsIds);
+            cs.setString(24, pQuants);
+            cs.setString(25, pIdTaxes);
+            cs.setString(26, pFromAmounts);
+            cs.setString(27, pTaxAmounts);
+            cs.setString(28, pTaxProdsIds);
+            cs.setString(29, pItemTaxes);
+            Integer idtax = 0;
+            if (in.getIdShcostTax() != null) {
+                idtax = Integer.parseInt(in.getIdShcostTax().getIdTax().toString());
+            }
+
+            cs.setInt(30, idtax);
+            Double shtaxamount = Double.parseDouble(in.getShcostTaxAmount().toString());
+
+            cs.setDouble(31, shtaxamount);
+
+            cs.setString(32, in.getShcostTaxName());
+
+            cs.setString(33, in.getEsAccby());
+            cs.setString(34, in.getEsAccdate());
+            cs.setString(35, op);
+            cs.registerOutParameter(36, Types.VARCHAR);
+            cs.registerOutParameter(37, Types.VARCHAR);
+            cs.execute();
+            res = cs.getString(36);
+            resId = cs.getString(37);
+            System.out.println("Id de invoice recien insertada: " + resId);
+            cs.close();
+
+        } catch (Exception e) {
+            res = e.toString();//"-2";
+            resId = "-2";
+            e.printStackTrace();
+        }
+        System.out.println("Facade Resultado de operacion: " + res);
+        return resId;
+    }    
 
     public String generateInvoice(FbInvoice i, String logo, JasperReport report, String type) {
         String res = "";

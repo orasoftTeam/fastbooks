@@ -500,4 +500,28 @@ public class ValidationBean {
             e.printStackTrace();
         }
     }
+    
+        public String formatType(String t) {
+        String res = "";
+        switch (t) {
+            case "IN":
+                res = getMsgBundle("lblInvoiceTypeIn");
+                break;
+            case "ES":
+                res = getMsgBundle("lblEstimate");
+                break;
+            case "SR":
+                res = getMsgBundle("salesR");
+                break;
+            case "PA":
+                res = getMsgBundle("payment");
+                break;
+            default:
+                break;
+        }
+
+        return res;
+    }
+    
+    
 }

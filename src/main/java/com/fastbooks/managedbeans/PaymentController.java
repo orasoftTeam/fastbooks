@@ -391,7 +391,9 @@ public class PaymentController implements Serializable {
 
                     if (isMod) {
                         payment.setIdInvoice(new BigDecimal(this.idPayment));
-                        op = "U";
+                        if (!op.equals("D")) {
+                            op = "U";
+                        }
                     }
 
                     //String property = System.getProperty("java.version");
@@ -431,6 +433,8 @@ public class PaymentController implements Serializable {
                         message = "lblPaymentSuccess";
                     } else if (op.equals("U")) {
                         message = "lblEditPaymentSuccess";
+                    }else if(op.equals("D")){
+                        message = "lblPaymentDeleted";
                     }
                     switch (res) {
                         case "0":
@@ -489,6 +493,12 @@ public class PaymentController implements Serializable {
         System.out.println("id:" + req.getParameter("id"));
 
         try {
+            
+            if (req.getParameter("id") != null && in == null) {
+                in = iFacade.getInvoiceByIdInvoice(req.getParameter("id"));
+            }
+            
+            
             if (in != null) {
 
                 isMod = true;
@@ -571,6 +581,11 @@ public class PaymentController implements Serializable {
             e.printStackTrace();
         }
 
+    }
+    
+    
+    public boolean modifica(){
+    return this.isMod;
     }
 
 }

@@ -388,7 +388,7 @@ public class InvoiceController implements Serializable {
         if (!this.fIdCust.equals("0")) {
             query += " AND ID_CUST =  " + this.fIdCust;
         }
-
+           query += " and status != 'DEL'";
         this.userData.setInvoiceSql(query);
         System.out.println("com.fastbooks.managedbeans.InvoiceController.applyFilter()");
 

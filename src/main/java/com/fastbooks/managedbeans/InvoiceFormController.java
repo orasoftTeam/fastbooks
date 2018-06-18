@@ -63,7 +63,10 @@ public class InvoiceFormController implements Serializable {
     @EJB
     FbTaxFacade taxFacade;
 
-    InvoiceService invoiceService;
+    //InvoiceService invoiceService;
+    private @Getter
+    @Setter
+    String invoiceModal = "0";
 
     private @Getter
     @Setter
@@ -239,12 +242,14 @@ public class InvoiceFormController implements Serializable {
     private @Getter
     @Setter
     Double totalPayment = 0.00;
-    
+
     private @Getter
     @Setter
-    boolean linked = false;    
-    
-    private @Getter @Setter FbInvoice editInvoice;
+    boolean linked = false;
+
+    private @Getter
+    @Setter
+    FbInvoice editInvoice;
 
     public InvoiceFormController() {
     }
@@ -361,7 +366,7 @@ public class InvoiceFormController implements Serializable {
                 if (modStay) {
                     this.setPagos(editInvoice);
                 }
-                
+
                 this.didUserTouchForm();
             } else {
                 this.idCust = "0";
@@ -370,9 +375,6 @@ public class InvoiceFormController implements Serializable {
                 biAddress = null;
                 shAddress = null;
             }
-            
-            
-            
 
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.changeCust()");
@@ -476,7 +478,7 @@ public class InvoiceFormController implements Serializable {
                                 for (FbBundleItems bi : prod.getFbBundleItemsList()) {
                                     prodBundle = bi.getIdProd();
 
-                                    addItemInDetailList(prodBundle);
+                                    addItemInDetailList(prodBundle, bi.getQuant().toString());
 
                                 }
 
@@ -492,7 +494,7 @@ public class InvoiceFormController implements Serializable {
                         } else {
 
                             if (checkIfInvHasQuant(prod, 1)) {
-                                addItemInDetailList(prod);
+                                addItemInDetailList(prod, "1");
                             } else {
                                 this.validationBean.lanzarMensaje("error", "lblProdNoQuant", "blank");
                             }
@@ -518,7 +520,7 @@ public class InvoiceFormController implements Serializable {
 
     }
 
-    public void addItemInDetailList(FbProduct prod) {
+    public void addItemInDetailList(FbProduct prod, String quantity) {
         FbInvoiceDetail id = new FbInvoiceDetail(BigDecimal.ZERO);
         id.setIdProd(prod);
         id.setItemName(prod.getName());
@@ -528,7 +530,7 @@ public class InvoiceFormController implements Serializable {
         if (prod.getIdTax() != null) {
             id.setItemTax(prod.getIdTax().getIdTax().toString());
         }
-        id.setItemQuant(new BigInteger("1"));
+        id.setItemQuant(new BigInteger(quantity));
 
         Double price = Double.parseDouble(prod.getPrice().toString());
         Integer quant = Integer.parseInt(id.getItemQuant().toString());
@@ -649,12 +651,10 @@ public class InvoiceFormController implements Serializable {
                 //Double balanceDue = acum + ship;
 
                 this.rTotal = new BigDecimal((acum + ship + tax + shTaxAmount));
-                
-               /* if (modStay && this.paymentDetailList.size() != 0) {
+
+                /* if (modStay && this.paymentDetailList.size() != 0) {
                     this.rBalance = new BigDecimal(this.rBalance.doubleValue() - this.totalPayment);
                 }*/
-                
-                
                 this.didUserTouchForm();
             } else {
                 this.validationBean.lanzarMensaje("error", "lblProdNoQuant", "blank");
@@ -667,11 +667,11 @@ public class InvoiceFormController implements Serializable {
         }
     }
 
-    public String tooltipQuant(FbProduct prod) {
+    public String tooltipQuant(FbProduct prod, String quantity) {
         String res = "";
         if (prod.getType().equals("IN")) {
             res = this.validationBean.getMsgBundle("lblQuantIs");
-            res += " " + prod.getInitQuant().toString();
+            res += " " + (Integer.parseInt(prod.getInitQuant().toString()) - Integer.parseInt(quantity));
         } else {
             res = this.validationBean.getMsgBundle("lblQuant");
         }
@@ -811,89 +811,7 @@ public class InvoiceFormController implements Serializable {
 
     }
 
-    /*public void updateTaxes() {
-
-        int t = 0;
-        Double rate = 0.00;
-        Double amount = 0.00;
-        FbInvoiceTaxes it = new FbInvoiceTaxes();
-        taxesAmountList = new ArrayList<>();
-        for (FbInvoiceDetail det : dList) {
-            if (det.getItemTax() == null) {
-                det.setItemTax(this.taxList.get(0).getIdTax().toString());
-            }
-        }
-
-        if (dList.isEmpty()) {
-            taxesAmountList = new ArrayList<>();
-        }
-        for (FbInvoiceDetail det : dList) {
-            t = 0;
-
-            for (FbInvoiceDetail deta : dList) {
-                if (det.getItemTax().equals(deta.getItemTax())) {
-                    t++;
-                }
-            }
-            if (t == 1 && det.getItemQuant().toString().equals("1")) {
-                //newtaxesAmountList
-                it = new FbInvoiceTaxes();
-                for (FbTax fbTax : this.taxList) {
-                    if (det.getItemTax().equals(fbTax.getIdTax().toString())) {
-                        it.setIdTax(fbTax);
-                    }
-                }
-                it.setFromAmount(det.getItemAmount());
-                it.setIdProds(det.getIdProd().getIdProd().toString());
-                rate = Double.parseDouble(it.getIdTax().getRate());
-                amount = Double.parseDouble(det.getItemAmount().toString());
-                it.setTaxAmount(new BigDecimal(String.valueOf(amount * rate)));
-
-                this.taxesAmountList.add(it);
-            } else if (t > 1) {
-                //sumar
-                int o = 0;
-                for (FbInvoiceTaxes inTax : taxesAmountList) {
-                    o = 0;
-                    String[] split = inTax.getIdProds().split(",");
-                    for (String string : split) {
-                        if (string.equals(det.getIdProd().getIdProd().toString())) {
-                            o++;
-                        }
-                    }
-
-                    if (o == 0) {
-                        if (inTax.getIdTax().getIdTax().toString().equals(det.getItemTax())) {
-
-                            amount = Double.parseDouble(inTax.getFromAmount().toString());
-                            inTax.setFromAmount(new BigDecimal(String.valueOf(amount + Double.parseDouble(det.getItemAmount().toString()))));
-                            inTax.setIdProds(inTax.getIdProds() + ", " + det.getIdProd().getIdProd());
-                            inTax.setTaxAmount(new BigDecimal(String.valueOf(
-                                    Double.parseDouble(inTax.getFromAmount().toString())
-                                    * Double.parseDouble(inTax.getIdTax().getRate()))));
-
-                        }
-                    }
-
-                }
-
-            } else if (t == 1 && (!det.getItemQuant().toString().equals("1"))) {
-                for (int i = 0; i < taxesAmountList.size(); i++) {
-                    if (taxesAmountList.get(i).getIdTax().getIdTax().toString().equals(det.getItemTax())) {
-                        taxesAmountList.get(i).setFromAmount(new BigDecimal(String.valueOf(Double.parseDouble(taxesAmountList.get(i).getFromAmount().toString()) + Double.parseDouble(det.getItemAmount().toString()))));
-                        taxesAmountList.get(i).setTaxAmount(new BigDecimal(String.valueOf(Double.parseDouble(taxesAmountList.get(i).getFromAmount().toString())
-                                * Double.parseDouble(taxesAmountList.get(i).getIdTax().getRate()))));
-                    }
-                }
-
-            }
-            int s = 0;
-            for (int i = 0; i < taxesAmountList.size(); i++) {
-
-            }
-
-        }
-    }*/
+ 
     public void save(String op) {
         try {
             if (this.validationBean.validarSoloNumerosConPunto(this.shCost, "error", "lblInShCostFail", "blank")) {
@@ -907,15 +825,7 @@ public class InvoiceFormController implements Serializable {
                     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
                     DateFormat sd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
                     if (!this.dList.isEmpty()) {
-                        /*
-     PROCEDURE PR_ACT_INVOICE
- (pIdCia IN INT, pIdInvoice IN INT, pIdCust IN INT, pType IN VARCHAR2,pNo IN VARCHAR2, pEmail IN VARCHAR2,
-    pInDate IN VARCHAR2,pDueDate IN VARCHAR2,pActBalance IN DECIMAL,pSubTotal IN DECIMAL,pTaxTotal IN DECIMAL,
-     pTotal IN DECIMAL,pStatus IN VARCHAR2,pBiAdd IN VARCHAR2,pShAdd IN VARCHAR2,pTerms IN VARCHAR2,pTrackNum IN VARCHAR2,
-      pShipVia IN VARCHAR2,pShDate IN VARCHAR2,pShCost IN DECIMAL,pMessageInvoice IN VARCHAR2,pAttachment IN VARCHAR2,
-      pProdIds IN VARCHAR2,pQuants IN VARCHAR2,pIdTaxes IN VARCHAR2,pFromAmounts IN VARCHAR2,pTaxAmounts IN VARCHAR2,
-        pTaxProdIds IN VARCHAR2, op IN VARCHAR2, res OUT VARCHAR2); 
-                         */
+
                         updateTotal();
                         FbInvoice in = new FbInvoice();
                         in.setIdCia(this.userData.getCurrentCia());
@@ -942,10 +852,10 @@ public class InvoiceFormController implements Serializable {
                         if (modStay && this.paymentDetailList.size() != 0) {
                             resultado = this.rBalance.doubleValue() - this.totalPayment;
                             in.setActualBalance(new BigDecimal(resultado));
-                        }else{
+                        } else {
                             in.setActualBalance(this.rBalance);
                         }
-                        
+
                         in.setSubTotal(rSubTotal);
                         in.setTotal(rTotal);
                         in.setTaxTotal(rTaxTotal);
@@ -963,12 +873,12 @@ public class InvoiceFormController implements Serializable {
                                 } else {
                                     this.invoiceStatus = "OP";
                                 }
-                                
+
                                 if (modStay && this.paymentDetailList.size() != 0) {
                                     Double result = this.rBalance.doubleValue() - this.totalPayment;
                                     if (result == 0 || result < 0) {
                                         this.invoiceStatus = "PD";
-                                    }else if(result > 0){
+                                    } else if (result > 0) {
                                         this.invoiceStatus = "PA";
                                     }
                                 }
@@ -1046,6 +956,14 @@ public class InvoiceFormController implements Serializable {
                                 } else if (type.equals("SR")) {
                                     message = "lblSalesRUpdateSuccess";
                                 }
+                            } else if (op.equals("D")) {
+                                if (type.equals("IN")) {
+                                    message = "lblInvoiceDeleted";
+                                } else if (type.equals("ES")) {
+                                    message = "lblEstimateDeleted";
+                                } else if (type.equals("SR")) {
+                                    message = "lblSalesReceiptDeleted";
+                                }
                             }
 
                             this.userData.setUses(message);
@@ -1078,6 +996,11 @@ public class InvoiceFormController implements Serializable {
         System.out.println("id:" + req.getParameter("id"));
 
         try {
+
+            if (req.getParameter("id") != null && in == null) {
+                in = iFacade.getInvoiceByIdInvoice(req.getParameter("id"));
+            }
+
             if (in != null) {
                 this.type = in.getType();
                 this.currentCust = in.getIdCust();
@@ -1086,7 +1009,7 @@ public class InvoiceFormController implements Serializable {
                 //in.setFbInvoiceTaxesList(invoiceService.getFbInvoiceTaxesByIdInvoice(in.getIdInvoice()));
 
                 this.editInvoice = in;
-                
+
                 in.setFbInvoiceDetailList(this.iFacade.getInvoiceDetailsByIdInvoice(in.getIdInvoice().toString()));
                 in.setFbInvoiceTaxesList(this.iFacade.getInvoiceTaxesByIdInvoice(in.getIdInvoice().toString()));
                 if (in.getIdCust() != null) {
@@ -1126,7 +1049,7 @@ public class InvoiceFormController implements Serializable {
                     if (currentCust.getCountryS() != null) {
                         shAddress += currentCust.getCountryS() + ".";
                     }
-                    
+
                     this.setPagos(in);
                     if (!this.paymentDetailList.isEmpty()) {
                         linked = true;
@@ -1334,51 +1257,242 @@ public class InvoiceFormController implements Serializable {
         if (modStay) {
             //res = String.format("%.2f", (this.rBalance.doubleValue() - totalPayment));
             dob = this.rBalance.doubleValue() - totalPayment;
-            
+
             if (dob == 0) {
                 res = this.validationBean.getMsgBundle("lblPaid");
-            }else if(dob != 0){
-                res =  String.format("%.2f",dob);
+            } else if (dob != 0) {
+                res = String.format("%.2f", dob);
             }
-        }else{
-         res = this.dBalance;
+        } else {
+            res = this.dBalance;
         }
         return res;
     }
-    
-    public void setPagos(FbInvoice in){
-            if (this.idCust.equals(idOGCust)) {
-                                if (in.getType().equals("IN")) {
-                    System.out.println("idInvoice:" + in.getIdInvoice().toString());
-                    this.paymentDetailList = this.iFacade.getPaymentDetailsByIdInvoice(in.getIdInvoice().toString());
-                    if (!this.paymentDetailList.isEmpty()) {
-                        System.out.println("TIENE PAGOS");
-                        this.totalPayment = 0.00;
-                        for (FbPaymentDetail pd : this.paymentDetailList) {
-                            System.out.println("id:" + pd.getIdDetail().toString() + "  date: " + pd.getIdPayment().getInDate() + " amount: " + pd.getPayment().toString());
-                            this.totalPayment += pd.getPayment().doubleValue();
 
-                        }
-                        System.out.println("total pago: " + this.totalPayment);
+    public void setPagos(FbInvoice in) {
+        if (this.idCust.equals(idOGCust)) {
+            if (in.getType().equals("IN")) {
+                System.out.println("idInvoice:" + in.getIdInvoice().toString());
+                this.paymentDetailList = this.iFacade.getPaymentDetailsByIdInvoice(in.getIdInvoice().toString());
+                if (!this.paymentDetailList.isEmpty()) {
+                    System.out.println("TIENE PAGOS");
+                    this.totalPayment = 0.00;
+                    for (FbPaymentDetail pd : this.paymentDetailList) {
+                        System.out.println("id:" + pd.getIdDetail().toString() + "  date: " + pd.getIdPayment().getInDate() + " amount: " + pd.getPayment().toString());
+                        this.totalPayment += pd.getPayment().doubleValue();
 
-                        //Formateando mensaje de salida
-                        String cadena = "";
-                        if (this.paymentDetailList.size() > 1) {
-                            cadena = this.validationBean.getMsgBundle("lblPaymentPlural");
-                        } else {
-                            cadena = this.validationBean.getMsgBundle("lblPaymentLower");
-                        }
-                        this.paymentMade = "<a onclick='myFunction();' class='dropLi' >" + this.paymentDetailList.size() + " " + cadena + "</a> " + this.validationBean.getMsgBundle("lblPaymentMade")
-                                + " " + this.paymentDetailList.get(this.paymentDetailList.size() - 1).getIdPayment().getInDate();
-
-                    } else {
-                        System.out.println("NO TIENE PAGOS");
                     }
+                    System.out.println("total pago: " + this.totalPayment);
+
+                    //Formateando mensaje de salida
+                    String cadena = "";
+                    if (this.paymentDetailList.size() > 1) {
+                        cadena = this.validationBean.getMsgBundle("lblPaymentPlural");
+                    } else {
+                        cadena = this.validationBean.getMsgBundle("lblPaymentLower");
+                    }
+                    this.paymentMade = "<a onclick='myFunction();' class='dropLi' >" + this.paymentDetailList.size() + " " + cadena + "</a> " + this.validationBean.getMsgBundle("lblPaymentMade")
+                            + " " + this.paymentDetailList.get(this.paymentDetailList.size() - 1).getIdPayment().getInDate();
+
+                } else {
+                    System.out.println("NO TIENE PAGOS");
                 }
-        }else{
+            }
+        } else {
             this.totalPayment = 0.00;
             this.paymentDetailList = new ArrayList<>();
+        }
+    }
+
+    public void print(FbInvoice i, HttpServletRequest req) {
+        try {
+            String jasperFile = i.getIdCust() == null ? "salesReceiptSinCust" : "report1";
+
+            this.invoiceModal = this.iFacade.generateInvoice(i, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile(jasperFile, req), this.validationBean.formatType(i.getType()));
+            
+            this.validationBean.updateComponent("pdf");
+            this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.InvoiceController.print()");
+        }
+    }
+    
+        public void saveForPrint(String op) {
+        try {
+            if (this.validationBean.validarSoloNumerosConPunto(this.shCost, "error", "lblInShCostFail", "blank")) {
+                if (this.currentCust != null || type.equals("SR")) {
+
+                    if (this.currentCust == null) {
+                        currentCust = new FbCustomer();
+                        currentCust.setIdCust(BigDecimal.ZERO);
+                    }
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+                    DateFormat sd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+                    if (!this.dList.isEmpty()) {
+
+                        updateTotal();
+                        FbInvoice in = new FbInvoice();
+                        in.setIdCia(this.userData.getCurrentCia());
+                        in.setIdInvoice(new BigDecimal(idInvoice));
+                        in.setIdCust(currentCust);
+                        in.setType(type);
+                        in.setNoDot(this.InNo);
+                        in.setCustEmail(this.currentCust.getEmail());
+                        //in.setInDate(sdf.format(sd.parse(this.invoiceDate)));
+                        try {
+                            in.setInDate(sdf.format(sd.parse(this.invoiceDate)));
+                        } catch (Exception e) {
+                            in.setInDate(this.invoiceDate);
+                        }
+
+                        try {
+                            in.setDueDate(sdf.format(sd.parse(this.dueDate)));
+                        } catch (Exception e) {
+                            in.setDueDate(this.dueDate);
+                        }
+
+                        //in.setDueDate(sdf.format(sd.parse(this.dueDate)));
+                        Double resultado = 0.00;
+                        if (modStay && this.paymentDetailList.size() != 0) {
+                            resultado = this.rBalance.doubleValue() - this.totalPayment;
+                            in.setActualBalance(new BigDecimal(resultado));
+                        } else {
+                            in.setActualBalance(this.rBalance);
+                        }
+
+                        in.setSubTotal(rSubTotal);
+                        in.setTotal(rTotal);
+                        in.setTaxTotal(rTaxTotal);
+
+                        switch (type) {
+                            case "IN":
+                                Date date = null;
+                                try {
+                                    date = sdf.parse(this.dueDate);
+                                } catch (Exception e) {
+                                    date = sd.parse(this.dueDate);
+                                }
+                                if (date.before(new Date())) {
+                                    this.invoiceStatus = "OV";
+                                } else {
+                                    this.invoiceStatus = "OP";
+                                }
+
+                                if (modStay && this.paymentDetailList.size() != 0) {
+                                    Double result = this.rBalance.doubleValue() - this.totalPayment;
+                                    if (result == 0 || result < 0) {
+                                        this.invoiceStatus = "PD";
+                                    } else if (result > 0) {
+                                        this.invoiceStatus = "PA";
+                                    }
+                                }
+                                in.setStatus(this.invoiceStatus);//aqui 
+                                break;
+                            case "ES":
+                                in.setStatus(this.estimateStatus);//aqui 
+                                if (this.estimateStatus.equals("PE")) {
+                                    in.setEsAccby("");
+                                    in.setEsAccdate("");
+                                } else {
+                                    in.setEsAccby(AccBy);
+
+                                    try {
+                                        in.setEsAccdate(sdf.format(sd.parse(AccDate)));
+                                    } catch (Exception e) {
+                                        in.setEsAccdate("");
+
+                                    }
+
+                                }
+                                break;
+                            case "SR":
+                                in.setStatus("PD");
+                                in.setDueDate(" ");
+                                break;
+                            default:
+                                break;
+                        }
+
+                        in.setBiAddress(biAddress);
+                        in.setShAddress(shAddress);
+                        in.setTerms(termDays);
+                        in.setTrackNum(trackNo);
+                        in.setShipVia(shVia);
+                        in.setShCost(new BigDecimal(this.shCost));
+                        if (shipDate != null) {
+                            in.setShDate(shipDate);
+                            // in.setShDate(sdf.format(sd.parse(shipDate)));
+                        }
+
+                        in.setMessageInvoice(messageInvoice);
+                        in.setAttachment(attach);
+
+                        in.setFbInvoiceDetailList(dList);
+                        in.setFbInvoiceTaxesList(taxesAmountList);
+
+                        in.setShcostTaxAmount(rShCostTaxAmount);
+                        in.setShcostTaxName(dShCostTaxName);
+
+                        for (FbTax fbTax : taxList) {
+                            if (fbTax.getIdTax().toString().equals(this.shCostIdTax)) {
+                                in.setIdShcostTax(fbTax);
+                            }
+                        }
+                        String res = "def";
+                        res = iFacade.actInvoiceWithReturnId(in, op);
+                        System.out.println("result: " + res);
+                        if (res.equals("0")) {
+                            String message = "unexpectedError";
+                            if (op.equals("A")) {
+                                if (type.equals("IN")) {
+                                    message = "lblInvoiceAddSuccess";
+                                } else if (type.equals("ES")) {
+                                    message = "lblEstimateAddSuccess";
+                                } else if (type.equals("SR")) {
+                                    message = "lblSalesRAddSuccess";
+                                }
+
+                            } else if (op.equals("U")) {
+                                if (type.equals("IN")) {
+                                    message = "lblInUpdateSuccess";
+                                } else if (type.equals("ES")) {
+                                    message = "lblEsUpdateSuccess";
+                                } else if (type.equals("SR")) {
+                                    message = "lblSalesRUpdateSuccess";
+                                }
+                            } else if (op.equals("D")) {
+                                if (type.equals("IN")) {
+                                    message = "lblInvoiceDeleted";
+                                } else if (type.equals("ES")) {
+                                    message = "lblEstimateDeleted";
+                                } else if (type.equals("SR")) {
+                                    message = "lblSalesReceiptDeleted";
+                                }
+                            }
+                            this.validationBean.lanzarMensaje("info", message, "blank");
+                            this.print(iFacade.getInvoiceByIdInvoice(res), this.validationBean.getRequestContext());
+                            //this.userData.setUses(message);
+                            //this.validationBean.redirecionar("/view/sales/sales.xhtml");
+                        } else {
+                            //this.validationBean.lanzarMensajeSinBundle("error", res, " ");
+                        }
+
+                    } else {
+                        this.validationBean.lanzarMensaje("error", "lblMinDetInvoice", "blank");
+                    }
+
+                } else {
+
+                    this.validationBean.lanzarMensaje("error", "lblSelectCust", "blank");
+                }
             }
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.InvoiceController.save()");
+            // this.validationBean.lanzarMensajeSinBundle("error", e.toString(), " ");
+            e.printStackTrace();
+        }
+
     }
 
 }
