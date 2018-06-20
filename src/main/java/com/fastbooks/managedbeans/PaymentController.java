@@ -71,6 +71,10 @@ public class PaymentController implements Serializable {
     private @Getter
     @Setter
     String pMethod;
+    
+    private @Getter
+    @Setter
+    String invoiceModal = "0";    
 
     private @Getter
     @Setter
@@ -433,7 +437,7 @@ public class PaymentController implements Serializable {
                         message = "lblPaymentSuccess";
                     } else if (op.equals("U")) {
                         message = "lblEditPaymentSuccess";
-                    }else if(op.equals("D")){
+                    } else if (op.equals("D")) {
                         message = "lblPaymentDeleted";
                     }
                     switch (res) {
@@ -493,12 +497,13 @@ public class PaymentController implements Serializable {
         System.out.println("id:" + req.getParameter("id"));
 
         try {
-            
+
             if (req.getParameter("id") != null && in == null) {
                 in = iFacade.getInvoiceByIdInvoice(req.getParameter("id"));
             }
-            
-            
+
+
+
             if (in != null) {
 
                 isMod = true;
@@ -548,6 +553,14 @@ public class PaymentController implements Serializable {
                 this.payDetailList = in.getFbPaymentDetailList();
 
                 this.actualizarResults();
+                
+             if (req.getParameter("p") != null) {
+                String message = this.userData.getUses();
+                this.userData.setUses("0");
+                this.vb.lanzarMensaje("info", message, "blank");
+                this.print(in, this.vb.getRequestContext());
+            }
+             
             }
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.PaymentController.assignEdit()");
@@ -582,10 +595,110 @@ public class PaymentController implements Serializable {
         }
 
     }
+
+    public boolean modifica() {
+        return this.isMod;
+    }
+
+    public void saveForPrint(String op) {
+        try {
+
+            if (!this.idCust.equals("0")) {
+
+                if (!this.DAmount.equals("0.00")) {
+
+                    FbInvoice payment = new FbInvoice();
+                    payment.setIdCia(this.userData.getCurrentCia());
+                    //this.vb.lanzarMensajeSinBundle("info", this.userData.getCurrentCia().getNomCom(), DAmount);//
+                    payment.setIdCust(new FbCustomer(new BigDecimal(this.idCust)));
+                    //this.vb.lanzarMensajeSinBundle("info", payment.getIdCust().getIdCust().toString(), DAmount);//
+                    //this.vb.lanzarMensajeSinBundle("info", op, DAmount);//
+                    if (op.equals("A")) {
+                        payment.setIdInvoice(BigDecimal.ZERO);
+                    }
+
+                    if (isMod) {
+                        payment.setIdInvoice(new BigDecimal(this.idPayment));
+                        if (!op.equals("D")) {
+                            op = "U";
+                        }
+                    }
+
+                    //String property = System.getProperty("java.version");
+                    payment.setTotal(new BigDecimal(this.DAmount));
+                    //this.vb.lanzarMensajeSinBundle("info", op, "386");//
+                    payment.setPayMethod(this.pMethod);
+
+                    //this.vb.lanzarMensajeSinBundle("info",this.pMethod, DAmount);//
+                    payment.setPayReferenceNo(this.pReferenceNo);
+
+                    //this.vb.lanzarMensajeSinBundle("info", sdf.format(sd.parse(this.paymentDate)), DAmount); //
+                    try {
+                        payment.setInDate(sdf.format(sd.parse(this.paymentDate)));
+                    } catch (Exception e) {
+                        payment.setInDate(this.paymentDate);
+                    }
+                    HttpServletRequest req = (HttpServletRequest) vb.getRequestContext();
+                    this.memo = req.getParameter("memo");
+                    payment.setMessageInvoice(this.memo);
+                    List<FbPaymentDetail> finalList = new ArrayList<>();
+
+                    for (FbPaymentDetail pd : payDetailList) {
+                        if (pd.getPayment() != null) {
+                            finalList.add(pd);
+                        }
+                    }
+
+                    payment.setFbPaymentDetailList(finalList);
+                    payment.setCustEmail(email);
+                    //this.vb.lanzarMensajeSinBundle("info", "entre despues de setear email linea 407", email + " " + op);
+                    //this.vb.lanzarMensajeSinBundle("info", finalList.toString(), finalList.toString());//  
+                    String res = iFacade.actPaymentWithReturnId(payment, op);
+                    //this.vb.lanzarMensajeSinBundle("info", "entre despues de facade linea 410", "res: " + res);
+                    //this.vb.lanzarMensajeSinBundle("info", res, res); //
+                    String message = "lblPaymentSuccess";
+                    if (op.equals("A")) {
+                        message = "lblPaymentSuccess";
+                    } else if (op.equals("U")) {
+                        message = "lblEditPaymentSuccess";
+                    } else if (op.equals("D")) {
+                        message = "lblPaymentDeleted";
+                    }
+
+                    if (!res.equals("def")) {
+                        this.userData.setUses(message);
+                        this.vb.redirecionar("/view/sales/payments/paymentForm.xhtml?id=" + res + "&p=1");
+                    } else {
+                        this.vb.lanzarMensaje("error", "unexpectedError", "unexpectedError");
+                    }
+
+                } else {
+                    this.vb.lanzarMensaje("error", "lblPaymentInvalid", "lblPaymentInvalid");
+
+                }
+
+            } else {
+                this.vb.lanzarMensaje("error", "lblSelectCust", "lblSelectCust");
+            }
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.PaymentController.save()");
+            //this.vb.lanzarMensajeSinBundle("error", e.toString(), e.getMessage());
+            e.printStackTrace();
+        }
+
+    }
     
-    
-    public boolean modifica(){
-    return this.isMod;
+        public void print(FbInvoice i, HttpServletRequest req) {
+        try {
+            String jasperFile = "payment";
+
+            this.invoiceModal = this.iFacade.generatePayment(i, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile(jasperFile, req), this.userData.formatMaster(DAmountCredit), this.userData.formatMaster(DAmountApply));
+            
+            //this.validationBean.updateComponent("pdf");
+            this.vb.ejecutarJavascript("$('.invoiceModal').modal();");
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.InvoiceController.print()");
+        }
     }
 
 }

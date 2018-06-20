@@ -28,16 +28,16 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author dell
+ * @author DELL
  */
 @Entity
 @Table(name = "FB_ESTADO")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "FbEstado.findAll", query = "SELECT f FROM FbEstado f"),
-    @NamedQuery(name = "FbEstado.findByIdEstado", query = "SELECT f FROM FbEstado f WHERE f.idEstado = :idEstado"),
-    @NamedQuery(name = "FbEstado.findByNombre", query = "SELECT f FROM FbEstado f WHERE f.nombre = :nombre"),
-    @NamedQuery(name = "FbEstado.findByFechaCreacion", query = "SELECT f FROM FbEstado f WHERE f.fechaCreacion = :fechaCreacion")})
+    @NamedQuery(name = "FbEstado.findAll", query = "SELECT f FROM FbEstado f")
+    , @NamedQuery(name = "FbEstado.findByIdEstado", query = "SELECT f FROM FbEstado f WHERE f.idEstado = :idEstado")
+    , @NamedQuery(name = "FbEstado.findByNomEstado", query = "SELECT f FROM FbEstado f WHERE f.nomEstado = :nomEstado")
+    , @NamedQuery(name = "FbEstado.findByFechaCreacion", query = "SELECT f FROM FbEstado f WHERE f.fechaCreacion = :fechaCreacion")})
 public class FbEstado implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -47,16 +47,14 @@ public class FbEstado implements Serializable {
     @NotNull
     @Column(name = "ID_ESTADO")
     private BigDecimal idEstado;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 20)
-    @Column(name = "NOMBRE")
-    private String nombre;
+    @Size(max = 20)
+    @Column(name = "NOM_ESTADO")
+    private String nomEstado;
     @Column(name = "FECHA_CREACION")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
     @JoinColumn(name = "ID_PAIS", referencedColumnName = "ID_PAIS")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private FbPais idPais;
     @OneToMany(mappedBy = "idEstado")
     private List<FbCiudad> fbCiudadList;
@@ -68,11 +66,6 @@ public class FbEstado implements Serializable {
         this.idEstado = idEstado;
     }
 
-    public FbEstado(BigDecimal idEstado, String nombre) {
-        this.idEstado = idEstado;
-        this.nombre = nombre;
-    }
-
     public BigDecimal getIdEstado() {
         return idEstado;
     }
@@ -81,12 +74,12 @@ public class FbEstado implements Serializable {
         this.idEstado = idEstado;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNomEstado() {
+        return nomEstado;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNomEstado(String nomEstado) {
+        this.nomEstado = nomEstado;
     }
 
     public Date getFechaCreacion() {

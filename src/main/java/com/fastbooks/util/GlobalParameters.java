@@ -19,7 +19,7 @@ import org.apache.commons.codec.binary.Base64;
  * @author dell
  */
 public class GlobalParameters {
-    private @Getter @Setter String appPath = /*;    "C:\\Users\\luis\\Pictures\\fastbooks" System.getProperty("user.dir")*/"/u01/app/oracle/fastbooks";  
+    private @Getter @Setter String appPath = /*;    "C:\\Users\\luis\\Pictures\\fastbooks" "/u01/app/oracle/fastbooks"*/System.getProperty("user.dir");  
     private @Getter @Setter String email = "fastbooks20@gmail.com";
     private @Getter @Setter String pass = "orasoft123";
     private @Getter @Setter String imgBytesSize = "1000000";

@@ -6,7 +6,9 @@
 package com.fastbooks.managedbeans;
 
 import com.fastbooks.facade.FbCompaniaFacade;
+import com.fastbooks.facade.FbPaisFacade;
 import com.fastbooks.modelo.FbCompania;
+import com.fastbooks.modelo.FbPais;
 import com.fastbooks.modelo.FbUsuario;
 import com.fastbooks.util.GlobalParameters;
 import com.fastbooks.util.ValidationBean;
@@ -14,6 +16,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
@@ -36,6 +41,8 @@ public class CompanyController implements Serializable {
     FbCompaniaFacade comFacade;
     @EJB
     ValidationBean validationBean;
+    @EJB
+    FbPaisFacade paisFacade;
     @Inject
     UserData userData;
     private GlobalParameters gp = new GlobalParameters();
@@ -60,6 +67,21 @@ public class CompanyController implements Serializable {
     private String website;
     private String logourl;
     FileUploadEvent events;
+    
+    private @Getter @Setter List<FbPais> listaPaises = new ArrayList<>();
+    private @Getter @Setter String idPais = "0";
+    
+    @PostConstruct
+    public void init(){
+        try {
+            if (listaPaises.isEmpty()) {
+                listaPaises = paisFacade.getPaises();
+            }
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.CompanyController.init()");
+            e.printStackTrace();
+        }
+    }
 
     public UploadedFile getArchivo() {
         return archivo;
@@ -448,6 +470,11 @@ public class CompanyController implements Serializable {
             System.out.println("validation fail");
         }
 
+    }
+    
+    
+    public void chargeStates(){
+        System.out.println("idPais: " + this.idPais);
     }
 
 }

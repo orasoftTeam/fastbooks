@@ -1000,6 +1000,13 @@ public class InvoiceFormController implements Serializable {
             if (req.getParameter("id") != null && in == null) {
                 in = iFacade.getInvoiceByIdInvoice(req.getParameter("id"));
             }
+            
+            if (req.getParameter("p") != null) {
+                String message = this.userData.getUses();
+                this.userData.setUses("0");
+                 this.validationBean.lanzarMensaje("info", message, "blank");
+                 this.print(in, this.validationBean.getRequestContext());
+            }
 
             if (in != null) {
                 this.type = in.getType();
@@ -1306,11 +1313,11 @@ public class InvoiceFormController implements Serializable {
 
     public void print(FbInvoice i, HttpServletRequest req) {
         try {
-            String jasperFile = i.getIdCust() == null ? "salesReceiptSinCust" : "report1";
+            String jasperFile = i.getIdCust() == null ? "salesReceiptSinCust_1" : "invoice_1";
 
-            this.invoiceModal = this.iFacade.generateInvoice(i, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile(jasperFile, req), this.validationBean.formatType(i.getType()));
+            this.invoiceModal = this.iFacade.generateInvoice(i, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile(jasperFile, req), this.validationBean.formatType(i.getType()),this.userData.formatMaster(i.getActualBalance().toString()));
             
-            this.validationBean.updateComponent("pdf");
+            //this.validationBean.updateComponent("pdf");
             this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.print()");
@@ -1442,7 +1449,7 @@ public class InvoiceFormController implements Serializable {
                         String res = "def";
                         res = iFacade.actInvoiceWithReturnId(in, op);
                         System.out.println("result: " + res);
-                        if (res.equals("0")) {
+                        if (!res.equals("def")) {
                             String message = "unexpectedError";
                             if (op.equals("A")) {
                                 if (type.equals("IN")) {
@@ -1470,12 +1477,13 @@ public class InvoiceFormController implements Serializable {
                                     message = "lblSalesReceiptDeleted";
                                 }
                             }
-                            this.validationBean.lanzarMensaje("info", message, "blank");
-                            this.print(iFacade.getInvoiceByIdInvoice(res), this.validationBean.getRequestContext());
-                            //this.userData.setUses(message);
-                            //this.validationBean.redirecionar("/view/sales/sales.xhtml");
+                            
+                            this.userData.setUses(message);
+                            //this.userData.setFbInvoice(iFacade.getInvoiceByIdInvoice(res));
+                            
+                            this.validationBean.redirecionar("/view/sales/invoiceForm.xhtml?id="+res+"&p=1");
                         } else {
-                            //this.validationBean.lanzarMensajeSinBundle("error", res, " ");
+                            this.validationBean.lanzarMensajeSinBundle("error", res, " ");
                         }
 
                     } else {

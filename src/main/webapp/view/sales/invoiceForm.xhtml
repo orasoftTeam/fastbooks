@@ -29,7 +29,7 @@
                         <h2><h:commandLink style="text-decoration: none;color: black" action="#{invoiceController.validationBean.redirecionar('/view/sales/sales.xhtml')}">✖</h:commandLink></h2>
                     </bnu:column>
 
-                       
+
                 </bnu:row>
                 <bnu:row>
                     <bnu:column span="12">
@@ -204,7 +204,7 @@
 
 
                 <p:separator/>
-                <bnu:row>
+                <bnu:row class="messages" >
                     <bnu:column span="12">
                         <bnu:messages />
 
@@ -863,68 +863,68 @@
                 <bnu:commandButton value="Yes" look="success" action="#{invoiceController.validationBean.redirecionar('/view/sales/invoiceForm.xhtml')}" style="margin-left: 10px"  />
             </h:form>
         </p:dialog> 
-        
+
         <p:dialog header="Confirmation" widgetVar="dlg7" modal="true" height="100">
             <h:outputText value="This transaction is linked to payments, are you sure that you want to save? saving would update all the linked payments" /><br/>
             <p:separator />
 
             <h:form id="confirmModalSaveLink">
                 <bnu:button value="No" onclick="PF('dlg7').hide();" />
-                
+
                 <bnu:commandButton value="Yes"  look="success"  style="margin-left: 10px" action="#{invoiceController.save('U')}" rendered="#{invoiceController.modStay}" />
-                
+
             </h:form>
         </p:dialog>
-        
+
         <p:dialog header="Confirmation" widgetVar="dlg8" modal="true" height="150">
             <bnu:alert severity="danger">
                 <h:outputText value="Are you sure you want to delete this?" />
             </bnu:alert>
-            
+
             <p:separator />
 
             <h:form id="confirmModalDelete">
                 <bnu:button value="No" onclick="PF('dlg8').hide();" />
-                
+
                 <bnu:commandButton value="Yes"  look="success"  style="margin-left: 10px" action="#{invoiceController.save('D')}" />
-                
+
             </h:form>
         </p:dialog>
-        
-        
-        
-                <p:dialog header="Confirmation" widgetVar="dlg9" modal="true" height="150">
+
+
+
+        <p:dialog header="Confirmation" widgetVar="dlg9" modal="true" height="150">
             <bnu:alert severity="info">
                 <h:outputText value="If you want to print or preview, the transaction will be saved, are you sure?" />
             </bnu:alert>
-            
+
             <p:separator />
 
             <h:form id="confirmModalPreview">
                 <bnu:button value="No" onclick="PF('dlg9').hide();" />
-                
-                <bnu:commandButton value="Yes"  look="success"  style="margin-left: 10px"  />
-                
+
+                <bnu:commandButton value="Yes"  look="success"  style="margin-left: 10px" action="#{invoiceController.saveForPrint('A')}" rendered="#{!invoiceController.modStay}" update="@(.messages)"  />
+                <bnu:commandButton value="Yes"  look="success"  style="margin-left: 10px" action="#{invoiceController.saveForPrint('U')}" rendered="#{invoiceController.modStay}"   />
             </h:form>
         </p:dialog>    
 
         <!-- end modal exit-->
 
 
-   <!-- PDF MODAL-->
-       <bnu:modal  id="invoiceModal" title="#{messages.invoice}" styleClass="invoiceModal"  close-on-escape="false" backdrop="false"  >
-        <h:panelGroup id="pdf">
+        <!-- PDF MODAL-->
+        <bnu:modal  id="invoiceModal" title="#{messages.invoice}" styleClass="invoiceModal"  close-on-escape="false" backdrop="false"  >
+            <h:panelGroup id="pdf" class="messages" >
 
-            <p:media value="#{invoiceController.invoiceModal}" width="100%" height="500px" rendered="#{not(invoiceController.invoiceModal eq '0')}"  />     
-
-
-        </h:panelGroup>
-    </bnu:modal> 
+                <p:media value="#{invoiceController.invoiceModal}" width="100%" height="500px" rendered="#{not(invoiceController.invoiceModal eq '0')}"  />     
 
 
+            </h:panelGroup>
+        </bnu:modal> 
 
 
-    <!--FIN PDF MODAL-->
+
+
+        <!--FIN PDF MODAL-->
 
 
         <h:outputScript>

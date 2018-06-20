@@ -187,6 +187,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             q.setParameter(1, idCia);
             q.setParameter(2, idCust);
             list = q.getResultList();
+            //em.flush();
             
             for (FbInvoice fbInvoice : list) {
                 em.refresh(fbInvoice);
@@ -227,7 +228,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
          */
         try {
             Connection cn = em.unwrap(java.sql.Connection.class);
-            CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_PAYMENT(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_PAYMENT(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             cs.setInt(1, Integer.parseInt(in.getIdCia().getIdCia().toString()));
             cs.setInt(2, Integer.parseInt(in.getIdInvoice().toString()));
             cs.setInt(3, Integer.parseInt(in.getIdCust().getIdCust().toString()));
@@ -247,6 +248,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             cs.setString(11, in.getMessageInvoice());
             cs.setString(12, op);
             cs.registerOutParameter(13, Types.VARCHAR);
+            cs.registerOutParameter(14, Types.VARCHAR);
             cs.execute();
             res = cs.getString(13);
             // res = pIdInvoices+" :: "+pPayAmounts;
@@ -260,6 +262,53 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         System.out.println("res: " + res);
         return res;
     }
+    
+    public String actPaymentWithReturnId(FbInvoice in, String op) {
+        String res = "def";
+        String pIdInvoices = "";
+        String pPayAmounts = "";
+        /*
+    PROCEDURE PR_ACT_PAYMENT(pIdCia IN INT,pIdPayment IN INT,pIdCust IN INT, pReferenceNo IN VARCHAR2,pEmail IN VARCHAR2,
+                            pPayDate IN VARCHAR2,pPaymentTotal IN DECIMAL,pMethod IN VARCHAR2,pIdInvoices IN VARCHAR2,
+                                pPayAmounts IN VARCHAR2,op IN VARCHAR2,res OUT VARCHAR2);
+         */
+        try {
+            Connection cn = em.unwrap(java.sql.Connection.class);
+            CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_PAYMENT(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            cs.setInt(1, Integer.parseInt(in.getIdCia().getIdCia().toString()));
+            cs.setInt(2, Integer.parseInt(in.getIdInvoice().toString()));
+            cs.setInt(3, Integer.parseInt(in.getIdCust().getIdCust().toString()));
+            cs.setString(4, in.getPayReferenceNo());
+            cs.setString(5, in.getCustEmail());
+            cs.setString(6, in.getInDate());
+            cs.setDouble(7, in.getTotal().doubleValue());
+            cs.setString(8, in.getPayMethod());
+
+            for (FbPaymentDetail pd : in.getFbPaymentDetailList()) {
+                pIdInvoices += pd.getIdInvoice().getIdInvoice().toString() + ",";
+                pPayAmounts += String.format("%.2f", pd.getPayment()) + ";";
+            }
+
+            cs.setString(9, pIdInvoices);
+            cs.setString(10, pPayAmounts);
+            cs.setString(11, in.getMessageInvoice());
+            cs.setString(12, op);
+            cs.registerOutParameter(13, Types.VARCHAR);
+            cs.registerOutParameter(14, Types.VARCHAR);
+            cs.execute();
+            res = cs.getString(14);
+            // res = pIdInvoices+" :: "+pPayAmounts;
+            cs.close();
+
+        } catch (Exception e) {
+            res = e.getMessage();
+            System.out.println("com.fastbooks.facade.FbInvoiceFacade.actPayment()");
+            e.printStackTrace();
+        }
+        System.out.println("res: " + res);
+        return res;
+    }    
+    
 
     public String actInvoice(FbInvoice in, String op) {
         String res = "";
@@ -476,7 +525,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         return resId;
     }    
 
-    public String generateInvoice(FbInvoice i, String logo, JasperReport report, String type) {
+    public String generateInvoice(FbInvoice i, String logo, JasperReport report, String type,String balance) {
         String res = "";
         em.getEntityManagerFactory().getCache().evictAll();
         Connection cn = em.unwrap(java.sql.Connection.class);
@@ -496,14 +545,16 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
 
         String pdfName = File.separator + "IN" + i.getNoDot() + i.getIdCia().getNomCom() + ".pdf";
         Map parametersMap = new HashMap();
-        parametersMap.put("idInvoice", i.getIdInvoice().toString());
+        parametersMap.put("ID_INVOICE", i.getIdInvoice().toString());
         File logoFile = new File(gp.getAppPath() + logo);
         if (!logoFile.exists()) {
             logoFile = null;
         }
-        parametersMap.put("logo", logoFile);
+        parametersMap.put("LOGO", logoFile);
 
-        parametersMap.put("type", type);
+        parametersMap.put("TYPE", type);
+        parametersMap.put("BALANCE_DUE", balance);
+        
         try {
             ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
             String realPath = ec.getRealPath("/");
@@ -535,6 +586,66 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
 
         return res;
     }
+    
+    public String generatePayment(FbInvoice i, String logo, JasperReport report, String amountCredited,String total) {
+        String res = "";
+        em.getEntityManagerFactory().getCache().evictAll();
+        Connection cn = em.unwrap(java.sql.Connection.class);
+        String dir = "view" + File.separator + "jasper" + File.separator + "payment.jrxml";
+        GlobalParameters gp = new GlobalParameters();
+        File file = new File(gp.getAppPath() + File.separator + "pdf" + File.separator + "cia" + i.getIdCia().getIdCia().toString()
+                + File.separator);
+        /*String[] entries = file.list();
+        for (String s : entries) {
+            File currentFile = new File(file.getPath(),s);
+            currentFile.delete();
+        }*/
+        file.mkdirs();
+
+        String destino = gp.getAppPath() + File.separator + "pdf" + File.separator + "cia" + i.getIdCia().getIdCia().toString()
+                + File.separator + "Payment" + i.getIdInvoice().toString() + i.getIdCia().getNomCom() + ".pdf";
+
+        //String pdfName = File.separator + "IN" + i.getNoDot() + i.getIdCia().getNomCom() + ".pdf";
+        Map parametersMap = new HashMap();
+        parametersMap.put("ID_INVOICE", i.getIdInvoice().toString());
+        File logoFile = new File(gp.getAppPath() + logo);
+        if (!logoFile.exists()) {
+            logoFile = null;
+        }
+        parametersMap.put("LOGO", logoFile);
+        parametersMap.put("AMOUNT_CREDITED", amountCredited);
+        parametersMap.put("TOTAL", total);
+        try {
+            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+            String realPath = ec.getRealPath("/");
+            System.out.println(realPath + dir);
+            //JasperReport report = JasperCompileManager.compileReport(realPath + dir);
+
+            File dest = new File(destino);
+            if (dest.exists()) {
+                dest.delete();
+            }
+            JasperPrint print = JasperFillManager.fillReport(report, parametersMap, cn);
+            JRExporter exporter = new JRPdfExporter();
+
+            exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, destino);
+            exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
+            exporter.exportReport();
+            System.out.println("File Created: " + destino);
+            // i.setMessageStmnt("/pdf/"+"cia" + i.getIdCia().getIdCia().toString()+
+            //       "/IN"+i.getNoDot()+i.getIdCia().getNomCom()+".pdf");
+            // this.edit(i);
+            //  res = i.getMessageStmnt();
+            res = "/pdf/" + "cia" + i.getIdCia().getIdCia().toString()
+                    + "/Payment" + i.getIdInvoice().toString() + i.getIdCia().getNomCom() + ".pdf";
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbInvoiceFacade.generatePayment()");
+            e.printStackTrace();
+            res = e.toString() + " ::: " + e.getMessage();
+        }
+
+        return res;
+    }    
 
     public JasperReport getCompiledFile(String fileName, HttpServletRequest request) throws JRException, IOException {
         // Create temporary folder to store jasper report as you should not write a resource into your program

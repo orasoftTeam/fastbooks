@@ -222,10 +222,6 @@
 					<rightPen lineWidth="1.5"/>
 				</box>
 			</frame>
-			<image>
-				<reportElement x="32" y="27" width="154" height="56" uuid="1704c701-f3f3-4a58-b6e1-cb0386eb1f3c"/>
-				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
-			</image>
 			<textField>
 				<reportElement x="229" y="17" width="233" height="26" uuid="096408fc-e267-463b-91dc-6767145e0df6"/>
 				<textElement>
@@ -336,6 +332,10 @@
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
+				<image>
+					<reportElement x="14" y="1" width="180" height="85" uuid="acf37f28-7334-432a-84f3-7e83e83fd5aa"/>
+					<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+				</image>
 			</frame>
 			<textField>
 				<reportElement x="114" y="164" width="100" height="17" uuid="73d41cb3-65f5-4399-98d3-9b97de53ac3e"/>

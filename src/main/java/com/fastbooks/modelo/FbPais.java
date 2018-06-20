@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -27,24 +26,19 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author dell
+ * @author DELL
  */
 @Entity
 @Table(name = "FB_PAIS")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "FbPais.findAll", query = "SELECT f FROM FbPais f"),
-    @NamedQuery(name = "FbPais.findByIdPais", query = "SELECT f FROM FbPais f WHERE f.idPais = :idPais"),
-    @NamedQuery(name = "FbPais.findByNombre", query = "SELECT f FROM FbPais f WHERE f.nombre = :nombre"),
-    @NamedQuery(name = "FbPais.findByFechaCreacion", query = "SELECT f FROM FbPais f WHERE f.fechaCreacion = :fechaCreacion")})
+    @NamedQuery(name = "FbPais.findAll", query = "SELECT f FROM FbPais f")
+    , @NamedQuery(name = "FbPais.findByIdPais", query = "SELECT f FROM FbPais f WHERE f.idPais = :idPais")
+    , @NamedQuery(name = "FbPais.findByNomPais", query = "SELECT f FROM FbPais f WHERE f.nomPais = :nomPais")
+    , @NamedQuery(name = "FbPais.findByFechaCreacion", query = "SELECT f FROM FbPais f WHERE f.fechaCreacion = :fechaCreacion")
+    , @NamedQuery(name = "FbPais.findByLocale", query = "SELECT f FROM FbPais f WHERE f.locale = :locale")
+    , @NamedQuery(name = "FbPais.findByLang", query = "SELECT f FROM FbPais f WHERE f.lang = :lang")})
 public class FbPais implements Serializable {
-
-    @Size(max = 10)
-    @Column(name = "LOCALE")
-    private String locale;
-    @Size(max = 10)
-    @Column(name = "LANG")
-    private String lang;
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -53,15 +47,19 @@ public class FbPais implements Serializable {
     @NotNull
     @Column(name = "ID_PAIS")
     private BigDecimal idPais;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 20)
-    @Column(name = "NOMBRE")
-    private String nombre;
+    @Size(max = 20)
+    @Column(name = "NOM_PAIS")
+    private String nomPais;
     @Column(name = "FECHA_CREACION")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPais")
+    @Size(max = 10)
+    @Column(name = "LOCALE")
+    private String locale;
+    @Size(max = 10)
+    @Column(name = "LANG")
+    private String lang;
+    @OneToMany(mappedBy = "idPais")
     private List<FbEstado> fbEstadoList;
 
     public FbPais() {
@@ -69,11 +67,6 @@ public class FbPais implements Serializable {
 
     public FbPais(BigDecimal idPais) {
         this.idPais = idPais;
-    }
-
-    public FbPais(BigDecimal idPais, String nombre) {
-        this.idPais = idPais;
-        this.nombre = nombre;
     }
 
     public BigDecimal getIdPais() {
@@ -84,12 +77,12 @@ public class FbPais implements Serializable {
         this.idPais = idPais;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNomPais() {
+        return nomPais;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNomPais(String nomPais) {
+        this.nomPais = nomPais;
     }
 
     public Date getFechaCreacion() {
@@ -98,6 +91,22 @@ public class FbPais implements Serializable {
 
     public void setFechaCreacion(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
     }
 
     @XmlTransient
@@ -132,22 +141,6 @@ public class FbPais implements Serializable {
     @Override
     public String toString() {
         return "com.fastbooks.modelo.FbPais[ idPais=" + idPais + " ]";
-    }
-
-    public String getLocale() {
-        return locale;
-    }
-
-    public void setLocale(String locale) {
-        this.locale = locale;
-    }
-
-    public String getLang() {
-        return lang;
-    }
-
-    public void setLang(String lang) {
-        this.lang = lang;
     }
     
 }

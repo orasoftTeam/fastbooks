@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -29,16 +28,16 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author dell
+ * @author DELL
  */
 @Entity
 @Table(name = "FB_CIUDAD")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "FbCiudad.findAll", query = "SELECT f FROM FbCiudad f"),
-    @NamedQuery(name = "FbCiudad.findByIdCiudad", query = "SELECT f FROM FbCiudad f WHERE f.idCiudad = :idCiudad"),
-    @NamedQuery(name = "FbCiudad.findByNombre", query = "SELECT f FROM FbCiudad f WHERE f.nombre = :nombre"),
-    @NamedQuery(name = "FbCiudad.findByFechaCreacion", query = "SELECT f FROM FbCiudad f WHERE f.fechaCreacion = :fechaCreacion")})
+    @NamedQuery(name = "FbCiudad.findAll", query = "SELECT f FROM FbCiudad f")
+    , @NamedQuery(name = "FbCiudad.findByIdCiudad", query = "SELECT f FROM FbCiudad f WHERE f.idCiudad = :idCiudad")
+    , @NamedQuery(name = "FbCiudad.findByNomCiudad", query = "SELECT f FROM FbCiudad f WHERE f.nomCiudad = :nomCiudad")
+    , @NamedQuery(name = "FbCiudad.findByFechaCreacion", query = "SELECT f FROM FbCiudad f WHERE f.fechaCreacion = :fechaCreacion")})
 public class FbCiudad implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -48,15 +47,13 @@ public class FbCiudad implements Serializable {
     @NotNull
     @Column(name = "ID_CIUDAD")
     private BigDecimal idCiudad;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 20)
-    @Column(name = "NOMBRE")
-    private String nombre;
+    @Size(max = 20)
+    @Column(name = "NOM_CIUDAD")
+    private String nomCiudad;
     @Column(name = "FECHA_CREACION")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCiudad")
+    @OneToMany(mappedBy = "idCiudad")
     private List<FbDireccion> fbDireccionList;
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     @ManyToOne
@@ -69,11 +66,6 @@ public class FbCiudad implements Serializable {
         this.idCiudad = idCiudad;
     }
 
-    public FbCiudad(BigDecimal idCiudad, String nombre) {
-        this.idCiudad = idCiudad;
-        this.nombre = nombre;
-    }
-
     public BigDecimal getIdCiudad() {
         return idCiudad;
     }
@@ -82,12 +74,12 @@ public class FbCiudad implements Serializable {
         this.idCiudad = idCiudad;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNomCiudad() {
+        return nomCiudad;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNomCiudad(String nomCiudad) {
+        this.nomCiudad = nomCiudad;
     }
 
     public Date getFechaCreacion() {
