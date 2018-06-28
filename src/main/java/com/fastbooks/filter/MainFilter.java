@@ -50,7 +50,7 @@ public class MainFilter implements Filter {
         String contextPath = ((HttpServletRequest) request).getContextPath();
         String path = ((HttpServletRequest) request).getRequestURI();
         //System.out.println(path);
-        if (userData.getLoggedUser() == null) {
+        if (userData == null || userData.getLoggedUser() == null) {
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             httpResponse.sendRedirect(contextPath);
         }

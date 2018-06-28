@@ -77,6 +77,27 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer> {
         }
         return listC;
     }
+    
+        public FbCustomer getCustomerByIdCust(String idCust) {
+        List<FbCustomer> listC = new ArrayList<>();
+        try {
+            String sql = "select * from fb_customer \n"
+                    + " where id_cust = ?"
+                    + " and status = 'A'";
+            Query q = em.createNativeQuery(sql, FbCustomer.class);
+            q.setParameter(1, idCust);
+            listC = q.getResultList();
+            
+            for (FbCustomer fbCustomer : listC) {
+                em.refresh(fbCustomer);
+            }
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbCustomerFacade.getCustomer()");
+            e.printStackTrace();
+
+        }
+        return listC.isEmpty()? null: listC.get(0);
+    }
 
     /* (pIdCia IN INT,pIdCust IN INT,pTitle IN VARCHAR2,pfirstName IN VARCHAR2,
 		pMidName IN VARCHAR2,pLastName IN VARCHAR2,pSuffix IN VARCHAR2,pEmail IN VARCHAR2,

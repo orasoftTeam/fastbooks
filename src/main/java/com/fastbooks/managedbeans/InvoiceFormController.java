@@ -250,6 +250,8 @@ public class InvoiceFormController implements Serializable {
     private @Getter
     @Setter
     FbInvoice editInvoice;
+    
+    private @Getter @Setter String dir = "0";
 
     public InvoiceFormController() {
     }
@@ -312,7 +314,7 @@ public class InvoiceFormController implements Serializable {
             c.add(Calendar.DATE, Integer.parseInt(this.termDays));
             //dt.plusDays(Integer.parseInt(this.termDays));
             this.dueDate = sdf.format(c.getTime());
-
+            this.setCustomerInvoice();
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.init()");
             e.printStackTrace();
@@ -811,7 +813,6 @@ public class InvoiceFormController implements Serializable {
 
     }
 
- 
     public void save(String op) {
         try {
             if (this.validationBean.validarSoloNumerosConPunto(this.shCost, "error", "lblInShCostFail", "blank")) {
@@ -967,7 +968,9 @@ public class InvoiceFormController implements Serializable {
                             }
 
                             this.userData.setUses(message);
-                            this.validationBean.redirecionar("/view/sales/sales.xhtml");
+
+                            this.regresar();
+
                         } else {
                             //this.validationBean.lanzarMensajeSinBundle("error", res, " ");
                         }
@@ -994,18 +997,22 @@ public class InvoiceFormController implements Serializable {
 
         HttpServletRequest req = (HttpServletRequest) validationBean.getRequestContext();
         System.out.println("id:" + req.getParameter("id"));
-
+        
         try {
+            
+            if (req.getParameter("dir") != null) {
+                this.dir = req.getParameter("dir");
+            }
 
             if (req.getParameter("id") != null && in == null) {
                 in = iFacade.getInvoiceByIdInvoice(req.getParameter("id"));
             }
-            
+
             if (req.getParameter("p") != null) {
                 String message = this.userData.getUses();
                 this.userData.setUses("0");
-                 this.validationBean.lanzarMensaje("info", message, "blank");
-                 this.print(in, this.validationBean.getRequestContext());
+                this.validationBean.lanzarMensaje("info", message, "blank");
+                this.print(in, this.validationBean.getRequestContext());
             }
 
             if (in != null) {
@@ -1315,16 +1322,16 @@ public class InvoiceFormController implements Serializable {
         try {
             String jasperFile = i.getIdCust() == null ? "salesReceiptSinCust_1" : "invoice_1";
 
-            this.invoiceModal = this.iFacade.generateInvoice(i, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile(jasperFile, req), this.validationBean.formatType(i.getType()),this.userData.formatMaster(i.getActualBalance().toString()));
-            
+            this.invoiceModal = this.iFacade.generateInvoice(i, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile(jasperFile, req), this.validationBean.formatType(i.getType()), this.userData.formatMaster(i.getActualBalance().toString()));
+
             //this.validationBean.updateComponent("pdf");
             this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.print()");
         }
     }
-    
-        public void saveForPrint(String op) {
+
+    public void saveForPrint(String op) {
         try {
             if (this.validationBean.validarSoloNumerosConPunto(this.shCost, "error", "lblInShCostFail", "blank")) {
                 if (this.currentCust != null || type.equals("SR")) {
@@ -1477,11 +1484,11 @@ public class InvoiceFormController implements Serializable {
                                     message = "lblSalesReceiptDeleted";
                                 }
                             }
-                            
+
                             this.userData.setUses(message);
                             //this.userData.setFbInvoice(iFacade.getInvoiceByIdInvoice(res));
-                            
-                            this.validationBean.redirecionar("/view/sales/invoiceForm.xhtml?id="+res+"&p=1");
+
+                            this.validationBean.redirecionar("/view/sales/invoiceForm.xhtml?id=" + res + "&p=1");
                         } else {
                             this.validationBean.lanzarMensajeSinBundle("error", res, " ");
                         }
@@ -1501,6 +1508,75 @@ public class InvoiceFormController implements Serializable {
             e.printStackTrace();
         }
 
+    }
+
+    public void setCustomerInvoice() {
+        HttpServletRequest req = (HttpServletRequest) validationBean.getRequestContext();
+        System.out.println("idCust:" + req.getParameter("idc"));
+
+        String pIdCust = req.getParameter("idc");
+
+        try {
+
+            if (pIdCust != null) {
+                this.idCust = pIdCust;
+                for (FbCustomer fbCustomer : cList) {
+                    if (fbCustomer.getIdCust().toString().equals(this.idCust)) {
+                        this.currentCust = fbCustomer;
+                        this.email = fbCustomer.getEmail();
+
+                    }
+                }
+
+                biAddress = "";
+                if (currentCust.getStreet() != null) {
+                    biAddress += currentCust.getStreet() + " ";
+                }
+                if (currentCust.getPostalCode() != null) {
+                    biAddress += currentCust.getPostalCode() + " ";
+                }
+                if (currentCust.getCity() != null) {
+                    biAddress += currentCust.getCity() + " ";
+                }
+                if (currentCust.getEstate() != null) {
+                    biAddress += currentCust.getEstate() + " ";
+                }
+                if (currentCust.getCountry() != null) {
+                    biAddress += currentCust.getCountry() + ".";
+                }
+
+                shAddress = "";
+                if (currentCust.getStreetS() != null) {
+                    shAddress += currentCust.getStreetS() + " ";
+                }
+                if (currentCust.getPostalCodeS() != null) {
+                    shAddress += currentCust.getPostalCodeS() + " ";
+                }
+                if (currentCust.getCityS() != null) {
+                    shAddress += currentCust.getCityS() + " ";
+                }
+                if (currentCust.getEstateS() != null) {
+                    shAddress += currentCust.getEstateS() + " ";
+                }
+                if (currentCust.getCountryS() != null) {
+                    shAddress += currentCust.getCountryS() + ".";
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.InvoiceFormController.setCustomerInvoice()");
+            e.printStackTrace();
+        }
+
+    }
+
+    public void regresar() {
+        if (this.dir.equals("0")) {
+            this.validationBean.redirecionar("/view/sales/sales.xhtml");
+        } else {
+            this.validationBean.redirecionar("/view/sales/customer/customerDetail.xhtml?id=" + this.dir);
+            //this.userData.setDirCust("0");
+        }
     }
 
 }

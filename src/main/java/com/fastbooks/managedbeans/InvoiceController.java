@@ -130,6 +130,7 @@ public class InvoiceController implements Serializable {
 
     public void init() {
         try {
+            System.out.println("INIT INVOICES!!!!");
             if (this.userData.getInvoiceSql().equals("0")) {
                 //iList =  iFacade.getInvoicesByIdCiaNonJpa(this.userData.getCurrentCia().getIdCia().toString());
                 iList = iFacade.getInvoicesByIdCia(this.userData.getCurrentCia().getIdCia().toString());
@@ -343,10 +344,7 @@ public class InvoiceController implements Serializable {
         return flag;
     }
 
-    public void changeTab(int index) {
-        this.userData.setSalesIndex(index);
 
-    }
 
     public void applyFilter() {
 

@@ -5,9 +5,14 @@
  */
 package com.fastbooks.managedbeans;
 
+import com.fastbooks.facade.FbCiudadFacade;
 import com.fastbooks.facade.FbCompaniaFacade;
+import com.fastbooks.facade.FbEstadoFacade;
 import com.fastbooks.facade.FbPaisFacade;
+import com.fastbooks.modelo.FbCiudad;
 import com.fastbooks.modelo.FbCompania;
+import com.fastbooks.modelo.FbDireccion;
+import com.fastbooks.modelo.FbEstado;
 import com.fastbooks.modelo.FbPais;
 import com.fastbooks.modelo.FbUsuario;
 import com.fastbooks.util.GlobalParameters;
@@ -43,13 +48,17 @@ public class CompanyController implements Serializable {
     ValidationBean validationBean;
     @EJB
     FbPaisFacade paisFacade;
+    @EJB
+    FbEstadoFacade estadoFacade;
+    @EJB
+    FbCiudadFacade ciudadFacade;
     @Inject
     UserData userData;
     private GlobalParameters gp = new GlobalParameters();
     private @Getter
     @Setter
     String appPath = gp.getAppPath();//System.getProperty("user.dir");
-    private String destination = appPath + File.separator + "logo" + File.separator ;
+    private String destination = appPath + File.separator + "logo" + File.separator;
     private UploadedFile archivo;
     private String nameFileFinal;
     private String msgFile;
@@ -67,12 +76,42 @@ public class CompanyController implements Serializable {
     private String website;
     private String logourl;
     FileUploadEvent events;
-    
-    private @Getter @Setter List<FbPais> listaPaises = new ArrayList<>();
-    private @Getter @Setter String idPais = "0";
-    
+
+    private @Getter
+    @Setter
+    List<FbPais> listaPaises = new ArrayList<>();
+    private @Getter
+    @Setter
+    String idPais = "0";
+
+    private @Getter
+    @Setter
+    List<FbEstado> listaEstados = new ArrayList<>();
+    private @Getter
+    @Setter
+    String idEstado = "0";
+
+    private @Getter
+    @Setter
+    List<FbCiudad> listaCiudades = new ArrayList<>();
+    private @Getter
+    @Setter
+    String idCiudad = "0";
+
+    private @Getter
+    @Setter
+    String direccion = "";
+
+    private @Getter
+    @Setter
+    String zipcode = "";
+
+    private @Getter
+    @Setter
+    boolean showDir = false;
+
     @PostConstruct
-    public void init(){
+    public void init() {
         try {
             if (listaPaises.isEmpty()) {
                 listaPaises = paisFacade.getPaises();
@@ -228,7 +267,15 @@ public class CompanyController implements Serializable {
             user.setLastname(lName);
             user.setClave(pass);
             com.setIdCia(BigDecimal.ZERO);
-            String res = comFacade.actCompany(com, user, "A");
+
+            FbDireccion dir = new FbDireccion();
+            dir.setIdDireccion(BigDecimal.ZERO);
+            dir.setDireccion(direccion);
+            dir.setIdCiudad(new FbCiudad(new BigDecimal(this.idCiudad)));
+            dir.setZipCode(zipcode);
+
+            //String res = "-1";
+            String res = comFacade.actCompany(com,dir, user, "A");
             System.out.println("Resultado controller: " + res);
 
             if (res.equals("0")) {
@@ -259,26 +306,55 @@ public class CompanyController implements Serializable {
                 && validationBean.validarEmail(this.email, "error", "valErr", "reqEmail")
                 && validationBean.validarLongitudCampo(this.email, 8, 80, "error", "valErr", "reqEmail"))) {
             c++;
-        }
+        } else {
 
-        if (!(validationBean.validarCampoVacio(this.fName, "error", "valErr", "reqFname")
-                && validationBean.validarSoloLetras(this.fName, "error", "valErr", "reqFname")
-                && validationBean.validarLongitudCampo(this.fName, 4, 50, "error", "valErr", "reqFname"))) {
-            c++;
-        }
+            if (!(validationBean.validarCampoVacio(this.fName, "error", "valErr", "reqFname")
+                    && validationBean.validarSoloLetras(this.fName, "error", "valErr", "reqFname")
+                    && validationBean.validarLongitudCampo(this.fName, 4, 50, "error", "valErr", "reqFname"))) {
+                c++;
+            } else {
+                if (!(validationBean.validarCampoVacio(this.lName, "error", "valErr", "reqLname")
+                        && validationBean.validarSoloLetras(this.lName, "error", "valErr", "reqLname")
+                        && validationBean.validarLongitudCampo(this.lName, 4, 50, "error", "valErr", "reqLname"))) {
+                    c++;
+                } else {
+                    if (!(validationBean.validarCampoVacio(this.pass, "error", "valErr", "reqPass")
+                            && validationBean.validarLongitudCampo(this.pass, 5, 10, "error", "valErr", "reqPass"))) {
+                        c++;
+                    } else if (!this.pass.equals(this.rPass)) {
+                        c++;
+                        validationBean.lanzarMensaje("warn", "valErr", "reqRPass");
+                    } else {
 
-        if (!(validationBean.validarCampoVacio(this.lName, "error", "valErr", "reqLname")
-                && validationBean.validarSoloLetras(this.lName, "error", "valErr", "reqLname")
-                && validationBean.validarLongitudCampo(this.lName, 4, 50, "error", "valErr", "reqLname"))) {
-            c++;
-        }
+                        if (this.idPais.equals("0")) {
+                            c++;
+                            this.validationBean.lanzarMensaje("error", "valErr", "lblSelectCountry");
+                        } else {
+                            if (this.idEstado.equals("0")) {
+                                c++;
+                                this.validationBean.lanzarMensaje("error", "valErr", "lblSelectEstate");
+                            } else {
+                                if (this.idCiudad.equals("0")) {
+                                    c++;
+                                    this.validationBean.lanzarMensaje("error", "valErr", "lblSelectCity");
+                                } else {
+                                    if (this.validationBean.validarCampoVacio(this.zipcode, "error", "valErr", "lblInputZipCode")) {
+                                        if (!this.validationBean.validarCampoVacio(this.direccion, "error", "valErr", "lblInputDir")) {
+                                            c++;
+                                        }
+                                    } else {
+                                        c++;
+                                    }
+                                }
+                            }
+                        }
 
-        if (!(validationBean.validarCampoVacio(this.pass, "error", "valErr", "reqPass")
-                && validationBean.validarLongitudCampo(this.pass, 5, 10, "error", "valErr", "reqPass"))) {
-            c++;
-        } else if (!this.pass.equals(this.rPass)) {
-            c++;
-            validationBean.lanzarMensaje("warn", "valErr", "reqRPass");
+                    }
+
+                }
+
+            }
+
         }
 
         if (!this.naturalPerson) {
@@ -323,50 +399,6 @@ public class CompanyController implements Serializable {
 
         }
 
-        /* String name;
-        try {
-            if (archivo == null) {
-                archivo = event.getFile();
-                //BufferedImage img = ImageIO.read(archivo.getInputstream());
-                name = validationBean.generarRandom(archivo.getFileName());
-                File file = new File(destination);
-                file.mkdir();
-                validationBean.copyFile(name, destination, archivo.getInputstream());
-                
-                this.logourl = "/logo/" + name;
-                this.msgFile = validationBean.getMsgBundle("lblFileSuccess");
-               
-                validationBean.updateComponent("comForm:msgFile");
-                System.out.println(this.logourl);
-                validationBean.updateComponent("comForm:showLogo");
-                this.nameFileFinal = name;
-            } else {
-                archivo = event.getFile();
-                if (validationBean.deleteFile(destination + nameFileFinal)) {
-                    name = validationBean.generarRandom(archivo.getFileName());
-                    validationBean.copyFile(name, destination, archivo.getInputstream());
-                    this.logourl = "/logo/" + name;
-                    this.msgFile = validationBean.getMsgBundle("lblFileSuccess");
-                    validationBean.updateComponent("comForm:msgFile");
-                    System.out.println(this.logourl);
-                    validationBean.updateComponent("comForm:showLogo");
-                    nameFileFinal = name;
-                }
-
-            }
-        } catch (Exception e) {
-            msgFile = validationBean.getMsgBundle("lblFileUploadError");
-            if (archivo != null) {
-                if (validationBean.deleteFile("/logo/" + archivo.getFileName())) {
-                    archivo = null;
-                }
-            }
-            this.logourl = "";
-            validationBean.updateComponent("comForm:msgFile");
-            
-            validationBean.updateComponent("comForm:showLogo");
-            e.printStackTrace();
-        }*/
     }
 
     public void uploadFile() {
@@ -378,10 +410,10 @@ public class CompanyController implements Serializable {
             file.mkdir();
             File existe = new File(destination + nameFileFinal);
             if (existe.exists()) {
-                    if (validationBean.deleteFile(destination + nameFileFinal)) {
+                if (validationBean.deleteFile(destination + nameFileFinal)) {
                     name = validationBean.generarRandom(archivo.getFileName());
                     validationBean.copyFile(name, destination, archivo.getInputstream());
-                    this.logourl = "/logo/cia" + this.userData.getCurrentCia().getIdCia().toString() +"/"+ name;
+                    this.logourl = "/logo/cia" + this.userData.getCurrentCia().getIdCia().toString() + "/" + name;
                     this.msgFile = validationBean.getMsgBundle("lblFileSuccess");
                     validationBean.updateComponent("comForm:msgFile");
                     System.out.println(this.logourl);
@@ -390,7 +422,7 @@ public class CompanyController implements Serializable {
                 }
             } else {
                 validationBean.copyFile(name, destination, archivo.getInputstream());
-                this.logourl = "/logo/cia" + this.userData.getCurrentCia().getIdCia().toString() +"/"+ name;
+                this.logourl = "/logo/cia" + this.userData.getCurrentCia().getIdCia().toString() + "/" + name;
                 this.msgFile = validationBean.getMsgBundle("lblFileSuccess");
 
                 validationBean.updateComponent("comForm:msgFile");
@@ -399,11 +431,10 @@ public class CompanyController implements Serializable {
                 this.nameFileFinal = name;
             }
 
-           
         } catch (Exception e) {
             msgFile = validationBean.getMsgBundle("lblFileUploadError");
             if (archivo != null) {
-                if (validationBean.deleteFile("/logo/cia" + this.userData.getCurrentCia().getIdCia().toString() +"/"+ archivo.getFileName())) {
+                if (validationBean.deleteFile("/logo/cia" + this.userData.getCurrentCia().getIdCia().toString() + "/" + archivo.getFileName())) {
                     archivo = null;
                 }
             }
@@ -413,7 +444,7 @@ public class CompanyController implements Serializable {
             validationBean.updateComponent("comForm:showLogo");
             e.printStackTrace();
         }
-        
+
         userData.getCurrentCia().setLogo(this.logourl);
 
     }
@@ -454,7 +485,8 @@ public class CompanyController implements Serializable {
             this.company.setNomLeg(this.companyLegName);
             this.company.setTelefono(tel);
             this.company.setWebsite(website);
-            String res = comFacade.actCompany(company, new FbUsuario(), "U");
+            FbDireccion dir = this.userData.getCurrentCia().getIdDireccion();
+            String res = comFacade.actCompany(company, dir, new FbUsuario(), "U");
             System.out.println("Resultado controller: " + res);
             if (res.equals("0")) {
                 validationBean.lanzarMensaje("info", "modComSuccess", "blank");
@@ -471,10 +503,50 @@ public class CompanyController implements Serializable {
         }
 
     }
-    
-    
-    public void chargeStates(){
+
+    public void chargeStates() {
         System.out.println("idPais: " + this.idPais);
+        if (!this.idPais.equals("0")) {
+            listaEstados = this.estadoFacade.getEstadosByIdPais(idPais);
+        } else {
+            listaEstados = new ArrayList<>();
+            listaCiudades = new ArrayList<>();
+            this.idEstado = "0";
+            this.idCiudad = "0";
+            direccion = "";
+            zipcode = "";
+            showDir = false;
+        }
+        System.out.println("size: " + listaEstados.size());
+        this.validationBean.updateComponent("registerForm:ciudades");
+        this.validationBean.updateComponent("registerForm:direccion");
+    }
+
+    public void chargeCities() {
+        System.out.println("idEstado: " + this.idEstado);
+        if (!this.idEstado.equals("0")) {
+            listaCiudades = this.ciudadFacade.getCiudadesByIdEstado(idEstado);
+        } else {
+            listaCiudades = new ArrayList<>();
+            this.idCiudad = "0";
+            direccion = "";
+            zipcode = "";
+            showDir = false;
+        }
+
+        this.validationBean.updateComponent("registerForm:direccion");
+    }
+
+    public void chargeAddress() {
+        System.out.println("idCiudad: " + this.idCiudad);
+        if (this.idCiudad.equals("0")) {
+            showDir = false;
+            this.direccion = "";
+            zipcode = "";
+        } else {
+            showDir = true;
+        }
+        this.validationBean.updateComponent("registerForm:direccion");
     }
 
 }

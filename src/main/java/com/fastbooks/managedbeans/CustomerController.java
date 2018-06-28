@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
@@ -149,6 +150,10 @@ public class CustomerController implements Serializable {
             }
             res = custF.actCustomer(customer, "A");
             if (res.equals("0")) {
+                
+                validationBean.ejecutarJavascript("PF('dlg2').hide();");
+                custL = custF.getCustomer(this.userData.getCurrentCia().getIdCia().toString());
+                validationBean.updateComponent("customerForm");
                 validationBean.lanzarMensaje("info", "custAdded", "blank");
             } else if (res.equals("-1")) {
                 validationBean.lanzarMensaje("error", "customerRepeatFail", "blank");
@@ -161,8 +166,10 @@ public class CustomerController implements Serializable {
 
     }
 
+    @PostConstruct
     public void init() {
         try {
+            System.out.println("INIT CUSTOMERS!!!!");
             custL = custF.getCustomer(this.userData.getCurrentCia().getIdCia().toString());
             if (!this.userData.getUses().equals("0")) {
                 this.validationBean.lanzarMensaje("info", this.userData.getUses(), "blank");
@@ -527,6 +534,37 @@ public class CustomerController implements Serializable {
        
         return flag;
     }
+        
+        
+        public boolean renderOptionMaster(String option,FbCustomer cust){
+        boolean flag = false;
+        switch(option){
+            case "REPAY":
+                if (cust.getBalance().doubleValue() > 0) {
+                    flag = true;
+                }
+                break;
+        
+        }
+        
+        return flag;
+        }
+        
+        
+        public void receivePayment(String idCust){
+        
+        this.validationBean.redirecionar("/view/sales/payments/paymentForm.xhtml?idc=" + idCust);
+        }
+        
+        public void createInvoice(String type,String idCust){
+        this.userData.setInvoiceTypeForm(type);
+        this.validationBean.redirecionar("/view/sales/invoiceForm.xhtml?idc="+idCust);
+        }
+        
+        
+        public void onSelect(String idCust){
+            System.out.println("idCust: " +idCust);
+        }
 
 
 

@@ -149,6 +149,7 @@ public class ProductController implements Serializable {
     }
 
     public void init() {
+        System.out.println("INIT PRODUCTS!!!!");
         try {
             pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
             tList = tFacade.getTaxByIdCia(this.userData.getCurrentCia().getIdCia().toString());
