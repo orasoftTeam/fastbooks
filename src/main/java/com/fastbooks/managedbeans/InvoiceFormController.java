@@ -26,6 +26,7 @@ import com.fastbooks.util.ValidationBean;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -66,7 +67,6 @@ public class InvoiceFormController implements Serializable {
     FbTaxFacade taxFacade;
     @EJB
     FbCatProdFacade catProdFacade;
-    
 
     //InvoiceService invoiceService;
     private @Getter
@@ -255,8 +255,10 @@ public class InvoiceFormController implements Serializable {
     private @Getter
     @Setter
     FbInvoice editInvoice;
-    
-    private @Getter @Setter String dir = "0";
+
+    private @Getter
+    @Setter
+    String dir = "0";
 
     public InvoiceFormController() {
     }
@@ -321,6 +323,9 @@ public class InvoiceFormController implements Serializable {
             //dt.plusDays(Integer.parseInt(this.termDays));
             this.dueDate = sdf.format(c.getTime());
             this.setCustomerInvoice();
+            this.assign();
+            this.parseDates();
+
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.init()");
             e.printStackTrace();
@@ -421,6 +426,9 @@ public class InvoiceFormController implements Serializable {
             DateFormat sd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
             if (!this.shipDate.isEmpty()) {
                 this.shipDate = sdf.format(sd.parse(this.shipDate));
+            }
+            if (!this.AccDate.isEmpty()) {
+                this.AccDate = sdf.format(sd.parse(this.AccDate));
             }
             this.invoiceDate = sdf.format(sd.parse(this.invoiceDate));
             this.dueDate = sdf.format(sd.parse(this.dueDate));
@@ -650,16 +658,17 @@ public class InvoiceFormController implements Serializable {
                     this.shCost = "0.00";
                 }
 
-                this.dBalance = String.format("%.2f", (acum + ship + tax + shTaxAmount));
+                //this.dBalance = String.format("%.2f", (acum + ship + tax + shTaxAmount));
                 //Double balanceDue = acum + ship;
                 this.dShCostTaxAmount = String.format("%.2f", shTaxAmount);
                 this.rShCostTaxAmount = new BigDecimal(shTaxAmount);
-                this.rBalance = new BigDecimal((acum + ship + tax + shTaxAmount));
-                this.dTotal = String.format("%.2f", (acum + ship + tax + shTaxAmount));
+                this.rBalance = new BigDecimal((acum + ship + tax + shTaxAmount)).setScale(2, BigDecimal.ROUND_HALF_UP);
+                this.dBalance = this.rBalance.toString();
+                //this.dTotal = String.format("%.2f", (acum + ship + tax + shTaxAmount));
                 //Double balanceDue = acum + ship;
 
-                this.rTotal = new BigDecimal((acum + ship + tax + shTaxAmount));
-
+                this.rTotal = new BigDecimal((acum + ship + tax + shTaxAmount)).setScale(2, BigDecimal.ROUND_HALF_UP);
+                this.dTotal = this.rTotal.toString();
                 /* if (modStay && this.paymentDetailList.size() != 0) {
                     this.rBalance = new BigDecimal(this.rBalance.doubleValue() - this.totalPayment);
                 }*/
@@ -1003,15 +1012,16 @@ public class InvoiceFormController implements Serializable {
 
         HttpServletRequest req = (HttpServletRequest) validationBean.getRequestContext();
         System.out.println("id:" + req.getParameter("id"));
-        
+
         try {
-            
+
             if (req.getParameter("dir") != null) {
                 this.dir = req.getParameter("dir");
             }
 
             if (req.getParameter("id") != null && in == null) {
-                in = iFacade.getInvoiceByIdInvoice(req.getParameter("id"));
+                in = iFacade.getInvoiceByIdInvoice(req.getParameter("id"),this.userData.getCurrentCia().getIdCia().toString());
+                
             }
 
             if (req.getParameter("p") != null) {
@@ -1163,6 +1173,7 @@ public class InvoiceFormController implements Serializable {
 
                 } else {
                     copy = true;
+                    in.setIdInvoice(BigDecimal.ZERO);
                     DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
                     Calendar cal = Calendar.getInstance();
                     invoiceDate = dateFormat.format(cal.getTime());
@@ -1178,7 +1189,9 @@ public class InvoiceFormController implements Serializable {
                 updateTotal();
                 this.userData.setFbInvoice(null);
                 mod = false;
-            }
+            }/*else{
+            this.regresar();
+            }*/
 
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceFormController.assign()");
@@ -1276,7 +1289,8 @@ public class InvoiceFormController implements Serializable {
         Double dob = 0.00;
         if (modStay) {
             //res = String.format("%.2f", (this.rBalance.doubleValue() - totalPayment));
-            dob = this.rBalance.doubleValue() - totalPayment;
+            double doubleValue = this.rBalance.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            dob = doubleValue - totalPayment;
 
             if (dob == 0) {
                 res = this.validationBean.getMsgBundle("lblPaid");

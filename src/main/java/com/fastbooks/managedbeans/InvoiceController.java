@@ -128,6 +128,7 @@ public class InvoiceController implements Serializable {
         this.validationBean.redirecionar("/view/sales/invoiceForm.xhtml");
     }
 
+    @PostConstruct
     public void init() {
         try {
             System.out.println("INIT INVOICES!!!!");
@@ -145,10 +146,12 @@ public class InvoiceController implements Serializable {
 
             cList = cFacade.getCustomersByIdCia(this.userData.getCurrentCia().getIdCia().toString());
             if (!this.userData.getUses().equals("0")) {
-                this.validationBean.lanzarMensaje("info", "lblInvoiceAddSuccess", "blank");
+                this.validationBean.lanzarMensaje("info", this.userData.getUses(), "blank");
+                this.validationBean.updateComponent("tblInvoiceForm:messages");
             }
 
             System.out.println("com.fastbooks.managedbeans.InvoiceController.init()");
+            this.showInvoice();
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.init()");
             e.printStackTrace();
@@ -278,7 +281,7 @@ public class InvoiceController implements Serializable {
     }
 
     public void copy(FbInvoice in) {
-        in.setIdInvoice(BigDecimal.ZERO);
+        
         in.setNoDot("copy");
         this.userData.setFbInvoice(in);
         this.userData.setInvoiceTypeForm(in.getType());

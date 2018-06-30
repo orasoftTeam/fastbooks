@@ -83,13 +83,14 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         return list;
     }
     
-    public FbInvoice getInvoiceByIdInvoice(String idInvoice) {
+    public FbInvoice getInvoiceByIdInvoice(String idInvoice, String idCia) {
         List<FbInvoice> list = new ArrayList<>();
         try {
 
-            String sql = "select * from fb_invoice where id_invoice=? and status != 'DEL'";
+            String sql = "select * from fb_invoice where id_invoice=? and status != 'DEL' and id_cia =?";
             Query q = em.createNativeQuery(sql, FbInvoice.class);
             q.setParameter(1, idInvoice);
+            q.setParameter(2, idCia);
             list = q.getResultList();
             for (FbInvoice fbInvoice : list) {
                 em.refresh(fbInvoice);
@@ -99,7 +100,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             e.printStackTrace();
         }
 
-        return list.get(0);
+        return list.isEmpty()?null: list.get(0);
     }    
     
     public List<FbInvoice> getInvoicesByIdCust(String idCust,String idCia) {
@@ -320,7 +321,9 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         String pTaxAmounts = "";
         String pTaxProdsIds = "";
         String pItemTaxes = "";
-        String temp = null;
+        String tempIn = "";
+        String tempDue = "";
+        String tempSh = "";
         //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         try {
             Connection cn = em.unwrap(java.sql.Connection.class);
@@ -332,15 +335,15 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             cs.setString(5, in.getNoDot());
             cs.setString(6, in.getCustEmail());
             if (in.getInDate() != null) {
-                temp = in.getInDate();
+                tempIn = in.getInDate();
             }
 
-            cs.setString(7, temp);
+            cs.setString(7, tempIn);
             if (in.getDueDate() != null) {
-                temp = in.getDueDate();
+                tempDue = in.getDueDate();
             }
 
-            cs.setString(8, temp);
+            cs.setString(8, tempDue);
             cs.setDouble(9, Double.parseDouble(in.getActualBalance().toString()));
             cs.setDouble(10, Double.parseDouble(in.getSubTotal().toString()));
             cs.setDouble(11, Double.parseDouble(in.getTaxTotal().toString()));
@@ -352,10 +355,10 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             cs.setString(17, in.getTrackNum());
             cs.setString(18, in.getShipVia());
             if (in.getShDate() != null) {
-                temp = in.getShDate();
+                tempSh = in.getShDate();
             }
 
-            cs.setString(19, temp);
+            cs.setString(19, tempSh);
             cs.setDouble(20, Double.parseDouble(in.getShCost().toString()));
             cs.setString(21, in.getMessageInvoice());
             cs.setString(22, in.getAttachment());

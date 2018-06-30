@@ -15,8 +15,8 @@
     </ui:remove>
 
     <bnu:form id="tblInvoiceForm" inline="true">
-        #{invoiceTableController.init()}
-        #{invoiceTableController.showInvoice()}
+        
+        
         <bnu:row>
             <bnu:column large-screen="10" medium-screen="11" small-screen="12" tiny-screen="12" >
                 <h2>#{messages.lblSalesTrans}</h2>
@@ -40,7 +40,7 @@
    
         <bnu:row>
             <bnu:column span="12">
-                <bnu:messages  />
+                <bnu:messages id="messages" />
             </bnu:column>
         </bnu:row>
         <p:separator/>

@@ -6,7 +6,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:bnu="http://bootsfaces.net/ui"
       xmlns:p="http://primefaces.org/ui">
-    
+
     <h:body>
         <ui:composition template="../../../template/template.xhtml">
 
@@ -43,6 +43,11 @@
                         </bnu:column>
 
 
+                    </bnu:row>
+                    <bnu:row>
+                        <bnu:column span="12">
+                            <bnu:messages id="messages" />
+                        </bnu:column>
                     </bnu:row>
 
                     <bnu:tabView active-index="0" > 
@@ -111,25 +116,25 @@
 
                         </bnu:tab>
                         <bnu:tab title="Customer Details">
-                            
-                            
-                            
+
+
+
                             <!-- cust data -->
                             <br/>
                             <br/>
                             <bnu:row>
                                 <bnu:column span="1">
-                                <strong><h:outputText value="Customer" /></strong>
+                                    <strong><h:outputText value="Customer" /></strong>
                                 </bnu:column>
                                 <bnu:column span="1" >
-                                <h:outputText value="#{customerDetailController.currentCust.displayName}" />
+                                    <h:outputText value="#{customerDetailController.currentCust.displayName}" />
                                 </bnu:column>
                                 <p:separator/>
                             </bnu:row>    
-                            
-                            
-                            
-                            
+
+
+
+
                         </bnu:tab>
 
                     </bnu:tabView>

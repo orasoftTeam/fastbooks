@@ -95,6 +95,7 @@ public class CustomerDetailController implements Serializable {
     String AccDate;
     private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
     private DateFormat sd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+
     /*End estimate stuff*/
     public CustomerDetailController() {
     }
@@ -103,6 +104,10 @@ public class CustomerDetailController implements Serializable {
     public void init() {
         title = "Customer Detail";
         System.out.println("com.fastbooks.managedbeans.CustomerDetailController.init()");
+        if (!this.userData.getUses().equals("0")) {
+            this.vb.lanzarMensaje("info", this.userData.getUses(), "blank");
+            this.vb.updateComponent("CustomerDetailForm:messages");
+        }
         this.setCustomer();
     }
 
@@ -208,8 +213,7 @@ public class CustomerDetailController implements Serializable {
     public void recievePayment(String idCust, String idInvoice) {
         this.vb.redirecionar("/view/sales/payments/paymentForm.xhtml?idc=" + idCust + "&idi=" + idInvoice);
     }
-    
-    
+
     public void updateEstimateStatus() {
 
         currenInvoice.setStatus(this.estimateStatus);
@@ -236,7 +240,6 @@ public class CustomerDetailController implements Serializable {
 
         }
 
-        
     }
 
 }

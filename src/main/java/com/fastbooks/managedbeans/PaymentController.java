@@ -504,7 +504,7 @@ public class PaymentController implements Serializable {
             }
 
             if (req.getParameter("id") != null && in == null) {
-                in = iFacade.getInvoiceByIdInvoice(req.getParameter("id"));
+                in = iFacade.getInvoiceByIdInvoice(req.getParameter("id"),this.userData.getCurrentCia().getIdCia().toString());
             }
 
             if (in != null) {
@@ -530,7 +530,7 @@ public class PaymentController implements Serializable {
                     pBaseDetail.setCheckbox(true);
                     pBaseDetail.setPaymentString(pBaseDetail.getPayment().toString());
                     //pBaseDetail.setOpenBalance(pBaseDetail.getIdInvoice().getActualBalance().add(pBaseDetail.getPayment()));
-                    Double openBalance = this.iFacade.getInvoiceByIdInvoice(pBaseDetail.getIdInvoice().getIdInvoice().toString()).getActualBalance().doubleValue();
+                    Double openBalance = this.iFacade.getInvoiceByIdInvoice(pBaseDetail.getIdInvoice().getIdInvoice().toString(),this.userData.getCurrentCia().getIdCia().toString()).getActualBalance().doubleValue();
                     Double payment = pBaseDetail.getPayment().doubleValue();
                     pBaseDetail.setOpenBalance(new BigDecimal(openBalance + payment));
                     pBaseDetail.setDescrip(this.vb.getMsgBundle("invoice") + pBaseDetail.getDescrip());

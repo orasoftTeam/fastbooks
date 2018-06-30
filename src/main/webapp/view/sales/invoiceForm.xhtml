@@ -13,6 +13,7 @@
     <h:body>
 
         <h:form id="invoiceForm">
+            
             <bnu:container styleClass="marco">
               
 
@@ -38,7 +39,7 @@
                         <bnu:column span="4">
 
                             #{invoiceController.refreshComboCust()}
-                            <bnu:selectOneMenu label="#{messages.lblInvocieCustomer}" value="#{invoiceController.idCust}" onchange="ajax:invoiceController.changeCust();"   update="@form" >
+                            <bnu:selectOneMenu label="#{messages.lblInvocieCustomer}" value="#{invoiceController.idCust}" onchange="ajax:invoiceController.changeCust();"   update="@(.customerInfo)" >
                                 <f:selectItem  itemLabel="#{messages.selectOne}" itemValue="0"  />
                                 <f:selectItems value="#{invoiceController.CList}" var="cust"
                                                itemValue="#{cust.idCust}" itemLabel="#{cust.title} #{cust.firstname} #{cust.lastname}"  itemDescription="#{cust.company}" />
@@ -46,14 +47,14 @@
 
 
                         </bnu:column>
-                        <bnu:column span="3">
+                        <bnu:column span="3" class="customerInfo" >
                             <bnu:inputText label="#{messages.email}" value="#{invoiceController.email}"  id="email" placeholder="Customer email" maxlength="20"  onblur="ajax:invoiceController.didUserTouchForm();" />
 
                         </bnu:column>
                         <bnu:column span="3">
 
                         </bnu:column>
-                        <bnu:column span="2">
+                        <bnu:column span="2" class="lowSection" >
                             <h:panelGroup rendered="#{invoiceController.showSegunType('CN')}" ><h4 style="margin-top: -5px">#{messages.lblAmountToRefund}</h4></h:panelGroup>
                             <h:panelGroup rendered="#{!invoiceController.showSegunType('CN')}" ><h4 style="margin-top: -5px">#{messages.lblInvoiceBalanceDue}</h4></h:panelGroup>
                             <h1 style="margin-top: -5px" >#{invoiceController.showBalanceDue()}</h1>
@@ -140,7 +141,7 @@
 
 
                     <bnu:row>
-                        <bnu:column span="4">
+                        <bnu:column span="4" class="customerInfo" >
                             <bnu:inputTextarea label="#{messages.billingA}" maxlength="250" value="#{invoiceController.biAddress}" onblur="ajax:invoiceController.didUserTouchForm();" />
 
                         </bnu:column>
@@ -168,7 +169,7 @@
                         </bnu:column>
                     </bnu:row>
                     <bnu:row  rendered="#{!invoiceController.showSegunType('CN')}" >
-                        <bnu:column span="4">
+                        <bnu:column span="4" class="customerInfo" >
                             <bnu:inputTextarea label="#{messages.shippingA}" value="#{invoiceController.shAddress}" maxlength="250" onblur="ajax:invoiceController.didUserTouchForm();" />
 
                         </bnu:column>
@@ -227,7 +228,7 @@
                         <bnu:button value="#{messages.lblNewProd}" look="warning" style="margin-top: 25px;width: 100%"  onclick="$('.modalPseudoClass').modal()" />
                     </bnu:column>
                     <bnu:column span="4">
-                        <bnu:commandButton ajax="true" update="@form" value="#{messages.lblAddProductBundle}" look="success" style="margin-top: 25px;width: 100%" action="#{invoiceController.addDetail()}" />
+                        <bnu:commandButton ajax="true" update="@(.lowSection)" value="#{messages.lblAddProductBundle}" look="success" style="margin-top: 25px;width: 100%" action="#{invoiceController.addDetail()}" />
 
                     </bnu:column>
                 </bnu:row>
@@ -235,7 +236,7 @@
                 <p:separator/>
                 <bnu:row>
                     <bnu:column span="4">
-                        <bnu:selectOneMenu  update="@form" value="#{invoiceController.hasTax}" onchange="ajax:invoiceController.updateTotal();" >
+                        <bnu:selectOneMenu  update="@(.lowSection)" value="#{invoiceController.hasTax}" onchange="ajax:invoiceController.updateTotal();" >
                             <f:selectItem itemLabel="#{messages.lblInvoiceWTax}" itemValue="true" />
                             <f:selectItem itemLabel="#{messages.lblInvoiceWTTax}" itemValue="false" />
                         </bnu:selectOneMenu>
@@ -243,7 +244,7 @@
                     </bnu:column>
                 </bnu:row>
                 <bnu:row>
-                    <bnu:column span="12">
+                    <bnu:column span="12" class="lowSection" >
                         <bnu:dataTable
                             paginated="false"
                             searching="false"
@@ -255,23 +256,23 @@
                             <bnu:dataTableColumn label="#{messages.lblSKU}" value="#{det.itemSku}" />
                             <bnu:dataTableColumn label="#{messages.lblDesc}" value="#{det.itemDesc}" />
                             <bnu:dataTableColumn label="#{messages.lblQuant}"  >
-                                <bnu:inputText  value="#{det.itemQuant}"  tooltip="#{invoiceController.tooltipQuant(det.idProd,det.itemQuant)}" onkeyup="soloNumeros(this)" maxlength="4"   onblur="ajax:invoiceController.updateTotal();"  update="@form" />
+                                <bnu:inputText  value="#{det.itemQuant}"  tooltip="#{invoiceController.tooltipQuant(det.idProd,det.itemQuant)}" onkeyup="soloNumeros(this)" maxlength="4"   onblur="ajax:invoiceController.updateTotal();"  update="@(.lowSection)" />
                             </bnu:dataTableColumn>
                             <bnu:dataTableColumn label="#{messages.lblInDetRate}" value="#{det.itemRate}" />
                             <bnu:dataTableColumn label="#{messages.lblInDetAmount}" value="#{invoiceController.formatOutput(det.itemAmount)}" />
                             <bnu:dataTableColumn label="#{messages.lblInvoiceTax}" rendered="#{invoiceController.hasTax}" >
-                                <bnu:selectOneMenu value="#{det.itemTax}" update="@form" onchange="ajax:invoiceController.updateTotal();" >
+                                <bnu:selectOneMenu value="#{det.itemTax}" update="@(.lowSection)" onchange="ajax:invoiceController.updateTotal();" >
                                     <f:selectItems value="#{invoiceController.taxList}" var="tax" itemLabel="#{tax.name} (#{tax.rate}%)" itemValue="#{tax.idTax.toString()}" />
                                 </bnu:selectOneMenu>
                             </bnu:dataTableColumn>
                             <bnu:dataTableColumn label="" >
-                                <bnu:commandButton icon-awesome="fa-trash" value="" icon-size="lg" ajax="true" update="@form" action="#{invoiceController.removeDetail(det)}"  />
+                                <bnu:commandButton icon-awesome="fa-trash" value="" icon-size="lg" ajax="true" update="@(.lowSection)" action="#{invoiceController.removeDetail(det)}"  />
                             </bnu:dataTableColumn>
                         </bnu:dataTable>
                     </bnu:column>
                 </bnu:row>
                 <p:separator/>
-                <bnu:row>
+                <bnu:row class="lowSection" >
                     <bnu:column span="7"/>
                     <bnu:column span="5">
                         <div class="form-group row">
@@ -287,13 +288,13 @@
                                 #{messages.lblInShipCost}
                             </label>
                             <div class="col-sm-6">
-                                <bnu:selectOneMenu  class="form-control" value="#{invoiceController.shCostIdTax}" onchange="ajax:invoiceController.updateTotal();" update="@form" >
+                                <bnu:selectOneMenu  class="form-control" value="#{invoiceController.shCostIdTax}" onchange="ajax:invoiceController.updateTotal();" update="@(.lowSection)" >
                                     <f:selectItem  itemLabel="#{messages.lblSelectShTax}" itemValue="0"  />
                                     <f:selectItems value="#{invoiceController.taxList}" var="tax" itemLabel="#{tax.name} (#{tax.rate}%)" itemValue="#{tax.idTax.toString()}" />
                                 </bnu:selectOneMenu>
                             </div>
                             <div class="col-sm-4">
-                                <bnu:inputText value="#{invoiceController.shCost}" maxlength="6"  onblur="ajax:invoiceController.updateTotal();"  update="@form" class="form-control" /> 
+                                <bnu:inputText value="#{invoiceController.shCost}" maxlength="6"  onblur="ajax:invoiceController.updateTotal();"  update="@(.lowSection)" class="form-control" /> 
                             </div>
 
 
@@ -378,8 +379,8 @@
                 <bnu:navLink value="Delete" onclick="PF('dlg8').show();" rendered="#{invoiceController.modStay}"  ></bnu:navLink>
             </bnu:navbarLinks>
             <h:form styleClass="navbar-form navbar-right" >
-                <bnu:commandButton value="#{messages.save}"  look="success"  style="width: 100%" action="#{invoiceController.save('A')}" rendered="#{!invoiceController.modStay}"  />
-                <bnu:commandButton value="#{messages.lblUpdateIn}"  look="success"  style="width: 100%"  action="#{invoiceController.save('U')}" rendered="#{invoiceController.modStay and  (not invoiceController.linked)}" />
+                <bnu:commandButton value="#{messages.save}"  look="success"  style="width: 100%" action="#{invoiceController.save('A')}" rendered="#{!invoiceController.modStay}" update="@(.messages)"  />
+                <bnu:commandButton value="#{messages.lblUpdateIn}"  look="success"  style="width: 100%"  action="#{invoiceController.save('U')}" rendered="#{invoiceController.modStay and  (not invoiceController.linked)}" update="@(.messages)" />
                 <bnu:button value="#{messages.lblUpdateIn}"  look="success"  style="width: 100%"  onclick="PF('dlg7').show();" rendered="#{invoiceController.linked}" />
             </h:form>
         </bnu:navBar>
@@ -867,7 +868,7 @@
             <h:form id="confirmModalSaveLink">
                 <bnu:button value="No" onclick="PF('dlg7').hide();" />
 
-                <bnu:commandButton value="Yes"  look="success"  style="margin-left: 10px" action="#{invoiceController.save('U')}" rendered="#{invoiceController.modStay}" />
+                <bnu:commandButton value="Yes"  look="success"  style="margin-left: 10px" action="#{invoiceController.save('U')}" rendered="#{invoiceController.modStay}" update="@(.messages)" />
 
             </h:form>
         </p:dialog>
