@@ -5,6 +5,7 @@
  */
 package com.fastbooks.managedbeans;
 
+import com.fastbooks.facade.FbCatProdFacade;
 import com.fastbooks.facade.FbCustomerFacade;
 
 import com.fastbooks.facade.FbInvoiceFacade;
@@ -32,6 +33,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -62,6 +64,9 @@ public class InvoiceFormController implements Serializable {
     FbProductFacade pFacade;
     @EJB
     FbTaxFacade taxFacade;
+    @EJB
+    FbCatProdFacade catProdFacade;
+    
 
     //InvoiceService invoiceService;
     private @Getter
@@ -265,6 +270,7 @@ public class InvoiceFormController implements Serializable {
         return flag;
     }
 
+    @PostConstruct
     public void init() {
         try {//this.userData.getCurrentCia().getIdCia().toString()
             type = this.userData.getInvoiceTypeForm();

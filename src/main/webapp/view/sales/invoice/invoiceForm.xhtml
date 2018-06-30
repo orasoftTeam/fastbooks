@@ -6,15 +6,19 @@
       xmlns:bnu="http://bootsfaces.net/ui"
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    <f:view locale="#{ userData.locale}"/>
+    
     <h:head>
-        <title>#{userData.GParameters.title}</title>
+        <title>Fastbooks</title>
     </h:head>
     <h:body>
 
         <h:form id="invoiceForm">
             <bnu:container styleClass="marco">
-              
+                #{invoiceController.init()}        
+                #{invoiceController.assign()}
+                #{invoiceController.parseDates()}
+                #{categoryController.init()}
+                #{productController.init()}
 
                 <bnu:row>
                     <bnu:column span="11">
