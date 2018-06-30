@@ -49,7 +49,7 @@ public class UserData implements Serializable {
 
     @EJB
     ValidationBean validationBean;
-    
+
     private static final long serialVersionUID = 1L;
     private String locale = "en";
     private Country lenguage;
@@ -61,23 +61,56 @@ public class UserData implements Serializable {
     private FbPerfiles perfil;
     private String email;
     private String pass;
-    
-    private @Getter @Setter GlobalParameters gParameters = new GlobalParameters();
-    private @Getter @Setter Integer offset  = 2;
-    private @Getter @Setter Integer colmd  = 10;
-    private @Getter @Setter String currentPage = "Dashboard";
-    private @Getter @Setter String uses = "0";
-    private @Getter @Setter String sInvoice = "0";
-    private @Getter @Setter FbInvoice fbInvoice = null;
-    private @Getter @Setter int salesIndex= 0;
-    private @Getter @Setter String invoiceSql = "0";
-    private @Getter @Setter String formInProdId = "0";
-    private @Getter @Setter String formInCustId = "0";
-    private @Getter @Setter String invoiceTypeForm = "IN";
-    private @Getter @Setter String autoLocale = "";
-    private @Getter @Setter Locale country;
-    
-    
+
+    private @Getter
+    @Setter
+    GlobalParameters gParameters = new GlobalParameters();
+    private @Getter
+    @Setter
+    Integer offset = 2;
+    private @Getter
+    @Setter
+    Integer colmd = 10;
+    private @Getter
+    @Setter
+    String currentPage = "Dashboard";
+    private @Getter
+    @Setter
+    String uses = "0";
+    private @Getter
+    @Setter
+    String sInvoice = "0";
+    private @Getter
+    @Setter
+    FbInvoice fbInvoice = null;
+    private @Getter
+    @Setter
+    int salesIndex = 0;
+    private @Getter
+    @Setter
+    String invoiceSql = "0";
+    private @Getter
+    @Setter
+    String formInProdId = "0";
+    private @Getter
+    @Setter
+    String formInCustId = "0";
+    private @Getter
+    @Setter
+    String invoiceTypeForm = "IN";
+    private @Getter
+    @Setter
+    String autoLocale = "";
+    private @Getter
+    @Setter
+    Locale country;
+    private @Getter
+    @Setter
+    int jsfSucks = 0;
+    private @Getter
+    @Setter
+    String dirCust = "0";
+
     public String getEmail() {
         return email;
     }
@@ -139,9 +172,8 @@ public class UserData implements Serializable {
      */
     public UserData() {
 
-        
     }
-    
+
     /* @PostConstruct
     public void init(){
        System.out.println("INITIALIZATING SESSION BEAN!!!!");
@@ -159,7 +191,6 @@ public class UserData implements Serializable {
         System.out.println(format.format(doble));
         System.out.println("-------------------------------------------------------");
     }*/
-
     public List<Country> getList() {
         return list;
     }
@@ -199,19 +230,18 @@ public class UserData implements Serializable {
         }
         initLangs();
     }
-    
-    public void changeLocale(String loc) throws IOException{
-    for (Country entry : list) {
-    if (entry.getLanInitials().equals(loc)) {
-        System.out.println(entry.getLanInitials());
+
+    public void changeLocale(String loc) throws IOException {
+        for (Country entry : list) {
+            if (entry.getLanInitials().equals(loc)) {
+                System.out.println(entry.getLanInitials());
                 FacesContext.getCurrentInstance()
                         .getViewRoot().setLocale((Locale) entry.getLocale());
                 validationBean.reload();
+            }
+        }
+        initLangs();
     }
-    }
-    initLangs();
-    }
-    
 
     public void login() {
         FbUsuario user = new FbUsuario();
@@ -230,13 +260,13 @@ public class UserData implements Serializable {
                     //redirect to dashboard and set id_cia and profile
                     currentCia = loggedUser.getFbUsuarioXCiaList().get(0).getFbCompania();
                     perfil = loggedUser.getFbPerfilXUsuarioList().get(0).getFbPerfiles();
-                    
+
                     if (currentCia.getFbCompaniaPref() != null) {
                         country = new Locale(currentCia.getFbCompaniaPref().getLang(), currentCia.getFbCompaniaPref().getCountry());
-                    }else{
+                    } else {
                         country = new Locale("en", "us");
                     }
-                    
+
                     validationBean.redirecionar("/view/dashboard.xhtml");
                 } else {
                     //redirect to chooseCompany and set id_cia and profile with the selected
@@ -287,12 +317,12 @@ public class UserData implements Serializable {
     public void workaround() {
         validationBean.redirecionar("/index.xhtml?faces-redirect=true");
         this.locale = "en";
-         FacesContext.getCurrentInstance()
-               .getViewRoot().setLocale((Locale)new Locale("en"));
+        FacesContext.getCurrentInstance()
+                .getViewRoot().setLocale((Locale) new Locale("en"));
         initLangs();
     }
-    
-    public void valLogin(){
+
+    public void valLogin() {
         try {
             if (this.loggedUser != null) {
                 validationBean.redirecionar("/view/dashboard.xhtml");
@@ -301,56 +331,190 @@ public class UserData implements Serializable {
             System.out.println("not logged");
         }
     }
-    
-    
-    public void initLangs(){
-        
+
+    public void initLangs() {
+
         if (this.locale.isEmpty()) {
             this.locale = "en";
-         FacesContext.getCurrentInstance()
-               .getViewRoot().setLocale((Locale)new Locale("en"));
+            FacesContext.getCurrentInstance()
+                    .getViewRoot().setLocale((Locale) new Locale("en"));
         }
-        
+
         list = new ArrayList<>();
         list.add(new Country("USA", validationBean.getMsgBundle("lblEnglish"), "en", new Locale("en")));
         //list.add(new Country("France", "French", "fr", new Locale("fr")));
         list.add(new Country("El Salvador", validationBean.getMsgBundle("lblSpanish"), "es", new Locale("es")));
-    
+
         System.out.println("INIT LANGUAGES!!");
     }
-    
-    public boolean activo(String pag){
-        
+
+    public boolean activo(String pag) {
+
         HttpServletRequest requestContext = validationBean.getRequestContext();
         //System.out.println( requestContext.getRequestURI()+"  :"+pag + " = " + currentPage);
         //return this.currentPage.equals(pag);
         return requestContext.getRequestURI().contains(pag.toLowerCase());
     }
-    
-    public String formatMaster(String obj){
+
+    public String formatMaster(String obj) {
         java.text.NumberFormat format = java.text.NumberFormat.getCurrencyInstance(country);
         //obj = "249.57";
         String res = "";
-        if(!obj.isEmpty()){
-        Double dobbs = Double.parseDouble(obj);
-        res = format.format(dobbs);
+        if (!obj.isEmpty()) {
+            Double dobbs = Double.parseDouble(obj);
+            res = format.format(dobbs);
             if (dobbs < 0) {
                 //formatear para negativo
-               res = res.substring(1, 2) + " -" + res.substring(2, res.length()-1);
-                
-                
+                res = res.substring(1, 2) + " -" + res.substring(2, res.length() - 1);
+
             }
-        
-        
+
         }
-        
+
+        return res;
+    }
+
+    public void changeTab(int index) {
+        this.salesIndex = index;
+        jsfSucks++;
+        if (jsfSucks == 1) {
+            this.validationBean.redirecionar("/view/sales/sales.xhtml");
+        } else if (jsfSucks > 2) {
+            jsfSucks = 0;
+        }
+
+    }
+
+    public boolean renderTab(int index) {
+        boolean flag = false;
+        if (this.salesIndex == index) {
+            flag = true;
+        }
+
+        return flag;
+    }
+
+    public boolean renderSpinner(int index) {
+        boolean flag = false;
+        if (this.salesIndex != index) {
+            flag = true;
+        }
+
+        return flag;
+    }
+
+    @PreDestroy
+    public void destory() {
+        this.validationBean.redirecionar("/");
+        System.out.println("com.fastbooks.managedbeans.UserData.destory()");
+    }
+
+    public String formatStatus(String s) {
+        String res = "";
+        switch (s) {
+            case "OP":
+                res = this.validationBean.getMsgBundle("lblInvoiceStatusOpen");
+                break;
+            case "CA":
+                res = this.validationBean.getMsgBundle("lblInvoiceStatusCancel");
+                break;
+            case "PA":
+                res = this.validationBean.getMsgBundle("lblInvoiceStatusPartial");
+                break;
+            case "OV":
+                res = this.validationBean.getMsgBundle("lblInvoiceStatusOverdue");
+                break;
+            case "CL":
+                res = this.validationBean.getMsgBundle("lblInvoiceStatusClosed");
+                break;
+            case "PE":
+                res = this.validationBean.getMsgBundle("lblESPending");
+                break;
+            case "AC":
+                res = this.validationBean.getMsgBundle("lblAccepted");
+                break;
+            case "RJ":
+                res = this.validationBean.getMsgBundle("lblRejected");
+                break;
+
+            case "PD":
+                res = this.validationBean.getMsgBundle("lblPaid");
+                break;
+            case "UN":
+                res = this.validationBean.getMsgBundle("lblUnapplied");
+                break;
+
+            default:
+                break;
+        }
+
+        return res;
+    }
+
+    public String formatType(String t) {
+        String res = "";
+        switch (t) {
+            case "IN":
+                res = this.validationBean.getMsgBundle("lblInvoiceTypeIn");
+                break;
+            case "ES":
+                res = this.validationBean.getMsgBundle("lblEstimate");
+                break;
+            case "SR":
+                res = this.validationBean.getMsgBundle("salesR");
+                break;
+            case "PA":
+                res = this.validationBean.getMsgBundle("payment");
+                break;
+            default:
+                break;
+        }
+
         return res;
     }
     
-    @PreDestroy
-    public void destory(){
-    this.validationBean.redirecionar("/");
-        System.out.println("com.fastbooks.managedbeans.UserData.destory()");
+       public boolean showOptions(String status, String type, String option) {
+        boolean flag = false;
+
+        switch (option) {
+            case "PRINT":
+                if (!type.equals("PA")) {
+                    flag = true;
+                }
+
+                break;
+
+            case "EDIT":
+                flag = true;
+                break;
+
+            case "ESTATUS":
+                if (type.equals("ES")) {
+                    flag = true;
+                }
+                break;
+            case "COPY":
+                if (!type.equals("PA")) {
+                    flag = true;
+                }
+                break;
+            case "REPAY":
+                if (type.equals("IN")) {
+                    if (status.equals("OV") || status.equals("OP") || status.equals("PA")) {
+                        flag = true;
+                    }
+                    
+                    
+                }
+                break;                
+
+            default:
+                System.out.println("You do nutin");
+                break;
+
+        }
+
+        return flag;
     }
-   
+
 }

@@ -13,8 +13,7 @@
                     Hint to editors: The menus follow the Chicago style of capitalization. Please capitalize everything but the "smaller" words. 
         -->
     </ui:remove>
-    #{categoryController.init()}
-       #{productController.init()} 
+    
     <h:form  id="tableForm">
        
                     <bnu:row>
@@ -50,8 +49,8 @@
                                 <bnu:dataTableColumn label="#{messages.lblCate}" value="#{prod.idCat.name}" ></bnu:dataTableColumn>
                                 <bnu:dataTableColumn label="#{messages.lblAction}">
                                     <bnu:dropButton value="#{messages.edit}" look="primary" styleClass="hidden-xs hidden-sm" >
-                                        <bnu:commandButton value="#{messages.edit}"  style="width:100%" update="prodForm" action="#{productController.assign(prod, 'U')}" />
-                                        <bnu:commandButton value="#{messages.delete}"  style="width:100%" action="#{productController.assign(prod, 'D')}" />
+                                        <bnu:commandButton value="#{messages.edit}"  style="width:100%;border:none;" update="prodForm" action="#{productController.assign(prod, 'U')}" />
+                                        <bnu:commandButton value="#{messages.delete}"  style="width:100%;border:none;" action="#{productController.assign(prod, 'D')}" />
 
                                     </bnu:dropButton>
                                     <bnu:commandButton value="#{messages.edit}"  look="warning" styleClass="hidden-lg hidden-md"  action="#{productController.assign(prod, 'U')}"  />
@@ -285,7 +284,7 @@
 
 
 
-                <!-- modal add -->
+                <!-- modal delete -->
                 <bnu:modal id="mode" title="#{messages.lblConfirm}" styleClass="modalAddProd" closable="false" backdrop="false" closeOnEscape="false">
                     <h:form>
                     <bnu:row>

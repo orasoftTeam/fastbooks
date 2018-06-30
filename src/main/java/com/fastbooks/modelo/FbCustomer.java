@@ -20,10 +20,13 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -182,8 +185,14 @@ public class FbCustomer implements Serializable {
     @JoinColumn(name = "ID_DIRECCION", referencedColumnName = "ID_DIRECCION")
     @ManyToOne
     private FbDireccion idDireccion;
-
+    
+    
+    @Transient
+    private @Getter @Setter boolean checkbox;
+    
+    
     public FbCustomer() {
+        checkbox = false;
     }
 
     public FbCustomer(BigDecimal idCust) {

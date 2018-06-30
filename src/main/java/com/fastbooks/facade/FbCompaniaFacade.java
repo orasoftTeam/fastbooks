@@ -6,6 +6,7 @@
 package com.fastbooks.facade;
 
 import com.fastbooks.modelo.FbCompania;
+import com.fastbooks.modelo.FbDireccion;
 import com.fastbooks.modelo.FbUsuario;
 import java.sql.*;
 import javax.ejb.Stateless;
@@ -32,11 +33,11 @@ public class FbCompaniaFacade extends AbstractFacade<FbCompania> {
     }
     
     
-    public String actCompany(FbCompania com,FbUsuario user,String op){
+    public String actCompany(FbCompania com,FbDireccion dir,FbUsuario user,String op){
     String res = "";
         try {
             Connection cn = em.unwrap(java.sql.Connection.class);
-            CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_COMPANIA (?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_COMPANIA (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             cs.setInt(1, Integer.parseInt(String.valueOf(com.getIdCia())));
             cs.setString(2, com.getNomCom());
             cs.setString(3, com.getNomLeg());
@@ -49,10 +50,14 @@ public class FbCompaniaFacade extends AbstractFacade<FbCompania> {
             cs.setString(10, user.getFirstname());
             cs.setString(11, user.getLastname());
             cs.setString(12, user.getClave());
-            cs.setString(13, op);
-            cs.registerOutParameter(14, Types.VARCHAR);
+            cs.setInt(13, dir.getIdDireccion().intValue());
+            cs.setString(14, dir.getDireccion());
+            cs.setInt(15, dir.getIdCiudad().getIdCiudad().intValue());
+            cs.setString(16, dir.getZipCode());
+            cs.setString(17, op);
+            cs.registerOutParameter(18, Types.VARCHAR);
             cs.execute();
-            res = cs.getString(14);
+            res = cs.getString(18);
             cs.close();
         } catch (Exception e) {
             res = "-2";

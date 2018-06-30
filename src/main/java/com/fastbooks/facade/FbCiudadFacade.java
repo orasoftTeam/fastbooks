@@ -6,9 +6,12 @@
 package com.fastbooks.facade;
 
 import com.fastbooks.modelo.FbCiudad;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -27,6 +30,22 @@ public class FbCiudadFacade extends AbstractFacade<FbCiudad> {
 
     public FbCiudadFacade() {
         super(FbCiudad.class);
+    }
+    
+    public List<FbCiudad> getCiudadesByIdEstado(String idEstado){
+    List<FbCiudad> list = new ArrayList<>();
+        try {
+            String sql= "SELECT * FROM FB_CIUDAD WHERE ID_ESTADO = ?";
+            Query q = em.createNativeQuery(sql,FbCiudad.class);
+            q.setParameter(1, idEstado);
+            list = q.getResultList();
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbCiudadFacade.getCiudadesByIdEstado()");
+            e.printStackTrace();
+        }
+    
+    
+    return list;
     }
     
 }

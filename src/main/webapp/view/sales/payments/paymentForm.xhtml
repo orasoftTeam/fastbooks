@@ -19,7 +19,7 @@
 
                     </bnu:column>
                     <bnu:column span="1">
-                        <h2><h:commandLink style="text-decoration: none;color: black" action="#{invoiceController.validationBean.redirecionar('/view/sales/sales.xhtml')}" >✖</h:commandLink></h2>
+                        <h2><h:commandLink style="text-decoration: none;color: black" action="#{paymentController.regresar()}" >✖</h:commandLink></h2>
                     </bnu:column>
 
                 </bnu:row> 
@@ -45,7 +45,7 @@
                         </bnu:column>
                         <bnu:column span="2" class="campos" >
                             <h4 style="margin-top: -5px">#{messages.lblAmountReceived}</h4>
-                            <h1 style="margin-top: -5px" >#{paymentController.DAmount}</h1>
+                            <h1 style="margin-top: -5px" >#{userData.formatMaster(paymentController.DAmount)}</h1>
                         </bnu:column>
                     </bnu:row>
                 </h:panelGroup>
@@ -192,7 +192,7 @@
         <bnu:navBar  inverse="true" position="bottom" fixed="true" >
             <h:panelGroup id="clear" class="campos" >
                 <h:form styleClass="navbar-form navbar-left"  id="navBtn1" >
-                    <bnu:commandButton value="Cancel" styleClass="btnBottom"  action="#{invoiceController.validationBean.redirecionar('/view/sales/sales.xhtml')}" rendered="#{!paymentController.formTouched}" />
+                    <bnu:commandButton value="Cancel" styleClass="btnBottom"  action="#{invoiceController.regresar()}" rendered="#{!paymentController.formTouched}" />
                     <bnu:button value="Cancel" styleClass="btnBottom"  onclick="PF('dlg5').show();" rendered="#{paymentController.formTouched}" />
                     <bnu:button value="Clear" style="margin-left: 10px" styleClass="btnBottom" onclick="PF('dlg6').show();"  rendered="#{paymentController.formTouched}"  />
                 </h:form>
@@ -220,7 +220,7 @@
 
             <h:form id="confirmModal">
                 <bnu:button value="No" onclick="PF('dlg5').hide();" />
-                <bnu:commandButton value="Yes" look="success" action="#{invoiceController.validationBean.redirecionar('/view/sales/sales.xhtml')}" style="margin-left: 10px" />
+                <bnu:commandButton value="Yes" look="success" action="#{paymentController.regresar()}" style="margin-left: 10px" />
             </h:form>
         </p:dialog> 
 

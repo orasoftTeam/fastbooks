@@ -6,16 +6,16 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:bnu="http://bootsfaces.net/ui"
       xmlns:p="http://primefaces.org/ui">
-    <f:view locale="#{ userData.locale}"/>
+    
     <h:head>
-        <title>Facelet Title</title>
+        <title>#{userData.GParameters.title}</title>
     </h:head>
     <h:body>
         <ui:composition template="../../template/template.xhtml">
 
             <ui:define name="content">
-                #{categoryController.init()}
-                <h:form>
+                
+                <h:form  id="catForm" >
                     <bnu:row>
                         <bnu:column span="12">
                             <bnu:navLink href="#{request.contextPath}/view/sales/sales.xhtml" value="#{messages.backProd}" />
@@ -38,14 +38,15 @@
                     <p:separator />
                     <bnu:row>
                         <bnu:column span="12">
-                            <bnu:dataTable 
+                            <bnu:dataTable
+                                id="tblCat"
                                 value="#{categoryController.list}"
                                 var="cat">
                                 <bnu:dataTableColumn label="#{messages.fullName}" value="#{cat.name}" ></bnu:dataTableColumn>
                                 <bnu:dataTableColumn label="#{messages.lblAction}">
                                     <bnu:dropButton value="#{messages.edit}" look="primary" >
-                                        <bnu:commandButton value="#{messages.edit}" action="#{categoryController.assign(cat,'U')}" style="width:100%" />
-                                        <bnu:commandButton value="#{messages.delete}" action="#{categoryController.assign(cat,'D')}" style="width:100%" />
+                                        <bnu:commandButton value="#{messages.edit}" action="#{categoryController.assign(cat,'U')}" style="width:100%;border:none;" />
+                                        <bnu:commandButton value="#{messages.delete}" action="#{categoryController.assign(cat,'D')}" style="width:100%;border:none;" />
                                         
                                     </bnu:dropButton>
                                 </bnu:dataTableColumn>
@@ -83,16 +84,13 @@
                     </h:form>
                 </bnu:modal>
                 
-                <!-- modal edit-->
+                <!-- modal delete-->
                 <bnu:modal id="cmodal"  styleClass="modalPseudoClass3" backdrop="false" closable="false" closeOnEscape="false"  >
                     <h:form  >
                         <p>#{messages.conDelCat}</p>
                         <bnu:commandButton value="#{messages.yes}" look="success" action="#{categoryController.delete()}"  />
                         <bnu:button value="#{messages.No}" dismiss="modal" look="danger" />
-                        <!--<f:facet name="footer">
-                            <bnu:button value="Close" dismiss="modal" />
-                           <bnu:commandButton value="Save" look="success"   />
-                        </f:facet>-->
+                      
                     </h:form>
                 </bnu:modal>
             </ui:define>

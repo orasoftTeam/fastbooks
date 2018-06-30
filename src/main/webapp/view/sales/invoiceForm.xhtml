@@ -26,7 +26,7 @@
 
                     </bnu:column>
                     <bnu:column span="1">
-                        <h2><h:commandLink style="text-decoration: none;color: black" action="#{invoiceController.validationBean.redirecionar('/view/sales/sales.xhtml')}">✖</h:commandLink></h2>
+                        <h2><h:commandLink style="text-decoration: none;color: black" action="#{invoiceController.regresar()}">✖</h:commandLink></h2>
                     </bnu:column>
 
 
@@ -372,7 +372,7 @@
         <bnu:navBar  inverse="true" position="bottom" fixed="true" >
             <h:panelGroup id="clear">
                 <h:form styleClass="navbar-form navbar-left"  id="navBtn1" >
-                    <bnu:commandButton value="Cancel" styleClass="btnBottom"  action="#{invoiceController.validationBean.redirecionar('/view/sales/sales.xhtml')}" rendered="#{!invoiceController.formTouched}" />
+                    <bnu:commandButton value="Cancel" styleClass="btnBottom"  action="#{invoiceController.regresar()}" rendered="#{!invoiceController.formTouched}" />
                     <bnu:button value="Cancel" styleClass="btnBottom"  onclick="PF('dlg5').show();" rendered="#{invoiceController.formTouched}" />
                     <bnu:button value="Clear" style="margin-left: 10px" styleClass="btnBottom" onclick="PF('dlg6').show();"  rendered="#{invoiceController.formTouched}"  />
                 </h:form>
@@ -849,7 +849,7 @@
 
             <h:form id="confirmModal">
                 <bnu:button value="No" onclick="PF('dlg5').hide();" />
-                <bnu:commandButton value="Yes" look="success" action="#{invoiceController.validationBean.redirecionar('/view/sales/sales.xhtml')}" style="margin-left: 10px" />
+                <bnu:commandButton value="Yes" look="success" action="#{invoiceController.regresar()}" style="margin-left: 10px" />
             </h:form>
         </p:dialog> 
 

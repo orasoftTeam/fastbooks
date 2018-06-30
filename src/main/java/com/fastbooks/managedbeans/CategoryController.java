@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
@@ -67,6 +68,7 @@ public class CategoryController implements Serializable {
                 res = cpFacade.actCat(cat, "A");
                 if (res.equals("0")) {
                     vb.lanzarMensaje("info", "catAddSuccess", "blank");
+                    this.refresh();
                 } else if (res.equals("-1")) {
                     vb.lanzarMensaje("error", "catRepeatFail", "blank");
                 } else if (res.equals("-2")) {
@@ -93,7 +95,9 @@ public class CategoryController implements Serializable {
         return flag;
     }
 
+    @PostConstruct
     public void init() {
+        System.out.println("com.fastbooks.managedbeans.CategoryController.init()");
         try {
             list = cpFacade.getCatsByIdCia(userData.getCurrentCia().getIdCia().toString());
         } catch (Exception e) {
@@ -127,6 +131,7 @@ public class CategoryController implements Serializable {
                 res = cpFacade.actCat(cat, "U");
                 if (res.equals("0")) {
                     vb.lanzarMensaje("info", "catEditSuccess", "blank");
+                    this.refresh();
                 } else if (res.equals("-1")) {
                     vb.lanzarMensaje("error", "catRepeatFail", "blank");
                 } else if (res.equals("-2")) {
@@ -151,6 +156,7 @@ public class CategoryController implements Serializable {
                 res = cpFacade.actCat(cat, "D");
                 if (res.equals("0")) {
                     vb.lanzarMensaje("info", "catDelSuccess", "blank");
+                    this.refresh();
                 } else if (res.equals("-1")) {
                     vb.lanzarMensaje("error", "catRepeatFail", "blank");
                 } else if (res.equals("-2")) {
@@ -164,6 +170,11 @@ public class CategoryController implements Serializable {
             }
 
         
+    }
+    
+     public void refresh(){
+        list = cpFacade.getCatsByIdCia(userData.getCurrentCia().getIdCia().toString());
+        this.vb.updateComponent("catForm:tblCat");
     }
 
 }

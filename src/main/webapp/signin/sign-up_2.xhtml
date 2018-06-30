@@ -79,15 +79,6 @@
                                                 <strong><h:inputSecret class="form-control mont mont-light btn btn-bordered" p:placeholder='#{messages.repassword}' value="#{companyController.rPass}" maxlength="10"/></strong>
                                             </div>
                                             <div class="form-group">
-                                                <label class="mont">Country</label>
-                                                
-                                                <strong><h:selectOneMenu class="form-control mont mont-light btn btn-bordered" value="#{companyController.idPais}"  >
-                                                        <f:ajax event="change" listener="#{companyController.chargeStates()}"/>
-                                                        <f:selectItem  itemLabel="#{messages.selectOne}" itemValue="0"  />
-                                                    <f:selectItems value="#{companyController.listaPaises}" var="pais" itemValue="#{pais.idPais}" itemLabel="#{pais.nomPais}"/>
-                                                </h:selectOneMenu></strong>
-                                            </div>
-                                            <div class="form-group">
                                                 <h:commandButton value="#{messages.signup}" class="btn btn-success big-btn" style="width: 100%;border-radius: 12px"  action="#{companyController.register()}" />
                                             </div>
                                             <h6 class="mont">#{messages.byClickingSignUp}

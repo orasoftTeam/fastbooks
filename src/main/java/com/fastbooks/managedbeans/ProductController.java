@@ -5,6 +5,7 @@
  */
 package com.fastbooks.managedbeans;
 
+import com.fastbooks.facade.FbCatProdFacade;
 import com.fastbooks.facade.FbProductFacade;
 import com.fastbooks.facade.FbTaxFacade;
 import com.fastbooks.modelo.FbBundleItems;
@@ -17,8 +18,10 @@ import java.io.File;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
@@ -141,6 +144,12 @@ public class ProductController implements Serializable {
     FbProductFacade pFacade;
     @EJB
     FbTaxFacade tFacade;
+    @EJB
+    FbCatProdFacade catFacade;
+
+    private @Getter
+    @Setter
+    List<FbCatProd> catList = new ArrayList<>();
 
     /**
      * Creates a new instance of ProductController
@@ -148,10 +157,13 @@ public class ProductController implements Serializable {
     public ProductController() {
     }
 
+    @PostConstruct
     public void init() {
+        System.out.println("INIT PRODUCTS!!!!");
         try {
             pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
             tList = tFacade.getTaxByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+            catList = catFacade.getCatsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
             if (!this.userData.getUses().equals("0")) {
                 this.vb.lanzarMensaje("info", this.userData.getUses(), "blank");
                 this.userData.setUses("0");
@@ -297,20 +309,20 @@ public class ProductController implements Serializable {
 
             switch (res) {
                 case "0":
+                    //this.limpiar();
                     if (isFormProd) {
                         String message = this.operation.equals("A") ? "lblAddProdSuccess" : "lblUpdateProdSuccess";
-                        this.userData.setUses(message);
-                        this.vb.reload();
+
+                        this.vb.ejecutarJavascript("$('.modalType').modal('hide')");
+                        this.vb.lanzarMensaje("info", message, "blank");
+                        this.refrescar();
+                        //this.userData.setUses(message);
+                        //this.vb.reload();
                     } else {
                         this.vb.ejecutarJavascript("$('.modalPseudoClass').modal('hide')");
                         this.vb.updateComponent("invoiceForm:prods");
                         this.userData.setFormInProdId(product.getName());
                     }
-                    /*String message = this.operation.equals("A")? "lblAddProdSuccess" : "lblUpdateProdSuccess";
-                    this.vb.ejecutarJavascript("$('.modalType').modal('hide');");
-                    this.vb.lanzarMensaje("info",message , "blank");
-                    this.init();
-                    this.vb.updateComponent("tableForm");*/
                     this.limpiar();
                     break;
                 case "-1":
@@ -448,22 +460,26 @@ public class ProductController implements Serializable {
         product.setIdTax(new FbTax(BigDecimal.ZERO));
         product.setInitQuant(BigInteger.ZERO);
         String res = this.product.getType().equals("BU") ? this.pFacade.actBundle(product, "D") : this.pFacade.actProd(product, "D");
-
+        String message = "unexpectedError";
         switch (res) {
             case "0":
-                this.userData.setUses("lblDelProdSuccess");
-                this.vb.reload();
-                this.limpiar();
-                break;
-            case "-1":
+                //this.userData.setUses("lblDelProdSuccess");
+                //this.vb.reload();
+                message = "lblDelProdSuccess";
 
                 break;
+            case "-1":
+                //no puede ser menos uno porqe esta eliminando
+                break;
             case "-2":
-                this.userData.setUses("unexpectedError");
-                this.vb.reload();
-                this.limpiar();
+                //this.userData.setUses("unexpectedError");
+                // this.vb.reload();
+                //this.limpiar();
                 break;
         }
+        this.vb.lanzarMensaje("info", message, "blank");
+        this.refrescar();
+        this.limpiar();
     }
 
     public void addItemBundle() {
@@ -498,7 +514,7 @@ public class ProductController implements Serializable {
                     }
                     int x = Integer.parseInt(e.getQuant().toString());
                     Double y = Double.parseDouble(e.getItemPrice().toString());
-                    e.setTotal(new BigDecimal(String.valueOf(x * y)));
+                    e.setTotal(new BigDecimal(x * y).setScale(2, BigDecimal.ROUND_HALF_UP));
                     //this.bundleTotal = String.valueOf(new BigDecimal(this.bundleTotal).add(this.productBundle.getPrice()));
 
                     bundleItems.add(e);
@@ -540,7 +556,7 @@ public class ProductController implements Serializable {
                 acum += value * q;
             }
             this.bundleTotal = String.format("%.2f", acum);
-            this.bTotalReal = new BigDecimal(acum);
+            this.bTotalReal = new BigDecimal(acum).setScale(2, BigDecimal.ROUND_HALF_UP);
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.ProductController.updateBundleTotal()");
             e.printStackTrace();
@@ -565,21 +581,18 @@ public class ProductController implements Serializable {
                 switch (res) {
                     case "0":
                         if (isFormProd) {
-                            String message = this.operation.equals("A") ? "lblAddProdSuccess" : "lblUpdateProdSuccess";
-                            this.userData.setUses(message);
-                            pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
-                            this.vb.reload();
+                            String message = this.operation.equals("A") ? "lblAddBundleSuccess" : "lblUpdateBundleSuccess";
+                            //this.userData.setUses(message);
+                            //pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+                            //this.vb.reload();
+                            this.vb.ejecutarJavascript("$('.modalType').modal('hide')");
+                            this.vb.lanzarMensaje("info", message, "blank");
+                            this.refrescar();
                         } else {
                             this.vb.ejecutarJavascript("$('.modalPseudoClass').modal('hide')");
                             this.vb.updateComponent("invoiceForm:prods");
                             this.userData.setFormInProdId(product.getName());
                         }
-
-                        /*String message = this.operation.equals("A")? "lblAddProdSuccess" : "lblUpdateProdSuccess";
-                    this.vb.ejecutarJavascript("$('.modalType').modal('hide');");
-                    this.vb.lanzarMensaje("info",message , "blank");
-                    this.init();
-                    this.vb.updateComponent("tableForm");*/
                         this.limpiar();
                         this.bundleItems = new ArrayList<>();
                         break;
@@ -623,5 +636,10 @@ public class ProductController implements Serializable {
     public String formatDouble(BigDecimal num) {
         Double number = Double.parseDouble(num.toString());
         return String.format("%.2f", number);
+    }
+
+    public void refrescar() {
+        pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+        this.vb.updateComponent("tableForm");
     }
 }

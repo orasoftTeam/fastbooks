@@ -4,7 +4,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:bnu="http://bootsfaces.net/ui"
       xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <f:view locale="#{ userData.locale}"/>
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
@@ -45,7 +46,7 @@
                                     
                                     <hr />
                                     <div class="form">
-                                        <h:form>
+                                        <h:form  id="registerForm" >
                                             <bnu:messages show-detail="true" />
                                             <div class="form-group">
                                                 <label class="mont mont-light">
@@ -78,6 +79,60 @@
                                                 <label class="mont">#{messages.repassword}</label>
                                                 <strong><h:inputSecret class="form-control mont mont-light btn btn-bordered" p:placeholder='#{messages.repassword}' value="#{companyController.rPass}" maxlength="10"/></strong>
                                             </div>
+                                            <div class="form-group">
+                                                <label class="mont">Country</label>
+                                                
+                                                <strong><bnu:selectOneMenu class="form-control mont mont-light btn btn-bordered" value="#{companyController.idPais}" onchange="ajax:companyController.chargeStates();"
+                                                                           update="registerForm:estados" >
+                                                        
+                                                        <f:selectItem  itemLabel="#{messages.selectOne}" itemValue="0"  />
+                                                    <f:selectItems value="#{companyController.listaPaises}" var="pais" itemValue="#{pais.idPais}" itemLabel="#{pais.nomPais}"/>
+                                                </bnu:selectOneMenu></strong>
+                                            </div>
+                                            <h:panelGroup  id="estados" >
+                                                <ui:fragment rendered="#{companyController.listaEstados.size() > 0}">
+                                            <div class="form-group">
+                                                <label class="mont">Estate</label>
+                                                
+                                                <strong><bnu:selectOneMenu class="form-control mont mont-light btn btn-bordered" value="#{companyController.idEstado}" onchange="ajax:companyController.chargeCities();" 
+                                                                           update="registerForm:ciudades">
+                                                        
+                                                        <f:selectItem  itemLabel="#{messages.selectOne}" itemValue="0"  />
+                                                        <f:selectItems value="#{companyController.listaEstados}" var="estado" itemValue="#{estado.idEstado}" itemLabel="#{estado.nomEstado}"/>
+                                                </bnu:selectOneMenu></strong>
+                                            </div> 
+                                                    </ui:fragment>
+                                                </h:panelGroup>
+                                            <h:panelGroup  id="ciudades" >
+                                                <ui:fragment rendered="#{companyController.listaCiudades.size() > 0   and  companyController.listaEstados.size() > 0}">
+                                            <div class="form-group">
+                                                <label class="mont">City</label>
+                                                
+                                                <strong><bnu:selectOneMenu class="form-control mont mont-light btn btn-bordered" value="#{companyController.idCiudad}" onchange="ajax:companyController.chargeAddress();"  >
+                                                        
+                                                        <f:selectItem  itemLabel="#{messages.selectOne}" itemValue="0"  />
+                                                        <f:selectItems value="#{companyController.listaCiudades}" var="ciudad" itemValue="#{ciudad.idCiudad}" itemLabel="#{ciudad.nomCiudad}"/>
+                                                </bnu:selectOneMenu></strong>
+                                            </div> 
+                                                    </ui:fragment>
+                                                </h:panelGroup>
+                                            
+                                            <h:panelGroup  id="direccion" >
+                                                <ui:fragment rendered="#{companyController.showDir}">
+                                                    <div class="form-group">
+                                                <label class="mont">ZIP Code</label>
+                                                
+                                                <strong><h:inputText value="#{companyController.zipcode}" class="form-control mont mont-light btn btn-bordered" p:placeholder="ZIP Code" maxlength="10" /></strong>
+                                            </div> 
+                                            <div class="form-group">
+                                                <label class="mont">Address</label>
+                                                
+                                                <strong><bnu:inputTextarea  maxlength="100" value="#{companyController.direccion}" class="form-control mont mont-light btn btn-bordered" p:placeholder="Example street #1 apt 54"  /></strong>
+                                            </div> 
+                                                    </ui:fragment>
+                                                </h:panelGroup>
+
+                                            
                                             <div class="form-group">
                                                 <h:commandButton value="#{messages.signup}" class="btn btn-success big-btn" style="width: 100%;border-radius: 12px"  action="#{companyController.register()}" />
                                             </div>

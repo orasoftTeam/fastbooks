@@ -102,13 +102,14 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         return list.get(0);
     }    
     
-    public List<FbInvoice> getInvoicesByIdCust(String idCust) {
+    public List<FbInvoice> getInvoicesByIdCust(String idCust,String idCia) {
         List<FbInvoice> list = new ArrayList<>();
         try {
 
-            String sql = "select * from fb_invoice i where id_cust=? and status != 'DEL' order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
+            String sql = "select * from fb_invoice i where id_cust=? and id_cia = ? and status != 'DEL' order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
             Query q = em.createNativeQuery(sql, FbInvoice.class);
             q.setParameter(1, idCust);
+            q.setParameter(2, idCia);
             list = q.getResultList();
             for (FbInvoice fbInvoice : list) {
                 em.refresh(fbInvoice);
@@ -539,11 +540,11 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             currentFile.delete();
         }*/
         file.mkdirs();
-
+        
         String destino = gp.getAppPath() + File.separator + "pdf" + File.separator + "cia" + i.getIdCia().getIdCia().toString()
-                + File.separator + "IN" + i.getNoDot() + i.getIdCia().getNomCom() + ".pdf";
+                + File.separator + i.getType() + i.getNoDot() + ".pdf";
 
-        String pdfName = File.separator + "IN" + i.getNoDot() + i.getIdCia().getNomCom() + ".pdf";
+        String pdfName = File.separator + i.getType() + i.getNoDot() +  ".pdf";
         Map parametersMap = new HashMap();
         parametersMap.put("ID_INVOICE", i.getIdInvoice().toString());
         File logoFile = new File(gp.getAppPath() + logo);
@@ -572,12 +573,9 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
             exporter.exportReport();
             System.out.println("File Created: " + destino);
-            // i.setMessageStmnt("/pdf/"+"cia" + i.getIdCia().getIdCia().toString()+
-            //       "/IN"+i.getNoDot()+i.getIdCia().getNomCom()+".pdf");
-            // this.edit(i);
-            //  res = i.getMessageStmnt();
+            
             res = "/pdf/" + "cia" + i.getIdCia().getIdCia().toString()
-                    + "/IN" + i.getNoDot() + i.getIdCia().getNomCom() + ".pdf";
+                    + "/"+i.getType() + i.getNoDot()  + ".pdf";
         } catch (Exception e) {
             System.out.println("com.fastbooks.facade.FbInvoiceFacade.generateInvoice()");
             e.printStackTrace();
@@ -603,9 +601,9 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         file.mkdirs();
 
         String destino = gp.getAppPath() + File.separator + "pdf" + File.separator + "cia" + i.getIdCia().getIdCia().toString()
-                + File.separator + "Payment" + i.getIdInvoice().toString() + i.getIdCia().getNomCom() + ".pdf";
+                + File.separator + "Payment" + i.getIdInvoice().toString()  + ".pdf";
 
-        //String pdfName = File.separator + "IN" + i.getNoDot() + i.getIdCia().getNomCom() + ".pdf";
+        
         Map parametersMap = new HashMap();
         parametersMap.put("ID_INVOICE", i.getIdInvoice().toString());
         File logoFile = new File(gp.getAppPath() + logo);
@@ -632,12 +630,9 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
             exporter.exportReport();
             System.out.println("File Created: " + destino);
-            // i.setMessageStmnt("/pdf/"+"cia" + i.getIdCia().getIdCia().toString()+
-            //       "/IN"+i.getNoDot()+i.getIdCia().getNomCom()+".pdf");
-            // this.edit(i);
-            //  res = i.getMessageStmnt();
+          
             res = "/pdf/" + "cia" + i.getIdCia().getIdCia().toString()
-                    + "/Payment" + i.getIdInvoice().toString() + i.getIdCia().getNomCom() + ".pdf";
+                    + "/Payment" + i.getIdInvoice().toString()  + ".pdf";
         } catch (Exception e) {
             System.out.println("com.fastbooks.facade.FbInvoiceFacade.generatePayment()");
             e.printStackTrace();

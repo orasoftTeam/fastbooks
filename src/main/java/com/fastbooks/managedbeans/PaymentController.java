@@ -72,9 +72,11 @@ public class PaymentController implements Serializable {
     @Setter
     String pMethod;
     
+    private @Getter @Setter String dir = "0";
+
     private @Getter
     @Setter
-    String invoiceModal = "0";    
+    String invoiceModal = "0";
 
     private @Getter
     @Setter
@@ -443,8 +445,7 @@ public class PaymentController implements Serializable {
                     switch (res) {
                         case "0":
                             this.userData.setUses(message);
-                            this.vb.redirecionar("/view/sales/sales.xhtml");
-
+                            this.regresar();
                             break;
                         case "-1":
                             this.vb.lanzarMensaje("error", "unexpectedError", "unexpectedError");
@@ -497,12 +498,14 @@ public class PaymentController implements Serializable {
         System.out.println("id:" + req.getParameter("id"));
 
         try {
+            
+            if (req.getParameter("dir") != null) {
+                this.dir = req.getParameter("dir");
+            }
 
             if (req.getParameter("id") != null && in == null) {
                 in = iFacade.getInvoiceByIdInvoice(req.getParameter("id"));
             }
-
-
 
             if (in != null) {
 
@@ -553,14 +556,14 @@ public class PaymentController implements Serializable {
                 this.payDetailList = in.getFbPaymentDetailList();
 
                 this.actualizarResults();
-                
-             if (req.getParameter("p") != null) {
-                String message = this.userData.getUses();
-                this.userData.setUses("0");
-                this.vb.lanzarMensaje("info", message, "blank");
-                this.print(in, this.vb.getRequestContext());
-            }
-             
+
+                if (req.getParameter("p") != null) {
+                    String message = this.userData.getUses();
+                    this.userData.setUses("0");
+                    this.vb.lanzarMensaje("info", message, "blank");
+                    this.print(in, this.vb.getRequestContext());
+                }
+
             }
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.PaymentController.assignEdit()");
@@ -585,6 +588,17 @@ public class PaymentController implements Serializable {
                         pd.setCheckbox(true);
                         this.DAmount = String.valueOf(Double.parseDouble(this.DAmount) + Double.valueOf(pd.getPayment().toString()));
                     }
+                }
+            } else if (pIdCust != null && pIdInvoice == null) {
+                this.idCust = pIdCust;
+                this.changeCust();
+                for (FbPaymentDetail pd : this.payDetailList) {
+
+                    pd.setPaymentString(pd.getOpenBalance().toString());
+                    pd.setPayment(pd.getOpenBalance());
+                    pd.setCheckbox(true);
+                    this.DAmount = String.valueOf(Double.parseDouble(this.DAmount) + Double.valueOf(pd.getPayment().toString()));
+
                 }
             }
             this.actualizarResults();
@@ -687,17 +701,26 @@ public class PaymentController implements Serializable {
         }
 
     }
-    
-        public void print(FbInvoice i, HttpServletRequest req) {
+
+    public void print(FbInvoice i, HttpServletRequest req) {
         try {
             String jasperFile = "payment";
 
             this.invoiceModal = this.iFacade.generatePayment(i, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile(jasperFile, req), this.userData.formatMaster(DAmountCredit), this.userData.formatMaster(DAmountApply));
-            
+
             //this.validationBean.updateComponent("pdf");
             this.vb.ejecutarJavascript("$('.invoiceModal').modal();");
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.print()");
+        }
+    }
+
+    public void regresar() {
+        if (this.dir.equals("0")) {
+            this.vb.redirecionar("/view/sales/sales.xhtml");
+        } else {
+            this.vb.redirecionar("/view/sales/customer/customerDetail.xhtml?id=" + this.dir);
+            //this.userData.setDirCust("0");
         }
     }
 

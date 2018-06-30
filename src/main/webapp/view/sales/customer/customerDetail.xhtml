@@ -1,0 +1,183 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:bnu="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui">
+    
+    <h:body>
+        <ui:composition template="../../../template/template.xhtml">
+
+            <ui:define name="content">
+                <h:form id="CustomerDetailForm" >
+                    <bnu:row>
+                        <bnu:column span="4" >
+                            <h3> #{customerDetailController.currentCust.displayName}</h3>
+                            <p  style="color: grey;" >#{customerDetailController.currentCust.company} | #{customerDetailController.currentCust.city}, #{customerDetailController.currentCust.country}</p>
+                        </bnu:column>
+                        <bnu:column span="4" />
+                        <bnu:column span="4" >
+                            <bnu:button value="Edit" />
+
+                            <bnu:dropButton value="#{messages.lblNewTrans}"  look="success" style="margin-top:20px;" >
+                                <bnu:commandButton value="#{messages.lblInvoiceTypeIn}"  action="#{customerDetailController.setType('IN' )}" style="width: 100%; border: none" />
+                                <bnu:commandButton value="#{messages.lblPayment}"   style="width: 100%; border: none" action="#{customerDetailController.pagar()}" />
+                                <bnu:commandButton value="#{messages.lblEstimate}"  action="#{customerDetailController.setType('ES')}" style="width: 100%; border: none" />
+                                <bnu:commandButton value="#{messages.salesR}"  action="#{customerDetailController.setType('SR')}" style="width: 100%; border: none" />
+
+                            </bnu:dropButton> 
+
+                        </bnu:column>
+                    </bnu:row>
+                    <bnu:row>
+                        <bnu:column span="8" />
+                        <bnu:column span="4" >
+                            <h4>#{userData.formatMaster(customerDetailController.DOpenBalance)}</h4>
+                            <p style="color: grey;" >OPEN</p>
+
+
+                            <h4>#{userData.formatMaster(customerDetailController.DOverDue)}</h4>
+                            <p style="color: grey;" >OVERDUE</p>
+                        </bnu:column>
+
+
+                    </bnu:row>
+
+                    <bnu:tabView active-index="0" > 
+                        <bnu:tab title="Transaction List">
+
+
+
+                            <bnu:dataTable
+                                value="#{customerDetailController.transactionList}"
+                                id="tblInvoice"
+                                var="in"
+
+
+
+                                >
+                                <bnu:dataTableColumn  >
+                                    <f:facet name="header">
+                                        <bnu:selectBooleanCheckbox  />
+                                    </f:facet>
+                                    <bnu:selectBooleanCheckbox  value="#{in.checkbox}"  />
+                                </bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblInvoiceDate}" value="#{in.inDate}"   />
+                                <bnu:dataTableColumn  label="#{messages.lblType}" value="#{userData.formatType(in.type)}" ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn   label="#{messages.lblInvoiceNo}"  value="#{in.noDot}" ></bnu:dataTableColumn>
+
+                                <bnu:dataTableColumn label="#{messages.lblIncoiceDueDate}" value="#{in.dueDate}" ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblInvoiceBalance}" value="#{userData.formatMaster(in.actualBalance.toString())}" ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblInvoiceTotalBTax}" value="#{userData.formatMaster(in.subTotal.toString())}" ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblInvoiceTax}" value="#{userData.formatMaster(in.taxTotal.toString())}"  ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblInvoiceTotal}"  value="#{userData.formatMaster(in.total.toString())}" ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblInvoiceStatus}" value="#{userData.formatStatus(in.status)}" ></bnu:dataTableColumn>
+                                <bnu:dataTableColumn label="#{messages.lblAction}">
+
+                                    <bnu:dropButton value="#{messages.edit}" look="primary" styleClass="hidden-xs hidden-sm" >
+                                        <bnu:commandButton value="#{messages.edit}"  style="width:100%; border: none" action="#{customerDetailController.edit(in)}" rendered="#{userData.showOptions(in.status,in.type,'EDIT')}"  />
+
+                                        <bnu:commandButton value="#{messages.lblInvoicePrint}"  style="width:100%; border: none"  update="pdf" action="#{customerDetailController.print(in,request)}"
+                                                           rendered="#{userData.showOptions(in.status,in.type,'PRINT')}"  />
+
+                                        <bnu:commandButton value="Update status"  style="width:100%; border: none"  
+                                                           rendered="#{userData.showOptions(in.status,in.type,'ESTATUS')}" action="#{customerDetailController.assignEstimate(in)}"   />
+
+                                        <bnu:commandButton value="Copy"  style="width:100%; border: none"  
+                                                           rendered="#{userData.showOptions(in.status,in.type,'COPY')}" action="#{customerDetailController.copy(in)}"   />
+
+                                        <bnu:commandButton value="Receive Payment"  style="width:100%; border: none"  
+                                                           rendered="#{userData.showOptions(in.status,in.type,'REPAY')}" action="#{customerDetailController.recievePayment(in.idCust.idCust.toString(), in.idInvoice.toString())}"   />
+
+                                    </bnu:dropButton>
+                                    <bnu:commandButton value="#{messages.edit}"  look="warning" styleClass="hidden-lg hidden-md" action="#{customerDetailController.edit(in)}" rendered="#{userData.showOptions(in.status,in.type,'EDIT')}"   />
+
+                                    <bnu:commandButton value="Update status"  style="width:100%; border: none"   styleClass="hidden-lg hidden-md"
+                                                       rendered="#{userData.showOptions(in.status,in.type,'ESTATUS')}" action="#{customerDetailController.assignEstimate(in)}"   />
+
+                                    <bnu:commandButton value="#{messages.lblInvoicePrint}" update="pdf"  styleClass="hidden-lg hidden-md"  action="#{customerDetailController.print(in,request)}" rendered="#{userData.showOptions(in.status,in.type,'PRINT')}"  />
+
+                                    <bnu:commandButton value="Copy"  style="width:100%; border: none" styleClass="hidden-lg hidden-md" 
+                                                       rendered="#{userData.showOptions(in.status,in.type,'COPY')}" action="#{customerDetailController.copy(in)}"   />
+                                    <bnu:commandButton value="Receive Payment"  style="width:100%; border: none"  styleClass="hidden-lg hidden-md"
+                                                       rendered="#{userData.showOptions(in.status,in.type,'REPAY')}" action="#{customerDetailController.recievePayment(in.idCust.idCust.toString(), in.idInvoice.toString())}"   />
+                                </bnu:dataTableColumn>
+
+                            </bnu:dataTable>
+
+
+
+                        </bnu:tab>
+                        <bnu:tab title="Customer Details">
+                            
+                            
+                            
+                            <!-- cust data -->
+                            <br/>
+                            <br/>
+                            <bnu:row>
+                                <bnu:column span="1">
+                                <strong><h:outputText value="Customer" /></strong>
+                                </bnu:column>
+                                <bnu:column span="1" >
+                                <h:outputText value="#{customerDetailController.currentCust.displayName}" />
+                                </bnu:column>
+                                <p:separator/>
+                            </bnu:row>    
+                            
+                            
+                            
+                            
+                        </bnu:tab>
+
+                    </bnu:tabView>
+
+
+                </h:form>
+
+
+                <bnu:modal  id="invoiceModal" title="#{messages.invoice}" styleClass="invoiceModal"  close-on-escape="false" backdrop="false"  >
+                    <h:panelGroup id="pdf">
+
+                        <p:media value="#{customerDetailController.invoiceModal}" width="100%" height="500px" rendered="#{not(customerDetailController.invoiceModal eq '0')}"  />     
+
+
+                    </h:panelGroup>
+                </bnu:modal> 
+
+
+                <bnu:modal  id="updateStatusModal" title="#{messages.lblEstimate}" styleClass="updateStatusModal"   >
+
+                    <h:form  >
+                        <bnu:selectOneMenu label="#{messages.lblInvoiceStatus}" value="#{customerDetailController.estimateStatus}" onchange="show(this.value);" >
+
+                            <f:selectItem itemValue="PE" itemLabel="#{messages.lblESPending}" />
+                            <f:selectItem itemValue="AC" itemLabel="#{messages.lblAccepted}" />
+                            <f:selectItem itemValue="CL" itemLabel="#{messages.lblClosed}" />
+                            <f:selectItem itemValue="RJ" itemLabel="#{messages.lblRejected}" />
+                        </bnu:selectOneMenu>
+                        <div class="updateEstimateStatus" style="display: none;" >
+                            <bnu:inputText label="By" maxlength="30"  value="#{customerDetailController.accBy}" />
+                            <strong>
+                                <h:outputText value="Date"  />
+
+                            </strong>
+                            <bnu:datepicker value="#{customerDetailController.accDate}"    />
+                        </div>
+                        <p:separator/>
+
+                        <bnu:commandButton value="Cancel" style="margin-right: 10px;" />
+                        <bnu:commandButton value="Ok" look="success"  action="#{customerDetailController.updateEstimateStatus()}" />
+
+                    </h:form>
+
+                </bnu:modal>
+
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

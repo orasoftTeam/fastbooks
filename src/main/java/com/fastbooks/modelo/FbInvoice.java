@@ -23,6 +23,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -156,12 +157,26 @@ public class FbInvoice implements Serializable {
     private List<FbInvoiceDetail> fbInvoiceDetailList;
     @OneToMany(mappedBy = "idInvoice", fetch = FetchType.LAZY)
     private List<FbInvoiceTaxes> fbInvoiceTaxesList;
+    
+    
+    
+    @Transient
+    private boolean checkbox;
 
     public FbInvoice() {
+        this.checkbox = false;
     }
 
     public FbInvoice(BigDecimal idInvoice) {
         this.idInvoice = idInvoice;
+    }
+
+    public boolean isCheckbox() {
+        return checkbox;
+    }
+
+    public void setCheckbox(boolean checkbox) {
+        this.checkbox = checkbox;
     }
 
     public BigDecimal getIdInvoice() {
