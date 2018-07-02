@@ -7,15 +7,15 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:bnu="http://bootsfaces.net/ui">
-    <f:view locale="#{ userData.locale}"/>
+    
     <h:head>
-        <title>Facelet Title</title>
+        <title>#{userData.GParameters.title}</title>
     </h:head>
     <h:body>
         <ui:composition template="../../template/template.xhtml">
 
             <ui:define name="content">
-                #{userController.setValues()}
+                
                 <h:form>
                     
                     <h:panelGrid columns="1">
@@ -44,10 +44,13 @@
                         </bnu:selectOneMenu>  
                     </h:panelGrid>
                     
-                    <bnu:inputSecret maxlength="10" value="#{userController.clave}"  placeholder="#{messages.password}" label="#{messages.password}"   />
+                    <bnu:selectBooleanCheckbox value="#{userController.editPass}" label="Edit Password" onclick="habilitar();" />
+                    <label  >#{messages.password}</label>
+                    <input  type="password" class="form-control" name="password" id="password" maxlength="10"   placeholder="#{messages.password}"   />
                     
-                    <bnu:inputSecret maxlength="10" value="#{userController.rclave}" placeholder="#{messages.repassword}" label="#{messages.repassword}"/>
                     
+                    <label  >#{messages.repassword}</label>
+                    <input  type="password" class="form-control" name="rpassword" id="rpassword" maxlength="10"   placeholder="#{messages.repassword}"   />
                    
                     
                     <h:panelGroup>
@@ -63,6 +66,24 @@
              function soloNumeros(obj) 
                 { 
                 obj.value = (obj.value + '').replace(/[^0-9]/g, '');
+                }
+                var dir = 1;
+                $(document).ready(function(){
+                 $('#password').attr('disabled','disabled');
+                 $('#rpassword').attr('disabled','disabled');
+                });
+                
+                function habilitar(){
+                if(dir == 1){
+                $('#password').removeAttr('disabled');
+                $('#rpassword').removeAttr('disabled');
+                dir = 2;
+                }else{
+                $('#password').attr('disabled','disabled');
+                $('#rpassword').attr('disabled','disabled');
+                dir = 1;
+                }
+                
                 }
             
         </h:outputScript>

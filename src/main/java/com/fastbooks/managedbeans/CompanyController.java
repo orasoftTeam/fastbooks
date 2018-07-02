@@ -15,6 +15,7 @@ import com.fastbooks.modelo.FbDireccion;
 import com.fastbooks.modelo.FbEstado;
 import com.fastbooks.modelo.FbPais;
 import com.fastbooks.modelo.FbUsuario;
+import com.fastbooks.util.Encryptar;
 import com.fastbooks.util.GlobalParameters;
 import com.fastbooks.util.ValidationBean;
 import java.awt.image.BufferedImage;
@@ -265,7 +266,8 @@ public class CompanyController implements Serializable {
             user.setEmail(email);
             user.setFirstname(fName);
             user.setLastname(lName);
-            user.setClave(pass);
+            Encryptar encryptar = new Encryptar();
+            user.setClave(encryptar.hashPassword(pass));
             com.setIdCia(BigDecimal.ZERO);
 
             FbDireccion dir = new FbDireccion();

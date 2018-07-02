@@ -62,6 +62,31 @@ public class FbUsuarioFacade extends AbstractFacade<FbUsuario> {
 
         return user;
     }
+    
+        public FbUsuario login(String email) {
+        FbUsuario user = new FbUsuario();
+        user.setIdUsuario(new BigDecimal(0));
+        try {
+            String sql = "select * from fb_usuario a "
+                    + "where a.email = ? "
+                    
+                    + "and a.estado = 'A'";
+            Query q = getEntityManager().createNativeQuery(sql, FbUsuario.class);
+            q.setParameter(1, email);
+            
+            List<FbUsuario> resultList = q.getResultList();
+            if (!resultList.isEmpty()) {
+              user = resultList.get(0);  
+            }
+            
+
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbUsuarioFacade.login()");
+            e.printStackTrace();
+        }
+
+        return user;
+    }
 
     public List<CompaniaForm> getUserCompaniasById(String id) {
         List<CompaniaForm> list = new ArrayList<>();

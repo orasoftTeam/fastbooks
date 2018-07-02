@@ -10,6 +10,7 @@ import com.fastbooks.facade.FbProductFacade;
 import com.fastbooks.facade.FbTaxFacade;
 import com.fastbooks.modelo.FbBundleItems;
 import com.fastbooks.modelo.FbCatProd;
+import com.fastbooks.modelo.FbCompania;
 import com.fastbooks.modelo.FbProduct;
 import com.fastbooks.modelo.FbTax;
 import com.fastbooks.util.GlobalParameters;
@@ -139,7 +140,7 @@ public class ProductController implements Serializable {
     @Inject
     UserData userData;
     @EJB
-    ValidationBean vb;
+    private @Getter @Setter ValidationBean vb;
     @EJB
     FbProductFacade pFacade;
     @EJB
@@ -150,6 +151,11 @@ public class ProductController implements Serializable {
     private @Getter
     @Setter
     List<FbCatProd> catList = new ArrayList<>();
+    
+    /*cat vars*/
+    private @Getter @Setter String catName = "";
+    private @Getter @Setter FbCatProd cat = new FbCatProd();
+    
 
     /**
      * Creates a new instance of ProductController
@@ -161,9 +167,11 @@ public class ProductController implements Serializable {
     public void init() {
         System.out.println("INIT PRODUCTS!!!!");
         try {
+            this.userData.setCurrentCia(new FbCompania(BigDecimal.ONE));
             pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
             tList = tFacade.getTaxByIdCia(this.userData.getCurrentCia().getIdCia().toString());
             catList = catFacade.getCatsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+            itemBundleList = pFacade.getProductsByIdCiaWithoutBundle(this.userData.getCurrentCia().getIdCia().toString());
             if (!this.userData.getUses().equals("0")) {
                 this.vb.lanzarMensaje("info", this.userData.getUses(), "blank");
                 this.userData.setUses("0");
@@ -185,11 +193,6 @@ public class ProductController implements Serializable {
     public void selectType(String type, String typeImg) {
         this.type = type;
         this.typeImg = typeImg;
-        //showScnd = true;
-        //this.vb.reload();
-        /*this.vb.ejecutarJavascript("$('.modalType').modal('hide');");
-    this.vb.updateComponent("bmodal");
-    this.vb.ejecutarJavascript("$('.modalAddProd').modal();");*/
         this.modalTitle = this.vb.getMsgBundle("lblProdServiceInfo");
         this.showForm = true;
         if (type.equals("BU")) {
@@ -640,6 +643,62 @@ public class ProductController implements Serializable {
 
     public void refrescar() {
         pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+        itemBundleList = pFacade.getProductsByIdCiaWithoutBundle(this.userData.getCurrentCia().getIdCia().toString());
         this.vb.updateComponent("tableForm");
+    }
+    
+    
+    
+    
+    /*add cat methods*/
+        public void addCat() {
+        if (valAddCat()) {
+            String res = "";
+            try {
+                cat = new FbCatProd();
+                cat.setName(name);
+                cat.setIdCat(BigDecimal.ZERO);
+                cat.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
+                cat.setUserCreacion(new BigInteger(userData.getLoggedUser().getIdUsuario().toString()));
+                res = catFacade.actCat(cat, "A");
+                if (res.equals("0")) {
+                    vb.lanzarMensaje("info", "catAddSuccess", "blank");
+                    
+                } else if (res.equals("-1")) {
+                    vb.lanzarMensaje("error", "catRepeatFail", "blank");
+                } else if (res.equals("-2")) {
+                    vb.lanzarMensaje("error", "unexpectedError", "blank");
+                }
+                
+                
+                //refrescar
+                catList = catFacade.getCatsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+                for (FbCatProd fbCatProd : catList) {
+                    if (fbCatProd.getName().equals(this.catName)) {
+                        idCat = fbCatProd.getIdCat().toString();
+                    }
+                }
+                this.catName = "";
+                this.cat = new FbCatProd();
+            } catch (Exception e) {
+                System.out.println("com.fastbooks.managedbeans.CategoryController.add()");
+                e.printStackTrace();
+                res = "-2";
+            }
+
+        }
+    }
+    
+    
+    
+        public boolean valAddCat() {
+
+        boolean flag = false;
+        if (vb.validarCampoVacio(this.name, "warn", "valErr", "reqCatName")
+                && vb.validarSoloLetras(this.name, "warn", "valErr", "reqCatName")) {
+            flag = true;
+        }
+
+        return flag;
     }
 }

@@ -4,7 +4,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:bnu="http://bootsfaces.net/ui">
+      xmlns:bnu="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui">
 
     <body>
 
@@ -12,20 +13,532 @@
 
             <ui:define name="content">
                 
-                <h:form>
-                    <bnu:inputText id="behemoth" onblur="hey();" />
-                </h:form>
+                <bnu:button value="#{messages.lblNewProd}" look="warning" style="margin-top: 25px;width: 100%"  onclick="openModalProd();" />
                 
-                <script>
+                
+                <bnu:modal id="productModal"   styleClass="productModal" >
+                    <div id="selectType" >
+                        <h3>#{messages.lblSelectProdType}</h3>
+                        <bnu:panel styleClass="typeOp" onclick="showForm('IN','inv.png');" >
+                            <bnu:row   >
+
+                                <bnu:column tiny-screen="3" small-screen="2" medium-screen="2" large-screen="2">
+                                    <p:graphicImage name="inv.png" library="img" width="64" height="64" />
+                                </bnu:column>
+                                <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                                    <p><strong>#{messages.lblInventory}</strong></p>
+                                    <p>#{messages.lblInventoryDetail}</p>
+                                </bnu:column>
+                            </bnu:row>
+                        </bnu:panel>
+                        <p:separator/>
+                        <bnu:panel styleClass="typeOp" onclick="showForm('NI', 'noninv.png');" >
+                            <bnu:row  >
+                                <bnu:column tiny-screen="3" small-screen="2" medium-screen="2" large-screen="2">
+                                    <p:graphicImage name="noninv.png" library="img" width="64" height="64" />
+                                </bnu:column>
+                                <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                                    <p><strong>#{messages.lblNonInventory}</strong></p>
+                                    <p>#{messages.lblNonInventoryDetail}</p>
+                                </bnu:column>
+                            </bnu:row>   
+                        </bnu:panel>
+                        <p:separator/>
+                        <bnu:panel styleClass="typeOp" onclick="showForm('SE', 'serv.png');" >
+                            <bnu:row  >
+                                <bnu:column tiny-screen="3" small-screen="2" medium-screen="2" large-screen="2">
+                                    <p:graphicImage name="serv.png" library="img" width="64" height="64" />
+                                </bnu:column>
+                                <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                                    <p><strong>#{messages.lblService}</strong></p>
+                                    <p>#{messages.lblServiceDetail}</p>
+                                </bnu:column>
+                            </bnu:row>
+                        </bnu:panel>
+                        <p:separator/>
+
+                        <bnu:panel styleClass="typeOp" onclick="showForm('BU', 'bundle.png');" >
+                            <bnu:row >
+                                <bnu:column tiny-screen="3" small-screen="2" medium-screen="2" large-screen="2">
+                                    <p:graphicImage name="bundle.png" library="img" width="64" height="64" />
+                                </bnu:column>
+                                <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                                    <p><strong>#{messages.lblBundle}</strong></p>
+                                    <p>#{messages.lblBundleDetail}</p>
+                                </bnu:column>
+                            </bnu:row>
+                        </bnu:panel>
+                        <p:separator/>
+                        <bnu:row>
+
+                            <bnu:column span="6">
+                                <bnu:button value="#{messages.lblClose}" look="danger" onclick="$('.productModal').modal('hide')" size="lg"/>
+                            </bnu:column>
+
+                        </bnu:row>
+                    </div>
                     
-                   function hey(){
-                      alert('vinny'); 
-                       
-                   }
                     
                     
+                    <div id="pForm"  style="display: none;" >
+                        <h3 id="formTitle" ></h3>
+                        <h:form id="productForm">
+                            <input type="hidden" name="type" id="type" />
+                            <bnu:row  >
+                            <bnu:column tiny-screen="1" small-screen="1" medium-screen="1" large-screen="1" >
+                                <img src="resources/img/índice.png" style="width: 32px;height: 32px;" id="prodImg"/>
+                                
+                            </bnu:column>
+                            <bnu:column tiny-screen="11" small-screen="11" medium-screen="11" large-screen="11">
+                                <h6 id="pTypeTitle" ><strong></strong></h6>
+
+                            </bnu:column>
+                        </bnu:row> 
+                        <p:separator/>
+                        <bnu:row  >
+                            <bnu:column tiny-screen="12" small-screen="12" medium-screen="8" large-screen="8">
+                                <bnu:inputText label="#{messages.lblName}" maxlength="40" 
+                                               placeholder="#{messages.lblProdName}" value="#{productController.name}"
+                                               />
+                                <bnu:inputText label="#{messages.lblSKU}" onkeyup="soloNumeros(this)"  maxlength="20" label-style="color:black;" placeholder="#{messages.lblSKU}" value="#{productController.sku}" />
+                            </bnu:column>
+                            <bnu:column tiny-screen="12" small-screen="12" medium-screen="4" large-screen="4" >
+                                <p:graphicImage value="#{productController.photoUrl}" id="showPhoto" width="128" height="128" />
+                            </bnu:column>
+                        </bnu:row  >
+                        <bnu:row>
+                            <bnu:column span="12">
+                                <h:outputLabel>#{messages.lblProdPhoto}</h:outputLabel>
+                                <p:fileUpload label="#{messages['lblImageUpload']}" invalidFileMessage="#{messages['lblFileInvalid']}" id="logoCom" fileUploadListener="#{productController.handleFileUpload}" mode="advanced"
+                                              auto="true" sizeLimit="#{userData.GParameters.imgBytesSize}" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+                            </bnu:column>
+                        </bnu:row>
+                        <bnu:row rendered="#{!productController.bundle}" >
+                            <bnu:column span="6">
+                                <bnu:selectOneMenu label="#{messages.lblCate}" value="#{productController.idCat}" >
+                                    <f:selectItem itemValue="0" itemLabel="#{messages.selectOne}"  />
+                                    <f:selectItems value="#{categoryController.list}" var="cat" itemValue="#{cat.idCat}" itemLabel="#{cat.name}" /> 
+                                </bnu:selectOneMenu>
+
+
+                            </bnu:column>
+                            <bnu:column span="6"  class="inventory"  style="display: none;" >
+                                <bnu:inputText label="#{messages.lblInitQuant}"  maxlength="6" onkeyup="soloNumeros(this)" value="#{productController.initQuant}"  />
+                            </bnu:column>
+
+                        </bnu:row>
+
+
+                        <p:separator/>
+                        <bnu:row>
+                            <bnu:column span="12">
+                                <bnu:inputTextarea label="#{messages.lblDesc}"  maxlength="250" value="#{productController.desc}" />
+                            </bnu:column>
+
+                        </bnu:row>
+                        <bnu:row rendered="#{!productController.bundle}">
+                            <bnu:column span="6">
+                                <bnu:inputText label="#{messages.lblPrice}" maxlength="10" value="#{productController.price}"/>
+                            </bnu:column>
+                            <bnu:column span="6">
+                                <bnu:selectBooleanCheckbox label="#{messages.lblIncTax}"  value="#{productController.incTax}" />
+
+                            </bnu:column>
+
+                        </bnu:row>
+                        <bnu:row rendered="#{!productController.bundle}">
+                            <bnu:column span="6">
+                                <bnu:selectOneMenu label="#{messages.lblTax}"  value="#{productController.idTax}" >
+                                    <f:selectItem itemValue="0" itemLabel="#{messages.selectOne}" />
+                                    <f:selectItems value="#{productController.TList}" var="tax" 
+                                                   itemLabel="#{tax.name} (#{tax.rate}%)"
+                                                   itemValue="#{tax.idTax}" />
+                                </bnu:selectOneMenu>
+                            </bnu:column>
+                        </bnu:row>
+                        <bnu:row  rendered="#{productController.bundle}">
+                            <bnu:column span="6">
+                                <bnu:selectOneMenu label="#{messages.lblProductComplete}" value="#{productController.productBundle}">
+                                    <f:selectItems value="#{productController.itemBundleList}"
+                                                   var="item" itemValue="#{item}"
+                                                   itemLabel="#{item.name}" />
+                                </bnu:selectOneMenu>
+                            </bnu:column>
+                            <bnu:column span="3">
+                                <bnu:inputText label="#{messages.lblQuant}" value="#{productController.bundleQuant}" onkeyup="soloNumeros(this)" maxlength="4" id="bQuant" />
+                            </bnu:column>
+                            <bnu:column span="3">
+                                <bnu:commandButton value="#{messages.lblAddProductBundle}" look="success" style="margin-top: 25px;" 
+                                                   action="#{productController.addItemBundle()}" ajax="true" update="tblBundle"  />
+                            </bnu:column>
+
+                        </bnu:row>
+                        <h:panelGroup id="tblBundle">
+                            <bnu:row  rendered="#{productController.bundle}">
+                                <bnu:column span="12">
+                                    <bnu:dataTable
+                                        value="#{productController.bundleItems}"
+                                        searching="false"
+                                        paginated="false"
+                                        responsive="true"
+                                        var="bi"
+                                        >
+                                        <bnu:dataTableColumn label="#{messages.lblProductComplete}"  value="#{bi.itemName}" />
+                                        <bnu:dataTableColumn label="#{messages.lblPrice}"  value="#{productController.formatDouble(bi.itemPrice)}"/>
+                                        <bnu:dataTableColumn label="#{messages.lblQuant}" value="#{bi.quant}" />
+                                        <bnu:dataTableColumn label="#{messages.lblTotal}" value="#{bi.total}" />
+                                        <bnu:dataTableColumn label="#{messages.lblAction}">
+                                            <bnu:commandButton icon-awesome="fa-trash" value="" icon-size="lg" ajax="true" action="#{productController.removeItemBundle(bi)}" />
+
+                                        </bnu:dataTableColumn>
+                                    </bnu:dataTable>
+                                </bnu:column>
+
+                            </bnu:row>
+                            <bnu:row  rendered="#{productController.bundle}">
+                                <bnu:column span="10">
+                                    <h:outputText value="#{messages.lblTotal}" style="font-weight: bold;" />
+                                </bnu:column>
+                                <bnu:column span="2">
+                                    <h:outputText value="#{productController.bundleTotal}" />
+                                </bnu:column>
+                            </bnu:row>
+                        </h:panelGroup>
+                        <p:separator/>
+                        <bnu:row>
+                            <bnu:column span="12">
+                                <bnu:messages id="msg" />
+                            </bnu:column>
+                        </bnu:row>
+                        <bnu:row>
+                            <bnu:column span="6">
+                                <bnu:commandButton value="#{messages.save}" style="width: 100%" look="success" 
+                                                   action="#{productController.addNew(false)}" update="productForm:msg"
+                                                   rendered="#{!productController.bundle}"
+                                                   />
+                                <bnu:commandButton value="#{messages.save}" style="width: 100%" look="success" 
+                                                   action="#{productController.addBundle(false)}" update="productForm:msg"
+                                                   rendered="#{productController.bundle}"
+                                                   />
+                            </bnu:column>
+                            <bnu:column span="6">
+                                <bnu:commandButton value="#{messages.lblClose}" look="danger" action="#{productController.limpiar()}" style="width: 100%"/>
+                            </bnu:column>
+
+                        </bnu:row>
+                            
+                        </h:form>
+                        
+                    </div>
                     
-                </script>
+                    
+                </bnu:modal>
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                        <!-- modal producto types y  add -->
+        <bnu:modal id="amodal"   styleClass="modalPseudoClass" >
+            <h:form id="prodForm">
+                <h:panelGroup id="modalContent">
+                    <h3>#{productController.modalTitle}</h3>
+                    <ui:fragment rendered="#{!productController.showForm}">
+                        <bnu:panel styleClass="typeOp" onclick="ajax:productController.selectType('IN', 'inv.png');" >
+                            <bnu:row   >
+
+                                <bnu:column tiny-screen="3" small-screen="2" medium-screen="2" large-screen="2">
+                                    <p:graphicImage name="inv.png" library="img" width="64" height="64" />
+                                </bnu:column>
+                                <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                                    <p><strong>#{messages.lblInventory}</strong></p>
+                                    <p>#{messages.lblInventoryDetail}</p>
+                                </bnu:column>
+                            </bnu:row>
+                        </bnu:panel>
+                        <p:separator/>
+                        <bnu:panel styleClass="typeOp" onclick="ajax:productController.selectType('NI', 'noninv.png');" >
+                            <bnu:row  >
+                                <bnu:column tiny-screen="3" small-screen="2" medium-screen="2" large-screen="2">
+                                    <p:graphicImage name="noninv.png" library="img" width="64" height="64" />
+                                </bnu:column>
+                                <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                                    <p><strong>#{messages.lblNonInventory}</strong></p>
+                                    <p>#{messages.lblNonInventoryDetail}</p>
+                                </bnu:column>
+                            </bnu:row>   
+                        </bnu:panel>
+                        <p:separator/>
+                        <bnu:panel styleClass="typeOp" onclick="ajax:productController.selectType('SE', 'serv.png');" >
+                            <bnu:row  >
+                                <bnu:column tiny-screen="3" small-screen="2" medium-screen="2" large-screen="2">
+                                    <p:graphicImage name="serv.png" library="img" width="64" height="64" />
+                                </bnu:column>
+                                <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                                    <p><strong>#{messages.lblService}</strong></p>
+                                    <p>#{messages.lblServiceDetail}</p>
+                                </bnu:column>
+                            </bnu:row>
+                        </bnu:panel>
+                        <p:separator/>
+
+                        <bnu:panel styleClass="typeOp" onclick="ajax:productController.selectType('BU', 'bundle.png');" >
+                            <bnu:row >
+                                <bnu:column tiny-screen="3" small-screen="2" medium-screen="2" large-screen="2">
+                                    <p:graphicImage name="bundle.png" library="img" width="64" height="64" />
+                                </bnu:column>
+                                <bnu:column tiny-screen="9" small-screen="10" medium-screen="10" large-screen="10">
+                                    <p><strong>#{messages.lblBundle}</strong></p>
+                                    <p>#{messages.lblBundleDetail}</p>
+                                </bnu:column>
+                            </bnu:row>
+                        </bnu:panel>
+                        <p:separator/>
+                        <bnu:row>
+
+                            <bnu:column span="6">
+                                <bnu:button value="#{messages.lblClose}" look="danger" onclick="$('.modalPseudoClass').modal('hide')" size="lg"/>
+                            </bnu:column>
+
+                        </bnu:row>
+                    </ui:fragment>
+
+                    <ui:fragment rendered="#{productController.showForm}">
+
+                        <bnu:row  >
+                            <bnu:column tiny-screen="1" small-screen="1" medium-screen="1" large-screen="1" >
+                                <p:graphicImage name="#{productController.typeImg}" library="img" width="32" height="32" />
+                            </bnu:column>
+                            <bnu:column tiny-screen="11" small-screen="11" medium-screen="11" large-screen="11">
+                                <h6><strong>#{productController.convertType(productController.type)}</strong></h6>
+
+                            </bnu:column>
+                        </bnu:row> 
+                        <p:separator/>
+                        <bnu:row  >
+                            <bnu:column tiny-screen="12" small-screen="12" medium-screen="8" large-screen="8">
+                                <bnu:inputText label="#{messages.lblName}" maxlength="40" 
+                                               placeholder="#{messages.lblProdName}" value="#{productController.name}"
+                                               />
+                                <bnu:inputText label="#{messages.lblSKU}" onkeyup="soloNumeros(this)"  maxlength="20" label-style="color:black;" placeholder="#{messages.lblSKU}" value="#{productController.sku}" />
+                            </bnu:column>
+                            <bnu:column tiny-screen="12" small-screen="12" medium-screen="4" large-screen="4" >
+                                <p:graphicImage value="#{productController.photoUrl}" id="showPhoto" width="128" height="128" />
+                            </bnu:column>
+                        </bnu:row  >
+                        <bnu:row>
+                            <bnu:column span="12">
+                                <h:outputLabel>#{messages.lblProdPhoto}</h:outputLabel>
+                                <p:fileUpload label="#{messages['lblImageUpload']}" invalidFileMessage="#{messages['lblFileInvalid']}" id="logoCom" fileUploadListener="#{productController.handleFileUpload}" mode="advanced"
+                                              auto="true" sizeLimit="#{userData.GParameters.imgBytesSize}" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+                            </bnu:column>
+                        </bnu:row>
+                        <bnu:row rendered="#{!productController.bundle}" >
+                            <bnu:column span="6">
+                                <bnu:selectOneMenu label="#{messages.lblCate}" value="#{productController.idCat}" >
+                                    <f:selectItem itemValue="0" itemLabel="#{messages.selectOne}"  />
+                                    <f:selectItems value="#{categoryController.list}" var="cat" itemValue="#{cat.idCat}" itemLabel="#{cat.name}" /> 
+                                </bnu:selectOneMenu>
+
+
+                            </bnu:column>
+                            <bnu:column span="6"  rendered="#{productController.type eq 'IN'}" >
+                                <bnu:inputText label="#{messages.lblInitQuant}"  maxlength="6" onkeyup="soloNumeros(this)" value="#{productController.initQuant}"  />
+                            </bnu:column>
+
+                        </bnu:row>
+
+
+                        <p:separator/>
+                        <bnu:row>
+                            <bnu:column span="12">
+                                <bnu:inputTextarea label="#{messages.lblDesc}"  maxlength="250" value="#{productController.desc}" />
+                            </bnu:column>
+
+                        </bnu:row>
+                        <bnu:row rendered="#{!productController.bundle}">
+                            <bnu:column span="6">
+                                <bnu:inputText label="#{messages.lblPrice}" maxlength="10" value="#{productController.price}"/>
+                            </bnu:column>
+                            <bnu:column span="6">
+                                <bnu:selectBooleanCheckbox label="#{messages.lblIncTax}"  value="#{productController.incTax}" />
+
+                            </bnu:column>
+
+                        </bnu:row>
+                        <bnu:row rendered="#{!productController.bundle}">
+                            <bnu:column span="6">
+                                <bnu:selectOneMenu label="#{messages.lblTax}"  value="#{productController.idTax}" >
+                                    <f:selectItem itemValue="0" itemLabel="#{messages.selectOne}" />
+                                    <f:selectItems value="#{productController.TList}" var="tax" 
+                                                   itemLabel="#{tax.name} (#{tax.rate}%)"
+                                                   itemValue="#{tax.idTax}" />
+                                </bnu:selectOneMenu>
+                            </bnu:column>
+                        </bnu:row>
+                        <bnu:row  rendered="#{productController.bundle}">
+                            <bnu:column span="6">
+                                <bnu:selectOneMenu label="#{messages.lblProductComplete}" value="#{productController.productBundle}">
+                                    <f:selectItems value="#{productController.itemBundleList}"
+                                                   var="item" itemValue="#{item}"
+                                                   itemLabel="#{item.name}" />
+                                </bnu:selectOneMenu>
+                            </bnu:column>
+                            <bnu:column span="3">
+                                <bnu:inputText label="#{messages.lblQuant}" value="#{productController.bundleQuant}" onkeyup="soloNumeros(this)" maxlength="4" id="bQuant" />
+                            </bnu:column>
+                            <bnu:column span="3">
+                                <bnu:commandButton value="#{messages.lblAddProductBundle}" look="success" style="margin-top: 25px;" 
+                                                   action="#{productController.addItemBundle()}" ajax="true" update="tblBundle"  />
+                            </bnu:column>
+
+                        </bnu:row>
+                        <h:panelGroup id="tblBundle">
+                            <bnu:row  rendered="#{productController.bundle}">
+                                <bnu:column span="12">
+                                    <bnu:dataTable
+                                        value="#{productController.bundleItems}"
+                                        searching="false"
+                                        paginated="false"
+                                        responsive="true"
+                                        var="bi"
+                                        >
+                                        <bnu:dataTableColumn label="#{messages.lblProductComplete}"  value="#{bi.itemName}" />
+                                        <bnu:dataTableColumn label="#{messages.lblPrice}"  value="#{productController.formatDouble(bi.itemPrice)}"/>
+                                        <bnu:dataTableColumn label="#{messages.lblQuant}" value="#{bi.quant}" />
+                                        <bnu:dataTableColumn label="#{messages.lblTotal}" value="#{bi.total}" />
+                                        <bnu:dataTableColumn label="#{messages.lblAction}">
+                                            <bnu:commandButton icon-awesome="fa-trash" value="" icon-size="lg" ajax="true" action="#{productController.removeItemBundle(bi)}" />
+
+                                        </bnu:dataTableColumn>
+                                    </bnu:dataTable>
+                                </bnu:column>
+
+                            </bnu:row>
+                            <bnu:row  rendered="#{productController.bundle}">
+                                <bnu:column span="10">
+                                    <h:outputText value="#{messages.lblTotal}" style="font-weight: bold;" />
+                                </bnu:column>
+                                <bnu:column span="2">
+                                    <h:outputText value="#{productController.bundleTotal}" />
+                                </bnu:column>
+                            </bnu:row>
+                        </h:panelGroup>
+                        <p:separator/>
+                        <bnu:row>
+                            <bnu:column span="12">
+                                <bnu:messages id="msg" />
+                            </bnu:column>
+                        </bnu:row>
+                        <bnu:row>
+                            <bnu:column span="6">
+                                <bnu:commandButton value="#{messages.save}" style="width: 100%" look="success" 
+                                                   action="#{productController.addNew(false)}" update="@form"
+                                                   rendered="#{!productController.bundle}"
+                                                   />
+                                <bnu:commandButton value="#{messages.save}" style="width: 100%" look="success" 
+                                                   action="#{productController.addBundle(false)}" update="@form"
+                                                   rendered="#{productController.bundle}"
+                                                   />
+                            </bnu:column>
+                            <bnu:column span="6">
+                                <bnu:commandButton value="#{messages.lblClose}" look="danger" action="#{productController.limpiar()}" style="width: 100%"/>
+                            </bnu:column>
+
+                        </bnu:row>
+
+
+
+                    </ui:fragment>
+                </h:panelGroup>
+            </h:form>
+        </bnu:modal>
+
+        <!-- fin modal productos -->
+        
+        
+        
+         <style type="text/css">
+        .typeOp{
+
+            cursor: pointer;
+        }
+        .typeOp:hover{
+            background-color: #dedeee;
+            border-radius: 100px;
+        }
+    </style>
+    <h:outputScript>
+        var addCatDir = 1;
+        
+        function showAddCat(){
+            if(addCatDir == 1){
+            $("#addCat").show();
+            addCatDir = 2;
+            }else{
+            $("#addCat").hide();
+            addCatDir = 1;
+            }
+        }
+        
+        function soloNumeros(obj) 
+        { 
+        obj.value = (obj.value + '').replace(/[^0-9]/g, '');
+        }
+        //$.blockUI({ message: 'Hold on!' });      
+        function mensaje(e){
+        alert(e);
+        }
+        
+        
+        
+        var dir = 'resources/img/';
+        function showForm(type,img){
+        
+         $("#selectType").hide();
+         $("#pForm").show();
+         $("#type").val(type);   
+            if(type != 'BU'){
+            $("#formTitle").html('#{productController.vb.getMsgBundle("lblProdServiceInfo")}');
+            $("#prodImg").attr('src',dir+img);
+            
+                if(type == 'IN'){
+                    
+                    $("#pTypeTitle").html('#{productController.vb.getMsgBundle("lblInventory")}');
+                    $(".inventory").show();
+                }else if(type == 'NI'){
+                    $("#pTypeTitle").html('#{productController.vb.getMsgBundle("lblNonInventory")}');
+                }else if(type == 'SE'){
+                    $("#pTypeTitle").html('#{productController.vb.getMsgBundle("lblService")}');
+                }
+            }else{
+                $("#formTitle").html('#{productController.vb.getMsgBundle("lblBundleInfo")}');
+                $("#prodImg").attr('src',dir+img);
+                $("#pTypeTitle").html('#{productController.vb.getMsgBundle("lblBundle")}');
+            }
+         
+         
+         
+       
+        
+        }
+        
+        function openModalProd(){
+        $("#selectType").show();
+         $("#pForm").hide();
+         $('.productModal').modal();
+         $(".inventory").hide();
+        }
+        
+        
+    </h:outputScript>
                 
             </ui:define>
 

@@ -10,16 +10,19 @@ import com.fastbooks.facade.FbUsuarioFacade;
 import com.fastbooks.modelo.FbCompania;
 import com.fastbooks.modelo.FbPerfilXUsuario;
 import com.fastbooks.modelo.FbUsuario;
+import com.fastbooks.util.Encryptar;
 import com.fastbooks.util.ValidationBean;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.event.FlowEvent;
@@ -30,7 +33,7 @@ import org.primefaces.event.FlowEvent;
  */
 @Named(value = "userController")
 @ViewScoped
-public class UserController implements Serializable{
+public class UserController implements Serializable {
 
     @EJB
     private ValidationBean validationBean;
@@ -40,21 +43,24 @@ public class UserController implements Serializable{
     private FbPerfilXUsuarioFacade pxuFacade;
     @Inject
     private UserData userData;
-    
 
     FbUsuario usuario = new FbUsuario();
-    
+
     List<FbUsuario> usuarioL;
-     @Getter @Setter List<FbUsuario> usuarioPrueba;
-    @Getter @Setter List<FbPerfilXUsuario>  pxuList = new ArrayList<>();
-    
+    @Getter
+    @Setter
+    List<FbUsuario> usuarioPrueba;
+    @Getter
+    @Setter
+    List<FbPerfilXUsuario> pxuList = new ArrayList<>();
+
     String idCiaSearch;
-    
+
     private boolean skip;
     private String profile;
     private String per;
     private List<String> profilesL;
-    
+
     //Atributos tabla
     private String email;
     private String clave;
@@ -64,11 +70,22 @@ public class UserController implements Serializable{
     private String tel;
     private String gender;
     private String rclave;
-    private @Setter @Getter String day; 
-    private @Setter @Getter String month;
-    private @Setter @Getter String year; 
-    private @Setter @Getter List<Integer> years = new ArrayList<Integer>();
-    
+    private @Setter
+    @Getter
+    String day;
+    private @Setter
+    @Getter
+    String month;
+    private @Setter
+    @Getter
+    String year;
+    private @Setter
+    @Getter
+    boolean editPass;
+    private @Setter
+    @Getter
+    List<Integer> years = new ArrayList<Integer>();
+
     /**
      * Creates a new instance of UserController
      */
@@ -108,41 +125,38 @@ public class UserController implements Serializable{
         this.gender = gender;
     }
 
-    public void getUserxCia(){
+    public void getUserxCia() {
         usuarioL = new ArrayList<>();
         usuarioL = fbUsuarioFacade.getUserbyCia(idCiaSearch);
-            
+
     }
+
     //metodo creado para step-menu
-     public String onFlowProcess(FlowEvent event) {
-        if(skip) {
+    public String onFlowProcess(FlowEvent event) {
+        if (skip) {
             skip = false;   //reset in case user goes back
             return "confirm";
-        }
-        else {
+        } else {
             return event.getNewStep();
         }
-     }
-     
-     
-     public boolean addUsrVal(){
+    }
+
+    public boolean addUsrVal() {
         boolean flag = false;
-        
-        if(!(validationBean.validarCampoVacio(this.email, "error", "valErr", "reqEmail")
-            && validationBean.validarEmail(this.email, "error", "valErr", "reqEmail")
-                && validationBean.validarLongitudCampo(this.email, 8, 80, "error", "valErr", "reqEmail"))){
-                }
-        
-        if(!(validationBean.validarCampoVacio(this.lastName, "error", "valErr", "reqLastName")
-                && validationBean.validarSoloLetras(this.lastName, "error", "valErr", "reqLastName")
-                && validationBean.validarLongitudCampo(this.lastName, 4, 50, "error", "valErr", "reqLastName"))){   
+
+        if (!(validationBean.validarCampoVacio(this.email, "error", "valErr", "reqEmail")
+                && validationBean.validarEmail(this.email, "error", "valErr", "reqEmail")
+                && validationBean.validarLongitudCampo(this.email, 8, 80, "error", "valErr", "reqEmail"))) {
         }
-         return false;
-   
-     }
-     
-   
-    
+
+        if (!(validationBean.validarCampoVacio(this.lastName, "error", "valErr", "reqLastName")
+                && validationBean.validarSoloLetras(this.lastName, "error", "valErr", "reqLastName")
+                && validationBean.validarLongitudCampo(this.lastName, 4, 50, "error", "valErr", "reqLastName"))) {
+        }
+        return false;
+
+    }
+
     public FbUsuario getUsuario() {
         return usuario;
     }
@@ -222,49 +236,58 @@ public class UserController implements Serializable{
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    
 
-    
-    
-    public void setValues(){
+    @PostConstruct
+    public void setValues() {
         this.usuario = this.userData.getLoggedUser();
         this.email = this.usuario.getEmail();
-        this.clave = this.usuario.getClave();
-        this.rclave = this.usuario.getClave();
+        editPass = false;
+        //this.clave = this.usuario.getClave();
+        //this.rclave = this.usuario.getClave();
         this.gender = this.usuario.getGenero();
         this.bday = this.usuario.getBDay();
         this.firstName = this.usuario.getFirstname();
         this.lastName = this.usuario.getLastname();
         this.tel = this.usuario.getTelefono();
-        
-        
+
         int cYear = Calendar.getInstance().get(Calendar.YEAR);
-        
+
         for (int i = 80; i > 17; i--) {
             years.add(cYear - i);
         }
-        
+
         try {
             if (!this.usuario.getBDay().isEmpty()) {
                 String[] split = this.usuario.getBDay().split("/");
                 this.day = split[0];
                 this.month = split[1];
                 this.year = split[2];
-        }
+            }
         } catch (Exception e) {
         }
-        
+
     }
-    
+
     /*@PostConstruct
     public void init() {
     
     setValues();
     }*/
-    
-    
-    
-    public void editOwnUser(){
+    public void editOwnUser() {
+        /*Recomendaciones, JAMAS USAR JSF OTRA VEZ */
+        HttpServletRequest req = (HttpServletRequest) validationBean.getRequestContext();
+        if (req.getParameter("password") != null) {
+            this.clave = req.getParameter("password");
+        } else {
+            this.clave = "";
+        }
+
+        if (req.getParameter("rpassword") != null) {
+            this.rclave = req.getParameter("rpassword");
+        } else {
+            this.rclave = "";
+        }
+        /*Recomendaciones, JAMAS USAR JSF OTRA VEZ */
         if (valEditOwnUser()) {
             usuario.setEmail(email);
             usuario.setFirstname(firstName);
@@ -272,33 +295,36 @@ public class UserController implements Serializable{
             usuario.setTelefono(tel);
             usuario.setGenero(gender);
             usuario.setBDay(bday);
-            usuario.setClave(clave);
+            if (this.editPass) {
+                Encryptar encryptar = new Encryptar();
+                usuario.setClave(encryptar.hashPassword(clave));
+            }
             String res = fbUsuarioFacade.actUser(new FbCompania(BigDecimal.ZERO), usuario, "U");
-            
+
             if (res.equals("0")) {
                 validationBean.lanzarMensaje("info", "modUserSuccess", "blank");
                 System.out.println("Exito!");
-            }else if(res.equals("-1")){
+            } else if (res.equals("-1")) {
                 validationBean.lanzarMensaje("warn", "modUserFailRepeat", "blank");
-             System.out.println("Repetido!");
-            }else if(res.equals("-2")){
+                System.out.println("Repetido!");
+            } else if (res.equals("-2")) {
                 validationBean.lanzarMensaje("error", "unexpectedError", "blank");
-            System.out.println("Error!");
+                System.out.println("Error!");
             }
         }
     }
-    
-    public boolean valEditOwnUser(){
-    int c = 0;
-    boolean flag = false;
-    
-    if (!(validationBean.validarCampoVacio(this.email, "error", "valErr", "reqEmail")
+
+    public boolean valEditOwnUser() {
+        int c = 0;
+        boolean flag = false;
+
+        if (!(validationBean.validarCampoVacio(this.email, "error", "valErr", "reqEmail")
                 && validationBean.validarEmail(this.email, "error", "valErr", "reqEmail")
                 && validationBean.validarLongitudCampo(this.email, 8, 80, "error", "valErr", "reqEmail"))) {
             c++;
         }
-    
-     if (!(validationBean.validarCampoVacio(this.firstName, "error", "valErr", "reqFname")
+
+        if (!(validationBean.validarCampoVacio(this.firstName, "error", "valErr", "reqFname")
                 && validationBean.validarSoloLetras(this.firstName, "error", "valErr", "reqFname")
                 && validationBean.validarLongitudCampo(this.firstName, 4, 50, "error", "valErr", "reqFname"))) {
             c++;
@@ -309,48 +335,47 @@ public class UserController implements Serializable{
                 && validationBean.validarLongitudCampo(this.lastName, 4, 50, "error", "valErr", "reqLname"))) {
             c++;
         }
-        
-         if (!(validationBean.validarCampoVacio(this.clave, "error", "valErr", "reqPass")
-                && validationBean.validarLongitudCampo(this.clave, 5, 10, "error", "valErr", "reqPass"))) {
-            c++;
-        } else if (!this.clave.equals(this.rclave)) {
-            c++;
-            validationBean.lanzarMensaje("warn", "valErr", "reqRPass");
+
+        if (this.editPass) {
+            if (!(validationBean.validarCampoVacio(this.clave, "error", "valErr", "reqPass")
+                    && validationBean.validarLongitudCampo(this.clave, 5, 10, "error", "valErr", "reqPass"))) {
+                c++;
+            } else if (!this.clave.equals(this.rclave)) {
+                c++;
+                validationBean.lanzarMensaje("warn", "valErr", "reqRPass");
+            }
         }
-         
-         if (!(this.day.isEmpty() && this.month.isEmpty())) {
-            this.bday = this.day + "/"+this.month+"/"+this.year; // aqui poner que si mes o dia es d elongitud 1 entonces concatenarle un cero antes
-             if (!validationBean.validarFecha(this.bday, "error", "valErr", "reqDate")) {
-                 c++;
-             }
+
+        if (!(this.day.isEmpty() && this.month.isEmpty())) {
+            this.bday = this.day + "/" + this.month + "/" + this.year; // aqui poner que si mes o dia es d elongitud 1 entonces concatenarle un cero antes
+            if (!validationBean.validarFecha(this.bday, "error", "valErr", "reqDate")) {
+                c++;
+            }
         }
-         
-    
-    if (c == 0) {
+
+        if (c == 0) {
             flag = true;
         }
-    return flag;
+        return flag;
     }
-    
-    
-    public void initCrud(){
+
+    public void initCrud() {
         this.pxuList = this.pxuFacade.getUserbyCia(this.userData.getCurrentCia().getIdCia().toString());
-    //usuarioL = this.fbUsuarioFacade.getUserbyCia(this.userData.getCurrentCia().getIdCia().toString());
-    // usuarioL = this.fbUsuarioFacade.getUserbyCia("1");
+        //usuarioL = this.fbUsuarioFacade.getUserbyCia(this.userData.getCurrentCia().getIdCia().toString());
+        // usuarioL = this.fbUsuarioFacade.getUserbyCia("1");
     }
- 
-     public void getList(){
-         usuarioPrueba = new ArrayList<>();
-         int i;
-         for (i = 0; i < 2; i++) {
-             FbUsuario user = new FbUsuario();
-             user.setFirstname("Guadalupe");
-             user.setTelefono("77455622");
-             user.setEmail("lupix.90@gmail.com");
-             usuarioPrueba.add(user);
-            
+
+    public void getList() {
+        usuarioPrueba = new ArrayList<>();
+        int i;
+        for (i = 0; i < 2; i++) {
+            FbUsuario user = new FbUsuario();
+            user.setFirstname("Guadalupe");
+            user.setTelefono("77455622");
+            user.setEmail("lupix.90@gmail.com");
+            usuarioPrueba.add(user);
+
         }
-    
-    
-     }  
+
+    }
 }

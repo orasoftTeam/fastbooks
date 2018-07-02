@@ -15,6 +15,7 @@ import com.fastbooks.modelo.FbPerfilXUsuario;
 import com.fastbooks.modelo.FbPerfiles;
 import com.fastbooks.modelo.FbUsuario;
 import com.fastbooks.modelo.FbUsuarioXCia;
+import com.fastbooks.util.Encryptar;
 import com.fastbooks.util.GlobalParameters;
 import com.fastbooks.util.ValidationBean;
 import java.io.IOException;
@@ -252,6 +253,12 @@ public class UserData implements Serializable {
             user = userFacade.login(email, pass);
             System.out.println(user.toString());
             if (!String.valueOf(user.getIdUsuario()).equals("0")) {
+                
+                Encryptar encryptar = new Encryptar();
+               // boolean correcto = encryptar.checkPassword(pass, user.getClave());
+               
+                    //System.out.println("Password match: "+ correcto);
+                
                 loggedUser = user;
                 this.email = "";
                 this.pass = "";

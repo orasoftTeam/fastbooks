@@ -145,16 +145,22 @@ public class InvoiceController implements Serializable {
             }
 
             cList = cFacade.getCustomersByIdCia(this.userData.getCurrentCia().getIdCia().toString());
-            if (!this.userData.getUses().equals("0")) {
-                this.validationBean.lanzarMensaje("info", this.userData.getUses(), "blank");
-                this.validationBean.updateComponent("tblInvoiceForm:messages");
-            }
 
             System.out.println("com.fastbooks.managedbeans.InvoiceController.init()");
             this.showInvoice();
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.init()");
             e.printStackTrace();
+        }
+    }
+
+    public void showAlert() {
+        String uses = this.userData.getUses();
+        if (!uses.equals("0")) {
+            this.validationBean.lanzarMensaje("info", this.userData.getUses(), "blank");
+            this.userData.setUses("0");
+            this.validationBean.updateComponent("tblInvoiceForm:messages");
+
         }
     }
 
@@ -237,7 +243,7 @@ public class InvoiceController implements Serializable {
         try {
             String jasperFile = i.getIdCust() == null ? "salesReceiptSinCust_1" : "invoice_1";
 
-            this.invoiceModal = this.iFacade.generateInvoice(i, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile(jasperFile, req), formatType(i.getType()),this.userData.formatMaster(i.getActualBalance().toString()));
+            this.invoiceModal = this.iFacade.generateInvoice(i, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile(jasperFile, req), formatType(i.getType()), this.userData.formatMaster(i.getActualBalance().toString()));
 
             //this.userData.setSInvoice(invoiceModal);
             //this.validationBean.lanzarMensajeSinBundle("error", this.invoiceModal, "");
@@ -281,7 +287,7 @@ public class InvoiceController implements Serializable {
     }
 
     public void copy(FbInvoice in) {
-        
+
         in.setNoDot("copy");
         this.userData.setFbInvoice(in);
         this.userData.setInvoiceTypeForm(in.getType());
@@ -333,10 +339,9 @@ public class InvoiceController implements Serializable {
                     if (status.equals("OV") || status.equals("OP") || status.equals("PA")) {
                         flag = true;
                     }
-                    
-                    
+
                 }
-                break;                
+                break;
 
             default:
                 System.out.println("You do nutin");
@@ -346,8 +351,6 @@ public class InvoiceController implements Serializable {
 
         return flag;
     }
-
-
 
     public void applyFilter() {
 
@@ -389,7 +392,7 @@ public class InvoiceController implements Serializable {
         if (!this.fIdCust.equals("0")) {
             query += " AND ID_CUST =  " + this.fIdCust;
         }
-           query += " and status != 'DEL'";
+        query += " and status != 'DEL'";
         this.userData.setInvoiceSql(query);
         System.out.println("com.fastbooks.managedbeans.InvoiceController.applyFilter()");
 
@@ -581,7 +584,7 @@ public class InvoiceController implements Serializable {
     }
 
     public void recievePayment(String idCust, String idInvoice) {
-        this.validationBean.redirecionar("/view/sales/payments/paymentForm.xhtml?idc="+idCust+"&idi="+idInvoice);
+        this.validationBean.redirecionar("/view/sales/payments/paymentForm.xhtml?idc=" + idCust + "&idi=" + idInvoice);
     }
 
 }
