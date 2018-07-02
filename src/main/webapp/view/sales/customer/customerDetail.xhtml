@@ -17,29 +17,63 @@
                             <h3> #{customerDetailController.currentCust.displayName}</h3>
                             <p  style="color: grey;" >#{customerDetailController.currentCust.company} | #{customerDetailController.currentCust.city}, #{customerDetailController.currentCust.country}</p>
                         </bnu:column>
-                        <bnu:column span="4" />
-                        <bnu:column span="4" >
-                            <bnu:button value="Edit" />
+                        <bnu:column span="5" />
+                        <bnu:column span="3" >
+                            <h3> <bnu:button value="Edit" onclick="$('.modalPseudoClass2').modal();" />
 
-                            <bnu:dropButton value="#{messages.lblNewTrans}"  look="success" style="margin-top:20px;" >
-                                <bnu:commandButton value="#{messages.lblInvoiceTypeIn}"  action="#{customerDetailController.setType('IN' )}" style="width: 100%; border: none" />
-                                <bnu:commandButton value="#{messages.lblPayment}"   style="width: 100%; border: none" action="#{customerDetailController.pagar()}" />
-                                <bnu:commandButton value="#{messages.lblEstimate}"  action="#{customerDetailController.setType('ES')}" style="width: 100%; border: none" />
-                                <bnu:commandButton value="#{messages.salesR}"  action="#{customerDetailController.setType('SR')}" style="width: 100%; border: none" />
+                                <bnu:dropButton value="#{messages.lblNewTrans}" style="margin-left: 1em;" look="success"  >
+                                    <bnu:commandButton value="#{messages.lblInvoiceTypeIn}"  action="#{customerDetailController.setType('IN' )}" style="width: 100%; border: none" />
+                                    <bnu:commandButton value="#{messages.lblPayment}"   style="width: 100%; border: none" action="#{customerDetailController.pagar()}" />
+                                    <bnu:commandButton value="#{messages.lblEstimate}"  action="#{customerDetailController.setType('ES')}" style="width: 100%; border: none" />
+                                    <bnu:commandButton value="#{messages.salesR}"  action="#{customerDetailController.setType('SR')}" style="width: 100%; border: none" />
 
-                            </bnu:dropButton> 
+                                </bnu:dropButton> </h3>
 
                         </bnu:column>
                     </bnu:row>
                     <bnu:row>
-                        <bnu:column span="8" />
-                        <bnu:column span="4" >
-                            <h4>#{userData.formatMaster(customerDetailController.DOpenBalance)}</h4>
-                            <p style="color: grey;" >OPEN</p>
+                        <bnu:column span="10" />
+                        <bnu:column span="2" >
+                            <table>
+                                <tr>
+                                    <td style="background-color: yellow;width: 0.50em" rowspan="2" >
+
+                                    </td>
+                                    <td style="padding-left:  0.50em" >
+                                        <h4>#{userData.formatMaster(customerDetailController.DOpenBalance)}</h4> 
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td style="padding-left: 0.50em" >
+                                        <p style="color: grey;" >OPEN</p>
+                                    </td>
+                                </tr>
+
+                            </table>
+                            <br/>
+                            <table>
+                                <tr>
+                                    <td style="background-color: red;width: 0.50em" rowspan="2"  >
+
+                                    </td>
+                                    <td style="padding-left: 0.50em" >
+                                        <h4>#{userData.formatMaster(customerDetailController.DOverDue)}</h4>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td style="padding-left: 0.50em" >
+                                        <p style="color: grey;" >OVERDUE</p>
+                                    </td>
+
+                                </tr>
+                            </table>
 
 
-                            <h4>#{userData.formatMaster(customerDetailController.DOverDue)}</h4>
-                            <p style="color: grey;" >OVERDUE</p>
+
+
+
                         </bnu:column>
 
 
@@ -51,7 +85,7 @@
                     </bnu:row>
 
                     <bnu:tabView active-index="0" > 
-                        <bnu:tab title="Transaction List">
+                        <bnu:tab title="#{messages.lblTransactionList}">
 
 
 
@@ -59,7 +93,7 @@
                                 value="#{customerDetailController.transactionList}"
                                 id="tblInvoice"
                                 var="in"
-
+                                responsive="true"
 
 
                                 >
@@ -115,23 +149,97 @@
 
 
                         </bnu:tab>
-                        <bnu:tab title="Customer Details">
+                        <bnu:tab title="#{messages.lblCustomerDetails}">
 
 
 
                             <!-- cust data -->
                             <br/>
                             <br/>
-                            <bnu:row>
-                                <bnu:column span="1">
-                                    <strong><h:outputText value="Customer" /></strong>
-                                </bnu:column>
-                                <bnu:column span="1" >
-                                    <h:outputText value="#{customerDetailController.currentCust.displayName}" />
-                                </bnu:column>
-                                <p:separator/>
-                            </bnu:row>    
+                            <bnu:column col-lg="6" col-md="6" col-sm="12" col-xs="12" >
+                                <table class="table table-hover">
 
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>#{messages.lblCustomerFU}</strong></td>
+                                            <td>#{customerDetailController.currentCust.displayName}</td>
+
+                                        </tr>
+                                        <tr>
+                                            <td><strong>#{messages.lblEmailCustomerFU}</strong></td>
+                                            <td>#{customerDetailController.currentCust.email}</td>
+
+                                        </tr>
+                                        <tr>
+                                            <td><strong>#{messages.phoneC}</strong></td>
+                                            <td>#{customerDetailController.currentCust.phone}</td>
+
+                                        </tr>
+                                        <tr>
+                                            <td><strong>#{messages.mobileC}</strong></td>
+                                            <td>#{customerDetailController.currentCust.mobile}</td>
+
+                                        </tr>
+                                        <tr>
+                                            <td><strong>#{messages.faxC}</strong></td>
+                                            <td>#{customerDetailController.currentCust.fax}</td>
+
+                                        </tr>
+                                        <tr>
+                                            <td><strong>#{messages.websiteC}</strong></td>
+                                            <td>#{customerDetailController.currentCust.webside}</td>
+
+                                        </tr>
+                                        <tr>
+                                            <td><strong>#{messages.lblCustNotes}</strong></td>
+                                            <td><input type="text" placeholder="#{messages.lblAddNotes}" disabled="disabled" value="#{customerDetailController.currentCust.note}" /></td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </bnu:column>
+                            <bnu:column col-lg="6" col-md="6" col-sm="12" col-xs="12" >
+                                <table class="table table-hover">
+
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>#{messages.billingA}</strong></td>
+                                            <td>#{customerDetailController.currentCust.city},#{customerDetailController.currentCust.country}</td>
+
+                                        </tr>
+                                        <tr>
+                                            <td><strong>#{messages.shippingA}</strong></td>
+                                            <td>#{customerDetailController.currentCust.cityS},#{customerDetailController.currentCust.countryS}</td>
+
+
+                                        </tr>
+                                        <tr>
+                                            <td><strong>#{messages.lblInvoiceTerms}</strong></td>
+                                            <td>#{customerDetailController.currentCust.terms}</td>
+
+
+                                        </tr>
+                                        <tr>
+                                            <td><strong>#{messages.lblPaymentMethod}</strong></td>
+                                            <td>#{customerDetailController.currentCust.paymentMethod}</td>
+
+
+                                        </tr>
+                                        <tr>
+                                            <td><strong>#{messages.lblPrefDelivery}</strong></td>
+                                            <td>#{customerDetailController.currentCust.deliveryMethod}</td>
+
+
+                                        </tr>
+                                        <tr>
+                                            <td><strong>#{messages.lblTaxRegNo}</strong></td>
+                                            <td>#{customerDetailController.currentCust.taxregno}</td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </bnu:column>
 
 
 
@@ -179,6 +287,200 @@
                     </h:form>
 
                 </bnu:modal>
+                
+                
+                
+                
+                  <h:form id="myFormID" >
+                  <bnu:modal id="amodal2" styleClass="modalPseudoClass2" size="modal-lg" title="Customer information" >
+                      <bnu:row>
+                          <bnu:column span="1" >
+                              <bnu:inputText label="Title" field-size="xs"   />
+                          </bnu:column>
+                          <bnu:column span="2" >
+                              <bnu:inputText label="First name" field-size="xs"  />
+                          </bnu:column>
+                          <bnu:column span="2" >
+                              <bnu:inputText label="Middle name" field-size="xs" />
+                          </bnu:column>
+                          <bnu:column span="2" >
+                              <bnu:inputText label="Last name" field-size="xs" />
+                          </bnu:column>
+                          <bnu:column span="1" >
+                              <bnu:inputText label="Suffix" field-size="xs" />
+                          </bnu:column>
+                          <bnu:column span="4" >
+                              <bnu:inputText label="Email" field-size="xs" />
+                              
+                          </bnu:column>
+                      </bnu:row>
+                      
+                      <bnu:row>
+                       
+                          <bnu:column span="6" >
+                              <bnu:inputText label="Company" field-size="xs" />
+                          </bnu:column>
+                          <bnu:column span="2" >
+                              <bnu:inputText label="Phone" field-size="xs" />
+                          </bnu:column>
+                          <bnu:column span="2" >
+                              <bnu:inputText label="Mobile" field-size="xs" />
+                          </bnu:column>
+                          <bnu:column span="2" >
+                              <bnu:inputText label="Fax" field-size="xs" />
+                              
+                          </bnu:column>
+                      </bnu:row>
+                      
+                      <bnu:row>
+                       
+                         
+                          <bnu:column span="6" >
+                              <label>Display name as</label>
+                              <input type="text" class="form-control" id="displayName" value="#{customerDetailController.currentCust.displayName}"  field-size="xs" />
+                          </bnu:column>
+                          <bnu:column span="2" >
+                              <bnu:inputText label="Other" field-size="xs" />
+                          </bnu:column>
+                          <bnu:column span="4" >
+                              <bnu:inputText label="Website" field-size="xs" />
+                              
+                          </bnu:column>
+                      </bnu:row>
+                      
+                      
+                      <bnu:tabView  activeIndex="0" >
+                          <bnu:tab title="Address" >
+                              <bnu:row>
+                                  <bnu:column span="6">
+                                      <label>Billing address</label>
+                                      <textarea  placeholder="Street" class="form-control" />
+                                  </bnu:column>
+                                  
+                                  <bnu:column span="6">
+                                      <label>Shipping address</label> <input type="checkbox" checked='true' onclick="enableShipAdress()" />Same as billing address
+                                      <textarea placeholder="Street" class="form-control shippingEnable" disabled='true'  />
+                                  </bnu:column>
+                              </bnu:row>
+                              <bnu:row>
+                                  <bnu:column span="3">
+                                      <bnu:inputText placeholder="City/Town" />
+                                  </bnu:column>
+                                  
+                                  <bnu:column span="3">
+                                      <bnu:inputText placeholder="State/Province"  />
+                                  </bnu:column>
+                                 <bnu:column span="3">
+                                     <bnu:inputText placeholder="City/Town" disabled='true' class="shippingEnable" />
+                                  </bnu:column>
+                                  
+                                  <bnu:column span="3">
+                                      <bnu:inputText placeholder="State/Province" disabled='true' class="shippingEnable" />
+                                  </bnu:column>
+                              </bnu:row>
+                              <bnu:row>
+                                  <bnu:column span="3">
+                                      <bnu:inputText placeholder="Postal code"  />
+                                  </bnu:column>
+                                  
+                                  <bnu:column span="3">
+                                      <bnu:inputText placeholder="Country"/>
+                                  </bnu:column>
+                                  <bnu:column span="3">
+                                      <bnu:inputText placeholder="Postal code" disabled='true' class="shippingEnable" />
+                                  </bnu:column>
+                                  
+                                  <bnu:column span="3">
+                                      <bnu:inputText placeholder="Country" disabled='true' class="shippingEnable" />
+                                  </bnu:column>
+                              </bnu:row>
+                          </bnu:tab>
+                          <bnu:tab title="Notes" >
+                              <bnu:row>
+                                  <bnu:column span="12">
+                                      <bnu:inputTextarea label="Notes"  />
+                                  </bnu:column>
+                              </bnu:row>
+                          </bnu:tab>
+                          <bnu:tab title="Tax info" >
+                              <bnu:row>
+                                  <bnu:column span="4">
+                                      <bnu:inputText label="Tax Reg. No." />
+                                  </bnu:column>
+                              </bnu:row>
+                          </bnu:tab>
+                          <bnu:tab title="Payment and billing" >
+                               <bnu:row>
+                                  <bnu:column span="4">
+                                      <bnu:selectOneMenu label="Preferred payment method">
+                                          <f:selectItem  itemLabel="#{messages.selectOne}" itemValue=" "  />
+                                          
+                                      </bnu:selectOneMenu>
+                                  </bnu:column>
+                                   <bnu:column span="4"></bnu:column>
+                                   <bnu:column span="4">
+                                       <bnu:selectOneMenu label="#{messages.lblInvoiceTerms}" value="#{invoiceController.termDays}"   >
+                                <f:selectItem  itemLabel="#{messages.selectOne}" itemValue=" "  />
+                            </bnu:selectOneMenu>
+                                   </bnu:column>
+                              </bnu:row>
+                              <bnu:row>
+                                  <bnu:column span="4">
+                                      <bnu:selectOneMenu label="Preferred delivery method">
+                                          <f:selectItem  itemLabel="None" itemValue="None"  />
+                                          <f:selectItem  itemLabel="Send later" itemValue="Send later"  />
+                                          <f:selectItem  itemLabel="Print later" itemValue="Print later"  />
+                                      </bnu:selectOneMenu>
+                                  </bnu:column>
+                                  <bnu:column span="2"></bnu:column>
+                                  <bnu:column span="2">
+                                      <bnu:inputText  label="Opening balance" />
+                                  </bnu:column>
+                                  <bnu:column span="4"> <label>As of</label><bnu:datepicker /></bnu:column>
+                              </bnu:row>
+                          </bnu:tab>
+                          <bnu:tab title="Attachments" >
+                              <bnu:row>
+                                  <bnu:column  span="4">
+                                      <p:fileUpload />
+                                  </bnu:column>
+                                  <bnu:column  span="4">
+                                      Maximum size:25MB
+                                  </bnu:column>
+                              </bnu:row>
+                          </bnu:tab>
+                          
+                          
+                      </bnu:tabView>
+                      
+                      
+    <f:facet name="footer">
+      <bnu:button value="Close" dismiss="modal" />
+      <bnu:button value="Ok" look="primary" dismiss="modal" />
+    </f:facet>
+  </bnu:modal>
+</h:form>
+
+                
+                
+                
+                <h:outputScript>
+                    var shippingDir = 1;
+                    function enableShipAdress(){
+                     if(shippingDir == 1){
+                     $(".shippingEnable").removeAttr('disabled');
+                     
+                     shippingDir = 2;
+                     }else{
+                     $(".shippingEnable").attr('disabled',true);
+                     $(".shippingEnable").val("");
+                     shippingDir = 1;
+                     }
+                    }
+                    
+                    
+                </h:outputScript>
+                
 
 
             </ui:define>

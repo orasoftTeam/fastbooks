@@ -84,7 +84,7 @@ public class FbUsuario implements Serializable {
     private String bDay;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 10)
+    @Size(min = 1, max = 100)
     @Column(name = "CLAVE")
     private String clave;
     @Column(name = "FECHA_CREACION")

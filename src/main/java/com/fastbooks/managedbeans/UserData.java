@@ -15,6 +15,7 @@ import com.fastbooks.modelo.FbPerfilXUsuario;
 import com.fastbooks.modelo.FbPerfiles;
 import com.fastbooks.modelo.FbUsuario;
 import com.fastbooks.modelo.FbUsuarioXCia;
+import com.fastbooks.util.Encryptar;
 import com.fastbooks.util.GlobalParameters;
 import com.fastbooks.util.ValidationBean;
 import java.io.IOException;
@@ -249,29 +250,40 @@ public class UserData implements Serializable {
             /*HttpServletRequest req = (HttpServletRequest) validationBean.getRequestContext();
             this.email = req.getParameter("userid");
             this.pass = req.getParameter("password");*/
-            user = userFacade.login(email, pass);
+            user = userFacade.login(email);
             System.out.println(user.toString());
             if (!String.valueOf(user.getIdUsuario()).equals("0")) {
-                loggedUser = user;
-                this.email = "";
-                this.pass = "";
 
-                if (loggedUser.getFbUsuarioXCiaList().size() == 1) {
-                    //redirect to dashboard and set id_cia and profile
-                    currentCia = loggedUser.getFbUsuarioXCiaList().get(0).getFbCompania();
-                    perfil = loggedUser.getFbPerfilXUsuarioList().get(0).getFbPerfiles();
+                Encryptar encryptar = new Encryptar();
+                boolean correcto = encryptar.checkPassword(pass, user.getClave());
 
-                    if (currentCia.getFbCompaniaPref() != null) {
-                        country = new Locale(currentCia.getFbCompaniaPref().getLang(), currentCia.getFbCompaniaPref().getCountry());
+                //System.out.println("Password match: "+ correcto);
+                if (correcto) {
+                    loggedUser = user;
+                    this.email = "";
+                    this.pass = "";
+
+                    if (loggedUser.getFbUsuarioXCiaList().size() == 1) {
+                        //redirect to dashboard and set id_cia and profile
+                        currentCia = loggedUser.getFbUsuarioXCiaList().get(0).getFbCompania();
+                        perfil = loggedUser.getFbPerfilXUsuarioList().get(0).getFbPerfiles();
+
+                        if (currentCia.getFbCompaniaPref() != null) {
+                            country = new Locale(currentCia.getFbCompaniaPref().getLang(), currentCia.getFbCompaniaPref().getCountry());
+                        } else {
+                            country = new Locale("en", "us");
+                        }
+
+                        validationBean.redirecionar("/view/dashboard.xhtml");
                     } else {
-                        country = new Locale("en", "us");
+                        //redirect to chooseCompany and set id_cia and profile with the selected
+                        System.out.println("show com list");
+                        validationBean.redirecionar("/view/chooseCompany.xhtml?faces-redirect=true");
                     }
-
-                    validationBean.redirecionar("/view/dashboard.xhtml");
-                } else {
-                    //redirect to chooseCompany and set id_cia and profile with the selected
-                    System.out.println("show com list");
-                    validationBean.redirecionar("/view/chooseCompany.xhtml?faces-redirect=true");
+                }else{
+                System.out.println("Fallo de login");
+                validationBean.lanzarMensaje("error", "loginfail", "loginfaildesc");
+                
                 }
 
             } else {
@@ -279,6 +291,7 @@ public class UserData implements Serializable {
                 validationBean.lanzarMensaje("error", "loginfail", "loginfaildesc");
             }
         } catch (Exception e) {
+            validationBean.lanzarMensaje("error", "loginfail", "loginfaildesc");
             System.out.println("com.fastbooks.managedbeans.UserData.login()");
             e.printStackTrace();
         }
@@ -472,8 +485,8 @@ public class UserData implements Serializable {
 
         return res;
     }
-    
-       public boolean showOptions(String status, String type, String option) {
+
+    public boolean showOptions(String status, String type, String option) {
         boolean flag = false;
 
         switch (option) {
@@ -503,10 +516,9 @@ public class UserData implements Serializable {
                     if (status.equals("OV") || status.equals("OP") || status.equals("PA")) {
                         flag = true;
                     }
-                    
-                    
+
                 }
-                break;                
+                break;
 
             default:
                 System.out.println("You do nutin");
