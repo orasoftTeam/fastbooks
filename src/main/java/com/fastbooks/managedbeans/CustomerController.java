@@ -46,7 +46,7 @@ public class CustomerController implements Serializable {
     ValidationBean validationBean;
     @EJB
     FbCustomerFacade custF;
-    private FbCustomer customer; //declarar modelo
+    private FbCustomer customer = new FbCustomer(); //declarar modelo
     private boolean sameSHA = true;
     @Inject
     UserData userData;
@@ -210,52 +210,7 @@ public class CustomerController implements Serializable {
 
     }
 
-    public void editCustomer(FbCustomer cu, String op) {
-        System.out.println("updating customer" + cu);
-        this.cust = cu;
-        if (op.equals("U")) {
-            this.validationBean.ejecutarJavascript("PF('dlg3').show();");
-            //this.validationBean.ejecutarJavascript("$('.modalPseudoClass2').modal();");
-        } else {
-            this.validationBean.ejecutarJavascript("$('.modalPseudoClass3').modal();");
-        }
 
-    }
-
-    //Updating customer
-    public void edit() {
-        String res = "";
-        System.out.println("getting cust" + cust);
-        try {
-            /*cust.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
-                cust.setIdCust(new BigDecimal("0"));
-             */
-
-            if (sameSHA) {
-                cust.setStreetS(cust.getStreet());
-                cust.setCityS(cust.getCity());
-                cust.setEstateS(cust.getEstate());
-                cust.setPostalCodeS(cust.getPostalCode());
-                cust.setCountryS(cust.getCountry());
-            }
-            res = custF.actCustomer(cust, "U");
-            System.out.println("resultado update customer" + res);
-            if (res.equals("0")) {
-                validationBean.lanzarMensaje("info", "customerUpdate", "blank");
-            } else if (res.equals("-1")) {
-                validationBean.lanzarMensaje("error", "customerRepeatFail", "blank");
-            } else if (res.equals("-2")) {
-                validationBean.lanzarMensaje("error", "unexpectedError", "blank");
-            }
-            cust = new FbCustomer(); //limpiando formulario
-
-        } catch (Exception e) {
-            System.out.println("com.fastbooks.managedbeans.CustomerController.edit()");
-            e.printStackTrace();
-            res = "-2";
-        }
-
-    }
 
     //Deleting customer
     public void deleteCustomer() {
@@ -544,7 +499,11 @@ public class CustomerController implements Serializable {
                     flag = true;
                 }
                 break;
-        
+            case "INAC":
+                if (cust.getBalance().doubleValue() == 0) {
+                    flag = true;
+                }
+                break;
         }
         
         return flag;
@@ -565,6 +524,9 @@ public class CustomerController implements Serializable {
         public void onSelect(String idCust){
             System.out.println("idCust: " +idCust);
         }
+        
+        
+      
 
 
 
