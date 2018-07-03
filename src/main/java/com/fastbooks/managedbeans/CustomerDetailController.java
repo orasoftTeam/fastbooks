@@ -9,6 +9,8 @@ import com.fastbooks.facade.FbCustomerFacade;
 import com.fastbooks.facade.FbInvoiceFacade;
 import com.fastbooks.modelo.FbCustomer;
 import com.fastbooks.modelo.FbInvoice;
+import com.fastbooks.modelo.PaymentMethod;
+import com.fastbooks.modelo.Terms;
 import com.fastbooks.util.ValidationBean;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -60,7 +62,9 @@ public class CustomerDetailController implements Serializable {
     private @Getter
     @Setter
     Double overDue = 0.00;
-
+    private @Getter
+    @Setter
+    List<Terms> tList = new ArrayList<>();
     private @Getter
     @Setter
     String dOpenBalance = "0.00";
@@ -80,6 +84,10 @@ public class CustomerDetailController implements Serializable {
     @Setter
     FbInvoice currentIn = new FbInvoice();
 
+    private @Getter
+    @Setter
+    List<PaymentMethod> pMethodList = new ArrayList<>();
+
     /*Estimate stuff*/
     private @Getter
     @Setter
@@ -97,6 +105,10 @@ public class CustomerDetailController implements Serializable {
     private DateFormat sd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
 
     /*End estimate stuff*/
+    public @Getter
+    @Setter
+    boolean sameShipping = false;
+
     public CustomerDetailController() {
     }
 
@@ -107,6 +119,22 @@ public class CustomerDetailController implements Serializable {
         if (!this.userData.getUses().equals("0")) {
             this.vb.lanzarMensaje("info", this.userData.getUses(), "blank");
             this.vb.updateComponent("CustomerDetailForm:messages");
+            this.userData.setUses("0");
+        }
+
+        if (this.pMethodList.isEmpty()) {
+            this.pMethodList.add(new PaymentMethod("1", "", this.vb.getMsgBundle("lblCash")));
+            this.pMethodList.add(new PaymentMethod("2", "", this.vb.getMsgBundle("lblCreditCard")));
+            this.pMethodList.add(new PaymentMethod("3", "", this.vb.getMsgBundle("lblDirectDebit")));
+            this.pMethodList.add(new PaymentMethod("4", "", this.vb.getMsgBundle("lblCheque")));
+        }
+
+        if (this.tList.isEmpty()) {
+            this.tList.add(new Terms("1", "30", "Credits at 30 days"));
+            this.tList.add(new Terms("2", "0", "Due on receipt"));
+            this.tList.add(new Terms("3", "15", "Net 15"));
+            this.tList.add(new Terms("4", "30", "Net 30"));
+            this.tList.add(new Terms("5", "60", "Net 60"));
         }
         this.setCustomer();
     }
@@ -121,6 +149,15 @@ public class CustomerDetailController implements Serializable {
                 if (userData != null && userData.getCurrentCia() != null) {
                     this.idCia = userData.getCurrentCia().getIdCia().toString();
                     transactionList = iFacade.getInvoicesByIdCust(idCust, idCia);
+                    if (currentCust.getStreet().equals(currentCust.getStreetS()) && currentCust.getEstate().equals(currentCust.getEstateS())
+                            && currentCust.getPostalCode().equals(currentCust.getPostalCodeS()) && currentCust.getCity().equals(currentCust.getCityS())
+                            && currentCust.getCountry().equals(currentCust.getCountryS())) {
+                        this.sameShipping = true;
+                        this.vb.ejecutarJavascript("customerFormHelper.shippingDir = 2;customerFormHelper.enableShipAdress();");
+                    } else {
+                        this.sameShipping = false;
+                        this.vb.ejecutarJavascript("$('#sameSha').attr('checked',false);customerFormHelper.enableShipAdress()");
+                    }
                 } else {
                     c++;
                 }
@@ -182,9 +219,9 @@ public class CustomerDetailController implements Serializable {
             this.invoiceModal = this.iFacade.generateInvoice(i, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile(jasperFile, req), this.userData.formatType(i.getType()), this.userData.formatMaster(i.getActualBalance().toString()));
 
             //this.userData.setSInvoice(invoiceModal);
-            //this.validationBean.lanzarMensajeSinBundle("error", this.invoiceModal, "");
+            //this.vb.lanzarMensajeSinBundle("error", this.invoiceModal, "");
             this.currentIn = i;
-            // this.validationBean.updateComponent("pdf");
+            // this.vb.updateComponent("pdf");
             this.vb.ejecutarJavascript("$('.invoiceModal').modal();");
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.print()");
@@ -238,6 +275,92 @@ public class CustomerDetailController implements Serializable {
         } else {
             this.userData.setUses("unexpectedError");
 
+        }
+        this.vb.redirecionar("/view/sales/invoiceForm.xhtml?dir=" + this.idCust);
+
+    }
+
+    public boolean valCampos() {
+
+        boolean flag = false;
+
+        if (vb.validarEmail(this.currentCust.getEmail(), "warn", "valErr", "reqEmail")
+                && vb.validarCampoVacio(this.currentCust.getDisplayName(), "warn", "valErr", "lblReqDisplayName")
+                && vb.validarCampoVacio(this.currentCust.getStreet(), "warn", "valErr", "reqStreet")
+                && vb.validarCampoVacio(this.currentCust.getCity(), "warn", "valErr", "reqCity")
+                && vb.validarSoloLetras(this.currentCust.getCity(), "warn", "valErr", "reqCity")
+                && vb.validarCampoVacio(this.currentCust.getEstate(), "warn", "valErr", "reqState")
+                && vb.validarSoloLetras(this.currentCust.getEstate(), "warn", "valErr", "reqState")
+                && vb.validarCampoVacio(this.currentCust.getPostalCode(), "warn", "valErr", "reqPostalC")
+                && vb.validarCampoVacio(this.currentCust.getCountry(), "warn", "valErr", "reqCountry")
+                && vb.validarSoloLetras(this.currentCust.getCountry(), "warn", "valErr", "reqCountry")
+                && vb.validarCampoVacio(this.currentCust.getFirstname(), "warn", "valErr", "lblReqCustomerName")
+                && vb.validarSoloLetras(this.currentCust.getFirstname(), "warn", "valErr", "lblReqCustomerName")
+                && vb.validarCampoVacio(this.currentCust.getLastname(), "warn", "valErr", "lblReqCustomerLastName")
+                && vb.validarSoloLetras(this.currentCust.getLastname(), "warn", "valErr", "lblReqCustomerLastName")) {
+            HttpServletRequest req = (HttpServletRequest) vb.getRequestContext();
+            String parameter = req.getParameter("sameSha");
+            if (parameter != null) {
+                sameShipping = true;
+            } else {
+                sameShipping = false;
+            }
+
+            if (!sameShipping) {
+                
+                //validar
+                if (vb.validarCampoVacio(this.currentCust.getStreetS(), "warn", "valErr", "reqStreetS")
+                && vb.validarCampoVacio(this.currentCust.getCityS(), "warn", "valErr", "reqCityS")
+                && vb.validarSoloLetras(this.currentCust.getCityS(), "warn", "valErr", "reqCityS")
+                && vb.validarCampoVacio(this.currentCust.getEstateS(), "warn", "valErr", "reqStateS")
+                && vb.validarSoloLetras(this.currentCust.getEstateS(), "warn", "valErr", "reqStateS")
+                && vb.validarCampoVacio(this.currentCust.getPostalCodeS(), "warn", "valErr", "reqPostalCS")
+                && vb.validarCampoVacio(this.currentCust.getCountryS(), "warn", "valErr", "reqCountryS")
+                && vb.validarSoloLetras(this.currentCust.getCountryS(), "warn", "valErr", "reqCountryS")) {
+                   flag = true;   
+                }
+                
+              
+            }else{
+            flag = true;
+            }
+            
+        }
+
+        return flag;
+    }
+
+    public void editCustomer() {
+        String res = "";
+
+        try {
+
+            if (valCampos()) {
+
+                if (sameShipping) {
+                    currentCust.setStreetS(currentCust.getStreet());
+                    currentCust.setCityS(currentCust.getCity());
+                    currentCust.setEstateS(currentCust.getEstate());
+                    currentCust.setPostalCodeS(currentCust.getPostalCode());
+                    currentCust.setCountryS(currentCust.getCountry());
+                }
+                res = cFacade.actCustomer(currentCust, "U");
+                System.out.println("resultado update customer" + res);
+                if (res.equals("0")) {
+                    //vb.lanzarMensaje("info", "customerUpdate", "blank");
+                    this.userData.setUses("customerUpdate");
+                    this.vb.redirecionar("/view/sales/customer/customerDetail.xhtml?id=" + this.idCust);
+                } else if (res.equals("-1")) {
+                    vb.lanzarMensaje("error", "customerRepeatFail", "blank");
+                } else if (res.equals("-2")) {
+                    vb.lanzarMensaje("error", "unexpectedError", "blank");
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.CustomerController.edit()");
+            e.printStackTrace();
+            res = "-2";
         }
 
     }

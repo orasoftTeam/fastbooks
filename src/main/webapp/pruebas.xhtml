@@ -25,26 +25,26 @@
                         <bnu:row>
                             <bnu:column span="1" >
                                 <label>Title</label>
-                                <input type="text" size="3" class="form-control" id="title" name="title"  />
+                                <input type="text" size="3" class="form-control" id="title" name="title" onblur="customerFormHelper.displayName();"  />
                             </bnu:column>
                             <bnu:column span="2" >
                                 <label>First name</label>
-                                <input type="text" size="10" class="form-control" id="fname" name="fname"  />
+                                <input type="text" size="10" class="form-control" id="fname" name="fname"  onblur="customerFormHelper.displayName();"  />
                                 
                             </bnu:column>
                             <bnu:column span="2" >
                                 <label>Middle name</label>
-                                <input type="text" size="10" class="form-control" id="mname" name="mname"  />
+                                <input type="text" size="10" class="form-control" id="mname" name="mname" onblur="customerFormHelper.displayName();"   />
                                 
                             </bnu:column>
                             <bnu:column span="2" >
                                 <label>Last name</label>
-                                <input type="text" size="10" class="form-control" id="lname" name="lname"  />
+                                <input type="text" size="10" class="form-control" id="lname" name="lname" onblur="customerFormHelper.displayName();"   />
                                 
                             </bnu:column>
                             <bnu:column span="1" >
                                 <label>Suffix</label>
-                                <input type="text" size="3" class="form-control" id="suffix" name="suffix"  />
+                                <input type="text" size="3" class="form-control" id="suffix" name="suffix" onblur="customerFormHelper.displayName();"   />
                                 
                             </bnu:column>
                             <bnu:column span="4" >
@@ -125,7 +125,7 @@
                                     <bnu:column span="6" >
                                         <bnu:row>
                                             <bnu:column span="12">
-                                                <label>Shipping address</label> <input type="checkbox" checked='true' onclick="enableShipAdress()" />Same as billing address
+                                                <label>Shipping address</label> <input type="checkbox" checked='true' onclick="customerFormHelper.enableShipAdress()" />Same as billing address
                                                 <textarea placeholder="Street" class="form-control shippingEnable" disabled='true'  />
                                             </bnu:column>
                                         </bnu:row>
@@ -182,7 +182,7 @@
                                     </bnu:column>
                                     <bnu:column span="4"></bnu:column>
                                     <bnu:column span="4">
-                                        <bnu:selectOneMenu label="#{messages.lblInvoiceTerms}" value="#{invoiceController.termDays}"   >
+                                        <bnu:selectOneMenu label="#{messages.lblInvoiceTerms}"    >
                                             <f:selectItem  itemLabel="#{messages.selectOne}" itemValue=" "  />
                                         </bnu:selectOneMenu>
                                     </bnu:column>
@@ -228,19 +228,31 @@
 
 
                 <h:outputScript>
-                    var shippingDir = 1;
-                    function enableShipAdress(){
-                    if(shippingDir == 1){
+      
+                    
+                    var customerFormHelper = {
+                    shippingDir : 1,
+                    displayName: function(){
+                    var title = $("#title").val();
+                    var fname = $("#fname").val();
+                    var mname = $("#mname").val();
+                    var lname = $("#lname").val();
+                    var suffix = $("#suffix").val();
+                    $("#displayName").val(title +' '+ fname +' '+mname +' '+ lname +' '+ suffix);
+                    },
+                    enableShipAdress: function (){
+                    if(this.shippingDir == 1){
                     $(".shippingEnable").removeAttr('disabled');
 
-                    shippingDir = 2;
+                    this.shippingDir = 2;
                     }else{
                     $(".shippingEnable").attr('disabled',true);
                     $(".shippingEnable").val("");
-                    shippingDir = 1;
+                    this.shippingDir = 1;
                     }
                     }
-
+                    };
+                    
 
                 </h:outputScript>
 
