@@ -132,6 +132,11 @@ public class InvoiceController implements Serializable {
     public void init() {
         try {
             System.out.println("INIT INVOICES!!!!");
+           /* HttpServletRequest req = (HttpServletRequest) this.validationBean.getRequestContext();
+            this.userData.changeTab(req.getParameter("index"));*/
+            
+            
+            
             if (this.userData.getInvoiceSql().equals("0")) {
                 //iList =  iFacade.getInvoicesByIdCiaNonJpa(this.userData.getCurrentCia().getIdCia().toString());
                 iList = iFacade.getInvoicesByIdCia(this.userData.getCurrentCia().getIdCia().toString());
@@ -146,7 +151,7 @@ public class InvoiceController implements Serializable {
 
             cList = cFacade.getCustomersByIdCia(this.userData.getCurrentCia().getIdCia().toString());
 
-            System.out.println("com.fastbooks.managedbeans.InvoiceController.init()");
+            //System.out.println("com.fastbooks.managedbeans.InvoiceController.init()");
             this.showInvoice();
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.init()");

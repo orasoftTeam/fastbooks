@@ -7,10 +7,12 @@ package com.fastbooks.managedbeans;
 
 import com.fastbooks.facade.FbCustomerFacade;
 import com.fastbooks.facade.FbInvoiceFacade;
+import com.fastbooks.modelo.FbCompania;
 import com.fastbooks.modelo.FbCustomer;
 import com.fastbooks.modelo.FbInvoice;
 import com.fastbooks.modelo.FbPaymentDetail;
 import com.fastbooks.modelo.PaymentMethod;
+import com.fastbooks.modelo.Terms;
 import com.fastbooks.util.ValidationBean;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -38,7 +40,7 @@ public class PaymentController implements Serializable {
     UserData userData;
 
     @EJB
-    ValidationBean vb;
+    private @Getter @Setter ValidationBean vb;
 
     private @Getter
     @Setter
@@ -103,6 +105,10 @@ public class PaymentController implements Serializable {
     private @Getter
     @Setter
     List<PaymentMethod> pMethodList = new ArrayList<>();
+    
+    private @Getter
+    @Setter
+    List<Terms> tList = new ArrayList<>();
 
     private @Getter
     @Setter
@@ -148,6 +154,14 @@ public class PaymentController implements Serializable {
             this.pMethodList.add(new PaymentMethod("3", "", this.vb.getMsgBundle("lblDirectDebit")));
             this.pMethodList.add(new PaymentMethod("4", "", this.vb.getMsgBundle("lblCheque")));
         }
+        
+        if (this.tList.isEmpty()) {
+                this.tList.add(new Terms("1", "30", "Credits at 30 days"));
+                this.tList.add(new Terms("2", "0", "Due on receipt"));
+                this.tList.add(new Terms("3", "15", "Net 15"));
+                this.tList.add(new Terms("4", "30", "Net 30"));
+                this.tList.add(new Terms("5", "60", "Net 60"));
+            }
 
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         Calendar cal = Calendar.getInstance();
@@ -723,5 +737,108 @@ public class PaymentController implements Serializable {
             //this.userData.setDirCust("0");
         }
     }
+    
+    
+    
+     /*Add Customer section*/
+    private @Getter
+    @Setter
+    FbCustomer customer = new FbCustomer();
+    private @Getter
+    @Setter
+    boolean sameShipping = true;
+
+    public boolean valCamposAdd() {
+
+        boolean flag = false;
+
+        if (vb.validarEmail(this.customer.getEmail(), "warn", "valErr", "reqEmail")
+                && vb.validarCampoVacio(this.customer.getDisplayName(), "warn", "valErr", "lblReqDisplayName")
+                && vb.validarCampoVacio(this.customer.getStreet(), "warn", "valErr", "reqStreet")
+                && vb.validarCampoVacio(this.customer.getCity(), "warn", "valErr", "reqCity")
+                && vb.validarSoloLetras(this.customer.getCity(), "warn", "valErr", "reqCity")
+                && vb.validarCampoVacio(this.customer.getEstate(), "warn", "valErr", "reqState")
+                && vb.validarSoloLetras(this.customer.getEstate(), "warn", "valErr", "reqState")
+                && vb.validarCampoVacio(this.customer.getPostalCode(), "warn", "valErr", "reqPostalC")
+                && vb.validarCampoVacio(this.customer.getCountry(), "warn", "valErr", "reqCountry")
+                && vb.validarSoloLetras(this.customer.getCountry(), "warn", "valErr", "reqCountry")
+                && vb.validarCampoVacio(this.customer.getFirstname(), "warn", "valErr", "lblReqCustomerName")
+                && vb.validarSoloLetras(this.customer.getFirstname(), "warn", "valErr", "lblReqCustomerName")
+                && vb.validarCampoVacio(this.customer.getLastname(), "warn", "valErr", "lblReqCustomerLastName")
+                && vb.validarSoloLetras(this.customer.getLastname(), "warn", "valErr", "lblReqCustomerLastName")) {
+            HttpServletRequest req = (HttpServletRequest) vb.getRequestContext();
+            String parameter = req.getParameter("sameSha");
+            if (parameter != null) {
+                sameShipping = true;
+            } else {
+                sameShipping = false;
+            }
+
+            if (!sameShipping) {
+
+                //validar
+                if (vb.validarCampoVacio(this.customer.getStreetS(), "warn", "valErr", "reqStreetS")
+                        && vb.validarCampoVacio(this.customer.getCityS(), "warn", "valErr", "reqCityS")
+                        && vb.validarSoloLetras(this.customer.getCityS(), "warn", "valErr", "reqCityS")
+                        && vb.validarCampoVacio(this.customer.getEstateS(), "warn", "valErr", "reqStateS")
+                        && vb.validarSoloLetras(this.customer.getEstateS(), "warn", "valErr", "reqStateS")
+                        && vb.validarCampoVacio(this.customer.getPostalCodeS(), "warn", "valErr", "reqPostalCS")
+                        && vb.validarCampoVacio(this.customer.getCountryS(), "warn", "valErr", "reqCountryS")
+                        && vb.validarSoloLetras(this.customer.getCountryS(), "warn", "valErr", "reqCountryS")) {
+                    flag = true;
+                }
+
+            } else {
+                flag = true;
+            }
+
+        }
+
+        return flag;
+    }
+    
+    
+        public void registerC() {
+        if (valCamposAdd()) {
+            if (sameShipping) {
+                
+                customer.setStreetS(customer.getStreet());
+                customer.setCityS(customer.getCity());
+                customer.setEstateS(customer.getEstate());
+                customer.setPostalCodeS(customer.getPostalCode());
+                customer.setCountryS(customer.getCountry());
+            }
+
+            FbCompania com = new FbCompania();
+            com.setIdCia(BigDecimal.ZERO);
+            customer.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
+            customer.setIdCust(new BigDecimal("0"));
+            customer.setAtachment(" ");
+            String res;
+            res = cFacade.actCustomer(customer, "A");
+            if (res.equals("0")) {
+                this.vb.ejecutarJavascript("$('.addCustModal').modal('hide');");
+                cList = cFacade.getCustomersByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+                for (FbCustomer fbCustomer : cList) {
+                    if (fbCustomer.getEmail().equals(customer.getEmail())) {
+                        this.idCust = fbCustomer.getIdCust().toString();
+                    }
+                }
+                this.customer =  new FbCustomer();
+                this.changeCust();
+                this.vb.lanzarMensaje("info", "custAdded", "blank");
+            } else if (res.equals("-1")) {
+                vb.lanzarMensaje("error", "customerRepeatFail", "blank");
+            } else if (res.equals("-2")) {
+                vb.lanzarMensaje("error", "unexpectedError", "blank");
+            }
+            
+            
+        }
+
+    }
+
+    /*End add customer section*/
+    
 
 }

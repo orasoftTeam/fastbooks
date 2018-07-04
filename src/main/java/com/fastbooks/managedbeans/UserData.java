@@ -105,9 +105,7 @@ public class UserData implements Serializable {
     private @Getter
     @Setter
     Locale country;
-    private @Getter
-    @Setter
-    int jsfSucks = 0;
+    
     private @Getter
     @Setter
     String dirCust = "0";
@@ -387,14 +385,18 @@ public class UserData implements Serializable {
         return res;
     }
 
-    public void changeTab(int index) {
-        this.salesIndex = index;
-        jsfSucks++;
-        if (jsfSucks == 1) {
-            this.validationBean.redirecionar("/view/sales/sales.xhtml");
-        } else if (jsfSucks > 2) {
-            jsfSucks = 0;
+    public void changeTab(String index) {
+        int indexInt = 3;
+        try {
+            indexInt = Integer.parseInt(index);
+        } catch (Exception e) {
         }
+        if (indexInt >= 0 && indexInt <=2) {
+           this.salesIndex = indexInt; 
+            System.out.println("index: " + this.salesIndex);
+        }
+        
+        
 
     }
 

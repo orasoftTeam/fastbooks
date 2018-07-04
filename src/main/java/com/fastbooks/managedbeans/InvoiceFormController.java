@@ -12,6 +12,7 @@ import com.fastbooks.facade.FbInvoiceFacade;
 import com.fastbooks.facade.FbProductFacade;
 import com.fastbooks.facade.FbTaxFacade;
 import com.fastbooks.modelo.FbBundleItems;
+import com.fastbooks.modelo.FbCompania;
 import com.fastbooks.modelo.FbCustomer;
 import com.fastbooks.modelo.FbInvoice;
 import com.fastbooks.modelo.FbInvoiceDetail;
@@ -1020,8 +1021,8 @@ public class InvoiceFormController implements Serializable {
             }
 
             if (req.getParameter("id") != null && in == null) {
-                in = iFacade.getInvoiceByIdInvoice(req.getParameter("id"),this.userData.getCurrentCia().getIdCia().toString());
-                
+                in = iFacade.getInvoiceByIdInvoice(req.getParameter("id"), this.userData.getCurrentCia().getIdCia().toString());
+
             }
 
             if (req.getParameter("p") != null) {
@@ -1599,4 +1600,103 @@ public class InvoiceFormController implements Serializable {
         }
     }
 
+    /*Add Customer section*/
+    private @Getter
+    @Setter
+    FbCustomer customer = new FbCustomer();
+    private @Getter
+    @Setter
+    boolean sameShipping = true;
+
+    public boolean valCamposAdd() {
+
+        boolean flag = false;
+
+        if (validationBean.validarEmail(this.customer.getEmail(), "warn", "valErr", "reqEmail")
+                && validationBean.validarCampoVacio(this.customer.getDisplayName(), "warn", "valErr", "lblReqDisplayName")
+                && validationBean.validarCampoVacio(this.customer.getStreet(), "warn", "valErr", "reqStreet")
+                && validationBean.validarCampoVacio(this.customer.getCity(), "warn", "valErr", "reqCity")
+                && validationBean.validarSoloLetras(this.customer.getCity(), "warn", "valErr", "reqCity")
+                && validationBean.validarCampoVacio(this.customer.getEstate(), "warn", "valErr", "reqState")
+                && validationBean.validarSoloLetras(this.customer.getEstate(), "warn", "valErr", "reqState")
+                && validationBean.validarCampoVacio(this.customer.getPostalCode(), "warn", "valErr", "reqPostalC")
+                && validationBean.validarCampoVacio(this.customer.getCountry(), "warn", "valErr", "reqCountry")
+                && validationBean.validarSoloLetras(this.customer.getCountry(), "warn", "valErr", "reqCountry")
+                && validationBean.validarCampoVacio(this.customer.getFirstname(), "warn", "valErr", "lblReqCustomerName")
+                && validationBean.validarSoloLetras(this.customer.getFirstname(), "warn", "valErr", "lblReqCustomerName")
+                && validationBean.validarCampoVacio(this.customer.getLastname(), "warn", "valErr", "lblReqCustomerLastName")
+                && validationBean.validarSoloLetras(this.customer.getLastname(), "warn", "valErr", "lblReqCustomerLastName")) {
+            HttpServletRequest req = (HttpServletRequest) validationBean.getRequestContext();
+            String parameter = req.getParameter("sameSha");
+            if (parameter != null) {
+                sameShipping = true;
+            } else {
+                sameShipping = false;
+            }
+
+            if (!sameShipping) {
+
+                //validar
+                if (validationBean.validarCampoVacio(this.customer.getStreetS(), "warn", "valErr", "reqStreetS")
+                        && validationBean.validarCampoVacio(this.customer.getCityS(), "warn", "valErr", "reqCityS")
+                        && validationBean.validarSoloLetras(this.customer.getCityS(), "warn", "valErr", "reqCityS")
+                        && validationBean.validarCampoVacio(this.customer.getEstateS(), "warn", "valErr", "reqStateS")
+                        && validationBean.validarSoloLetras(this.customer.getEstateS(), "warn", "valErr", "reqStateS")
+                        && validationBean.validarCampoVacio(this.customer.getPostalCodeS(), "warn", "valErr", "reqPostalCS")
+                        && validationBean.validarCampoVacio(this.customer.getCountryS(), "warn", "valErr", "reqCountryS")
+                        && validationBean.validarSoloLetras(this.customer.getCountryS(), "warn", "valErr", "reqCountryS")) {
+                    flag = true;
+                }
+
+            } else {
+                flag = true;
+            }
+
+        }
+
+        return flag;
+    }
+    
+    
+        public void registerC() {
+        if (valCamposAdd()) {
+            if (sameShipping) {
+                
+                customer.setStreetS(customer.getStreet());
+                customer.setCityS(customer.getCity());
+                customer.setEstateS(customer.getEstate());
+                customer.setPostalCodeS(customer.getPostalCode());
+                customer.setCountryS(customer.getCountry());
+            }
+
+            FbCompania com = new FbCompania();
+            com.setIdCia(BigDecimal.ZERO);
+            customer.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
+            customer.setIdCust(new BigDecimal("0"));
+            customer.setAtachment(" ");
+            String res;
+            res = cFacade.actCustomer(customer, "A");
+            if (res.equals("0")) {
+                this.validationBean.ejecutarJavascript("$('.addCustModal').modal('hide');");
+                cList = cFacade.getCustomersByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+                for (FbCustomer fbCustomer : cList) {
+                    if (fbCustomer.getEmail().equals(customer.getEmail())) {
+                        this.idCust = fbCustomer.getIdCust().toString();
+                    }
+                }
+                this.customer =  new FbCustomer();
+                this.changeCust();
+                this.validationBean.lanzarMensaje("info", "custAdded", "blank");
+            } else if (res.equals("-1")) {
+                validationBean.lanzarMensaje("error", "customerRepeatFail", "blank");
+            } else if (res.equals("-2")) {
+                validationBean.lanzarMensaje("error", "unexpectedError", "blank");
+            }
+            
+            
+        }
+
+    }
+
+    /*End add customer section*/
 }

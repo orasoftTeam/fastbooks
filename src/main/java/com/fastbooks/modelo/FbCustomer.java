@@ -109,7 +109,7 @@ public class FbCustomer implements Serializable {
     @Size(max = 20)
     @Column(name = "FAX")
     private String fax;
-    @Size(max = 50)
+    @Size(max = 60)
     @Column(name = "DISPLAY_NAME")
     private String displayName;
     @Size(max = 100)

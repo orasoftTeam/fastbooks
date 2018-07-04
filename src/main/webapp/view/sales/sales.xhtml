@@ -31,7 +31,7 @@
 
                 <bnu:tabView active-index="#{userData.salesIndex}">
 
-                    <bnu:tab title="#{messages.Sales}" onclick="ajax:userData.changeTab(0);">
+                    <bnu:tab title="#{messages.Sales}" onclick="redirect(0);"   >
                         <br></br>
                         <!-- Sales and customer panel -->
                         <h:panelGroup  rendered="#{userData.renderTab(0)}" >
@@ -48,7 +48,7 @@
                         </h:form>
                     </bnu:tab>
 
-                    <bnu:tab title="#{messages.customer}" onclick="ajax:userData.changeTab(1);"  >
+                    <bnu:tab title="#{messages.customer}" onclick="redirect(1);"   >
                         <h:panelGroup  rendered="#{userData.renderTab(1)}" >
                             <ui:include src="customer/customerTab.xhtml"    />
                         </h:panelGroup>
@@ -62,7 +62,7 @@
                             </bnu:row>
                         </h:form>
                     </bnu:tab> 
-                    <bnu:tab title="#{messages.ProdNServ}"  onclick="ajax:userData.changeTab(2);" >
+                    <bnu:tab title="#{messages.ProdNServ}"  onclick="redirect(2);"   >
                         <h:panelGroup  rendered="#{userData.renderTab(2)}" >
                             <ui:include src="product.xhtml"  />
                         </h:panelGroup>
@@ -105,7 +105,12 @@
                     //$.blockUI({ message: 'Hold on!' });      
                     function mensaje(e){
                     alert(e);
-                    } 
+                    }
+                    
+                    function redirect(op){
+                    //alert('#{request.contextPath}/sales/view/sales.xhtml');
+                    window.location.replace('#{request.contextPath}/view/sales/sales.xhtml?index='+op);
+                    }
                 </h:outputScript>
 
 

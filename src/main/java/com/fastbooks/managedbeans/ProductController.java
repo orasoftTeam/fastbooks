@@ -27,6 +27,7 @@ import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.event.FileUploadEvent;
@@ -166,7 +167,10 @@ public class ProductController implements Serializable {
     @PostConstruct
     public void init() {
         System.out.println("INIT PRODUCTS!!!!");
+        
         try {
+           /* HttpServletRequest req = (HttpServletRequest) this.vb.getRequestContext();
+            this.userData.changeTab(req.getParameter("index"));*/
             //this.userData.setCurrentCia(new FbCompania(BigDecimal.ONE));
             pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
             tList = tFacade.getTaxByIdCia(this.userData.getCurrentCia().getIdCia().toString());

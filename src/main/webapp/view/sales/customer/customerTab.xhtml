@@ -15,18 +15,18 @@
     </ui:remove>
     <h:form  id="customerForm" >
         <br></br>
-    
+       #{customerController.showAlert()}
 
         <bnu:row>
             <bnu:column>
                 <bnu:button        
                     value="#{messages.newC}" look="success" 
-                    style="float: right" onclick="$('addModalCust').modal()"/>
+                    style="float: right" onclick="$('.addCustModal').modal()"/>
             </bnu:column>
         </bnu:row>
         <bnu:row>
             <bnu:column span="12">
-                <bnu:messages  />
+                <bnu:messages id="message" />
             </bnu:column>
         </bnu:row>
         <br></br>
@@ -83,30 +83,30 @@
                         <bnu:row>
                             <bnu:column span="1" >
                                 <label>#{messages.titleC}</label>
-                                <bnu:inputText type="text" size="3" value="#{customerController.customer.title}"  class="title" name="title" onblur="customerFormHelper.displayName();"  />
+                                <bnu:inputText type="text" size="3" value="#{customerController.customer.title}"  class="title" name="title" onblur="customerFormHelper.displayName();" maxlength="4"  />
                             </bnu:column>
                             <bnu:column span="2" >
                                 <label>#{messages.fNameC}</label>
-                                <bnu:inputText type="text" size="10" value="#{customerController.customer.firstname}" class="fname" name="fname"  onblur="customerFormHelper.displayName();"  />
+                                <bnu:inputText type="text" size="10" value="#{customerController.customer.firstname}" class="fname" name="fname"  onblur="customerFormHelper.displayName();" maxlength="10"  />
                                 
                             </bnu:column>
                             <bnu:column span="2" >
                                 <label>#{messages.midNameC}</label>
-                                <bnu:inputText type="text" size="10" value="#{customerController.customer.middlename}" class="mname" name="mname" onblur="customerFormHelper.displayName();"   />
+                                <bnu:inputText type="text" size="10" value="#{customerController.customer.middlename}" class="mname" name="mname" onblur="customerFormHelper.displayName();" maxlength="10"    />
                                 
                             </bnu:column>
                             <bnu:column span="2" >
                                 <label>#{messages.lastNameC}</label>
-                                <bnu:inputText type="text" size="10" value="#{customerController.customer.lastname}" class="lname" name="lname" onblur="customerFormHelper.displayName();"   />
+                                <bnu:inputText type="text" size="10" value="#{customerController.customer.lastname}" class="lname" name="lname" onblur="customerFormHelper.displayName();" maxlength="15"  />
                                 
                             </bnu:column>
                             <bnu:column span="1" >
                                 <label>#{messages.suffixC}</label>
-                                <bnu:inputText type="text" size="3" value="#{customerController.customer.suffixx}" class="suffix" name="suffix" onblur="customerFormHelper.displayName();"   />
+                                <bnu:inputText type="text" size="3" value="#{customerController.customer.suffixx}" class="suffix" name="suffix" onblur="customerFormHelper.displayName();" maxlength="10"  />
                                 
                             </bnu:column>
                             <bnu:column span="4" >
-                                <bnu:inputText label="#{messages.email}" value="#{customerController.customer.email}" field-size="xs" />
+                                <bnu:inputText label="#{messages.email}" value="#{customerController.customer.email}" field-size="xs" maxlength="50" />
 
                             </bnu:column>
                         </bnu:row>
@@ -114,16 +114,16 @@
                         <bnu:row>
 
                             <bnu:column span="6" >
-                                <bnu:inputText label="#{messages.companyC}" value="#{customerController.customer.company}" field-size="xs" />
+                                <bnu:inputText label="#{messages.companyC}" value="#{customerController.customer.company}" field-size="xs" maxlength="50" />
                             </bnu:column>
                             <bnu:column span="2" >
-                                <bnu:inputText label="#{messages.phoneC}" value="#{customerController.customer.phone}" field-size="xs" />
+                                <bnu:inputText label="#{messages.phoneC}" value="#{customerController.customer.phone}" field-size="xs" maxlength="10" />
                             </bnu:column>
                             <bnu:column span="2" >
-                                <bnu:inputText label="#{messages.mobileC}" value="#{customerController.customer.mobile}" field-size="xs" />
+                                <bnu:inputText label="#{messages.mobileC}" value="#{customerController.customer.mobile}" field-size="xs" maxlength="10" />
                             </bnu:column>
                             <bnu:column span="2" >
-                                <bnu:inputText label="#{messages.faxC}" value="#{customerController.customer.fax}" field-size="xs" />
+                                <bnu:inputText label="#{messages.faxC}" value="#{customerController.customer.fax}" field-size="xs" maxlength="10" />
 
                             </bnu:column>
                         </bnu:row>
@@ -133,13 +133,13 @@
 
                             <bnu:column span="6" >
                                 <label>#{messages.displayN}</label>
-                                <bnu:inputText type="text" class="displayName"  field-size="xs" value="#{customerController.customer.displayName}" />
+                                <bnu:inputText type="text" class="displayName"  field-size="xs" value="#{customerController.customer.displayName}" maxlength="60" />
                             </bnu:column>
                             <bnu:column span="2" >
                                 <bnu:inputText label="#{messages.Otros}" field-size="xs"   />
                             </bnu:column>
                             <bnu:column span="4" >
-                                <bnu:inputText label="#{messages.website}" field-size="xs" value="#{customerController.customer.webside}" />
+                                <bnu:inputText label="#{messages.website}" field-size="xs" value="#{customerController.customer.webside}" maxlength="20" />
 
                             </bnu:column>
                         </bnu:row>
@@ -152,28 +152,28 @@
                                         <bnu:row>
                                             <bnu:column span="12">
                                                 <label>#{messages.billingA}</label>
-                                                <bnu:inputTextarea  placeholder="#{messages.streetC}" class="form-control"  value="#{customerController.customer.street}" />
+                                                <bnu:inputTextarea  placeholder="#{messages.streetC}" class="form-control"  value="#{customerController.customer.street}" maxlength="100" />
                                             </bnu:column>
                                         </bnu:row>
 
                                         <bnu:row>
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.cityT}"  value="#{customerController.customer.city}" />
+                                                <bnu:inputText placeholder="#{messages.cityT}"  value="#{customerController.customer.city}" maxlength="10" />
                                             </bnu:column>
 
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.stateP}"  value="#{customerController.customer.estate}" />
+                                                <bnu:inputText placeholder="#{messages.stateP}"  value="#{customerController.customer.estate}" maxlength="10" />
                                             </bnu:column>
 
                                         </bnu:row>
 
                                         <bnu:row>
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.postalCC}"  value="#{customerController.customer.postalCode}" />
+                                                <bnu:inputText placeholder="#{messages.postalCC}"  value="#{customerController.customer.postalCode}" maxlength="10" />
                                             </bnu:column>
 
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.countryC}" value="#{customerController.customer.country}" />
+                                                <bnu:inputText placeholder="#{messages.countryC}" value="#{customerController.customer.country}" maxlength="10" />
                                             </bnu:column>
 
                                         </bnu:row>
@@ -184,27 +184,27 @@
                                         <bnu:row>
                                             <bnu:column span="12">
                                                 <label>#{messages.shippingA}</label> <input checked="true" type="checkbox" onclick="customerFormHelper.enableShipAdress()" value="1"  name="sameSha" id="sameSha" />#{messages.sameSHA}
-                                                <bnu:inputTextarea placeholder="#{messages.streetC}"  class="form-control shippingEnable"  value="#{customerController.customer.streetS}"   />
+                                                <bnu:inputTextarea placeholder="#{messages.streetC}"  class="form-control shippingEnable"  value="#{customerController.customer.streetS}" maxlength="100"   />
                                             </bnu:column>
                                         </bnu:row>
                                         <bnu:row>
 
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.cityT}"  class="shippingEnable" value="#{customerController.customer.cityS}" />
+                                                <bnu:inputText placeholder="#{messages.cityT}"  class="shippingEnable" value="#{customerController.customer.cityS}" maxlength="10" />
                                             </bnu:column>
 
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.stateP}"  class="shippingEnable" value="#{customerController.customer.estateS}" />
+                                                <bnu:inputText placeholder="#{messages.stateP}"  class="shippingEnable" value="#{customerController.customer.estateS}" maxlength="10" />
                                             </bnu:column>
                                         </bnu:row>
                                         <bnu:row>
 
                                     <bnu:column span="6">
-                                        <bnu:inputText placeholder="#{messages.postalCC}"  class="shippingEnable" value="#{customerController.customer.postalCodeS}" />
+                                        <bnu:inputText placeholder="#{messages.postalCC}"  class="shippingEnable" value="#{customerController.customer.postalCodeS}" maxlength="10" />
                                     </bnu:column>
 
                                     <bnu:column span="6">
-                                        <bnu:inputText placeholder="#{messages.countryC}"  class="shippingEnable" value="#{customerController.customer.countryS}" />
+                                        <bnu:inputText placeholder="#{messages.countryC}"  class="shippingEnable" value="#{customerController.customer.countryS}" maxlength="10" />
                                     </bnu:column>
                                 </bnu:row>
                                     </bnu:column>
@@ -219,14 +219,14 @@
                             <bnu:tab title="#{messages.lblCustNotes }" >
                                 <bnu:row>
                                     <bnu:column span="12">
-                                        <bnu:inputTextarea label="#{messages.lblCustNotes }"  value="#{customerController.customer.note}" />
+                                        <bnu:inputTextarea label="#{messages.lblCustNotes }"  value="#{customerController.customer.note}" maxlength="200" />
                                     </bnu:column>
                                 </bnu:row>
                             </bnu:tab>
                             <bnu:tab title="#{messages.taxInfo}" >
                                 <bnu:row>
                                     <bnu:column span="4">
-                                        <bnu:inputText label="#{messages.lblTaxRegNo}"  value="#{customerController.customer.taxregno}" />
+                                        <bnu:inputText label="#{messages.lblTaxRegNo}"  value="#{customerController.customer.taxregno}" maxlength="15" />
                                     </bnu:column>
                                 </bnu:row>
                             </bnu:tab>
@@ -235,7 +235,7 @@
                                     <bnu:column span="4">
                                         <bnu:selectOneMenu label="#{messages.lblPreferredPayment}" value="#{customerController.customer.paymentMethod}" >
                                             <f:selectItem  itemLabel="#{messages.selectOne}" itemValue=""  />
-                                            <f:selectItems value="#{customerDetailController.PMethodList}" var="pm"
+                                            <f:selectItems value="#{customerController.PMethodList}" var="pm"
                                            itemValue="#{pm.display}" itemLabel="#{pm.display}" />   
                                         </bnu:selectOneMenu>
                                     </bnu:column>
@@ -243,7 +243,7 @@
                                     <bnu:column span="4">
                                         <bnu:selectOneMenu label="#{messages.lblInvoiceTerms}"    value="#{customerController.customer.terms}" >
                                             <f:selectItem  itemLabel="#{messages.selectOne}" itemValue="0"  />
-                                            <f:selectItems value="#{customerDetailController.TList}" var="term"
+                                            <f:selectItems value="#{customerController.TList}" var="term"
                                                itemLabel="#{term.display}" itemValue="#{term.days}" />
                                         </bnu:selectOneMenu>
                                     </bnu:column>
@@ -258,9 +258,9 @@
                                     </bnu:column>
                                     <bnu:column span="2"></bnu:column>
                                     <bnu:column span="2">
-                                        <bnu:inputText  label="#{messages.lblOpeningBalance}"  value="#{customerController.customer.balance}"  />
+                                        <bnu:inputText  label="#{messages.lblOpeningBalance}"  value="#{customerController.customer.balance}" maxlength="6"  />
                                     </bnu:column>
-                                    <bnu:column span="4"> <label>#{messages.lblAsOf}</label><bnu:inputText type="date" disabled="true" value="#{customerController.customer.asOf}"  /></bnu:column>
+                                    <bnu:column span="4"> <label>#{messages.lblAsOf}</label><bnu:inputText type="date" disabled="true" value="#{customerController.customer.asOf}" maxlength="10"  /></bnu:column>
                                 </bnu:row>
                             </bnu:tab>
                             <bnu:tab title="#{messages.lblAttachments}" >
@@ -284,7 +284,7 @@
 
                         <f:facet name="footer">
                             <bnu:button value="Close" dismiss="modal"  />
-                            <bnu:commandButton value="Save" look="success" update="customerFormAdd:errorMessage"  />
+                            <bnu:commandButton value="#{messages.save}" look="success" update="customerFormAdd:errorMessage" action="#{customerController.registerC()}"  />
                         </f:facet>
                     </bnu:modal>
                 </h:form>

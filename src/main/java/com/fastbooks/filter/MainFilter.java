@@ -54,6 +54,10 @@ public class MainFilter implements Filter {
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             httpResponse.sendRedirect(contextPath);
         }
+        if (path.contains("sales.xhtml")) {
+            
+            this.userData.changeTab(((HttpServletRequest) request).getParameter("index"));
+        }
     }    
     
     private void doAfterProcessing(ServletRequest request, ServletResponse response)
