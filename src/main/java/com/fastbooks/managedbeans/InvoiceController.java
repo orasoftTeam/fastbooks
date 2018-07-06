@@ -15,6 +15,8 @@ import com.fastbooks.util.ValidationBean;
 import com.fastbooks.util.WriteXMLFile;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -117,7 +119,117 @@ public class InvoiceController implements Serializable {
     private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
     private DateFormat sd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
 
-    /* @PostConstruct
+    private @Getter
+    @Setter
+    BigDecimal totalBalance = new BigDecimal(BigInteger.ZERO);
+    private @Getter
+    @Setter
+    BigDecimal totalTotal = new BigDecimal(BigInteger.ZERO);
+
+    /*Panel stuff*/
+    private @Getter
+    @Setter
+    int noEstimates = 0;
+    private @Getter
+    @Setter
+    int noUnbilled = 0;
+    private @Getter
+    @Setter
+    int noOverdue = 0;
+    private @Getter
+    @Setter
+    int noOpen = 0;
+    private @Getter
+    @Setter
+    int noPaid = 0;
+    
+    private @Getter
+    @Setter
+    int panelFlag = 0;
+
+    private @Getter
+    @Setter
+    BigDecimal totalEstimates = new BigDecimal(BigInteger.ZERO);
+    private @Getter
+    @Setter
+    BigDecimal totalUnbilled = new BigDecimal(BigInteger.ZERO);
+    private @Getter
+    @Setter
+    BigDecimal totalOverdue = new BigDecimal(BigInteger.ZERO);
+    private @Getter
+    @Setter
+    BigDecimal totalOpen = new BigDecimal(BigInteger.ZERO);
+    private @Getter
+    @Setter
+    BigDecimal totalPaid = new BigDecimal(BigInteger.ZERO);
+
+    public void setPanelData() {
+
+        try {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DATE, -31);
+            Date dateBefore30Days = cal.getTime();
+
+            Double acumEstimates = 0.0;
+            Double acumUnbilled = 0.0;
+            Double acumOverdue = 0.0;
+            Double acumOpen = 0.0;
+            Double acumPaid = 0.0;
+
+            for (FbInvoice fbInvoice : iList) {
+                if (fbInvoice.getType().equals("ES")) {
+
+                    noEstimates++;
+                    acumEstimates += fbInvoice.getTotal().doubleValue();
+                }
+
+                if (fbInvoice.getType().equals("SR")) {
+                    noUnbilled++;
+                    acumUnbilled += fbInvoice.getTotal().doubleValue();
+                }
+
+                if (fbInvoice.getType().equals("IN")) {
+
+                    if (fbInvoice.getStatus().equals("OV")) {
+                        noOverdue++;
+                        acumOverdue += fbInvoice.getActualBalance().doubleValue();
+                    }
+
+                    if (fbInvoice.getStatus().equals("PA") || fbInvoice.getStatus().equals("OP")) {
+                        noOpen++;
+                        acumOpen += fbInvoice.getActualBalance().doubleValue();
+                    }
+
+                    if (fbInvoice.getStatus().equals("PA") || fbInvoice.getStatus().equals("PD")) {
+                        Date invoiceDate = sdf.parse(fbInvoice.getInDate());
+                        if (invoiceDate.after(dateBefore30Days)) {
+                            noPaid++;
+                            if (fbInvoice.getStatus().equals("PA")) {
+                                acumPaid += fbInvoice.getTotal().doubleValue() - fbInvoice.getActualBalance().doubleValue();
+                            } else {
+                                acumPaid += fbInvoice.getTotal().doubleValue();
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+
+            this.totalEstimates = new BigDecimal(acumEstimates).setScale(2, BigDecimal.ROUND_HALF_UP);
+            this.totalUnbilled = new BigDecimal(acumUnbilled).setScale(2, BigDecimal.ROUND_HALF_UP);
+            this.totalOverdue = new BigDecimal(acumOverdue).setScale(2, BigDecimal.ROUND_HALF_UP);
+            this.totalOpen = new BigDecimal(acumOpen).setScale(2, BigDecimal.ROUND_HALF_UP);
+            this.totalPaid = new BigDecimal(acumPaid).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } catch (ParseException e) {
+            System.out.println("com.fastbooks.managedbeans.InvoiceController.setPanelData()");
+            e.printStackTrace();
+        }
+    }
+
+    /*End Panel stuff*/
+ /* @PostConstruct
     public void post(){
             testList = iFacade.getInvoicesByIdCia("1");
        }*/
@@ -128,18 +240,55 @@ public class InvoiceController implements Serializable {
         this.validationBean.redirecionar("/view/sales/invoiceForm.xhtml");
     }
 
+    public int setPanelSelected() {
+        HttpServletRequest req = (HttpServletRequest) this.validationBean.getRequestContext();
+        String pv = req.getParameter("pv");
+        String js = "";
+        int r = 5;
+        if (pv != null) {
+            switch (pv) {
+                case "0":
+                    js = "$('#estimates').addClass('selected');";
+                    r = 0;
+                    break;
+                case "1":
+                    js = "$('#unbilled').addClass('selected');";
+                    r = 1;
+                    break;
+                case "2":
+                    js = "$('#overdue').addClass('selected');";
+                    r = 2;
+                    this.panelFlag = 1;
+                    break;
+                case "3":
+                    js = "$('#unpaid').addClass('selected');";
+                    r = 3;
+                    this.panelFlag = 2;
+                    break;
+                case "4":
+                    js = "$('#paid').addClass('selected');";
+                    r = 4;
+                    break;
+                default:
+                    js = "$('.box').removeClass('selected');";
+                    break;
+            }
+            this.validationBean.ejecutarJavascript(js);
+        }
+        
+        return r;
+    }
+
     @PostConstruct
     public void init() {
         try {
             System.out.println("INIT INVOICES!!!!");
-           /* HttpServletRequest req = (HttpServletRequest) this.validationBean.getRequestContext();
+            /* HttpServletRequest req = (HttpServletRequest) this.validationBean.getRequestContext();
             this.userData.changeTab(req.getParameter("index"));*/
-            
-            
-            
+
             if (this.userData.getInvoiceSql().equals("0")) {
                 //iList =  iFacade.getInvoicesByIdCiaNonJpa(this.userData.getCurrentCia().getIdCia().toString());
-                iList = iFacade.getInvoicesByIdCia(this.userData.getCurrentCia().getIdCia().toString());
+                iList = iFacade.getInvoicesByIdCia(this.userData.getCurrentCia().getIdCia().toString(), 5);
                 /*WriteXMLFile xml = new WriteXMLFile();
                 xml.crearXML(iList);*/
                 DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -148,11 +297,31 @@ public class InvoiceController implements Serializable {
             } else {
                 iList = iFacade.getInvoicesByIdCiaFilter(this.userData.getInvoiceSql());
             }
+            this.setPanelData();
+            int setPanelSelected = this.setPanelSelected();
+            if (setPanelSelected != 5) {
+                iList = iFacade.getInvoicesByIdCia(this.userData.getCurrentCia().getIdCia().toString(), setPanelSelected);
+            }
+            Double acumBalance = 0.0;
+            Double acumTotal = 0.0;
+            for (FbInvoice fbInvoice : iList) {
+                if (fbInvoice.getActualBalance() != null && !fbInvoice.getType().equals("PA")) {
+                    acumBalance += fbInvoice.getActualBalance().doubleValue();
+                } else if (fbInvoice.getActualBalance() != null && fbInvoice.getType().equals("PA")) {
+                    acumBalance -= fbInvoice.getActualBalance().doubleValue();
+                }
+                if (fbInvoice.getTotal() != null && !fbInvoice.getType().equals("PA")) {
+                    acumTotal += fbInvoice.getTotal().doubleValue();
+                }
 
+            }
+            this.totalBalance = new BigDecimal(acumBalance).setScale(2, BigDecimal.ROUND_HALF_UP);
+            this.totalTotal = new BigDecimal(acumTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
             cList = cFacade.getCustomersByIdCia(this.userData.getCurrentCia().getIdCia().toString());
 
             //System.out.println("com.fastbooks.managedbeans.InvoiceController.init()");
             this.showInvoice();
+            
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.init()");
             e.printStackTrace();

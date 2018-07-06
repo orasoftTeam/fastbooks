@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 import javax.annotation.PostConstruct;
@@ -369,6 +370,7 @@ public class UserData implements Serializable {
 
     public String formatMaster(String obj) {
         java.text.NumberFormat format = java.text.NumberFormat.getCurrencyInstance(country);
+        Currency currency = Currency.getInstance(country);
         //obj = "249.57";
         String res = "";
         if (!obj.isEmpty()) {
@@ -382,7 +384,7 @@ public class UserData implements Serializable {
 
         }
 
-        return res;
+        return currency.getCurrencyCode() + res;
     }
 
     public void changeTab(String index) {

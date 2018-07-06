@@ -16,7 +16,7 @@
 
     <bnu:form id="tblInvoiceForm" inline="true">
         #{invoiceTableController.showAlert()}
-        
+
         <bnu:row>
             <bnu:column large-screen="10" medium-screen="11" small-screen="12" tiny-screen="12" >
                 <h2>#{messages.lblSalesTrans}</h2>
@@ -27,17 +27,105 @@
                     <bnu:commandButton value="#{messages.lblPayment}"   style="width: 100%; border: none" action="#{invoiceController.pagar()}" />
                     <bnu:commandButton value="#{messages.lblEstimate}"  action="#{invoiceTableController.setType('ES','/view/sales/invoiceForm.xhtml' )}" style="width: 100%; border: none" />
                     <bnu:commandButton value="#{messages.salesR}"  action="#{invoiceTableController.setType('SR','/view/sales/invoiceForm.xhtml' )}" style="width: 100%; border: none" />
-                  <!-- 
-   <bnu:navLink value="#{messages.lblPayment}" href="#{request.contextPath}/view/sales/payments/receivePayment.xhtml" ></bnu:navLink>
-
- <bnu:navLink value="Sales Receipt"></bnu:navLink>
- <bnu:navLink value="Credit Note"></bnu:navLink>
- <bnu:navLink value="Delayed Charged"></bnu:navLink>
- <bnu:navLink value="Time Activity"></bnu:navLink>-->
+                    <!-- 
+     <bnu:navLink value="#{messages.lblPayment}" href="#{request.contextPath}/view/sales/payments/receivePayment.xhtml" ></bnu:navLink>
+  
+   <bnu:navLink value="Sales Receipt"></bnu:navLink>
+   <bnu:navLink value="Credit Note"></bnu:navLink>
+   <bnu:navLink value="Delayed Charged"></bnu:navLink>
+   <bnu:navLink value="Time Activity"></bnu:navLink>-->
                 </bnu:dropButton> 
             </bnu:column>
-        </bnu:row> 
-   
+        </bnu:row>
+
+
+        <bnu:row id="panelVentas" styleClass="hidden-xs hidden-sm" >
+            <bnu:column span="12">
+                <div class="table moneyBar" >
+                    <div class="tableRow" >
+                        <div class="tableCell unbilled_tab" >
+                            <div class="bucket unbilled_tab">
+                                <div class="header">Unbilled Last 365 Days</div>
+                                <div class="table">
+                                    <div class="tableRow" >
+                                        <div class="tableCell">
+                                            <div class="box estimates" id="estimates" onmouseover="hoverBox('estimates')" onmouseout="hoverBoxOut('estimates')" onclick="redirectPanel(0);" >
+                                                <div class="subbox">
+                                                    <span class="amount" >#{userData.formatMaster(invoiceTableController.totalEstimates)}</span>&nbsp;
+                                                    <div><span >#{invoiceTableController.noEstimates}&nbsp;</span><span >ESTIMATES</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="tableCell">
+                                            <div class="box ccbt"  id="unbilled"  onmouseover="hoverBox('unbilled')" onmouseout="hoverBoxOut('unbilled')" onclick="redirectPanel(1);" >
+                                                <div class="subbox">
+                                                    <span class="amount" >#{userData.formatMaster(invoiceTableController.totalUnbilled)}</span>&nbsp;
+                                                    <div><span >#{invoiceTableController.noUnbilled}&nbsp;</span><span >UNBILLED ACTIVITY</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="tableCell unpaid_tab">
+                            <div class="bucket unpaid_tab"  >
+                                <div class="header" >Unpaid Last 365 Days</div>
+                                <div class="table">
+                                    <div class="tableRow">
+                                        <div class="tableCell">
+                                            <div class="box unpaid"  id="unpaid" >
+                                                <div class="subbox" onmouseover="hoverBox('unpaid')" onmouseout="hoverBoxOut('unpaid')" onclick="redirectPanel(3);" >
+                                                    <span class="amount" >#{userData.formatMaster(invoiceTableController.totalOpen)}</span>&nbsp;
+                                                    <div><span >#{invoiceTableController.noOpen}&nbsp;</span><span >Open Invoices</span></div>
+                                                </div>
+                                                <div class="subStatuses">
+                                                    <div class="box overdue"  id="overdue" onmouseover="hoverBox('overdue')" onmouseout="hoverBoxOut('overdue')" onclick="redirectPanel(2);" >
+                                                        <div class="subbox">
+                                                            <span class="amount" >#{userData.formatMaster(invoiceTableController.totalOverdue)}</span>&nbsp;
+                                                            <div><span >#{invoiceTableController.noOverdue}&nbsp;</span><span >OVERDUE</span></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tableCell paid_tab">
+                            <div class="bucket paid_tab" >
+                                <div class="header" >Paid</div>
+                                <div class="table">
+                                    <div class="tableRow" >
+                                        <div class="tableCell">
+                                            <div class="box paid"  id="paid" onmouseover="hoverBox('paid')" onmouseout="hoverBoxOut('paid')" onclick="redirectPanel(4);" >
+                                                <div class="subbox">
+                                                    <span class="amount" >#{userData.formatMaster(invoiceTableController.totalPaid)}</span>&nbsp;
+                                                    <div><span >#{invoiceTableController.noPaid}&nbsp;</span><span >PAID LAST 30 DAYS</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </bnu:column>
+
+        </bnu:row>
+
         <bnu:row>
             <bnu:column span="12">
                 <bnu:messages id="messages" />
@@ -91,7 +179,7 @@
             </bnu:column>
 
         </bnu:row>
-        <bnu:row  >
+        <bnu:row styleClass="hidden-xs hidden-sm" >
             <bnu:column span="12">
 
 
@@ -107,14 +195,14 @@
 
             </bnu:column>
         </bnu:row>
-       
+
         <bnu:row>
             <bnu:column span="12">
                 <bnu:dataTable
                     value="#{invoiceTableController.IList}"
                     id="tblInvoice"
                     var="in"
-
+                    responsive="true"
 
 
                     >
@@ -140,10 +228,10 @@
 
                             <bnu:commandButton value="Update status"  style="width:100%; border: none"  
                                                rendered="#{invoiceTableController.showOptions(in.status,in.type,'ESTATUS')}" action="#{invoiceTableController.assignEstimate(in)}"   />
-                            
+
                             <bnu:commandButton value="Copy"  style="width:100%; border: none"  
                                                rendered="#{invoiceTableController.showOptions(in.status,in.type,'COPY')}" action="#{invoiceTableController.copy(in)}"   />
-                            
+
                             <bnu:commandButton value="Receive Payment"  style="width:100%; border: none"  
                                                rendered="#{invoiceTableController.showOptions(in.status,in.type,'REPAY')}" action="#{invoiceTableController.recievePayment(in.idCust.idCust.toString(), in.idInvoice.toString())}"   />
 
@@ -156,15 +244,28 @@
                         <bnu:commandButton value="#{messages.lblInvoicePrint}" update="pdf"  styleClass="hidden-lg hidden-md"  action="#{invoiceTableController.print(in,request)}" rendered="#{invoiceTableController.showOptions(in.status,in.type,'PRINT')}"  />
 
                         <bnu:commandButton value="Copy"  style="width:100%; border: none" styleClass="hidden-lg hidden-md" 
-                                               rendered="#{invoiceTableController.showOptions(in.status,in.type,'COPY')}" action="#{invoiceTableController.copy(in)}"   />
+                                           rendered="#{invoiceTableController.showOptions(in.status,in.type,'COPY')}" action="#{invoiceTableController.copy(in)}"   />
                         <bnu:commandButton value="Receive Payment"  style="width:100%; border: none"  styleClass="hidden-lg hidden-md"
-                                               rendered="#{invoiceTableController.showOptions(in.status,in.type,'REPAY')}" action="#{invoiceTableController.recievePayment(in.idCust.idCust.toString(), in.idInvoice.toString())}"   />
+                                           rendered="#{invoiceTableController.showOptions(in.status,in.type,'REPAY')}" action="#{invoiceTableController.recievePayment(in.idCust.idCust.toString(), in.idInvoice.toString())}"   />
                     </bnu:dataTableColumn>
 
                 </bnu:dataTable>
             </bnu:column>
         </bnu:row>
-
+        <bnu:row>
+            <bnu:column span="1">
+                <label>#{messages.lblBalanceTotal}</label>
+            </bnu:column>
+            <bnu:column span="2">
+                <h:outputText value="#{userData.formatMaster(invoiceTableController.totalBalance.toString())}" />
+            </bnu:column>
+            <bnu:column span="1">
+                <label>#{messages.lblTotalTotal}</label>
+            </bnu:column>
+            <bnu:column span="2">
+                <h:outputText value="#{userData.formatMaster(invoiceTableController.totalTotal.toString())}" />
+            </bnu:column>
+        </bnu:row>
     </bnu:form>
     <p:separator/>
     <bnu:modal  id="invoiceModal" title="#{messages.invoice}" styleClass="invoiceModal"  close-on-escape="false" backdrop="false"  >
@@ -197,31 +298,216 @@
 
 
     <bnu:modal  id="updateStatusModal" title="#{messages.lblEstimate}" styleClass="updateStatusModal"   >
-        
-            <h:form  >
-                <bnu:selectOneMenu label="#{messages.lblInvoiceStatus}" value="#{invoiceTableController.estimateStatus}" onchange="show(this.value);" >
-                    
-                    <f:selectItem itemValue="PE" itemLabel="#{messages.lblESPending}" />
-                    <f:selectItem itemValue="AC" itemLabel="#{messages.lblAccepted}" />
-                    <f:selectItem itemValue="CL" itemLabel="#{messages.lblClosed}" />
-                    <f:selectItem itemValue="RJ" itemLabel="#{messages.lblRejected}" />
-                </bnu:selectOneMenu>
-                <div class="updateEstimateStatus" style="display: none;" >
-                    <bnu:inputText label="By" maxlength="30"  value="#{invoiceTableController.accBy}" />
+
+        <h:form  >
+            <bnu:selectOneMenu label="#{messages.lblInvoiceStatus}" value="#{invoiceTableController.estimateStatus}" onchange="show(this.value);" >
+
+                <f:selectItem itemValue="PE" itemLabel="#{messages.lblESPending}" />
+                <f:selectItem itemValue="AC" itemLabel="#{messages.lblAccepted}" />
+                <f:selectItem itemValue="CL" itemLabel="#{messages.lblClosed}" />
+                <f:selectItem itemValue="RJ" itemLabel="#{messages.lblRejected}" />
+            </bnu:selectOneMenu>
+            <div class="updateEstimateStatus" style="display: none;" >
+                <bnu:inputText label="By" maxlength="30"  value="#{invoiceTableController.accBy}" />
                 <strong>
                     <h:outputText value="Date"  />
 
                 </strong>
                 <bnu:datepicker value="#{invoiceTableController.accDate}"    />
-                </div>
-                <p:separator/>
+            </div>
+            <p:separator/>
 
-                <bnu:commandButton value="Cancel" style="margin-right: 10px;" />
-                <bnu:commandButton value="Ok" look="success"  action="#{invoiceTableController.updateEstimateStatus()}" />
+            <bnu:commandButton value="Cancel" style="margin-right: 10px;" />
+            <bnu:commandButton value="Ok" look="success"  action="#{invoiceTableController.updateEstimateStatus()}" />
 
-            </h:form>
-        
+        </h:form>
+
     </bnu:modal>
+
+
+    <h:outputStylesheet>
+        body .table {
+        display: table;
+        table-layout: fixed;
+        box-sizing: border-box;
+        }
+        .moneyBar{
+        margin-top: 35px;
+        width: 100%;
+        white-space: nowrap;
+        font-size: 1.2rem;
+
+        }
+        body .tableRow{
+        display: table-row;
+        vertical-align: top;
+        }
+        .moneyBar * {
+        outline: 0 none;
+        box-sizing: border-box;
+        }
+        .moneyBar .tableCell {
+        vertical-align: bottom;
+        }
+        body .tableCell {
+        display: table-cell;
+        vertical-align: top;
+        }
+        .moneyBar .bucket {
+        width: 100%;
+        padding-right: 5px;
+        }
+
+        .moneyBar .bucket.unbilled_tab .header {
+        float: right;
+        width: 50%;
+        text-overflow: ellipsis;
+        overflow-x: overlay;
+        }
+
+        .moneyBar .bucket .header {
+        padding-bottom: 2px;
+        color: #68779b;
+        }
+        .moneyBar .bucket .table {
+        width: 100%;
+        height: 68px;
+        text-transform: uppercase;
+        }
+        .moneyBar .bucket .box.estimates {
+        background-color: #21abf6;
+        }
+        .moneyBar .bucket .box {
+        width: 100%;
+        color: #ffffff;
+        height: 60px;
+        padding: 10px 10px 10px 10px;
+        cursor: pointer;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAGXRFW…FUeNpiYGBg4GVAAErYFBtAfcNGvTbqtVGvjXqNAjZAgAEAEPYFfUaJz74AAAAASUVORK5CYII=);
+        }
+        .moneyBar .bucket .box .subbox {
+        overflow: hidden;
+        height: 41px;
+        }
+        body, div, dl, dt, dd, li, pre, form, fieldset, input, textarea, p, blockquote {
+        margin: 0;
+        padding: 0;
+        }
+        .moneyBar .bucket .box .subbox .amount {
+        margin-bottom: 1px;
+        text-transform: none;
+        }
+        .moneyBar .bucket .box .amount {
+        font-family: "Geogrotesque", "Arial", -apple-system, "Helvetica Neue Bold", sans-serif;
+        font-weight: 500;
+        line-height: 1.21;
+        font-size: 2.2rem;
+        }
+        .moneyBar .bucket .box.ccbt {
+        background-color: #0077c5;
+        }
+        .moneyBar .bucket .box {
+        width: 100%;
+        color: #ffffff;
+        height: 60px;
+        padding: 10px 10px 10px 10px;
+        cursor: pointer;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAGXRFW…FUeNpiYGBg4GVAAErYFBtAfcNGvTbqtVGvjXqNAjZAgAEAEPYFfUaJz74AAAAASUVORK5CYII=);
+        }
+        .moneyBar .bucket .box .subStatuses .box {
+        margin-right: 15px;
+        margin-top: -51px;
+        }
+        .moneyBar .bucket .box.unpaid {
+        background-color: #babec5;
+        }
+        .moneyBar .bucket .box.unpaid > .subbox {
+        padding-left: 48%;
+        }
+        .moneyBar .bucket .box.unpaid > .subStatuses {
+        float: left;
+        }
+        .moneyBar .bucket .box .subStatuses {
+        float: right;
+        width: 45%;
+        }
+        .moneyBar .bucket .box.overdue {
+        background-color: #ff8000;
+        }
+        .moneyBar .bucket.paid_tab {
+        padding-right: 0;
+        }
+        .moneyBar .bucket .box.paid {
+        background-color: #7fd000;
+        }
+
+        .moneyBar .bucket
+        .box.estimates.selected, .moneyBar .bucket
+        .box.estimates.hover{
+        border-bottom: 6px solid rgba(0,0,0,0.35);
+        }
+
+        .moneyBar .bucket .box.selected,
+        .moneyBar .bucket .box.hover{
+        height: 68px;
+        }
+
+        .moneyBar .bucket .box.ccbt.selected, .moneyBar .bucket .box.ccbt.hover {
+        border-bottom: 6px solid rgba(0, 0, 0, 0.35);
+        }
+
+        .moneyBar .bucket .box .subStatuses .box.selected, .moneyBar .bucket .box .subStatuses .box.hover {
+        margin-top: -59px;
+        }
+        .moneyBar .bucket .box.overdue.selected, .moneyBar .bucket .box.overdue.hover {
+        border-bottom: 6px solid rgba(0, 0, 0, 0.3);
+        }
+        .moneyBar .bucket .box.unpaid.selected, .moneyBar .bucket .box.unpaid.hover {
+        border-bottom: 6px solid rgba(0, 0, 0, 0.25);
+        }
+        .moneyBar .bucket .box.selected .subStatuses .box, .moneyBar .bucket .box.hover .subStatuses .box {
+        height: 68px;
+        border-bottom: 6px solid rgba(0, 0, 0, 0.1);
+        }
+        .moneyBar .bucket .box.paid.selected, .moneyBar .bucket .box.paid.hover {
+        border-bottom: 6px solid rgba(0, 0, 0, 0.25);
+        }        
+    </h:outputStylesheet>
+
+    <h:outputScript>
+        function hoverBox(e){
+        if(e == 'overdue'){
+        if(#{invoiceTableController.panelFlag == 2}){
+        }else{
+        $('#'+e).addClass('hover');
+        }
+        }else{
+        $('#'+e).addClass('hover');
+        }
+
+        if(e == 'unpaid'){
+        if(#{invoiceTableController.panelFlag} != 0){
+        $('#overdue').removeClass('selected');
+        }
+        }
+        }
+
+
+        function hoverBoxOut(e){
+        $('#'+e).removeClass('hover');
+        if(e == 'unpaid' ){
+        if(#{invoiceTableController.panelFlag} != 0){
+        if(#{invoiceTableController.panelFlag} != 2){
+        $('#overdue').addClass('selected');
+        }
+
+        }
+
+        }
+        }
+
+
+    </h:outputScript>
 
 
     <style>
@@ -316,11 +602,11 @@
         }
         //obj.value = (obj.value + '').replace(/^((0?[1-9]|1[012])[- /.](0?[1-9]|[12][0-9]|3[01])[- /.](19|20)?[0-9]{2})*$/g, '');
         }
-        
-        
-        
+
+
+
         function show(value){
-        
+
         if(value == "PE"){
         $(".updateEstimateStatus").hide();
         //alert(value);
@@ -328,6 +614,13 @@
         $(".updateEstimateStatus").show();
         //alert(value);
         }
+        }
+
+
+
+        function redirectPanel(op){
+
+        window.location.replace('#{request.contextPath}/view/sales/sales.xhtml?pv='+op);
         }
 
     </h:outputScript>

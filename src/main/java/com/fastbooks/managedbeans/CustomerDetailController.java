@@ -14,6 +14,7 @@ import com.fastbooks.modelo.Terms;
 import com.fastbooks.util.ValidationBean;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -103,6 +104,9 @@ public class CustomerDetailController implements Serializable {
     String AccDate;
     private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
     private DateFormat sd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+    
+    private @Getter @Setter BigDecimal totalBalance = new BigDecimal(BigInteger.ZERO);
+    private @Getter @Setter BigDecimal totalTotal = new BigDecimal(BigInteger.ZERO);
 
     /*End estimate stuff*/
     public @Getter
@@ -114,7 +118,7 @@ public class CustomerDetailController implements Serializable {
 
     @PostConstruct
     public void init() {
-        title = "Customer Detail";
+        title = this.vb.getMsgBundle("lblCustomerDetail");
         System.out.println("com.fastbooks.managedbeans.CustomerDetailController.init()");
         if (!this.userData.getUses().equals("0")) {
             this.vb.lanzarMensaje("info", this.userData.getUses(), "blank");
@@ -149,6 +153,23 @@ public class CustomerDetailController implements Serializable {
                 if (userData != null && userData.getCurrentCia() != null) {
                     this.idCia = userData.getCurrentCia().getIdCia().toString();
                     transactionList = iFacade.getInvoicesByIdCust(idCust, idCia);
+                    Double acumBalance = 0.0;
+                    Double acumTotal = 0.0;
+                    for (FbInvoice fbInvoice : transactionList) {
+                if (fbInvoice.getActualBalance() != null && !fbInvoice.getType().equals("PA")) {
+                    acumBalance += fbInvoice.getActualBalance().doubleValue();
+                }else if(fbInvoice.getType().equals("PA")){
+                    acumBalance -= fbInvoice.getActualBalance().doubleValue();
+                }
+                if (fbInvoice.getTotal() != null && !fbInvoice.getType().equals("PA")) {
+                    acumTotal += fbInvoice.getTotal().doubleValue();
+                }
+                
+                
+            }
+                    this.totalBalance = new BigDecimal(acumBalance).setScale(2, BigDecimal.ROUND_HALF_UP);
+                    this.totalTotal = new BigDecimal(acumTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
+
                     if (currentCust.getStreet().equals(currentCust.getStreetS()) && currentCust.getEstate().equals(currentCust.getEstateS())
                             && currentCust.getPostalCode().equals(currentCust.getPostalCodeS()) && currentCust.getCity().equals(currentCust.getCityS())
                             && currentCust.getCountry().equals(currentCust.getCountryS())) {
@@ -307,24 +328,23 @@ public class CustomerDetailController implements Serializable {
             }
 
             if (!sameShipping) {
-                
+
                 //validar
                 if (vb.validarCampoVacio(this.currentCust.getStreetS(), "warn", "valErr", "reqStreetS")
-                && vb.validarCampoVacio(this.currentCust.getCityS(), "warn", "valErr", "reqCityS")
-                && vb.validarSoloLetras(this.currentCust.getCityS(), "warn", "valErr", "reqCityS")
-                && vb.validarCampoVacio(this.currentCust.getEstateS(), "warn", "valErr", "reqStateS")
-                && vb.validarSoloLetras(this.currentCust.getEstateS(), "warn", "valErr", "reqStateS")
-                && vb.validarCampoVacio(this.currentCust.getPostalCodeS(), "warn", "valErr", "reqPostalCS")
-                && vb.validarCampoVacio(this.currentCust.getCountryS(), "warn", "valErr", "reqCountryS")
-                && vb.validarSoloLetras(this.currentCust.getCountryS(), "warn", "valErr", "reqCountryS")) {
-                   flag = true;   
+                        && vb.validarCampoVacio(this.currentCust.getCityS(), "warn", "valErr", "reqCityS")
+                        && vb.validarSoloLetras(this.currentCust.getCityS(), "warn", "valErr", "reqCityS")
+                        && vb.validarCampoVacio(this.currentCust.getEstateS(), "warn", "valErr", "reqStateS")
+                        && vb.validarSoloLetras(this.currentCust.getEstateS(), "warn", "valErr", "reqStateS")
+                        && vb.validarCampoVacio(this.currentCust.getPostalCodeS(), "warn", "valErr", "reqPostalCS")
+                        && vb.validarCampoVacio(this.currentCust.getCountryS(), "warn", "valErr", "reqCountryS")
+                        && vb.validarSoloLetras(this.currentCust.getCountryS(), "warn", "valErr", "reqCountryS")) {
+                    flag = true;
                 }
-                
-              
-            }else{
-            flag = true;
+
+            } else {
+                flag = true;
             }
-            
+
         }
 
         return flag;

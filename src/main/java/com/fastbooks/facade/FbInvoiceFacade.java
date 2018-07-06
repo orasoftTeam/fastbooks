@@ -64,11 +64,49 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         super(FbInvoice.class);
     }
 
-    public List<FbInvoice> getInvoicesByIdCia(String idCia) {
+    public List<FbInvoice> getInvoicesByIdCia(String idCia, int op) {
         List<FbInvoice> list = new ArrayList<>();
         try {
+            String sql = "select * from fb_invoice i where id_cia=? and status != 'DEL' \n"
+                    + "and to_date(i.in_date,'MM/dd/yyyy') >= sysdate-365 \n"
+                    + "order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
 
-            String sql = "select * from fb_invoice i where id_cia=? and status != 'DEL' order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
+            switch (op) {
+                case 0:
+                    sql = "select * from fb_invoice i where id_cia=? and status != 'DEL'\n"
+                            + "and i.type = 'ES'\n"
+                            + "and to_date(i.in_date,'MM/dd/yyyy') >= sysdate -365\n"
+                            + "order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
+                    break;
+                case 1:
+                    sql = "select * from fb_invoice i where id_cia=? and status != 'DEL'\n"
+                            + "and i.type = 'SR'\n"
+                            + "and to_date(i.in_date,'MM/dd/yyyy') >= sysdate -365\n"
+                            + "order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
+                    break;
+                case 2:
+                    sql = "select * from fb_invoice i where id_cia=? and i.status != 'DEL'\n"
+                            + "and i.type = 'IN' and i.status = 'OV'\n"
+                            + "and to_date(i.in_date,'MM/dd/yyyy') >= sysdate -365\n"
+                            + "order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
+                    break;
+                case 3:
+                    sql = "select * from fb_invoice i where id_cia=? and i.status != 'DEL'\n"
+                            + "and i.type = 'IN' and i.status in ('OP','PA')\n"
+                            + "and to_date(i.in_date,'MM/dd/yyyy') >= sysdate -365\n"
+                            + "order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
+                    break;
+                case 4:
+                    sql = "select * from fb_invoice i where id_cia=? and i.status != 'DEL'\n"
+                            + "and i.type = 'IN' and i.status in ('PD','PA')\n"
+                            + "and to_date(i.in_date,'MM/dd/yyyy') >= sysdate -30\n"
+                            + "order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
+                    break;
+                default:
+
+                    break;
+            }
+
             Query q = em.createNativeQuery(sql, FbInvoice.class);
             q.setParameter(1, idCia);
             list = q.getResultList();
@@ -82,7 +120,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
 
         return list;
     }
-    
+
     public FbInvoice getInvoiceByIdInvoice(String idInvoice, String idCia) {
         List<FbInvoice> list = new ArrayList<>();
         try {
@@ -100,10 +138,10 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             e.printStackTrace();
         }
 
-        return list.isEmpty()?null: list.get(0);
-    }    
-    
-    public List<FbInvoice> getInvoicesByIdCust(String idCust,String idCia) {
+        return list.isEmpty() ? null : list.get(0);
+    }
+
+    public List<FbInvoice> getInvoicesByIdCust(String idCust, String idCia) {
         List<FbInvoice> list = new ArrayList<>();
         try {
 
@@ -121,11 +159,9 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         }
 
         return list;
-    }    
-    
-    
+    }
 
- /*   public List<FbInvoice> getInvoicesByIdCiaNonJpa(String idCia) throws SQLException, ClassNotFoundException {
+    /*   public List<FbInvoice> getInvoicesByIdCiaNonJpa(String idCia) throws SQLException, ClassNotFoundException {
         List<FbInvoice> list = new ArrayList<>();
 
         //Connection cn = em.unwrap(java.sql.Connection.class);
@@ -180,7 +216,6 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
 
         return list;
     }*/
-
     public List<FbInvoice> getInvoicesForPayment(String idCia, String idCust) {
         List<FbInvoice> list = new ArrayList<>();
         try {
@@ -190,7 +225,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             q.setParameter(2, idCust);
             list = q.getResultList();
             //em.flush();
-            
+
             for (FbInvoice fbInvoice : list) {
                 em.refresh(fbInvoice);
             }
@@ -264,7 +299,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         System.out.println("res: " + res);
         return res;
     }
-    
+
     public String actPaymentWithReturnId(FbInvoice in, String op) {
         String res = "def";
         String pIdInvoices = "";
@@ -309,8 +344,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         }
         System.out.println("res: " + res);
         return res;
-    }    
-    
+    }
 
     public String actInvoice(FbInvoice in, String op) {
         String res = "";
@@ -419,8 +453,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         System.out.println("Facade Resultado de operacion: " + res);
         return res;
     }
-    
-    
+
     public String actInvoiceWithReturnId(FbInvoice in, String op) {
         String res = "";
         String pProdsIds = "";
@@ -527,9 +560,9 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         }
         System.out.println("Facade Resultado de operacion: " + res);
         return resId;
-    }    
+    }
 
-    public String generateInvoice(FbInvoice i, String logo, JasperReport report, String type,String balance) {
+    public String generateInvoice(FbInvoice i, String logo, JasperReport report, String type, String balance) {
         String res = "";
         em.getEntityManagerFactory().getCache().evictAll();
         Connection cn = em.unwrap(java.sql.Connection.class);
@@ -543,11 +576,11 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             currentFile.delete();
         }*/
         file.mkdirs();
-        
+
         String destino = gp.getAppPath() + File.separator + "pdf" + File.separator + "cia" + i.getIdCia().getIdCia().toString()
                 + File.separator + i.getType() + i.getNoDot() + ".pdf";
 
-        String pdfName = File.separator + i.getType() + i.getNoDot() +  ".pdf";
+        String pdfName = File.separator + i.getType() + i.getNoDot() + ".pdf";
         Map parametersMap = new HashMap();
         parametersMap.put("ID_INVOICE", i.getIdInvoice().toString());
         File logoFile = new File(gp.getAppPath() + logo);
@@ -558,7 +591,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
 
         parametersMap.put("TYPE", type);
         parametersMap.put("BALANCE_DUE", balance);
-        
+
         try {
             ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
             String realPath = ec.getRealPath("/");
@@ -576,9 +609,9 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
             exporter.exportReport();
             System.out.println("File Created: " + destino);
-            
+
             res = "/pdf/" + "cia" + i.getIdCia().getIdCia().toString()
-                    + "/"+i.getType() + i.getNoDot()  + ".pdf";
+                    + "/" + i.getType() + i.getNoDot() + ".pdf";
         } catch (Exception e) {
             System.out.println("com.fastbooks.facade.FbInvoiceFacade.generateInvoice()");
             e.printStackTrace();
@@ -587,8 +620,8 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
 
         return res;
     }
-    
-    public String generatePayment(FbInvoice i, String logo, JasperReport report, String amountCredited,String total) {
+
+    public String generatePayment(FbInvoice i, String logo, JasperReport report, String amountCredited, String total) {
         String res = "";
         em.getEntityManagerFactory().getCache().evictAll();
         Connection cn = em.unwrap(java.sql.Connection.class);
@@ -604,9 +637,8 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         file.mkdirs();
 
         String destino = gp.getAppPath() + File.separator + "pdf" + File.separator + "cia" + i.getIdCia().getIdCia().toString()
-                + File.separator + "Payment" + i.getIdInvoice().toString()  + ".pdf";
+                + File.separator + "Payment" + i.getIdInvoice().toString() + ".pdf";
 
-        
         Map parametersMap = new HashMap();
         parametersMap.put("ID_INVOICE", i.getIdInvoice().toString());
         File logoFile = new File(gp.getAppPath() + logo);
@@ -633,9 +665,9 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
             exporter.exportReport();
             System.out.println("File Created: " + destino);
-          
+
             res = "/pdf/" + "cia" + i.getIdCia().getIdCia().toString()
-                    + "/Payment" + i.getIdInvoice().toString()  + ".pdf";
+                    + "/Payment" + i.getIdInvoice().toString() + ".pdf";
         } catch (Exception e) {
             System.out.println("com.fastbooks.facade.FbInvoiceFacade.generatePayment()");
             e.printStackTrace();
@@ -643,7 +675,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         }
 
         return res;
-    }    
+    }
 
     public JasperReport getCompiledFile(String fileName, HttpServletRequest request) throws JRException, IOException {
         // Create temporary folder to store jasper report as you should not write a resource into your program
@@ -812,7 +844,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
 
         return list;
     }
-    
+
     public List<FbPaymentDetail> getPaymentDetailsByIdInvoice(String idInvoice) {
         List<FbPaymentDetail> list = new ArrayList<>();
         try {
@@ -830,6 +862,6 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         }
 
         return list;
-    }    
+    }
 
 }

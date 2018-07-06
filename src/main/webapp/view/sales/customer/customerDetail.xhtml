@@ -12,7 +12,7 @@
 
             <ui:define name="content">
                 <h:form id="CustomerDetailForm" >
-                     <bnu:row>
+                    <bnu:row>
                         <bnu:column span="12">
                             <bnu:navLink href="#{request.contextPath}/view/sales/sales.xhtml" value="#{messages.lblGoBackCust}" />
                         </bnu:column>
@@ -150,7 +150,20 @@
                                 </bnu:dataTableColumn>
 
                             </bnu:dataTable>
-
+                            <bnu:row>
+                                <bnu:column span="1">
+                                    <label>#{messages.lblBalanceTotal}</label>
+                                </bnu:column>
+                                <bnu:column span="2">
+                                    <h:outputText value="#{userData.formatMaster(customerDetailController.totalBalance.toString())}" />
+                                </bnu:column>
+                                <bnu:column span="1">
+                                    <label>#{messages.lblTotalTotal}</label>
+                                </bnu:column>
+                                <bnu:column span="2">
+                                    <h:outputText value="#{userData.formatMaster(customerDetailController.totalTotal.toString())}" />
+                                </bnu:column>
+                            </bnu:row>
 
 
                         </bnu:tab>
@@ -292,11 +305,11 @@
                     </h:form>
 
                 </bnu:modal>
-                
-                
-                
-                
-                  <h:form id="customerFormEdit" >
+
+
+
+
+                <h:form id="customerFormEdit" >
                     <bnu:modal id="amodal2" styleClass="editCustModal" size="modal-lg" title="Customer information" >
                         <bnu:row>
                             <bnu:column span="1" >
@@ -306,22 +319,22 @@
                             <bnu:column span="2" >
                                 <label>#{messages.fNameC}</label>
                                 <bnu:inputText type="text" size="10" value="#{customerDetailController.currentCust.firstname}" class="fname" name="fname"  onblur="customerFormHelper.displayName();"  maxlength="10" />
-                                
+
                             </bnu:column>
                             <bnu:column span="2" >
                                 <label>#{messages.midNameC}</label>
                                 <bnu:inputText type="text" size="10" value="#{customerDetailController.currentCust.middlename}" class="mname" name="mname" onblur="customerFormHelper.displayName();"   maxlength="10" />
-                                
+
                             </bnu:column>
                             <bnu:column span="2" >
                                 <label>#{messages.lastNameC}</label>
                                 <bnu:inputText type="text" size="10" value="#{customerDetailController.currentCust.lastname}" class="lname" name="lname" onblur="customerFormHelper.displayName();"   maxlength="15" />
-                                
+
                             </bnu:column>
                             <bnu:column span="1" >
                                 <label>#{messages.suffixC}</label>
                                 <bnu:inputText type="text" size="3" value="#{customerDetailController.currentCust.suffixx}" class="suffix" name="suffix" onblur="customerFormHelper.displayName();"  maxlength="10"  />
-                                
+
                             </bnu:column>
                             <bnu:column span="4" >
                                 <bnu:inputText label="#{messages.email}" value="#{customerDetailController.currentCust.email}" field-size="xs" maxlength="50" />
@@ -397,7 +410,7 @@
                                         </bnu:row>
 
                                     </bnu:column>
-                               
+
                                     <bnu:column span="6" >
                                         <bnu:row>
                                             <bnu:column span="12">
@@ -417,18 +430,18 @@
                                         </bnu:row>
                                         <bnu:row>
 
-                                    <bnu:column span="6">
-                                        <bnu:inputText placeholder="#{messages.postalCC}"  class="shippingEnable" value="#{customerDetailController.currentCust.postalCodeS}" maxlength="10" />
+                                            <bnu:column span="6">
+                                                <bnu:inputText placeholder="#{messages.postalCC}"  class="shippingEnable" value="#{customerDetailController.currentCust.postalCodeS}" maxlength="10" />
+                                            </bnu:column>
+
+                                            <bnu:column span="6">
+                                                <bnu:inputText placeholder="#{messages.countryC}"  class="shippingEnable" value="#{customerDetailController.currentCust.countryS}" maxlength="10" />
+                                            </bnu:column>
+                                        </bnu:row>
                                     </bnu:column>
 
-                                    <bnu:column span="6">
-                                        <bnu:inputText placeholder="#{messages.countryC}"  class="shippingEnable" value="#{customerDetailController.currentCust.countryS}" maxlength="10" />
-                                    </bnu:column>
-                                </bnu:row>
-                                    </bnu:column>
 
-                                
-                                
+
 
                                 </bnu:row>
 
@@ -454,7 +467,7 @@
                                         <bnu:selectOneMenu label="#{messages.lblPreferredPayment}" value="#{customerDetailController.currentCust.paymentMethod}" >
                                             <f:selectItem  itemLabel="#{messages.selectOne}" itemValue=""  />
                                             <f:selectItems value="#{customerDetailController.PMethodList}" var="pm"
-                                           itemValue="#{pm.display}" itemLabel="#{pm.display}" />   
+                                                           itemValue="#{pm.display}" itemLabel="#{pm.display}" />   
                                         </bnu:selectOneMenu>
                                     </bnu:column>
                                     <bnu:column span="4"></bnu:column>
@@ -462,7 +475,7 @@
                                         <bnu:selectOneMenu label="#{messages.lblInvoiceTerms}"    value="#{customerDetailController.currentCust.terms}" >
                                             <f:selectItem  itemLabel="#{messages.selectOne}" itemValue="0"  />
                                             <f:selectItems value="#{customerDetailController.TList}" var="term"
-                                               itemLabel="#{term.display}" itemValue="#{term.days}" />
+                                                           itemLabel="#{term.display}" itemValue="#{term.days}" />
                                         </bnu:selectOneMenu>
                                     </bnu:column>
                                 </bnu:row>
@@ -507,12 +520,12 @@
                     </bnu:modal>
                 </h:form>
 
-                
-                
-                
-                 <h:outputScript>
-      
-                    
+
+
+
+                <h:outputScript>
+
+
                     var customerFormHelper = {
                     shippingDir : 1,
                     displayName: function(){
@@ -535,15 +548,15 @@
                     }
                     }
                     };
-                    
+
 
                     $(document).ready(function(){
-                        $(".shippingEnable").attr('disabled',true);
-                        
+                    $(".shippingEnable").attr('disabled',true);
+
                     });
-                    
+
                 </h:outputScript>
-                
+
 
 
             </ui:define>
