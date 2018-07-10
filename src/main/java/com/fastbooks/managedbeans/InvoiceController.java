@@ -10,6 +10,7 @@ import com.fastbooks.facade.FbInvoiceFacade;
 import com.fastbooks.modelo.FbCustomer;
 import com.fastbooks.modelo.FbInvoice;
 import com.fastbooks.util.GlobalParameters;
+import com.fastbooks.util.PanelesVentas;
 import com.fastbooks.util.SendMails;
 import com.fastbooks.util.ValidationBean;
 import com.fastbooks.util.WriteXMLFile;
@@ -162,6 +163,10 @@ public class InvoiceController implements Serializable {
     private @Getter
     @Setter
     BigDecimal totalPaid = new BigDecimal(BigInteger.ZERO);
+    
+    private @Getter @Setter PanelesVentas panelVentas;
+    private @Getter @Setter boolean hasPanelFilter = false;
+    /*panel stuff end */
 
     public void setPanelData() {
 
@@ -249,28 +254,34 @@ public class InvoiceController implements Serializable {
             switch (pv) {
                 case "0":
                     js = "$('#estimates').addClass('selected');";
+                    this.hasPanelFilter = true;
                     r = 0;
                     break;
                 case "1":
                     js = "$('#unbilled').addClass('selected');";
+                    this.hasPanelFilter = true;
                     r = 1;
                     break;
                 case "2":
                     js = "$('#overdue').addClass('selected');";
+                    this.hasPanelFilter = true;
                     r = 2;
                     this.panelFlag = 1;
                     break;
                 case "3":
                     js = "$('#unpaid').addClass('selected');";
+                    this.hasPanelFilter = true;
                     r = 3;
                     this.panelFlag = 2;
                     break;
                 case "4":
                     js = "$('#paid').addClass('selected');";
+                    this.hasPanelFilter = true;
                     r = 4;
                     break;
                 default:
                     js = "$('.box').removeClass('selected');";
+                    this.hasPanelFilter = false;
                     break;
             }
             this.validationBean.ejecutarJavascript(js);
@@ -285,10 +296,10 @@ public class InvoiceController implements Serializable {
             System.out.println("INIT INVOICES!!!!");
             /* HttpServletRequest req = (HttpServletRequest) this.validationBean.getRequestContext();
             this.userData.changeTab(req.getParameter("index"));*/
-
+            this.panelVentas = iFacade.getPanelesInfo(this.userData.getCurrentCia().getIdCia().toString());
             if (this.userData.getInvoiceSql().equals("0")) {
                 //iList =  iFacade.getInvoicesByIdCiaNonJpa(this.userData.getCurrentCia().getIdCia().toString());
-                iList = iFacade.getInvoicesByIdCia(this.userData.getCurrentCia().getIdCia().toString(), 5);
+                iList = iFacade.getInvoicesByIdCia(this.userData.getCurrentCia().getIdCia().toString(), this.setPanelSelected());
                 /*WriteXMLFile xml = new WriteXMLFile();
                 xml.crearXML(iList);*/
                 DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -297,11 +308,11 @@ public class InvoiceController implements Serializable {
             } else {
                 iList = iFacade.getInvoicesByIdCiaFilter(this.userData.getInvoiceSql());
             }
-            this.setPanelData();
+            /*this.setPanelData();
             int setPanelSelected = this.setPanelSelected();
             if (setPanelSelected != 5) {
                 iList = iFacade.getInvoicesByIdCia(this.userData.getCurrentCia().getIdCia().toString(), setPanelSelected);
-            }
+            }*/
             Double acumBalance = 0.0;
             Double acumTotal = 0.0;
             for (FbInvoice fbInvoice : iList) {

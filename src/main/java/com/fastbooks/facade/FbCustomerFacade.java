@@ -39,11 +39,12 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer> {
         List<FbCustomer> listC = new ArrayList<>();
         try {
             String sql = "select * from fb_customer where id_cia = ? and status = 'A' order by display_name asc";
+
             //tambien q muestre el perfil
             Query q = em.createNativeQuery(sql, FbCustomer.class);
             q.setParameter(1, idCust);
             listC = q.getResultList();
-            
+
             for (FbCustomer fbCustomer : listC) {
                 em.refresh(fbCustomer);
             }
@@ -57,16 +58,70 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer> {
     }
     //Lista para obtener customer por compania
 
-    public List<FbCustomer> getCustomer(String idCia) {
+    public List<FbCustomer> getCustomer(String idCia, int op) {
         List<FbCustomer> listC = new ArrayList<>();
         try {
             String sql = "select * from fb_customer \n"
                     + " where id_cia = ?"
                     + " and status = 'A' order by firstname asc";
+
+            switch (op) {
+                case 0:
+                    sql = "select * from fb_customer where id_cia = ? and status = 'A'\n"
+                            + "and id_cust in \n"
+                            + "(select distinct i.id_cust from fb_invoice i\n"
+                            + "where i.id_cia=? and i.status != 'DEL'\n"
+                            + "and i.type = 'ES'\n"
+                            + "and to_date(i.in_date,'MM/dd/yyyy') >= sysdate -365)\n"
+                            + "order by display_name asc";
+                    break;
+                case 1:
+                    sql = "select * from fb_customer where id_cia = ? and status = 'A'\n"
+                            + "and id_cust in \n"
+                            + "(select distinct i.id_cust from fb_invoice i where i.id_cia=? and i.status != 'DEL'\n"
+                            + "and i.type = 'SR' and i.id_cust is not null\n"
+                            + "and to_date(i.in_date,'MM/dd/yyyy') >= sysdate -365)\n"
+                            + "order by display_name asc";
+                    break;
+                case 2:
+                    sql = "select * from fb_customer where id_cia = ? and status = 'A'\n"
+                            + "and id_cust in \n"
+                            + "(select distinct i.id_cust from fb_invoice i where i.id_cia=? and i.status != 'DEL'\n"
+                            + "and i.type = 'IN' and i.status = 'OV'\n"
+                            + "and to_date(i.in_date,'MM/dd/yyyy') >= sysdate -365)\n"
+                            + "order by display_name asc";
+                    break;
+                case 3:
+                    sql = "select * from fb_customer where id_cia = ? and status = 'A'\n"
+                            + "and id_cust in \n"
+                            + "(select  distinct i.id_cust from fb_invoice i where i.id_cia=? and i.status != 'DEL'\n"
+                            + "and i.type = 'IN' and i.status in ('OP','PA')\n"
+                            + "and to_date(i.in_date,'MM/dd/yyyy') >= sysdate -365)\n"
+                            + "order by display_name asc";
+                    break;
+                case 4:
+                    sql = "select * from fb_customer where id_cia = ? and status = 'A'\n"
+                            + "and id_cust in \n"
+                            + "(select distinct i.id_cust from fb_invoice i where i.id_cia=? and i.status != 'DEL'\n"
+                            + "and i.type = 'IN' and i.status in ('PD','PA')\n"
+                            + "and to_date(i.in_date,'MM/dd/yyyy') >= sysdate -30)\n"
+                            + "order by display_name asc";
+                    break;
+                default:
+
+                    break;
+
+            }
+            int length = sql.length();
+            
             Query q = em.createNativeQuery(sql, FbCustomer.class);
             q.setParameter(1, idCia);
-            listC = q.getResultList();
+            if (length > 84) {
+                q.setParameter(2, idCia);
+            }
             
+            listC = q.getResultList();
+
             for (FbCustomer fbCustomer : listC) {
                 em.refresh(fbCustomer);
             }
@@ -77,17 +132,19 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer> {
         }
         return listC;
     }
-    
-        public FbCustomer getCustomerByIdCust(String idCust) {
+
+    public FbCustomer getCustomerByIdCust(String idCust,String idCia) {
         List<FbCustomer> listC = new ArrayList<>();
         try {
             String sql = "select * from fb_customer \n"
                     + " where id_cust = ?"
+                    + " and id_cia = ?"
                     + " and status = 'A'";
             Query q = em.createNativeQuery(sql, FbCustomer.class);
             q.setParameter(1, idCust);
+            q.setParameter(2, idCia);
             listC = q.getResultList();
-            
+
             for (FbCustomer fbCustomer : listC) {
                 em.refresh(fbCustomer);
             }
@@ -96,7 +153,7 @@ public class FbCustomerFacade extends AbstractFacade<FbCustomer> {
             e.printStackTrace();
 
         }
-        return listC.isEmpty()? null: listC.get(0);
+        return listC.isEmpty() ? null : listC.get(0);
     }
 
     /* (pIdCia IN INT,pIdCust IN INT,pTitle IN VARCHAR2,pfirstName IN VARCHAR2,

@@ -34,4 +34,9 @@
         <managed-bean-class>com.fastbooks.managedbeans.CustomerDetailController</managed-bean-class>
         <managed-bean-scope>view</managed-bean-scope>
     </managed-bean>
+    <managed-bean>
+        <managed-bean-name>statementController</managed-bean-name>
+        <managed-bean-class>com.fastbooks.managedbeans.StatementController</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
 </faces-config>

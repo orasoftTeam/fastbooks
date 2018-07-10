@@ -51,8 +51,8 @@
                                         <div class="tableCell">
                                             <div class="box estimates" id="estimates" onmouseover="hoverBox('estimates')" onmouseout="hoverBoxOut('estimates')" onclick="redirectPanel(0);" >
                                                 <div class="subbox">
-                                                    <span class="amount" >#{userData.formatMaster(invoiceTableController.totalEstimates)}</span>&nbsp;
-                                                    <div><span >#{invoiceTableController.noEstimates}&nbsp;</span><span >ESTIMATES</span></div>
+                                                    <span class="amount" >#{userData.formatMaster(invoiceTableController.panelVentas.totalEstimates)}</span>&nbsp;
+                                                    <div><span >#{invoiceTableController.panelVentas.noEstimates}&nbsp;</span><span >ESTIMATES</span></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -60,8 +60,8 @@
                                         <div class="tableCell">
                                             <div class="box ccbt"  id="unbilled"  onmouseover="hoverBox('unbilled')" onmouseout="hoverBoxOut('unbilled')" onclick="redirectPanel(1);" >
                                                 <div class="subbox">
-                                                    <span class="amount" >#{userData.formatMaster(invoiceTableController.totalUnbilled)}</span>&nbsp;
-                                                    <div><span >#{invoiceTableController.noUnbilled}&nbsp;</span><span >UNBILLED ACTIVITY</span></div>
+                                                    <span class="amount" >#{userData.formatMaster(invoiceTableController.panelVentas.totalUnbilled)}</span>&nbsp;
+                                                    <div><span >#{invoiceTableController.panelVentas.noUnbilled}&nbsp;</span><span >UNBILLED ACTIVITY</span></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -81,14 +81,14 @@
                                         <div class="tableCell">
                                             <div class="box unpaid"  id="unpaid" >
                                                 <div class="subbox" onmouseover="hoverBox('unpaid')" onmouseout="hoverBoxOut('unpaid')" onclick="redirectPanel(3);" >
-                                                    <span class="amount" >#{userData.formatMaster(invoiceTableController.totalOpen)}</span>&nbsp;
-                                                    <div><span >#{invoiceTableController.noOpen}&nbsp;</span><span >Open Invoices</span></div>
+                                                    <span class="amount" >#{userData.formatMaster(invoiceTableController.panelVentas.totalOpen)}</span>&nbsp;
+                                                    <div><span >#{invoiceTableController.panelVentas.noOpen}&nbsp;</span><span >Open Invoices</span></div>
                                                 </div>
                                                 <div class="subStatuses">
                                                     <div class="box overdue"  id="overdue" onmouseover="hoverBox('overdue')" onmouseout="hoverBoxOut('overdue')" onclick="redirectPanel(2);" >
                                                         <div class="subbox">
-                                                            <span class="amount" >#{userData.formatMaster(invoiceTableController.totalOverdue)}</span>&nbsp;
-                                                            <div><span >#{invoiceTableController.noOverdue}&nbsp;</span><span >OVERDUE</span></div>
+                                                            <span class="amount" >#{userData.formatMaster(invoiceTableController.panelVentas.totalOverdue)}</span>&nbsp;
+                                                            <div><span >#{invoiceTableController.panelVentas.noOverdue}&nbsp;</span><span >OVERDUE</span></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -107,8 +107,8 @@
                                         <div class="tableCell">
                                             <div class="box paid"  id="paid" onmouseover="hoverBox('paid')" onmouseout="hoverBoxOut('paid')" onclick="redirectPanel(4);" >
                                                 <div class="subbox">
-                                                    <span class="amount" >#{userData.formatMaster(invoiceTableController.totalPaid)}</span>&nbsp;
-                                                    <div><span >#{invoiceTableController.noPaid}&nbsp;</span><span >PAID LAST 30 DAYS</span></div>
+                                                    <span class="amount" >#{userData.formatMaster(invoiceTableController.panelVentas.totalPaid)}</span>&nbsp;
+                                                    <div><span >#{invoiceTableController.panelVentas.noPaid}&nbsp;</span><span >PAID LAST 30 DAYS</span></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -177,7 +177,7 @@
                     </div>
                 </div>
             </bnu:column>
-            <bnu:column span="3" >
+            <bnu:column span="3" rendered="#{invoiceTableController.hasPanelFilter}" >
                 <a href="#{request.contextPath}/view/sales/sales.xhtml" >Reset filters</a>
             </bnu:column>
         </bnu:row>

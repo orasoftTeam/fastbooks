@@ -10,10 +10,12 @@ import com.fastbooks.modelo.FbInvoiceDetail;
 import com.fastbooks.modelo.FbInvoiceTaxes;
 import com.fastbooks.modelo.FbPaymentDetail;
 import com.fastbooks.util.GlobalParameters;
+import com.fastbooks.util.PanelesVentas;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -69,38 +71,38 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         try {
             String sql = "select * from fb_invoice i where id_cia=? and status != 'DEL' \n"
                     + "and to_date(i.in_date,'MM/dd/yyyy') >= sysdate-365 \n"
-                    + "order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
+                    + "order by i.fecha_creacion desc";
 
             switch (op) {
                 case 0:
                     sql = "select * from fb_invoice i where id_cia=? and status != 'DEL'\n"
                             + "and i.type = 'ES'\n"
                             + "and to_date(i.in_date,'MM/dd/yyyy') >= sysdate -365\n"
-                            + "order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
+                            + "order by i.fecha_creacion desc";
                     break;
                 case 1:
                     sql = "select * from fb_invoice i where id_cia=? and status != 'DEL'\n"
                             + "and i.type = 'SR'\n"
                             + "and to_date(i.in_date,'MM/dd/yyyy') >= sysdate -365\n"
-                            + "order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
+                            + "order by i.fecha_creacion desc";
                     break;
                 case 2:
                     sql = "select * from fb_invoice i where id_cia=? and i.status != 'DEL'\n"
                             + "and i.type = 'IN' and i.status = 'OV'\n"
                             + "and to_date(i.in_date,'MM/dd/yyyy') >= sysdate -365\n"
-                            + "order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
+                            + "order by i.fecha_creacion desc";
                     break;
                 case 3:
                     sql = "select * from fb_invoice i where id_cia=? and i.status != 'DEL'\n"
                             + "and i.type = 'IN' and i.status in ('OP','PA')\n"
                             + "and to_date(i.in_date,'MM/dd/yyyy') >= sysdate -365\n"
-                            + "order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
+                            + "order by i.fecha_creacion desc";
                     break;
                 case 4:
                     sql = "select * from fb_invoice i where id_cia=? and i.status != 'DEL'\n"
                             + "and i.type = 'IN' and i.status in ('PD','PA')\n"
                             + "and to_date(i.in_date,'MM/dd/yyyy') >= sysdate -30\n"
-                            + "order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
+                            + "order by i.fecha_creacion desc";
                     break;
                 default:
 
@@ -145,7 +147,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         List<FbInvoice> list = new ArrayList<>();
         try {
 
-            String sql = "select * from fb_invoice i where id_cust=? and id_cia = ? and status != 'DEL' order by to_number(i.NO_DOT),to_date(i.in_date,'MM/dd/yyyy') desc";
+            String sql = "select * from fb_invoice i where id_cust=? and id_cia = ? and status != 'DEL' order by i.fecha_creacion desc";
             Query q = em.createNativeQuery(sql, FbInvoice.class);
             q.setParameter(1, idCust);
             q.setParameter(2, idCia);
@@ -862,6 +864,56 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         }
 
         return list;
+    }
+
+    public PanelesVentas getPanelesInfo(String idCia) {
+        PanelesVentas pv = null;
+        try {
+            Connection cn = em.unwrap(java.sql.Connection.class);
+            String sql = "select \n" +
+"(select count(*) from fb_invoice nes where nes.id_cia = ? and nes.status !='DEL' and nes.type = 'ES' and TO_DATE(nes.in_date,'MM/dd/yyyy') >= sysdate -365) \"NO_ESTIMATE\" ,\n" +
+"(select nvl(sum(tes.TOTAL),0)s from fb_invoice tes where tes.id_cia = ? and tes.status !='DEL' and tes.type = 'ES' and TO_DATE(tes.in_date,'MM/dd/yyyy') >= sysdate -365) \"TOTAL_ESTIMATE\" ,\n" +
+"(select count(*) from fb_invoice nsr where nsr.id_cia = ? and nsr.status !='DEL' and nsr.type = 'SR' and TO_DATE(nsr.in_date,'MM/dd/yyyy') >= sysdate -365) \"NO_UNBILLED\",\n" +
+"(select nvl(sum(tsr.TOTAL),0) from fb_invoice tsr where tsr.id_cia = ? and tsr.status !='DEL' and tsr.type = 'SR' and TO_DATE(tsr.in_date,'MM/dd/yyyy') >= sysdate -365) \"TOTAL_UNBILLED\" ,\n" +
+"(select count(*) from fb_invoice nov where nov.id_cia = ? and nov.status !='DEL' and nov.type = 'IN' and TO_DATE(nov.in_date,'MM/dd/yyyy') >= sysdate -365 and nov.status = 'OV') \"NO_OVERDUE\",\n" +
+"(select nvl(sum(tov.ACTUAL_BALANCE),0) from fb_invoice tov where tov.id_cia = ? and tov.status !='DEL' and tov.type = 'IN' and TO_DATE(tov.in_date,'MM/dd/yyyy') >= sysdate -365 and tov.status = 'OV') \"TOTAL_OVERDUE\" ,\n" +
+"(select count(*) from fb_invoice nop where nop.id_cia = ? and nop.status !='DEL' and nop.type = 'IN' and TO_DATE(nop.in_date,'MM/dd/yyyy') >= sysdate -365 and nop.status in ('OP','PA')) \"NO_OPEN\",\n" +
+"(select nvl(sum(top.ACTUAL_BALANCE),0) from fb_invoice top where top.id_cia = ? and top.status !='DEL' and top.type = 'IN' and TO_DATE(top.in_date,'MM/dd/yyyy') >= sysdate -365 and top.status in ('OP','PA')) \"TOTAL_OPEN\",\n" +
+"(select count(*) from fb_invoice npa where npa.id_cia = ? and npa.status !='DEL' and npa.type = 'IN' and TO_DATE(npa.in_date,'MM/dd/yyyy') >= sysdate -30 and npa.status in ('PD','PA')) \"NO_PAID\",\n" +
+"(select nvl(sum(tpa.TOTAL  - tpa.ACTUAL_BALANCE),0) from fb_invoice tpa where tpa.id_cia = ? and tpa.status !='DEL' and tpa.type = 'IN' and TO_DATE(tpa.in_date,'MM/dd/yyyy') >= sysdate -30 and tpa.status in ('PD','PA')) \"TOTAL_PAID\" \n" +
+"from dual";
+            PreparedStatement ps = cn.prepareStatement(sql);
+            ps.setString(1,idCia );
+            ps.setString(2,idCia );
+            ps.setString(3,idCia );
+            ps.setString(4,idCia );
+            ps.setString(5,idCia );
+            ps.setString(6,idCia );
+            ps.setString(7,idCia );
+            ps.setString(8,idCia );
+            ps.setString(9,idCia );
+            ps.setString(10,idCia );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                pv = new PanelesVentas();
+                pv.setNoEstimates(rs.getInt("NO_ESTIMATE"));
+                pv.setTotalEstimates(new BigDecimal(rs.getDouble("TOTAL_ESTIMATE")).setScale(2, BigDecimal.ROUND_HALF_UP));
+                pv.setNoUnbilled(rs.getInt("NO_UNBILLED"));
+                pv.setTotalUnbilled(new BigDecimal(rs.getDouble("TOTAL_UNBILLED")).setScale(2, BigDecimal.ROUND_HALF_UP));
+                pv.setNoOverdue(rs.getInt("NO_OVERDUE"));
+                pv.setTotalOverdue(new BigDecimal(rs.getDouble("TOTAL_OVERDUE")).setScale(2, BigDecimal.ROUND_HALF_UP));
+                pv.setNoOpen(rs.getInt("NO_OPEN"));
+                pv.setTotalOpen(new BigDecimal(rs.getDouble("TOTAL_OPEN")).setScale(2, BigDecimal.ROUND_HALF_UP));
+                pv.setNoPaid(rs.getInt("NO_PAID"));
+                pv.setTotalPaid(new BigDecimal(rs.getDouble("TOTAL_PAID")).setScale(2, BigDecimal.ROUND_HALF_UP));
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbInvoiceFacade.getPanelesInfo()");
+            e.printStackTrace();
+        }
+        return pv;
     }
 
 }

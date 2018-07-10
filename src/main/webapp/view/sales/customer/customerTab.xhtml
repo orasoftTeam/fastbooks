@@ -24,6 +24,130 @@
                     style="float: right" onclick="$('.addCustModal').modal()"/>
             </bnu:column>
         </bnu:row>
+        
+        <!-- tab paneles -->
+        
+        
+        
+        
+                <bnu:row id="panelVentas" styleClass="hidden-xs hidden-sm" >
+            <bnu:column span="12">
+                <div class="table moneyBar" >
+                    <div class="tableRow" >
+                        <div class="tableCell unbilled_tab" >
+                            <div class="bucket unbilled_tab">
+                                <div class="header">Unbilled Last 365 Days</div>
+                                <div class="table">
+                                    <div class="tableRow" >
+                                        <div class="tableCell">
+                                            <div class="box estimates" id="estimates" onmouseover="hoverBox('estimates')" onmouseout="hoverBoxOut('estimates')" onclick="redirectPanel(0);" >
+                                                <div class="subbox">
+                                                    <span class="amount" >#{userData.formatMaster(customerController.panelVentas.totalEstimates)}</span>&nbsp;
+                                                    <div><span >#{customerController.panelVentas.noEstimates}&nbsp;</span><span >ESTIMATES</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="tableCell">
+                                            <div class="box ccbt"  id="unbilled"  onmouseover="hoverBox('unbilled')" onmouseout="hoverBoxOut('unbilled')" onclick="redirectPanel(1);" >
+                                                <div class="subbox">
+                                                    <span class="amount" >#{userData.formatMaster(customerController.panelVentas.totalUnbilled)}</span>&nbsp;
+                                                    <div><span >#{customerController.panelVentas.noUnbilled}&nbsp;</span><span >UNBILLED ACTIVITY</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="tableCell unpaid_tab">
+                            <div class="bucket unpaid_tab"  >
+                                <div class="header" >Unpaid Last 365 Days</div>
+                                <div class="table">
+                                    <div class="tableRow">
+                                        <div class="tableCell">
+                                            <div class="box unpaid"  id="unpaid" >
+                                                <div class="subbox" onmouseover="hoverBox('unpaid')" onmouseout="hoverBoxOut('unpaid')" onclick="redirectPanel(3);" >
+                                                    <span class="amount" >#{userData.formatMaster(customerController.panelVentas.totalOpen)}</span>&nbsp;
+                                                    <div><span >#{customerController.panelVentas.noOpen}&nbsp;</span><span >Open Invoices</span></div>
+                                                </div>
+                                                <div class="subStatuses">
+                                                    <div class="box overdue"  id="overdue" onmouseover="hoverBox('overdue')" onmouseout="hoverBoxOut('overdue')" onclick="redirectPanel(2);" >
+                                                        <div class="subbox">
+                                                            <span class="amount" >#{userData.formatMaster(customerController.panelVentas.totalOverdue)}</span>&nbsp;
+                                                            <div><span >#{customerController.panelVentas.noOverdue}&nbsp;</span><span >OVERDUE</span></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tableCell paid_tab">
+                            <div class="bucket paid_tab" >
+                                <div class="header" >Paid</div>
+                                <div class="table">
+                                    <div class="tableRow" >
+                                        <div class="tableCell">
+                                            <div class="box paid"  id="paid" onmouseover="hoverBox('paid')" onmouseout="hoverBoxOut('paid')" onclick="redirectPanel(4);" >
+                                                <div class="subbox">
+                                                    <span class="amount" >#{userData.formatMaster(customerController.panelVentas.totalPaid)}</span>&nbsp;
+                                                    <div><span >#{customerController.panelVentas.noPaid}&nbsp;</span><span >PAID LAST 30 DAYS</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </bnu:column>
+
+        </bnu:row>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <!-- tab paneles fin -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         <bnu:row>
             <bnu:column span="12">
                 <bnu:messages id="message" />
@@ -35,7 +159,11 @@
             <bnu:navLink value="#{messages.createS}" href="#{request.contextPath}/view/sales/createStatements.xhtml"></bnu:navLink>
             <bnu:navLink value="#{messages.emailC}"></bnu:navLink>
         </bnu:dropButton>
-
+        <bnu:row>
+        <bnu:column span="3" rendered="#{customerController.hasPanelFilter}" >
+                <a href="#{request.contextPath}/view/sales/sales.xhtml" >Reset filters</a>
+            </bnu:column>
+            </bnu:row>
         <bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />
         <bnu:commandButton value="" iconAwesome="fa-clipboard" style="float: right" />
         <bnu:commandButton value="" iconAwesome="fa-print" style="float: right" />
@@ -69,7 +197,7 @@
                     <bnu:commandButton value="#{messages.lblCreateInvoice}" action="#{customerController.createInvoice('IN', cust.idCust.toString())}" style="width:100%;border: none;" />
                     <bnu:commandButton value="#{messages.lblCreateEstimate}" action="#{customerController.createInvoice('ES', cust.idCust.toString())}" style="width:100%;border: none;" />
                     <bnu:commandButton value="#{messages.lblCreateSalesReceipt}" action="#{customerController.createInvoice('SR', cust.idCust.toString())}" style="width:100%;border: none;" />
-                    
+                    <bnu:commandButton value="#{messages.lblStatement}"  action="#{customerController.statement(cust.idCust.toString())}" style="width: 100%; border: none"   />
                     <bnu:commandButton value="#{messages.lblMakeInactive}"  style="width:100%;border: none;"  rendered="#{customerController.renderOptionMaster('INAC',cust)}" />
 
                 </bnu:dropButton>
@@ -158,22 +286,22 @@
 
                                         <bnu:row>
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.cityT}"  value="#{customerController.customer.city}" maxlength="10" />
+                                                <bnu:inputText placeholder="#{messages.cityT}"  value="#{customerController.customer.city}" maxlength="15" />
                                             </bnu:column>
 
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.stateP}"  value="#{customerController.customer.estate}" maxlength="10" />
+                                                <bnu:inputText placeholder="#{messages.stateP}"  value="#{customerController.customer.estate}" maxlength="15" />
                                             </bnu:column>
 
                                         </bnu:row>
 
                                         <bnu:row>
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.postalCC}"  value="#{customerController.customer.postalCode}" maxlength="10" />
+                                                <bnu:inputText placeholder="#{messages.postalCC}"  value="#{customerController.customer.postalCode}" maxlength="15" />
                                             </bnu:column>
 
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.countryC}" value="#{customerController.customer.country}" maxlength="10" />
+                                                <bnu:inputText placeholder="#{messages.countryC}" value="#{customerController.customer.country}" maxlength="15" />
                                             </bnu:column>
 
                                         </bnu:row>
@@ -190,21 +318,21 @@
                                         <bnu:row>
 
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.cityT}"  class="shippingEnable" value="#{customerController.customer.cityS}" maxlength="10" />
+                                                <bnu:inputText placeholder="#{messages.cityT}"  class="shippingEnable" value="#{customerController.customer.cityS}" maxlength="15" />
                                             </bnu:column>
 
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.stateP}"  class="shippingEnable" value="#{customerController.customer.estateS}" maxlength="10" />
+                                                <bnu:inputText placeholder="#{messages.stateP}"  class="shippingEnable" value="#{customerController.customer.estateS}" maxlength="15" />
                                             </bnu:column>
                                         </bnu:row>
                                         <bnu:row>
 
                                     <bnu:column span="6">
-                                        <bnu:inputText placeholder="#{messages.postalCC}"  class="shippingEnable" value="#{customerController.customer.postalCodeS}" maxlength="10" />
+                                        <bnu:inputText placeholder="#{messages.postalCC}"  class="shippingEnable" value="#{customerController.customer.postalCodeS}" maxlength="15" />
                                     </bnu:column>
 
                                     <bnu:column span="6">
-                                        <bnu:inputText placeholder="#{messages.countryC}"  class="shippingEnable" value="#{customerController.customer.countryS}" maxlength="10" />
+                                        <bnu:inputText placeholder="#{messages.countryC}"  class="shippingEnable" value="#{customerController.customer.countryS}" maxlength="15" />
                                     </bnu:column>
                                 </bnu:row>
                                     </bnu:column>
@@ -339,6 +467,46 @@
                     });
                     
                 </h:outputScript>
+                
+                    <h:outputScript>
+        function hoverBox(e){
+        if(e == 'overdue'){
+        if(#{customerController.panelFlag == 2}){
+        }else{
+        $('#'+e).addClass('hover');
+        }
+        }else{
+        $('#'+e).addClass('hover');
+        }
+
+        if(e == 'unpaid'){
+        if(#{customerController.panelFlag} != 0){
+        $('#overdue').removeClass('selected');
+        }
+        }
+        }
+
+
+        function hoverBoxOut(e){
+        $('#'+e).removeClass('hover');
+        if(e == 'unpaid' ){
+        if(#{customerController.panelFlag} != 0){
+        if(#{customerController.panelFlag} != 2){
+        $('#overdue').addClass('selected');
+        }
+
+        }
+
+        }
+        }
+        
+        function redirectPanel(op){
+
+        window.location.replace('#{request.contextPath}/view/sales/sales.xhtml?pv='+op);
+        }
+
+
+    </h:outputScript>
 
 </ui:fragment>
 

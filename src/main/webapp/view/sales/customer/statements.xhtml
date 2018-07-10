@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:bnu="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <f:view locale="#{ userData.locale}"/>
+    <h:head>
+        <title>#{userData.GParameters.title}</title>
+    </h:head>
+    <h:body>
+        <h:form id="paymentForm" >
+            <bnu:container styleClass="marco">
+                <bnu:row>
+                    <bnu:column span="11">
+                        <h3>#{statementController.title} </h3>
+
+                    </bnu:column>
+                    <bnu:column span="1">
+                        <h2><a style="text-decoration: none;color: black" href="#{request.contextPath}/view/sales/customer/customerDetail.xhtml?id=#{statementController.idCust}" >✖</a></h2>
+                    </bnu:column>
+
+                </bnu:row> 
+                <p:separator/>
+                <bnu:row>
+                    <bnu:column span="2">
+                        <bnu:selectOneMenu value="#{statementController.stmtType}" label="Statement Type"  class="selectMenu" onchange="changeMenu(this.value);" >
+                            <f:selectItem itemLabel="#{messages.lblStatementType1}" itemValue="BF" />
+                            <f:selectItem itemLabel="#{messages.lblStatementType2}" itemValue="OI" />
+                            <f:selectItem itemLabel="#{messages.lblStatementType3}" itemValue="TS" />
+                        </bnu:selectOneMenu>
+                    </bnu:column>
+                    <bnu:column span="6">
+                        
+                    </bnu:column>
+                    <bnu:column span="4">
+                        <p><small>TOTAL BALANCE FOR #{statementController.currentCust.displayName}</small></p>
+                        <h1>#{userData.formatMaster(statementController.currentCust.balance)}</h1>
+                    </bnu:column>
+                    
+                </bnu:row>
+                <p:separator/>
+                <bnu:row>
+                    <bnu:column span="2">
+                        <label>Statement Date</label>
+                        <bnu:datepicker  value="#{statementController.stmtDate}" />
+                    </bnu:column>
+                    
+                </bnu:row>
+                <bnu:row class="startEnd" >
+                    <bnu:column span="2">
+                        <label>Start Date</label>
+                        <bnu:datepicker  value="#{statementController.startDate}" />
+                    </bnu:column>
+                    <bnu:column span="2">
+                        <label>End Date</label>
+                        <bnu:datepicker  value="#{statementController.endDate}" />
+                    </bnu:column>
+                </bnu:row>
+                <bnu:row>
+                    <bnu:column span="2">
+                        <bnu:commandButton value="Apply" />
+                    </bnu:column>
+                </bnu:row>
+                
+            </bnu:container>
+        </h:form>
+        
+        
+        <h:outputScript>
+            function changeMenu(e){
+            if(e == 'OI'){
+            $('.startEnd').hide();
+            }else{
+            $('.startEnd').show();
+            }
+            }
+            
+        </h:outputScript>
+        
+    </h:body>
+</html>
+

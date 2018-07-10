@@ -375,16 +375,18 @@ public class UserData implements Serializable {
         String res = "";
         if (!obj.isEmpty()) {
             Double dobbs = Double.parseDouble(obj);
-            res = format.format(dobbs);
+            res =  format.format(dobbs);
             if (dobbs < 0) {
                 //formatear para negativo
-                res = res.substring(1, 2) + " -" + res.substring(2, res.length() - 1);
+                res =  res.substring(1, 2) + " -" + res.substring(2, res.length() - 1);
 
             }
 
         }
-
-        return currency.getCurrencyCode() + res;
+        if (!obj.isEmpty()) {
+            res = currency.getCurrencyCode() + res;
+        }
+        return  res;
     }
 
     public void changeTab(String index) {

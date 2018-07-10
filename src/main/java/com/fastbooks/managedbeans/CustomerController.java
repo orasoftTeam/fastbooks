@@ -6,6 +6,7 @@
 package com.fastbooks.managedbeans;
 
 import com.fastbooks.facade.FbCustomerFacade;
+import com.fastbooks.facade.FbInvoiceFacade;
 import com.fastbooks.modelo.BillCustomer;
 import com.fastbooks.modelo.DeliveryMethod;
 import com.fastbooks.modelo.FbCompania;
@@ -13,6 +14,7 @@ import com.fastbooks.modelo.FbCustomer;
 import com.fastbooks.modelo.PaymentMethod;
 import com.fastbooks.modelo.Terms;
 import com.fastbooks.util.GlobalParameters;
+import com.fastbooks.util.PanelesVentas;
 import com.fastbooks.util.ValidationBean;
 import java.io.File;
 import java.io.Serializable;
@@ -47,8 +49,12 @@ public class CustomerController implements Serializable {
     ValidationBean validationBean;
     @EJB
     FbCustomerFacade custF;
+    @EJB
+    FbInvoiceFacade iFacade;
     private FbCustomer customer = new FbCustomer(); //declarar modelo
-    private @Getter @Setter boolean sameShipping = true;
+    private @Getter
+    @Setter
+    boolean sameShipping = true;
     @Inject
     UserData userData;
 
@@ -88,6 +94,15 @@ public class CustomerController implements Serializable {
     @Setter
     List<Terms> tList = new ArrayList<>();
 
+    private @Getter
+    @Setter
+    PanelesVentas panelVentas;
+
+    private @Getter
+    @Setter
+    int panelFlag = 0;
+    private @Getter @Setter boolean hasPanelFilter = false;
+
     public FbCustomer getCustomer() {
         return customer;
     }
@@ -95,8 +110,6 @@ public class CustomerController implements Serializable {
     public void setCustomer(FbCustomer customer) {
         this.customer = customer;
     }
-
-  
 
     /**
      * Creates a new instance of CustomerController
@@ -115,7 +128,7 @@ public class CustomerController implements Serializable {
     public void registerC() {
         if (valCamposAdd()) {
             if (sameShipping) {
-                
+
                 customer.setStreetS(customer.getStreet());
                 customer.setCityS(customer.getCity());
                 customer.setEstateS(customer.getEstate());
@@ -138,8 +151,7 @@ public class CustomerController implements Serializable {
             } else if (res.equals("-2")) {
                 validationBean.lanzarMensaje("error", "unexpectedError", "blank");
             }
-            
-            
+
         }
 
     }
@@ -150,7 +162,8 @@ public class CustomerController implements Serializable {
             System.out.println("INIT CUSTOMERS!!!!");
             /*HttpServletRequest req = (HttpServletRequest) this.validationBean.getRequestContext();
             this.userData.changeTab(req.getParameter("index"));*/
-            custL = custF.getCustomer(this.userData.getCurrentCia().getIdCia().toString());
+            this.panelVentas = this.iFacade.getPanelesInfo(this.userData.getCurrentCia().getIdCia().toString());
+            custL = custF.getCustomer(this.userData.getCurrentCia().getIdCia().toString(), this.setPanelSelected());
             if (!this.userData.getUses().equals("0")) {
                 this.validationBean.lanzarMensaje("info", this.userData.getUses(), "blank");
                 this.userData.setUses("0");
@@ -174,6 +187,51 @@ public class CustomerController implements Serializable {
             e.printStackTrace();
         }
 
+    }
+
+    public int setPanelSelected() {
+        HttpServletRequest req = (HttpServletRequest) this.validationBean.getRequestContext();
+        String pv = req.getParameter("pv");
+        String js = "";
+        int r = 5;
+        if (pv != null) {
+            switch (pv) {
+                case "0":
+                    js = "$('#estimates').addClass('selected');";
+                    this.hasPanelFilter = true;
+                    r = 0;
+                    break;
+                case "1":
+                    js = "$('#unbilled').addClass('selected');";
+                    this.hasPanelFilter = true;
+                    r = 1;
+                    break;
+                case "2":
+                    js = "$('#overdue').addClass('selected');";
+                    this.hasPanelFilter = true;
+                    r = 2;
+                    this.panelFlag = 1;
+                    break;
+                case "3":
+                    js = "$('#unpaid').addClass('selected');";
+                    this.hasPanelFilter = true;
+                    r = 3;
+                    this.panelFlag = 2;
+                    break;
+                case "4":
+                    js = "$('#paid').addClass('selected');";
+                    this.hasPanelFilter = true;
+                    r = 4;
+                    break;
+                default:
+                    js = "$('.box').removeClass('selected');";
+                    this.hasPanelFilter = false;
+                    break;
+            }
+            this.validationBean.ejecutarJavascript(js);
+        }
+
+        return r;
     }
 
     //Deleting customer
@@ -466,6 +524,11 @@ public class CustomerController implements Serializable {
                     flag = true;
                 }
                 break;
+            case "STATE":
+                if (cust.getBalance().doubleValue() != 0) {
+                    flag = true;
+                }
+                break;    
         }
 
         return flag;
@@ -484,9 +547,8 @@ public class CustomerController implements Serializable {
     public void onSelect(String idCust) {
         System.out.println("idCust: " + idCust);
     }
-    
-    
-        public boolean valCamposAdd() {
+
+    public boolean valCamposAdd() {
 
         boolean flag = false;
 
@@ -513,30 +575,29 @@ public class CustomerController implements Serializable {
             }
 
             if (!sameShipping) {
-                
+
                 //validar
                 if (validationBean.validarCampoVacio(this.customer.getStreetS(), "warn", "valErr", "reqStreetS")
-                && validationBean.validarCampoVacio(this.customer.getCityS(), "warn", "valErr", "reqCityS")
-                && validationBean.validarSoloLetras(this.customer.getCityS(), "warn", "valErr", "reqCityS")
-                && validationBean.validarCampoVacio(this.customer.getEstateS(), "warn", "valErr", "reqStateS")
-                && validationBean.validarSoloLetras(this.customer.getEstateS(), "warn", "valErr", "reqStateS")
-                && validationBean.validarCampoVacio(this.customer.getPostalCodeS(), "warn", "valErr", "reqPostalCS")
-                && validationBean.validarCampoVacio(this.customer.getCountryS(), "warn", "valErr", "reqCountryS")
-                && validationBean.validarSoloLetras(this.customer.getCountryS(), "warn", "valErr", "reqCountryS")) {
-                   flag = true;   
+                        && validationBean.validarCampoVacio(this.customer.getCityS(), "warn", "valErr", "reqCityS")
+                        && validationBean.validarSoloLetras(this.customer.getCityS(), "warn", "valErr", "reqCityS")
+                        && validationBean.validarCampoVacio(this.customer.getEstateS(), "warn", "valErr", "reqStateS")
+                        && validationBean.validarSoloLetras(this.customer.getEstateS(), "warn", "valErr", "reqStateS")
+                        && validationBean.validarCampoVacio(this.customer.getPostalCodeS(), "warn", "valErr", "reqPostalCS")
+                        && validationBean.validarCampoVacio(this.customer.getCountryS(), "warn", "valErr", "reqCountryS")
+                        && validationBean.validarSoloLetras(this.customer.getCountryS(), "warn", "valErr", "reqCountryS")) {
+                    flag = true;
                 }
-                
-              
-            }else{
-            flag = true;
+
+            } else {
+                flag = true;
             }
-            
+
         }
 
         return flag;
     }
-        
-            public void showAlert() {
+
+    public void showAlert() {
         String uses = this.userData.getUses();
         if (!uses.equals("0")) {
             this.validationBean.lanzarMensaje("info", this.userData.getUses(), "blank");
@@ -545,5 +606,10 @@ public class CustomerController implements Serializable {
 
         }
     }
+    
+    public void statement(String idCust){
+    this.validationBean.redirecionar("/view/sales/customer/statements.xhtml?id="+idCust);
+    }
+    
 
 }

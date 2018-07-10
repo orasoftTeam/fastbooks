@@ -148,7 +148,7 @@ public class CustomerDetailController implements Serializable {
         int c = 0;
         this.idCust = req.getParameter("id");
         if (this.idCust != null && !this.idCust.isEmpty()) {
-            this.currentCust = cFacade.getCustomerByIdCust(idCust);
+            this.currentCust = cFacade.getCustomerByIdCust(idCust,userData.getCurrentCia().getIdCia().toString());
             if (this.currentCust != null) {
                 if (userData != null && userData.getCurrentCia() != null) {
                     this.idCia = userData.getCurrentCia().getIdCia().toString();
@@ -169,6 +169,12 @@ public class CustomerDetailController implements Serializable {
             }
                     this.totalBalance = new BigDecimal(acumBalance).setScale(2, BigDecimal.ROUND_HALF_UP);
                     this.totalTotal = new BigDecimal(acumTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
+                    if (currentCust.getStreet() == null) {
+                        currentCust.setStreet("");
+                    }
+                    if (currentCust.getStreetS() == null) {
+                        currentCust.setStreetS("");
+                    }
 
                     if (currentCust.getStreet().equals(currentCust.getStreetS()) && currentCust.getEstate().equals(currentCust.getEstateS())
                             && currentCust.getPostalCode().equals(currentCust.getPostalCodeS()) && currentCust.getCity().equals(currentCust.getCityS())
@@ -382,7 +388,13 @@ public class CustomerDetailController implements Serializable {
             e.printStackTrace();
             res = "-2";
         }
+        
+      
 
+    }
+    
+      public void statement(){
+    this.vb.redirecionar("/view/sales/customer/statements.xhtml?id="+this.idCust);
     }
 
 }
