@@ -69,6 +69,9 @@ import lombok.Setter;
     , @NamedQuery(name = "FbCustomer.findByBillCustomer", query = "SELECT f FROM FbCustomer f WHERE f.billCustomer = :billCustomer")})
 public class FbCustomer implements Serializable {
 
+    @OneToMany(mappedBy = "idCust")
+    private List<FbStatement> fbStatementList;
+
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
@@ -519,6 +522,15 @@ public class FbCustomer implements Serializable {
     @Override
     public String toString() {
         return "com.fastbooks.modelo.FbCustomer[ idCust=" + idCust + " ]";
+    }
+
+    @XmlTransient
+    public List<FbStatement> getFbStatementList() {
+        return fbStatementList;
+    }
+
+    public void setFbStatementList(List<FbStatement> fbStatementList) {
+        this.fbStatementList = fbStatementList;
     }
     
 }

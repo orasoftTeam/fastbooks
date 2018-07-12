@@ -174,10 +174,10 @@ public class UserData implements Serializable {
 
     }
 
-    /* @PostConstruct
+     @PostConstruct
     public void init(){
        System.out.println("INITIALIZATING SESSION BEAN!!!!");
-        Locale requestLocale = new Locale("en", "us");//FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
+       /* Locale requestLocale = new Locale("en", "us");//FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
         System.out.println(requestLocale.toString());
         System.out.println(requestLocale.getDisplayName());
         System.out.println(requestLocale.getCountry());
@@ -189,8 +189,8 @@ public class UserData implements Serializable {
         BigDecimal doble = new BigDecimal("0");
         java.text.NumberFormat format = java.text.NumberFormat.getCurrencyInstance(requestLocale);
         System.out.println(format.format(doble));
-        System.out.println("-------------------------------------------------------");
-    }*/
+        System.out.println("-------------------------------------------------------");*/
+    }
     public List<Country> getList() {
         return list;
     }
@@ -424,7 +424,7 @@ public class UserData implements Serializable {
 
     @PreDestroy
     public void destory() {
-        this.validationBean.redirecionar("/");
+        //this.validationBean.redirecionar("/");
         System.out.println("com.fastbooks.managedbeans.UserData.destory()");
     }
 

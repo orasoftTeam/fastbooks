@@ -303,7 +303,7 @@ public class CustomerDetailController implements Serializable {
             this.userData.setUses("unexpectedError");
 
         }
-        this.vb.redirecionar("/view/sales/invoiceForm.xhtml?dir=" + this.idCust);
+        this.vb.redirecionar("/view/sales/customer/customerDetail.xhtml?id=" + this.idCust);
 
     }
 

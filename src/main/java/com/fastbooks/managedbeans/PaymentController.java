@@ -16,6 +16,7 @@ import com.fastbooks.modelo.Terms;
 import com.fastbooks.util.ValidationBean;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -615,6 +616,7 @@ public class PaymentController implements Serializable {
 
                 }
             }
+            this.DAmount = new BigDecimal(this.DAmount).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
             this.actualizarResults();
 
         } catch (Exception e) {

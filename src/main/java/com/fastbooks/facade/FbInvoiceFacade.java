@@ -870,29 +870,29 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         PanelesVentas pv = null;
         try {
             Connection cn = em.unwrap(java.sql.Connection.class);
-            String sql = "select \n" +
-"(select count(*) from fb_invoice nes where nes.id_cia = ? and nes.status !='DEL' and nes.type = 'ES' and TO_DATE(nes.in_date,'MM/dd/yyyy') >= sysdate -365) \"NO_ESTIMATE\" ,\n" +
-"(select nvl(sum(tes.TOTAL),0)s from fb_invoice tes where tes.id_cia = ? and tes.status !='DEL' and tes.type = 'ES' and TO_DATE(tes.in_date,'MM/dd/yyyy') >= sysdate -365) \"TOTAL_ESTIMATE\" ,\n" +
-"(select count(*) from fb_invoice nsr where nsr.id_cia = ? and nsr.status !='DEL' and nsr.type = 'SR' and TO_DATE(nsr.in_date,'MM/dd/yyyy') >= sysdate -365) \"NO_UNBILLED\",\n" +
-"(select nvl(sum(tsr.TOTAL),0) from fb_invoice tsr where tsr.id_cia = ? and tsr.status !='DEL' and tsr.type = 'SR' and TO_DATE(tsr.in_date,'MM/dd/yyyy') >= sysdate -365) \"TOTAL_UNBILLED\" ,\n" +
-"(select count(*) from fb_invoice nov where nov.id_cia = ? and nov.status !='DEL' and nov.type = 'IN' and TO_DATE(nov.in_date,'MM/dd/yyyy') >= sysdate -365 and nov.status = 'OV') \"NO_OVERDUE\",\n" +
-"(select nvl(sum(tov.ACTUAL_BALANCE),0) from fb_invoice tov where tov.id_cia = ? and tov.status !='DEL' and tov.type = 'IN' and TO_DATE(tov.in_date,'MM/dd/yyyy') >= sysdate -365 and tov.status = 'OV') \"TOTAL_OVERDUE\" ,\n" +
-"(select count(*) from fb_invoice nop where nop.id_cia = ? and nop.status !='DEL' and nop.type = 'IN' and TO_DATE(nop.in_date,'MM/dd/yyyy') >= sysdate -365 and nop.status in ('OP','PA')) \"NO_OPEN\",\n" +
-"(select nvl(sum(top.ACTUAL_BALANCE),0) from fb_invoice top where top.id_cia = ? and top.status !='DEL' and top.type = 'IN' and TO_DATE(top.in_date,'MM/dd/yyyy') >= sysdate -365 and top.status in ('OP','PA')) \"TOTAL_OPEN\",\n" +
-"(select count(*) from fb_invoice npa where npa.id_cia = ? and npa.status !='DEL' and npa.type = 'IN' and TO_DATE(npa.in_date,'MM/dd/yyyy') >= sysdate -30 and npa.status in ('PD','PA')) \"NO_PAID\",\n" +
-"(select nvl(sum(tpa.TOTAL  - tpa.ACTUAL_BALANCE),0) from fb_invoice tpa where tpa.id_cia = ? and tpa.status !='DEL' and tpa.type = 'IN' and TO_DATE(tpa.in_date,'MM/dd/yyyy') >= sysdate -30 and tpa.status in ('PD','PA')) \"TOTAL_PAID\" \n" +
-"from dual";
+            String sql = "select \n"
+                    + "(select count(*) from fb_invoice nes where nes.id_cia = ? and nes.status !='DEL' and nes.type = 'ES' and TO_DATE(nes.in_date,'MM/dd/yyyy') >= sysdate -365) \"NO_ESTIMATE\" ,\n"
+                    + "(select nvl(sum(tes.TOTAL),0)s from fb_invoice tes where tes.id_cia = ? and tes.status !='DEL' and tes.type = 'ES' and TO_DATE(tes.in_date,'MM/dd/yyyy') >= sysdate -365) \"TOTAL_ESTIMATE\" ,\n"
+                    + "(select count(*) from fb_invoice nsr where nsr.id_cia = ? and nsr.status !='DEL' and nsr.type = 'SR' and TO_DATE(nsr.in_date,'MM/dd/yyyy') >= sysdate -365) \"NO_UNBILLED\",\n"
+                    + "(select nvl(sum(tsr.TOTAL),0) from fb_invoice tsr where tsr.id_cia = ? and tsr.status !='DEL' and tsr.type = 'SR' and TO_DATE(tsr.in_date,'MM/dd/yyyy') >= sysdate -365) \"TOTAL_UNBILLED\" ,\n"
+                    + "(select count(*) from fb_invoice nov where nov.id_cia = ? and nov.status !='DEL' and nov.type = 'IN' and TO_DATE(nov.in_date,'MM/dd/yyyy') >= sysdate -365 and nov.status = 'OV') \"NO_OVERDUE\",\n"
+                    + "(select nvl(sum(tov.ACTUAL_BALANCE),0) from fb_invoice tov where tov.id_cia = ? and tov.status !='DEL' and tov.type = 'IN' and TO_DATE(tov.in_date,'MM/dd/yyyy') >= sysdate -365 and tov.status = 'OV') \"TOTAL_OVERDUE\" ,\n"
+                    + "(select count(*) from fb_invoice nop where nop.id_cia = ? and nop.status !='DEL' and nop.type = 'IN' and TO_DATE(nop.in_date,'MM/dd/yyyy') >= sysdate -365 and nop.status in ('OP','PA')) \"NO_OPEN\",\n"
+                    + "(select nvl(sum(top.ACTUAL_BALANCE),0) from fb_invoice top where top.id_cia = ? and top.status !='DEL' and top.type = 'IN' and TO_DATE(top.in_date,'MM/dd/yyyy') >= sysdate -365 and top.status in ('OP','PA')) \"TOTAL_OPEN\",\n"
+                    + "(select count(*) from fb_invoice npa where npa.id_cia = ? and npa.status !='DEL' and npa.type = 'IN' and TO_DATE(npa.in_date,'MM/dd/yyyy') >= sysdate -30 and npa.status in ('PD','PA')) \"NO_PAID\",\n"
+                    + "(select nvl(sum(tpa.TOTAL  - tpa.ACTUAL_BALANCE),0) from fb_invoice tpa where tpa.id_cia = ? and tpa.status !='DEL' and tpa.type = 'IN' and TO_DATE(tpa.in_date,'MM/dd/yyyy') >= sysdate -30 and tpa.status in ('PD','PA')) \"TOTAL_PAID\" \n"
+                    + "from dual";
             PreparedStatement ps = cn.prepareStatement(sql);
-            ps.setString(1,idCia );
-            ps.setString(2,idCia );
-            ps.setString(3,idCia );
-            ps.setString(4,idCia );
-            ps.setString(5,idCia );
-            ps.setString(6,idCia );
-            ps.setString(7,idCia );
-            ps.setString(8,idCia );
-            ps.setString(9,idCia );
-            ps.setString(10,idCia );
+            ps.setString(1, idCia);
+            ps.setString(2, idCia);
+            ps.setString(3, idCia);
+            ps.setString(4, idCia);
+            ps.setString(5, idCia);
+            ps.setString(6, idCia);
+            ps.setString(7, idCia);
+            ps.setString(8, idCia);
+            ps.setString(9, idCia);
+            ps.setString(10, idCia);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 pv = new PanelesVentas();
@@ -914,6 +914,77 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             e.printStackTrace();
         }
         return pv;
+    }
+
+    public List<FbInvoice> getTransactionsForStmt(String idCia, String idCust, String sDate, String eDate, String op) {
+        List<FbInvoice> tranList = new ArrayList<>();
+        String sql = "";
+        try {
+            switch (op) {
+                case "BF":
+                    sql = "select *\n"
+                            + "from fb_invoice i\n"
+                            + "where i.id_cia = ?\n"
+                            + "and i.id_cust = ?\n"
+                            + "and i.type in ('IN','PA','SR') and i.status != 'DEL'  \n"
+                            + "and to_date(i.in_date,'MM/dd/yyyy')\n"
+                            + "between to_date('" + sDate + "','MM/dd/yyyy')\n"
+                            + "and to_date('" + eDate + "','MM/dd/yyyy')\n"
+                            + "order by i.fecha_creacion asc";
+                    break;
+                case "OI":
+                    sql = "select *\n"
+                            + "from fb_invoice i\n"
+                            + "where i.id_cia = ?\n"
+                            + "and i.id_cust = ?\n"
+                            + "and i.type = 'IN'\n"
+                            + "and i.status in ('OP','PA') and i.status != 'DEL'  \n"
+                            + "order by i.fecha_creacion asc";
+                    break;
+
+                case "TS":
+                    sql = "select *\n"
+                            + "from fb_invoice i\n"
+                            + "where i.id_cia = ?\n"
+                            + "and i.id_cust = ?\n"
+                            + "and i.type in ('IN','SR')\n"
+                            + "and to_date(i.in_date,'MM/dd/yyyy')  \n"
+                            + "between to_date('" + sDate + "','MM/dd/yyyy')\n"
+                            + "and to_date('" + eDate + "','MM/dd/yyyy')  and i.status != 'DEL' \n"
+                            + "order by i.fecha_creacion asc";
+
+                    break;
+            }
+
+            Query q = em.createNativeQuery(sql, FbInvoice.class);
+            q.setParameter(1, idCia);
+            q.setParameter(2, idCust);
+            tranList = q.getResultList();
+
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbInvoiceFacade.getTransactionsForStmt()");
+            e.printStackTrace();
+        }
+
+        return tranList;
+    }
+
+    public String getPreBalance(String idCia, String idCust, String pDate) {
+        String res = "0";
+        try {
+            Connection cn = em.unwrap(java.sql.Connection.class);
+            String sql = "SELECT PROCS_FASTBOOKS.FN_CALC_PREDATE_BALANCE(" + idCia + "," + idCust + ",'" + pDate + "') pre_balance from dual";
+            PreparedStatement ps = cn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                res = rs.getString("pre_balance");
+            }
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbInvoiceFacade.getPreBalance()");
+            e.printStackTrace();
+        }
+
+        return res;
     }
 
 }

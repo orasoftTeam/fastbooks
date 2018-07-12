@@ -50,6 +50,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "FbCompania.findByTelefono", query = "SELECT f FROM FbCompania f WHERE f.telefono = :telefono")})
 public class FbCompania implements Serializable {
 
+    @OneToMany(mappedBy = "idCia")
+    private List<FbStatement> fbStatementList;
+
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "fbCompania")
     private FbCompaniaPref fbCompaniaPref;
 
@@ -327,6 +330,15 @@ public class FbCompania implements Serializable {
 
     public void setFbCompaniaPref(FbCompaniaPref fbCompaniaPref) {
         this.fbCompaniaPref = fbCompaniaPref;
+    }
+
+    @XmlTransient
+    public List<FbStatement> getFbStatementList() {
+        return fbStatementList;
+    }
+
+    public void setFbStatementList(List<FbStatement> fbStatementList) {
+        this.fbStatementList = fbStatementList;
     }
     
 }

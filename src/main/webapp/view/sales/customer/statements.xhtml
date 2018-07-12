@@ -11,7 +11,7 @@
         <title>#{userData.GParameters.title}</title>
     </h:head>
     <h:body>
-        <h:form id="paymentForm" >
+        <h:form id="stmtForm" >
             <bnu:container styleClass="marco">
                 <bnu:row>
                     <bnu:column span="11">
@@ -25,18 +25,20 @@
                 </bnu:row> 
                 <p:separator/>
                 <bnu:row>
-                    <bnu:column span="2">
-                        <bnu:selectOneMenu value="#{statementController.stmtType}" label="Statement Type"  class="selectMenu" onchange="changeMenu(this.value);" >
+                    <bnu:column span="2"  >
+                        <h:panelGroup class="selectMenu" >
+                        <bnu:selectOneMenu value="#{statementController.stmtType}" label="#{messages.lblStmtType}"    onchange="changeMenu(this.value);" >
                             <f:selectItem itemLabel="#{messages.lblStatementType1}" itemValue="BF" />
                             <f:selectItem itemLabel="#{messages.lblStatementType2}" itemValue="OI" />
                             <f:selectItem itemLabel="#{messages.lblStatementType3}" itemValue="TS" />
                         </bnu:selectOneMenu>
+                            </h:panelGroup>
                     </bnu:column>
                     <bnu:column span="6">
                         
                     </bnu:column>
-                    <bnu:column span="4">
-                        <p><small>TOTAL BALANCE FOR #{statementController.currentCust.displayName}</small></p>
+                    <bnu:column span="4" class="dBalance" >
+                        <p><small>#{messages.lblStmtTotalBalanceFor}#{statementController.currentCust.displayName}</small></p>
                         <h1>#{userData.formatMaster(statementController.currentCust.balance)}</h1>
                     </bnu:column>
                     
@@ -44,29 +46,67 @@
                 <p:separator/>
                 <bnu:row>
                     <bnu:column span="2">
-                        <label>Statement Date</label>
+                        <label>#{messages.lblStmtDate}</label>
                         <bnu:datepicker  value="#{statementController.stmtDate}" />
                     </bnu:column>
                     
                 </bnu:row>
                 <bnu:row class="startEnd" >
                     <bnu:column span="2">
-                        <label>Start Date</label>
+                        <label>#{messages.lblStmtStartDate}</label>
                         <bnu:datepicker  value="#{statementController.startDate}" />
                     </bnu:column>
                     <bnu:column span="2">
-                        <label>End Date</label>
+                        <label>#{messages.lblStmtEndDate}</label>
                         <bnu:datepicker  value="#{statementController.endDate}" />
                     </bnu:column>
                 </bnu:row>
                 <bnu:row>
                     <bnu:column span="2">
-                        <bnu:commandButton value="Apply" />
+                        <bnu:commandButton value="#{messages.lblStmtApply}"  action="#{statementController.apply()}" rendered="#{!statementController.showTbl}"   />
+                        <bnu:commandButton value="Reset"  action="#{statementController.reset()}"   rendered="#{statementController.showTbl}"   />
                     </bnu:column>
                 </bnu:row>
                 
+                <h:panelGroup class="showStmt"  >
+                <bnu:dataTable
+                    page-length="20"
+                    searching="false"
+                    rendered="#{statementController.showTbl}"
+                    id="tblStmt"
+                    value="#{statementController.statement.fbStmtDetailList}"
+                    var="detail"
+                    
+                    >
+                    <bnu:dataTableColumn label="#{messages.lblStmtDateTbl}" value="#{statementController.displayDate(detail.tranDate)}" />
+                    <bnu:dataTableColumn label="#{messages.lblStmtDesc}" value="#{detail.descripcion}" />
+                    <bnu:dataTableColumn label="#{messages.lblStmtAmount}" value="#{detail.amount}" />
+                    <bnu:dataTableColumn label="#{statementController.thirdColumn}" value="#{detail.balance}" />
+                </bnu:dataTable>
+                </h:panelGroup>
             </bnu:container>
         </h:form>
+        <bnu:navBar  inverse="true" position="bottom" fixed="true" >
+            
+                
+            
+            <bnu:navbarLinks pull="left"  >
+                <bnu:navLink value="Cancel" href="#{request.contextPath}/view/sales/customer/customerDetail.xhtml?id=#{statementController.idCust}"  ></bnu:navLink>
+                <bnu:navLink value="Preview"   ></bnu:navLink>
+               
+            </bnu:navbarLinks>
+            <h:form styleClass="navbar-form navbar-right" >
+                <bnu:commandButton value="#{messages.save}"  look="success"  style="width: 100%" action="#{statementController.save()}"  />
+                
+            </h:form>
+        </bnu:navBar>
+
+        <!-- fin navbar -->
+        <h:outputStylesheet>
+            .dBalance{
+            display:none;
+            }
+        </h:outputStylesheet>
         
         
         <h:outputScript>
