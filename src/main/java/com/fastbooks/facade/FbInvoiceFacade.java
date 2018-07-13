@@ -9,6 +9,8 @@ import com.fastbooks.modelo.FbInvoice;
 import com.fastbooks.modelo.FbInvoiceDetail;
 import com.fastbooks.modelo.FbInvoiceTaxes;
 import com.fastbooks.modelo.FbPaymentDetail;
+import com.fastbooks.modelo.FbStatement;
+import com.fastbooks.modelo.FbStmtDetail;
 import com.fastbooks.util.GlobalParameters;
 import com.fastbooks.util.PanelesVentas;
 import java.io.File;
@@ -23,9 +25,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.ejb.Stateless;
 import javax.faces.context.ExternalContext;
@@ -34,6 +39,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
+import lombok.Getter;
+import lombok.Setter;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporter;
 import net.sf.jasperreports.engine.JRExporterParameter;
@@ -986,5 +993,141 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
 
         return res;
     }
+
+    public String actStatement(FbStatement stmt, String op) {
+        String res = "";
+        String pTranDates = "";
+        String pDescrips = "";
+        String pAmounts = "";
+        String pBalances = "";
+        String pIdTrans = "";
+        String idInserted = "";
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        DateFormat sd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+        try {
+            
+            
+            for (FbStmtDetail d : stmt.getFbStmtDetailList()) {
+                pTranDates += sdf.format(d.getTranDate()) + ",";
+                pDescrips += d.getDescripcion() + ",";
+                if (d.getAmount() != null) {
+                    pAmounts += String.format("%.2f", d.getAmount()) + ";";
+                }else{
+                    pAmounts += String.format("%.2f", BigDecimal.ZERO) + ";";
+                }
+                
+                pBalances += String.format("%.2f", d.getBalance()) + ";";
+                if (d.getIdTran() != null) {
+                    pIdTrans += d.getIdTran().getIdInvoice().toString() + ",";
+                }else{
+                    pIdTrans += "0,";
+                }
+                
+            }
+            
+            
+
+            Connection cn = em.unwrap(java.sql.Connection.class);
+            CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_STATEMENT (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            
+            /*
+            (pIdCia IN INT, pIdStatement IN INT, pIdCust IN INT, pType IN VARCHAR2, pStmtDate IN VARCHAR2, pStartDate IN VARCHAR2,
+                                pEndDate IN VARCHAR2, pTotalAmount IN DECIMAL, pTotalBalance IN DECIMAL, pTranDates IN VARCHAR2, pDescrips IN VARCHAR2,
+                                    pAmounts IN VARCHAR2, pBalances IN VARCHAR2, pIdTrans IN VARCHAR2, op IN VARCHAR2, res OUT VARCHAR2, idInserted OUT VARCHAR2)
+            
+             */
+            
+            cs.setInt(1, Integer.parseInt(stmt.getIdCia().getIdCia().toString()));
+            cs.setInt(3, Integer.parseInt(stmt.getIdCust().getIdCust().toString()));
+            cs.setInt(2, Integer.parseInt(stmt.getIdStmt().toString()));
+            cs.setString(4,stmt.getType());
+            cs.setString(5, stmt.getStmtDate());
+            cs.setString(6, stmt.getStartDate());
+            cs.setString(7, stmt.getEndDate());
+            cs.setDouble(8, Double.parseDouble(stmt.getTotalAmount().toString()));
+            cs.setDouble(9, Double.parseDouble(stmt.getTotalBalance().toString()));
+            cs.setString(10, pTranDates);
+            cs.setString(11, pDescrips);
+            cs.setString(12, pAmounts);
+            cs.setString(13, pBalances);
+            cs.setString(14, pIdTrans);
+            cs.setString(15, op);
+            cs.registerOutParameter(16, Types.VARCHAR);
+            cs.registerOutParameter(17, Types.VARCHAR);
+            cs.execute();
+            res = cs.getString(16);
+            idInserted = cs.getString(17);
+            cs.close();
+            System.out.println("res: " + res);
+        } catch (NumberFormatException | SQLException e) {
+            System.out.println("com.fastbooks.facade.FbInvoiceFacade.actStatement()");
+            e.printStackTrace();
+        }
+
+        return res;
+    }
+    
+    
+    
+    
+     public String generateStmt(FbInvoice i, String logo, JasperReport report, String type, String balance) {
+        String res = "";
+        em.getEntityManagerFactory().getCache().evictAll();
+        Connection cn = em.unwrap(java.sql.Connection.class);
+        String dir = "view" + File.separator + "jasper" + File.separator + "report1.jrxml";
+        GlobalParameters gp = new GlobalParameters();
+        File file = new File(gp.getAppPath() + File.separator + "pdf" + File.separator + "cia" + i.getIdCia().getIdCia().toString()
+                + File.separator);
+        /*String[] entries = file.list();
+        for (String s : entries) {
+            File currentFile = new File(file.getPath(),s);
+            currentFile.delete();
+        }*/
+        file.mkdirs();
+
+        String destino = gp.getAppPath() + File.separator + "pdf" + File.separator + "cia" + i.getIdCia().getIdCia().toString()
+                + File.separator + i.getType() + i.getNoDot() + ".pdf";
+
+        String pdfName = File.separator + i.getType() + i.getNoDot() + ".pdf";
+        Map parametersMap = new HashMap();
+        parametersMap.put("ID_INVOICE", i.getIdInvoice().toString());
+        File logoFile = new File(gp.getAppPath() + logo);
+        if (!logoFile.exists()) {
+            logoFile = null;
+        }
+        parametersMap.put("LOGO", logoFile);
+
+        parametersMap.put("TYPE", type);
+        parametersMap.put("BALANCE_DUE", balance);
+
+        try {
+            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+            String realPath = ec.getRealPath("/");
+            System.out.println(realPath + dir);
+            //JasperReport report = JasperCompileManager.compileReport(realPath + dir);
+
+            File dest = new File(destino);
+            if (dest.exists()) {
+                dest.delete();
+            }
+            JasperPrint print = JasperFillManager.fillReport(report, parametersMap, cn);
+            JRExporter exporter = new JRPdfExporter();
+
+            exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, destino);
+            exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
+            exporter.exportReport();
+            System.out.println("File Created: " + destino);
+
+            res = "/pdf/" + "cia" + i.getIdCia().getIdCia().toString()
+                    + "/" + i.getType() + i.getNoDot() + ".pdf";
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbInvoiceFacade.generateInvoice()");
+            e.printStackTrace();
+            res = e.toString() + " ::: " + e.getMessage();
+        }
+
+        return res;
+    }
+    
 
 }

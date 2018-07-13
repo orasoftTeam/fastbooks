@@ -86,22 +86,39 @@
                 </h:panelGroup>
             </bnu:container>
         </h:form>
+        <p:separator/>
         <bnu:navBar  inverse="true" position="bottom" fixed="true" >
-            
+            <h:form styleClass="navbar-form navbar-left" >
+                <bnu:commandButton look="warning" value="Cancel" action="#{statementController.regresar()}" />
                 
-            
-            <bnu:navbarLinks pull="left"  >
-                <bnu:navLink value="Cancel" href="#{request.contextPath}/view/sales/customer/customerDetail.xhtml?id=#{statementController.idCust}"  ></bnu:navLink>
-                <bnu:navLink value="Preview"   ></bnu:navLink>
-               
-            </bnu:navbarLinks>
+            </h:form>
+                
+           
             <h:form styleClass="navbar-form navbar-right" >
-                <bnu:commandButton value="#{messages.save}"  look="success"  style="width: 100%" action="#{statementController.save()}"  />
+                <bnu:commandButton value="#{messages.save}"  look="success"  style="width: 100%" action="#{statementController.save()}" rendered="#{statementController.showTbl}"  />
                 
             </h:form>
         </bnu:navBar>
 
         <!-- fin navbar -->
+        
+        
+        <!-- PDF MODAL-->
+        <bnu:modal  id="invoiceModal" title="#{messages.invoice}" size="modal-lg" styleClass="printeModal"  close-on-escape="false" backdrop="false"  >
+            <h:panelGroup id="pdf" class="messages" >
+
+                <p:media value="#{invoiceController.invoiceModal}" width="100%" height="500px" rendered="#{not(invoiceController.invoiceModal eq '0')}"  />     
+
+
+            </h:panelGroup>
+        </bnu:modal> 
+
+
+
+
+        <!--FIN PDF MODAL-->
+        
+        
         <h:outputStylesheet>
             .dBalance{
             display:none;

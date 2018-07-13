@@ -148,6 +148,7 @@ public class StatementController implements Serializable{
             fLine.setTranDate(sdf.parse(startDate));
             fLine.setDescripcion(this.vb.getMsgBundle("lblStatementType1"));
             fLine.setBalance(preDateBalance.setScale(2, BigDecimal.ROUND_HALF_UP));
+            fLine.setIdTran(new FbInvoice(BigDecimal.ZERO));
             stmtList.add(fLine);
             for (FbInvoice t : tranList) {
                 FbStmtDetail sd = new FbStmtDetail();
@@ -170,7 +171,7 @@ public class StatementController implements Serializable{
                 }
                 sd.setAmount(amount);
                 sd.setBalance(preDateBalance);
-
+                sd.setIdTran(t);
                 stmtList.add(sd);
 
             }
@@ -196,6 +197,7 @@ public class StatementController implements Serializable{
                 sd.setDescripcion(this.vb.getMsgBundle("lblInvoiceTypeIn") + " No."+t.getNoDot()+ " Due " + t.getDueDate() );
                 sd.setAmount(t.getTotal());
                 sd.setBalance(t.getActualBalance());
+                sd.setIdTran(t);
                 stmtList.add(sd);
             }
             
@@ -283,6 +285,7 @@ public class StatementController implements Serializable{
                 sd.setDescripcion(this.userData.formatType(t.getType()) + " No."+t.getNoDot());
                 sd.setAmount(t.getTotal());
                 sd.setBalance(new BigDecimal(t.getTotal().doubleValue() - t.getActualBalance().doubleValue()).setScale(2,BigDecimal.ROUND_HALF_UP));
+                sd.setIdTran(t);
                 stmtList.add(sd);
             }
             
@@ -317,6 +320,17 @@ public class StatementController implements Serializable{
     
     public void save(){
         try {
+            this.statement.setIdStmt(BigDecimal.ZERO);
+            String res = this.iFacade.actStatement(statement, "A");
+            if (res.equals("0")) {
+                System.out.println("SUCCESS!!!" + res);
+                this.regresar();
+                this.userData.setUses("lblStatementAddSuccess");
+            }else{
+                System.out.println("FAIL!!!" + res);
+                this.regresar();
+                this.userData.setUses("lblStatementFailError");
+            }
             System.out.println(this.statement);
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.StatementController.save()");

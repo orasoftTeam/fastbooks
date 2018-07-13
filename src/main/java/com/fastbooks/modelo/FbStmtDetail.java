@@ -55,7 +55,7 @@ public class FbStmtDetail implements Serializable {
     private String descripcion;
     @Column(name = "AMOUNT")
     private BigDecimal amount;
-    @Column(name = "BALANCE")
+    @Column(name = "BALANCE_DET")
     private BigDecimal balance;
     @Column(name = "FECHA_CREACION")
     @Temporal(TemporalType.TIMESTAMP)
