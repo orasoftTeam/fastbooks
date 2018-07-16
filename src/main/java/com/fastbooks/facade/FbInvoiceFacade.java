@@ -995,7 +995,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
     }
 
     public String actStatement(FbStatement stmt, String op) {
-        String res = "";
+        String res = "-2";
         String pTranDates = "";
         String pDescrips = "";
         String pAmounts = "";
@@ -1005,42 +1005,38 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
         DateFormat sd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
         try {
-            
-            
+
             for (FbStmtDetail d : stmt.getFbStmtDetailList()) {
                 pTranDates += sdf.format(d.getTranDate()) + ",";
                 pDescrips += d.getDescripcion() + ",";
                 if (d.getAmount() != null) {
                     pAmounts += String.format("%.2f", d.getAmount()) + ";";
-                }else{
+                } else {
                     pAmounts += String.format("%.2f", BigDecimal.ZERO) + ";";
                 }
-                
+
                 pBalances += String.format("%.2f", d.getBalance()) + ";";
                 if (d.getIdTran() != null) {
                     pIdTrans += d.getIdTran().getIdInvoice().toString() + ",";
-                }else{
+                } else {
                     pIdTrans += "0,";
                 }
-                
+
             }
-            
-            
 
             Connection cn = em.unwrap(java.sql.Connection.class);
             CallableStatement cs = cn.prepareCall("{call FASTBOOKS.PROCS_FASTBOOKS.PR_ACT_STATEMENT (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-            
+
             /*
             (pIdCia IN INT, pIdStatement IN INT, pIdCust IN INT, pType IN VARCHAR2, pStmtDate IN VARCHAR2, pStartDate IN VARCHAR2,
                                 pEndDate IN VARCHAR2, pTotalAmount IN DECIMAL, pTotalBalance IN DECIMAL, pTranDates IN VARCHAR2, pDescrips IN VARCHAR2,
                                     pAmounts IN VARCHAR2, pBalances IN VARCHAR2, pIdTrans IN VARCHAR2, op IN VARCHAR2, res OUT VARCHAR2, idInserted OUT VARCHAR2)
             
              */
-            
             cs.setInt(1, Integer.parseInt(stmt.getIdCia().getIdCia().toString()));
             cs.setInt(3, Integer.parseInt(stmt.getIdCust().getIdCust().toString()));
             cs.setInt(2, Integer.parseInt(stmt.getIdStmt().toString()));
-            cs.setString(4,stmt.getType());
+            cs.setString(4, stmt.getType());
             cs.setString(5, stmt.getStmtDate());
             cs.setString(6, stmt.getStartDate());
             cs.setString(7, stmt.getEndDate());
@@ -1060,23 +1056,21 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             cs.close();
             System.out.println("res: " + res);
         } catch (NumberFormatException | SQLException e) {
+            res = "-2";
             System.out.println("com.fastbooks.facade.FbInvoiceFacade.actStatement()");
             e.printStackTrace();
         }
 
-        return res;
+        return res.equals("0") ? idInserted : "-2";
     }
-    
-    
-    
-    
-     public String generateStmt(FbInvoice i, String logo, JasperReport report, String type, String balance) {
+
+    public String generateStmt(FbStatement st, String logo, JasperReport report, String balance) {
         String res = "";
-        em.getEntityManagerFactory().getCache().evictAll();
+        //em.getEntityManagerFactory().getCache().evictAll();
         Connection cn = em.unwrap(java.sql.Connection.class);
-        String dir = "view" + File.separator + "jasper" + File.separator + "report1.jrxml";
+        String dir = "view" + File.separator + "jasper" + File.separator + "statement.jrxml";
         GlobalParameters gp = new GlobalParameters();
-        File file = new File(gp.getAppPath() + File.separator + "pdf" + File.separator + "cia" + i.getIdCia().getIdCia().toString()
+        File file = new File(gp.getAppPath() + File.separator + "pdf" + File.separator + "cia" + st.getIdCia().getIdCia().toString()
                 + File.separator);
         /*String[] entries = file.list();
         for (String s : entries) {
@@ -1084,21 +1078,20 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             currentFile.delete();
         }*/
         file.mkdirs();
+        String fileName = st.getType() + st.getIdStmt().toString()+ this.randomAlphaNumeric(10)+ ".pdf";
+        String destino = gp.getAppPath() + File.separator + "pdf" + File.separator + "cia" + st.getIdCia().getIdCia().toString()
+                + File.separator + fileName;
 
-        String destino = gp.getAppPath() + File.separator + "pdf" + File.separator + "cia" + i.getIdCia().getIdCia().toString()
-                + File.separator + i.getType() + i.getNoDot() + ".pdf";
-
-        String pdfName = File.separator + i.getType() + i.getNoDot() + ".pdf";
+        //String pdfName = File.separator + i.getType() + i.getNoDot() + ".pdf";
         Map parametersMap = new HashMap();
-        parametersMap.put("ID_INVOICE", i.getIdInvoice().toString());
+        parametersMap.put("ID_STMT", st.getIdStmt().toString());
         File logoFile = new File(gp.getAppPath() + logo);
         if (!logoFile.exists()) {
             logoFile = null;
         }
         parametersMap.put("LOGO", logoFile);
 
-        parametersMap.put("TYPE", type);
-        parametersMap.put("BALANCE_DUE", balance);
+        parametersMap.put("BALANCE", balance);
 
         try {
             ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
@@ -1118,8 +1111,8 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             exporter.exportReport();
             System.out.println("File Created: " + destino);
 
-            res = "/pdf/" + "cia" + i.getIdCia().getIdCia().toString()
-                    + "/" + i.getType() + i.getNoDot() + ".pdf";
+            res = "/pdf/" + "cia" + st.getIdCia().getIdCia().toString()
+                    + "/" + fileName;
         } catch (Exception e) {
             System.out.println("com.fastbooks.facade.FbInvoiceFacade.generateInvoice()");
             e.printStackTrace();
@@ -1128,6 +1121,19 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
 
         return res;
     }
-    
+
+    /* 
+    Generate random names
+     */
+    private final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    public  String randomAlphaNumeric(int count) {
+        StringBuilder builder = new StringBuilder();
+        while (count-- != 0) {
+            int character = (int) (Math.random() * ALPHA_NUMERIC_STRING.length());
+            builder.append(ALPHA_NUMERIC_STRING.charAt(character));
+        }
+        return builder.toString();
+    }
 
 }

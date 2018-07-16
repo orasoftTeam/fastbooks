@@ -80,6 +80,10 @@ public class StatementController implements Serializable{
     private @Getter @Setter String thirdColumn;
     
     private @Getter @Setter boolean showTbl = false;
+    
+    private @Getter @Setter String stmtPdf = "0";
+    
+    private @Getter @Setter boolean alreadyCreated = false;
 
     /**
      * Creates a new instance of StatementController
@@ -322,10 +326,15 @@ public class StatementController implements Serializable{
         try {
             this.statement.setIdStmt(BigDecimal.ZERO);
             String res = this.iFacade.actStatement(statement, "A");
-            if (res.equals("0")) {
+            if (!res.equals("-2")) {
                 System.out.println("SUCCESS!!!" + res);
-                this.regresar();
-                this.userData.setUses("lblStatementAddSuccess");
+                statement.setIdStmt(new BigDecimal(res));
+                res = this.iFacade.generateStmt(statement, statement.getIdCia().getLogo(), this.iFacade.getCompiledFile("statement", this.vb.getRequestContext()), this.userData.formatMaster(this.currentCust.getBalance().toString()));
+                System.out.println("pdf file!!!" + res);
+                this.stmtPdf = res;
+                this.alreadyCreated = true;
+                /*this.regresar();
+                this.userData.setUses("lblStatementAddSuccess");*/
             }else{
                 System.out.println("FAIL!!!" + res);
                 this.regresar();

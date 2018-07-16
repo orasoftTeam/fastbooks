@@ -97,6 +97,7 @@
 	</style>
 	<parameter name="LOGO" class="java.lang.String"/>
 	<parameter name="ID_STMT" class="java.lang.String"/>
+	<parameter name="BALANCE" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select * from fb_customer cust
 inner join fb_statement st
@@ -322,13 +323,6 @@ where st.id_stmt = $P{ID_STMT}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{STMT_DATE}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="454" y="64" width="100" height="20" uuid="b9286cbf-a326-43a3-81bf-ffd42b33f80b"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{BALANCE}]]></textFieldExpression>
-			</textField>
 			<rectangle>
 				<reportElement x="-1" y="119" width="555" height="20" backcolor="#DCE9F1" uuid="04efafef-77aa-4e08-84bc-b7a1a8a96c7b"/>
 				<graphicElement>
@@ -363,6 +357,13 @@ where st.id_stmt = $P{ID_STMT}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{TYPE}.equals("BF")?"BALANCE":$F{TYPE}.equals("OI")?"OPEN AMOUNT":$F{TYPE}.equals("TS")?"RECEIVED":"NONE"]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="455" y="64" width="100" height="20" uuid="a903e7f9-290e-4c64-94bf-e742c4b39fa1"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{BALANCE}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
@@ -388,7 +389,7 @@ where st.id_stmt = $P{ID_STMT}]]>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="43">
+		<band height="70">
 			<staticText>
 				<reportElement x="304" y="0" width="100" height="20" uuid="b6571e3d-6ee9-4f38-aea0-db0936f8854b">
 					<printWhenExpression><![CDATA[!$F{TYPE}.equals("BF")]]></printWhenExpression>
@@ -422,6 +423,20 @@ where st.id_stmt = $P{ID_STMT}]]>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{TOTAL_BALANCE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="330" y="40" width="74" height="20" uuid="9e877a6f-51a2-4b53-af12-27caafbfe1e0"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL DUE]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="414" y="40" width="140" height="20" uuid="4c00b33d-01f1-4e70-a5e5-473a67b903d5"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{BALANCE}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnFooter>
