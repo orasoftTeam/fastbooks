@@ -9,6 +9,7 @@ import com.fastbooks.facade.FbCustomerFacade;
 import com.fastbooks.facade.FbInvoiceFacade;
 import com.fastbooks.modelo.FbCustomer;
 import com.fastbooks.modelo.FbInvoice;
+import com.fastbooks.modelo.FbStatement;
 import com.fastbooks.util.GlobalParameters;
 import com.fastbooks.util.PanelesVentas;
 import com.fastbooks.util.SendMails;
@@ -53,7 +54,9 @@ public class InvoiceController implements Serializable {
     private @Getter
     @Setter
     List<FbInvoice> iList = new ArrayList<>();
-
+    private @Getter
+    @Setter
+    List<FbStatement> stmtList = new ArrayList<>();
     private @Getter
     @Setter
     List<FbInvoice> testList = new ArrayList<>();
@@ -72,6 +75,9 @@ public class InvoiceController implements Serializable {
     private @Getter
     @Setter
     String invoiceModal = "0";
+    private @Getter
+    @Setter
+    String idCia = "0";
     private @Getter
     @Setter
     String subjet = "";
@@ -143,7 +149,7 @@ public class InvoiceController implements Serializable {
     private @Getter
     @Setter
     int noPaid = 0;
-    
+
     private @Getter
     @Setter
     int panelFlag = 0;
@@ -163,11 +169,17 @@ public class InvoiceController implements Serializable {
     private @Getter
     @Setter
     BigDecimal totalPaid = new BigDecimal(BigInteger.ZERO);
-    
-    private @Getter @Setter PanelesVentas panelVentas;
-    private @Getter @Setter boolean hasPanelFilter = false;
-    /*panel stuff end */
 
+    private @Getter
+    @Setter
+    PanelesVentas panelVentas;
+    private @Getter
+    @Setter
+    boolean hasPanelFilter = false;
+    
+    private @Getter @Setter String stmtPdf = "0";
+
+    /*panel stuff end */
     public void setPanelData() {
 
         try {
@@ -286,7 +298,7 @@ public class InvoiceController implements Serializable {
             }
             this.validationBean.ejecutarJavascript(js);
         }
-        
+
         return r;
     }
 
@@ -294,25 +306,13 @@ public class InvoiceController implements Serializable {
     public void init() {
         try {
             System.out.println("INIT INVOICES!!!!");
-            /* HttpServletRequest req = (HttpServletRequest) this.validationBean.getRequestContext();
-            this.userData.changeTab(req.getParameter("index"));*/
-            this.panelVentas = iFacade.getPanelesInfo(this.userData.getCurrentCia().getIdCia().toString());
-            if (this.userData.getInvoiceSql().equals("0")) {
-                //iList =  iFacade.getInvoicesByIdCiaNonJpa(this.userData.getCurrentCia().getIdCia().toString());
-                iList = iFacade.getInvoicesByIdCia(this.userData.getCurrentCia().getIdCia().toString(), this.setPanelSelected());
-                /*WriteXMLFile xml = new WriteXMLFile();
-                xml.crearXML(iList);*/
-                DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-                Calendar cal = Calendar.getInstance();
-                this.fFrom = dateFormat.format(cal.getTime());
-            } else {
-                iList = iFacade.getInvoicesByIdCiaFilter(this.userData.getInvoiceSql());
-            }
-            /*this.setPanelData();
-            int setPanelSelected = this.setPanelSelected();
-            if (setPanelSelected != 5) {
-                iList = iFacade.getInvoicesByIdCia(this.userData.getCurrentCia().getIdCia().toString(), setPanelSelected);
-            }*/
+            this.idCia = this.userData.getCurrentCia().getIdCia().toString();
+
+            this.cList = cFacade.getCustomersByIdCia(this.idCia);
+
+            this.panelVentas = iFacade.getPanelesInfo(this.idCia);
+            this.cargarLista();
+
             Double acumBalance = 0.0;
             Double acumTotal = 0.0;
             for (FbInvoice fbInvoice : iList) {
@@ -328,11 +328,10 @@ public class InvoiceController implements Serializable {
             }
             this.totalBalance = new BigDecimal(acumBalance).setScale(2, BigDecimal.ROUND_HALF_UP);
             this.totalTotal = new BigDecimal(acumTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
-            cList = cFacade.getCustomersByIdCia(this.userData.getCurrentCia().getIdCia().toString());
 
             //System.out.println("com.fastbooks.managedbeans.InvoiceController.init()");
             this.showInvoice();
-            
+
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.init()");
             e.printStackTrace();
@@ -537,102 +536,96 @@ public class InvoiceController implements Serializable {
         return flag;
     }
 
-    public void applyFilter() {
+    public void cargarLista() {
+        HttpServletRequest req = (HttpServletRequest) this.validationBean.getRequestContext();
+        String pv = req.getParameter("pv");
 
-        String query = "SELECT * FROM FB_INVOICE WHERE ID_CIA = " + this.userData.getCurrentCia().getIdCia().toString() + " ";
-
-        if (!this.fType.equals("0")) {
-            query += "AND TYPE = '" + this.fType + "' ";
+        if (pv != null) {
+            this.resetFilter();
         }
 
-        if (!this.fStatus.equals("0")) {
-            query += "AND STATUS = '" + this.fStatus + "' ";
-        }
+        if (this.validarFilter()) {
 
-        if (!this.fShiVia.isEmpty()) {
-            query += "AND SHIP_VIA = '" + this.fShiVia + "' ";
-        }
-
-        /*if (!this.fDate.equals("0")) {
-            query += "AND to_date(IN_DATE,'MM/dd/yyyy') = to_date('"+ this.fDate+"','MM/dd/yyyy') " ;
-        } */
-        if (!this.fDate.equals("0")) {
-            query += " AND to_date(IN_DATE,'MM/dd/yyyy') BETWEEN sysdate-" + this.fDate + " AND sysdate ";
-        }
-
-        if (this.fDate.equals("0")) {
-            if (this.fFrom.isEmpty()) {
-                DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-                Calendar cal = Calendar.getInstance();
-                this.fFrom = dateFormat.format(cal.getTime());
-            }
-
-            if (this.fTo.isEmpty()) {
-                query += " AND to_date(IN_DATE,'MM/dd/yyyy') >= to_date('" + this.fFrom + "','MM/dd/yyyy') ";
+            if (this.userData.getInvoiceFilterType().equals("ST")) {
+                this.stmtList = this.iFacade.getStmtFilter(this.idCia, this.userData.getInvoiceFilterFrom(), this.userData.getInvoiceFilterTo(), this.userData.getInvoiceFilterIdCust());
             } else {
-                query += " AND to_date(IN_DATE,'MM/dd/yyyy') BETWEEN to_date('" + this.fFrom + "','MM/dd/yyyy') AND to_date('" + this.fTo + "','MM/dd/yyyy') ";
+                this.iList = this.iFacade.applyFilter(this.idCia, this.userData.getInvoiceFilterType(), this.userData.getInvoiceFilterStatus(), this.userData.getInvoiceFilterSh(), this.userData.getInvoiceFilterFrom(),
+                        this.userData.getInvoiceFilterTo(), this.userData.getInvoiceFilterIdCust());
             }
+
+        } else {
+            this.iList = iFacade.getInvoicesByIdCia(this.idCia, this.setPanelSelected());
+
+        }
+    }
+
+    public void processFilter() {
+
+        this.userData.setInvoiceFilterType(this.fType);
+        this.userData.setInvoiceFilterStatus(this.fStatus);
+        this.userData.setInvoiceFilterSh(this.fShiVia);
+        this.userData.setInvoiceFilterFrom(this.fFrom);
+        this.userData.setInvoiceFilterTo(this.fTo);
+        this.userData.setInvoiceFilterIdCust(this.fIdCust);
+        this.validationBean.redirecionar("/view/sales/sales.xhtml");
+
+    }
+
+    public boolean validarFilter() {
+        //HttpServletRequest req = (HttpServletRequest) this.validationBean.getRequestContext();
+        boolean flag = false;
+        int c = 0;
+        try {
+            if (!this.userData.getInvoiceFilterType().equals("0")) {
+                c++;
+            }
+            if (!this.userData.getInvoiceFilterStatus().equals("0")) {
+                c++;
+            }
+            if (!this.userData.getInvoiceFilterSh().equals("0")) {
+                c++;
+            }
+            if (!this.userData.getInvoiceFilterFrom().equals("0")) {
+                c++;
+            }
+            if (!this.userData.getInvoiceFilterTo().equals("0")) {
+                c++;
+            }
+            if (!this.userData.getInvoiceFilterIdCust().equals("0")) {
+                c++;
+            }
+
+            if (c != 0) {
+                flag = true;
+            }
+
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.InvoiceController.aplicarFilter()");
+            e.printStackTrace();
         }
 
-        if (!this.fIdCust.equals("0")) {
-            query += " AND ID_CUST =  " + this.fIdCust;
-        }
-        query += " and status != 'DEL'";
-        this.userData.setInvoiceSql(query);
-        System.out.println("com.fastbooks.managedbeans.InvoiceController.applyFilter()");
+        return flag;
 
     }
 
     public void resetFilter() {
-        this.userData.setInvoiceSql("0");
-        fType = "0";
-        fStatus = "0";
-        fShiVia = "";
-        fFrom = "";
-        fTo = "";
-        fIdCust = "0";
-        fDate = "0";
+        this.userData.setInvoiceFilterType("0");
+        this.userData.setInvoiceFilterStatus("0");
+        this.userData.setInvoiceFilterSh("0");
+        this.userData.setInvoiceFilterFrom("0");
+        this.userData.setInvoiceFilterTo("0");
+        this.userData.setInvoiceFilterIdCust("0");
+        //this.validationBean.redirecionar("/view/sales/sales.xhtml");
     }
 
-    public boolean showFilters(String sec, String value) {
-        /*
-        private @Getter
-    @Setter
-    String fType = "0";
-    private @Getter
-    @Setter
-    String fStatus = "0";
-    private @Getter
-    @Setter
-    String fShiVia = "";
-    private @Getter
-    @Setter
-    String fFrom = "";
-    private @Getter
-    @Setter
-    String fTo = "";
-    private @Getter
-    @Setter
-    String fIdCust = "0";
-    private @Getter
-    @Setter
-    String fDate = "0";
-        
-         */
-        boolean flag = false;
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-        Calendar cal = Calendar.getInstance();
-        String tmp = dateFormat.format(cal.getTime());
-        if (sec.equals("enq")) {
-            if (fType.equals("0") && fStatus.equals("0") && fShiVia.isEmpty() && this.fFrom.equals(tmp) && this.fTo.isEmpty() && fIdCust.equals("0") && fDate.equals("0")) {
-                System.out.println("no hay filtro");
-            } else {
-                System.out.println("si hay filtro");
-                flag = true;
-            }
-        }
-
-        return flag;
+    public void resetFilterBtn() {
+        this.userData.setInvoiceFilterType("0");
+        this.userData.setInvoiceFilterStatus("0");
+        this.userData.setInvoiceFilterSh("0");
+        this.userData.setInvoiceFilterFrom("0");
+        this.userData.setInvoiceFilterTo("0");
+        this.userData.setInvoiceFilterIdCust("0");
+        this.validationBean.redirecionar("/view/sales/sales.xhtml");
     }
 
     public void addToInvoiceList(FbInvoice idInvoice) {
@@ -770,6 +763,41 @@ public class InvoiceController implements Serializable {
 
     public void recievePayment(String idCust, String idInvoice) {
         this.validationBean.redirecionar("/view/sales/payments/paymentForm.xhtml?idc=" + idCust + "&idi=" + idInvoice);
+    }
+
+    public String formatStmtType(String type) {
+        String res = "";
+        switch (type) {
+            case "BF":
+                res = this.validationBean.getMsgBundle("lblStatementType1");
+                break;
+            case "OI":
+                res = this.validationBean.getMsgBundle("lblStatementType2");
+                break;
+
+            case "TS":
+                res = this.validationBean.getMsgBundle("lblStatementType3");
+                break;
+
+        }
+        return res;
+    }
+    
+    
+    public void viewStmt(String idCust, String idStmt){
+        this.validationBean.redirecionar("/view/sales/customer/statements.xhtml?id="+idCust+"&stmt="+idStmt);
+    }
+    
+    public void generateStmt(FbStatement statement){
+        try {
+            String res = this.iFacade.generateStmt(statement, statement.getIdCia().getLogo(), this.iFacade.getCompiledFile("statement", this.validationBean.getRequestContext()), this.userData.formatMaster(statement.getIdCust().getBalance().toString()));
+            this.stmtPdf = res;
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.InvoiceController.generateStmt()");
+            e.printStackTrace();
+        }
+    
+    
     }
 
 }

@@ -1121,6 +1121,73 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
 
         return res;
     }
+    
+    
+        public List<FbInvoice> applyFilter(String idCia, String type, String status, String sh, String from, String to, String idCust) {
+        List<FbInvoice> list = new ArrayList<>();
+        try {
+        String query = "SELECT * FROM FB_INVOICE WHERE ID_CIA = " + idCia + " ";
+        
+        if (!type.equals("0")) {
+            query += "AND TYPE = '" + type + "' ";
+        }
+        
+        if (!status.equals("0")) {
+            query += "AND STATUS = '" + status + "' ";
+        }
+        
+        if (!sh.isEmpty()) {
+            query += "AND SHIP_VIA = '" + sh + "' ";
+        }
+
+        
+        
+            query += " AND to_date(IN_DATE,'MM/dd/yyyy') BETWEEN to_date('"+from+"','MM/dd/yyyy') AND to_date('"+to+"','MM/dd/yyyy') ";
+        
+        
+        
+        if (!idCust.equals("0")) {
+            query += " AND ID_CUST =  " + idCust;
+        }
+        query += " and status != 'DEL' order by fecha_creacion desc";
+        
+        //System.out.println("com.fastbooks.managedbeans.InvoiceController.applyFilter()");
+         Query q = em.createNativeQuery(query, FbInvoice.class);
+            q.setParameter(1, idCia);
+            list = q.getResultList();
+            for (FbInvoice fbInvoice : list) {
+                em.refresh(fbInvoice);
+            }
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbProductFacade.getProductsByIdCia()");
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+        
+        public List<FbStatement> getStmtFilter(String idCia,  String from, String to, String idCust){
+        List<FbStatement> list = new ArrayList<>();
+            try {
+                String sql = "SELECT * FROM FB_STATEMENT WHERE ID_CIA = " + idCia + " AND to_date(STMT_DATE,'MM/dd/yyyy') BETWEEN to_date('"+from+"','MM/dd/yyyy') AND to_date('"+to+"','MM/dd/yyyy') ";
+                if (!idCust.equals("0")) {
+                    sql += " AND ID_CUST = " + idCust + " ";
+                }
+                sql += " ORDER BY FECHA_CREACION DESC";
+                Query q = em.createNativeQuery(sql, FbStatement.class);
+                list = q.getResultList();
+            } catch (Exception e) {
+                System.out.println("com.fastbooks.facade.FbInvoiceFacade.getStmtFilter()");
+                e.printStackTrace();
+            }
+        
+        
+        
+        return list;
+        }
+    
+    
+    
 
     /* 
     Generate random names
