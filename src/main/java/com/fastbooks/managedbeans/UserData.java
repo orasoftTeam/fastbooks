@@ -98,6 +98,11 @@ public class UserData implements Serializable {
     private @Getter @Setter String invoiceFilterIdCust = "0";
     
     
+    private @Getter @Setter String customerDetailFilterType = "0";
+    private @Getter @Setter String customerDetailFilterFrom = "0";
+    private @Getter @Setter String customerDetailFilterTo = "0";
+    
+    
     
     private @Getter
     @Setter

@@ -9,6 +9,7 @@ import com.fastbooks.facade.FbCustomerFacade;
 import com.fastbooks.facade.FbInvoiceFacade;
 import com.fastbooks.modelo.FbCustomer;
 import com.fastbooks.modelo.FbInvoice;
+import com.fastbooks.modelo.FbStatement;
 import com.fastbooks.modelo.PaymentMethod;
 import com.fastbooks.modelo.Terms;
 import com.fastbooks.util.ValidationBean;
@@ -112,6 +113,9 @@ public class CustomerDetailController implements Serializable {
     public @Getter
     @Setter
     boolean sameShipping = false;
+    
+    
+    public @Getter @Setter List<FbStatement> stmtList = new ArrayList<>();
 
     public CustomerDetailController() {
     }
@@ -152,7 +156,8 @@ public class CustomerDetailController implements Serializable {
             if (this.currentCust != null) {
                 if (userData != null && userData.getCurrentCia() != null) {
                     this.idCia = userData.getCurrentCia().getIdCia().toString();
-                    transactionList = iFacade.getInvoicesByIdCust(idCust, idCia);
+                    //transactionList = iFacade.getInvoicesByIdCust(idCust, idCia);
+                    this.aplicarFilter();
                     Double acumBalance = 0.0;
                     Double acumTotal = 0.0;
                     for (FbInvoice fbInvoice : transactionList) {
@@ -396,5 +401,109 @@ public class CustomerDetailController implements Serializable {
       public void statement(){
     this.vb.redirecionar("/view/sales/customer/statements.xhtml?id="+this.idCust);
     }
+      
+      
+      /*
+      Filter section
+      */
+      private @Getter @Setter String fFrom = "0";
+      private @Getter @Setter String fTo= "0";
+      private @Getter @Setter String fTranType = "0";
+      
+      public void processFilter(){
+      this.userData.setCustomerDetailFilterFrom(this.fFrom);
+      this.userData.setCustomerDetailFilterTo(this.fTo);
+      this.userData.setCustomerDetailFilterType(this.fTranType);
+      this.vb.redirecionar("/view/sales/customer/customerDetail.xhtml?id="+this.idCust);
+      }
+      
+          public String formatStmtType(String type) {
+        String res = "";
+        switch (type) {
+            case "BF":
+                res = this.vb.getMsgBundle("lblStatementType1");
+                break;
+            case "OI":
+                res = this.vb.getMsgBundle("lblStatementType2");
+                break;
+
+            case "TS":
+                res = this.vb.getMsgBundle("lblStatementType3");
+                break;
+
+        }
+        return res;
+    }
+      
+      public void aplicarFilter(){
+      this.fFrom = this.userData.getCustomerDetailFilterFrom();
+      this.fTo = this.userData.getCustomerDetailFilterTo();
+      this.fTranType = this.userData.getCustomerDetailFilterType();
+          if (this.validarFilter()) {
+              if (this.fTranType.equals("ST")) {
+                  this.stmtList = this.iFacade.getStmtFilter(this.idCia, this.fFrom, this.fTo, this.idCust);
+              }else if(this.fTranType.equals("PA") || this.fTranType.equals("SR") || this.fTranType.equals("ES")){
+                  this.transactionList = this.iFacade.applyFilter(this.idCia, this.fTranType, "0", "", this.fFrom, this.fTo, this.idCust);
+              }else if(this.fTranType.equals("AI") ){
+                  this.transactionList = this.iFacade.applyFilter(this.idCia, "IN", "0", "", this.fFrom, this.fTo, this.idCust);
+              }else if(this.fTranType.equals("0")){
+                  this.transactionList = this.iFacade.applyFilter(this.idCia, "0", "0", "", this.fFrom, this.fTo, this.idCust);
+              }else{
+                  this.transactionList = this.iFacade.applyFilter(this.idCia, "IN", this.fTranType, "", this.fFrom, this.fTo, this.idCust);
+              }
+          }else{
+          this.transactionList = this.iFacade.getInvoicesByIdCust(idCust, idCia);
+          
+          }
+      }
+      
+      public void resetFilter(){
+      this.userData.setCustomerDetailFilterFrom("0");
+      this.userData.setCustomerDetailFilterTo("0");
+      this.userData.setCustomerDetailFilterType("0");
+      this.vb.redirecionar("/view/sales/customer/customerDetail.xhtml?id="+this.idCust);
+      }
+      
+      public boolean validarFilter(){
+      boolean flag = false;
+      int c = 0;
+      
+          if (!this.fFrom.equals("0")) {
+              c++;
+          }
+          if (!this.fTo.equals("0")) {
+              c++;
+          }
+          if (!this.fTranType.equals("0")) {
+              c++;
+          }
+          if (c != 0) {
+              flag = true;
+          }
+      
+      
+      return flag;    
+      }
+      
+      
+          public void viewStmt(String idCust, String idStmt){
+        this.vb.redirecionar("/view/sales/customer/statements.xhtml?id="+idCust+"&stmt="+idStmt+"&dir=1");
+    }
+    
+         private @Getter @Setter String stmtPdf = "0"; 
+          
+    public void generateStmt(FbStatement statement){
+        try {
+            String res = this.iFacade.generateStmt(statement, statement.getIdCia().getLogo(), this.iFacade.getCompiledFile("statement", this.vb.getRequestContext()), this.userData.formatMaster(statement.getIdCust().getBalance().toString()));
+            this.stmtPdf = res;
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.InvoiceController.generateStmt()");
+            e.printStackTrace();
+        }
+    
+    
+    }
+      
+     
 
 }
