@@ -303,14 +303,15 @@
                                     </f:facet>
                                     <bnu:selectBooleanCheckbox  value="#{stmt.checkbox}"  />
                                 </bnu:dataTableColumn>
+                    <bnu:dataTableColumn   label="#{messages.lblStmtDate}"  value="#{stmt.stmtDate}" ></bnu:dataTableColumn>
                     <bnu:dataTableColumn   label="#{messages.lblInvoiceNo}"  value="#{stmt.noDot}" ></bnu:dataTableColumn>
                     <bnu:dataTableColumn label="#{messages.lblInvocieCustomer }" value="#{stmt.idCust.displayName}" ></bnu:dataTableColumn>
                     <bnu:dataTableColumn label="#{messages.lblStmtStartDate}" value="#{stmt.startDate}"  />
                     <bnu:dataTableColumn label="#{messages.lblStmtEndDate}" value="#{stmt.endDate}"  />
                     <bnu:dataTableColumn label="#{messages.lblStmtType}" value="#{invoiceTableController.formatStmtType(stmt.type)}"  />
                     <bnu:dataTableColumn label="#{messages.action}"   >
-                    <bnu:dropButton value="#{messages.edit}" look="primary" styleClass="hidden-xs hidden-sm" >
-                        <bnu:commandButton value="#{messages.edit}"  style="width:100%; border: none" action="#{invoiceTableController.viewStmt(stmt.idCust.idCust, stmt.idStmt)}"  />
+                    <bnu:dropButton value="#{messages.lblView}" look="primary" styleClass="hidden-xs hidden-sm" >
+                        <bnu:commandButton value="#{messages.lblView}"  style="width:100%; border: none" action="#{invoiceTableController.viewStmt(stmt.idCust.idCust, stmt.idStmt)}"  />
 
                             <bnu:commandButton value="#{messages.lblInvoicePrint}"  style="width:100%; border: none"  update="@(.pdfStatement)" oncomplete="$('.printeModal').modal('show')" 
                                                action="#{invoiceTableController.generateStmt(stmt)}"             />

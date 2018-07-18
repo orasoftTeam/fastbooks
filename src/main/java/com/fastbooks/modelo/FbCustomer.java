@@ -533,4 +533,13 @@ public class FbCustomer implements Serializable {
         this.fbStatementList = fbStatementList;
     }
     
+    
+    public String getFullBillingAddress(){
+    return this.street + " " + this.postalCode + " " + this.city + " " + this.estate + " " + this.country;
+    }
+    
+    public String getFullShippingAddress(){
+    return this.streetS + " " + this.postalCodeS + " " + this.cityS + " " + this.estateS + " " + this.countryS;
+    }
+    
 }

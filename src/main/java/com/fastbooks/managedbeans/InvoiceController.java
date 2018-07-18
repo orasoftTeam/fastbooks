@@ -785,7 +785,7 @@ public class InvoiceController implements Serializable {
     
     
     public void viewStmt(String idCust, String idStmt){
-        this.validationBean.redirecionar("/view/sales/customer/statements.xhtml?id="+idCust+"&stmt="+idStmt);
+        this.validationBean.redirecionar("/view/sales/customer/statements.xhtml?id="+idCust+"&stmt="+idStmt+"&dir=1");
     }
     
     public void generateStmt(FbStatement statement){

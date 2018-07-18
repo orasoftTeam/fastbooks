@@ -1185,6 +1185,48 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         
         return list;
         }
+        
+        
+        
+        public FbStatement getStmtByIdStmt(String idCia,  String idStmt, String idCust){
+        List<FbStatement> list = new ArrayList<>();
+            try {
+                String sql = "SELECT * FROM FB_STATEMENT WHERE ID_CIA = ? AND ID_STMT =  ?  AND ID_CUST =  ?";
+                
+                Query q = em.createNativeQuery(sql, FbStatement.class);
+                q.setParameter(1,idCia);
+                q.setParameter(2,idStmt);
+                q.setParameter(3,idCust);
+                list = q.getResultList();
+            } catch (Exception e) {
+                System.out.println("com.fastbooks.facade.FbInvoiceFacade.getStmtFilter()");
+                e.printStackTrace();
+            }
+        
+        
+        
+        return list.size() == 0 ? null: list.get(0);
+        }
+        
+        public List<FbStmtDetail> getStmtDetailByIdStmt(String idStmt){
+        List<FbStmtDetail> list = new ArrayList<>();
+            try {
+                String sql = "SELECT * FROM FB_STMT_DETAIL WHERE ID_STMT = ? ORDER BY ID_DETAIL ASC";
+                
+                Query q = em.createNativeQuery(sql, FbStmtDetail.class);
+                
+                q.setParameter(1,idStmt);
+                
+                list = q.getResultList();
+            } catch (Exception e) {
+                System.out.println("com.fastbooks.facade.FbInvoiceFacade.getStmtFilter()");
+                e.printStackTrace();
+            }
+        
+        
+        
+        return list;
+        }
     
     
     

@@ -25,7 +25,7 @@
                 </bnu:row> 
                 <p:separator/>
                 <bnu:row>
-                    <bnu:column span="2"  >
+                    <bnu:column span="2"   rendered="#{!statementController.view}"  >
                         <h:panelGroup class="selectMenu" >
                         <bnu:selectOneMenu value="#{statementController.stmtType}" label="#{messages.lblStmtType}"    onchange="changeMenu(this.value);" >
                             <f:selectItem itemLabel="#{messages.lblStatementType1}" itemValue="BF" />
@@ -34,7 +34,11 @@
                         </bnu:selectOneMenu>
                             </h:panelGroup>
                     </bnu:column>
-                    <bnu:column span="6">
+                    <bnu:column span="8"   rendered="#{statementController.view}"  >
+                        <h2>#{statementController.currentCust.displayName}</h2>
+                        <bnu:inputTextarea label="#{messages.billingA}" disabled="true" value="#{statementController.currentCust.fullBillingAddress}" />
+                    </bnu:column>
+                    <bnu:column span="6" rendered="#{!statementController.view}"  >
                         
                     </bnu:column>
                     <bnu:column span="4" class="dBalance" >
@@ -45,26 +49,35 @@
                 </bnu:row>
                 <p:separator/>
                 <bnu:row>
-                    <bnu:column span="2">
+                    <bnu:column span="2" rendered="#{!statementController.view}" >
                         <label>#{messages.lblStmtDate}</label>
-                        <bnu:datepicker  value="#{statementController.stmtDate}" />
+                        <bnu:datepicker  value="#{statementController.stmtDate}"   />
+                        
                     </bnu:column>
-                    
+                    <bnu:column span="2" rendered="#{statementController.view}"  >
+                        <bnu:inputText value="#{statementController.stmtDate}"  label="#{messages.lblStmtDate}"  disabled="true" />
+                    </bnu:column>
                 </bnu:row>
-                <bnu:row class="startEnd" >
-                    <bnu:column span="2">
+                <bnu:row class="startEnd"  >
+                    <bnu:column span="2" rendered="#{!statementController.view}" >
                         <label>#{messages.lblStmtStartDate}</label>
                         <bnu:datepicker  value="#{statementController.startDate}" />
                     </bnu:column>
-                    <bnu:column span="2">
+                    <bnu:column span="2" rendered="#{statementController.view}"  >
+                        <bnu:inputText value="#{statementController.startDate}"  label="#{messages.lblStmtStartDate}"  disabled="true" />
+                    </bnu:column>
+                    <bnu:column span="2" rendered="#{!statementController.view}" >
                         <label>#{messages.lblStmtEndDate}</label>
                         <bnu:datepicker  value="#{statementController.endDate}" />
+                    </bnu:column>
+                    <bnu:column span="2" rendered="#{statementController.view}"  >
+                        <bnu:inputText value="#{statementController.endDate}"  label="#{messages.lblStmtEndDate}"  disabled="true" />
                     </bnu:column>
                 </bnu:row>
                 <bnu:row>
                     <bnu:column span="2">
                         <bnu:commandButton value="#{messages.lblStmtApply}"  action="#{statementController.apply()}" rendered="#{!statementController.showTbl}"   />
-                        <bnu:commandButton value="Reset"  action="#{statementController.reset()}"   rendered="#{statementController.showTbl}"   />
+                        <bnu:commandButton value="#{messages.lblReset}"  action="#{statementController.reset()}"   rendered="#{statementController.showTbl and !statementController.view}"   />
                     </bnu:column>
                 </bnu:row>
                 
@@ -79,7 +92,9 @@
                     
                     >
                     <bnu:dataTableColumn label="#{messages.lblStmtDateTbl}" value="#{statementController.displayDate(detail.tranDate)}" />
-                    <bnu:dataTableColumn label="#{messages.lblStmtDesc}" value="#{detail.descripcion}" />
+                    <bnu:dataTableColumn label="#{messages.lblStmtDesc}"  >
+                        <h:commandLink  action="#{statementController.goToTran(detail.idTran.type, detail.idTran.idInvoice)}" >#{detail.descripcion}</h:commandLink>
+                    </bnu:dataTableColumn>
                     <bnu:dataTableColumn label="#{messages.lblStmtAmount}" value="#{detail.amount}" />
                     <bnu:dataTableColumn label="#{statementController.thirdColumn}" value="#{detail.balance}" />
                 </bnu:dataTable>
@@ -90,13 +105,13 @@
         <bnu:navBar  inverse="true" position="bottom" fixed="true" >
             <h:form styleClass="navbar-form navbar-left" >
                 <bnu:commandButton look="warning" value="#{messages.lblInvoiceCancel}" action="#{statementController.regresar()}" />
-                
+                <bnu:button style="margin-left: 5px" look="danger" value="#{messages.delete}" onclick="$('.deleteModal').modal();" rendered="#{statementController.view}" />
             </h:form>
                 
            
             <h:form styleClass="navbar-form navbar-right" >
-                <bnu:commandButton value="#{messages.save}"  look="success"  class="messages"  style="width: 100%" action="#{statementController.save()}" rendered="#{statementController.showTbl and !statementController.alreadyCreated}" update="@(.messages)" oncomplete="$('.printeModal').modal('show')" />
-                <bnu:commandButton value="#{messages.lblInvoicePrint}"  look="success" class="messages"  style="width: 100%"  rendered="#{statementController.alreadyCreated}" update="@(.messages)" oncomplete="$('.printeModal').modal('show')" />
+                <bnu:commandButton value="#{messages.save}"  look="success"  class="messages"  style="width: 100%" action="#{statementController.save()}" rendered="#{statementController.showTbl and !statementController.view}" update="@(.messages)" oncomplete="$('.printeModal').modal('show')" />
+                <bnu:commandButton value="#{messages.lblInvoicePrint}"  look="success" class="messages"  style="width: 100%"  rendered="#{statementController.view}" update="@(.messages)" oncomplete="$('.printeModal').modal('show')" action="#{statementController.print()}" />
             </h:form>
         </bnu:navBar>
 
@@ -124,6 +139,21 @@
 
         <!--FIN PDF MODAL-->
         
+        
+        <!-- delete modal -->
+        <bnu:modal  id="deleteModal" title="#{messages.lblConfirm}"  styleClass="deleteModal"   backdrop="false"   >
+            <p>
+                #{messages.lblDeleteStmtConfirm}
+            </p>
+            <f:facet name="footer" >
+                <h:form>
+                    <bnu:button look="success" value="#{messages.No}"  onclick="$('.deleteModal').modal('hide');"/>
+                    <bnu:commandButton look="danger" value="#{messages.delete}" action="#{statementController.delete()}" />
+                </h:form>
+            </f:facet>
+        </bnu:modal> 
+        
+        <!-- delete modal fin -->
         
         <h:outputStylesheet>
             .dBalance{
