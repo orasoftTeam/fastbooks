@@ -95,7 +95,7 @@
                             <div class="dropdown">
                                 <bnu:button onclick="myFunction()" value="#{messages.lblFilter}" style="margin-bottom: 15px"  class="dropLi" iconAwesome="fa-angle-down" icon-align="right" />
                                 <div id="myDropdown" class="dropdown-content dropLi">
-                                    <bnu:selectOneMenu label="#{messages.lblType}" style="width: 150px;"   class="comboType" >
+                                    <bnu:selectOneMenu label="#{messages.lblType}" style="width: 150px;"   class="comboType" value="#{customerDetailController.FTranType}"  >
                                         <f:selectItem itemValue="0" itemLabel="#{messages.lblAllTransactions}"  />
                                         <f:selectItem itemValue="AI" itemLabel="#{messages.lblAllInvoices}"  />
                                         <f:selectItem itemValue="OP" itemLabel="#{messages.lblOpenInvoices}"  />
@@ -122,11 +122,11 @@
                                         <f:selectItem itemLabel="#{messages.lblLastYear}" itemValue="LY" />
                                         <f:selectItem itemLabel="#{messages.lblLast365Days}" itemValue="L3" />
                                     </bnu:selectOneMenu>
-                                    <bnu:inputText class="ffrom" type="hidden" />
-                                    <bnu:inputText class="fto"  type="hidden" />
+                                    <bnu:inputText class="ffrom" type="hidden" value="#{customerDetailController.FFrom}" />
+                                    <bnu:inputText class="fto"  type="hidden" value="#{customerDetailController.FTo}"  />
                                     <br/>
-                                    <bnu:commandButton look="success" value="Apply"/>
-                                    <bnu:commandButton look="danger" value="Reset" style="margin-left: 5px;" />
+                                    <bnu:commandButton look="success" value="Apply"  action="#{customerDetailController.processFilter()}" />
+                                    <bnu:commandButton look="danger" value="Reset" style="margin-left: 5px;" action="#{customerDetailController.resetFilter()}" />
                                 </div>
                             </div>
 
@@ -191,7 +191,7 @@
                             
                             <bnu:dataTable 
                                 rendered="#{customerDetailController.stmtList.size() > 0}"
-                    value="#{customerDetailControllerstmtList}"
+                    value="#{customerDetailController.stmtList}"
                     var="stmt">
                     <bnu:dataTableColumn  >
                                     <f:facet name="header">

@@ -1166,9 +1166,12 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
     public List<FbStatement> getStmtFilter(String idCia, String from, String to, String idCust) {
         List<FbStatement> list = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM FB_STATEMENT WHERE ID_CIA = " + idCia + " AND to_date(STMT_DATE,'MM/dd/yyyy') BETWEEN to_date('" + from + "','MM/dd/yyyy') AND to_date('" + to + "','MM/dd/yyyy') ";
+            String sql = "SELECT * FROM FB_STATEMENT WHERE ID_CIA = " + idCia + " ";
             if (!idCust.equals("0")) {
                 sql += " AND ID_CUST = " + idCust + " ";
+            }
+            if (!from.equals("0") && !to.equals("0")) {
+                sql += " AND to_date(STMT_DATE,'MM/dd/yyyy') BETWEEN to_date('" + from + "','MM/dd/yyyy') AND to_date('" + to + "','MM/dd/yyyy') ";
             }
             sql += " ORDER BY FECHA_CREACION DESC";
             Query q = em.createNativeQuery(sql, FbStatement.class);

@@ -210,18 +210,18 @@
                 <a href="#{request.contextPath}/view/sales/sales.xhtml" >Reset filters</a>
             </bnu:column>
         </bnu:row>
-        <bnu:row styleClass="hidden-xs hidden-sm" >
+        <bnu:row  >
             <bnu:column span="12">
 
 
                 <bnu:iconAwesome name="fa-long-arrow-down" size="2x"  style="margin-right: 15px" />
 
                 <bnu:dropButton value="#{messages.lblBatchOptions}" style="margin-bottom:15px" class="batchOptions"  >
-                    <bnu:commandButton value="#{messages.lblPrintTranc}" action="#{invoiceTableController.printTransactions(request)}" style="width: 100%;border: none" disabled="#{invoiceTableController.disableBatch('PT')}"   ></bnu:commandButton>
-                    <bnu:commandButton value="#{messages.lblPrintPackingSlip}" action="#{invoiceTableController.packingSlip(request)}" style="width: 100%;border: none" disabled="#{invoiceTableController.disableBatch('PP')}"   ></bnu:commandButton>
+                    <bnu:commandButton value="#{messages.lblPrintTranc}" style="width: 100%;border: none" class="cPrintTrans"   action="#{invoiceTableController.printTransactions()}" update="@(.pdfInvoices)"   ></bnu:commandButton>
+                    <bnu:commandButton value="#{messages.lblPrintPackingSlip}"  style="width: 100%;border: none"   class="cPrintPacking"  action="#{invoiceTableController.packingSlip()}" update="@(.pdfInvoices)"  ></bnu:commandButton>
 
-                    <bnu:navLink value="#{messages.lblSendTranc}" href="#"></bnu:navLink>
-                    <bnu:navLink value="#{messages.lblSendRemind}" ></bnu:navLink>
+                    <!--<bnu:navLink value="#{messages.lblSendTranc}" href="#"></bnu:navLink>
+                    <bnu:navLink value="#{messages.lblSendRemind}" ></bnu:navLink>-->
                 </bnu:dropButton>
 
             </bnu:column>
@@ -234,7 +234,7 @@
                     value="#{invoiceTableController.IList}"
                     id="tblInvoice"
                     var="in"
-                    responsive="true"
+                    
 
 
                     >
@@ -242,9 +242,9 @@
                                     <f:facet name="header">
                                         <bnu:selectBooleanCheckbox  />
                                     </f:facet>
-                                    <bnu:selectBooleanCheckbox  value="#{in.checkbox}"  />
+                        <bnu:selectBooleanCheckbox  value="#{in.checkbox}"  onclick="batchHelper.activateOption('#{in.type}','#{in.idInvoice}');"   />
                                 </bnu:dataTableColumn>
-                    <bnu:dataTableColumn label="#{messages.lblInvoiceDate}"   >
+                    <bnu:dataTableColumn label="#{messages.lblInvoiceDate}"    >
                        #{in.inDate}
                     </bnu:dataTableColumn>
                     <bnu:dataTableColumn  label="#{messages.lblType}" value="#{invoiceTableController.formatType(in.type)}" ></bnu:dataTableColumn>
@@ -341,7 +341,7 @@
     </bnu:form>
     <p:separator/>
     <bnu:modal  id="invoiceModal" title="#{messages.invoice}" styleClass="invoiceModal"  close-on-escape="false" backdrop="false" size="modal-lg"  >
-        <h:panelGroup id="pdf">
+        <h:panelGroup id="pdf" class="pdfInvoices" >
 
             <p:media value="#{invoiceTableController.invoiceModal}" width="100%" height="500px" rendered="#{not(invoiceTableController.invoiceModal eq '0')}"  />     
 
@@ -661,7 +661,10 @@
 
         filterHelper.changeDate($('.filterDate').val());
         filterHelper.changeType($('.comboType').val());
-
+        $('.cPrintTrans').attr('disabled',true);
+        $('.cPrintPacking').attr('disabled',true);
+        $('.cPrintTrans').addClass('disabled');
+        $('.cPrintPacking').addClass('disabled');
 
 
 
@@ -985,6 +988,97 @@
 
         window.location.replace('#{request.contextPath}/view/sales/sales.xhtml?pv='+op);
         }
+        
+        
+        var batchHelper= {
+        checks: [],
+        activateOption: function(e,id){
+        var c = 0;
+        if(this.checks.length == 0){
+        this.checks.push({tipo:e,iden:id});
+        }else{
+        for(var i =0;i &lt; this.checks.length;i++){
+        //console.log(this.checks[i].tipo + ' ' + this.checks[i].iden);
+        if(this.checks[i].iden == id){
+        c++;
+        var index = this.checks.indexOf(this.checks[i]);
+        }
+        }
+        if(c == 0){
+        this.checks.push({tipo:e,iden:id});
+        }else{
+        this.checks.splice(index, 1);
+        }
+        
+        for(var i =0;i &lt; this.checks.length;i++){
+        console.log(this.checks[i].tipo + ' ' + this.checks[i].iden);
+        
+        }
+        console.log('================================================');
+        
+        }
+        this.enableOption();
+        },
+        enableOption: function(){
+        //alert(this.checks.length);
+        if(this.checks.length == 0){
+        $('.cPrintTrans').attr('disabled',true);
+        $('.cPrintPacking').attr('disabled',true);
+        $('.cPrintTrans').addClass('disabled');
+        $('.cPrintPacking').addClass('disabled');
+        }
+        var ce = 0;
+        var cp = 0;
+        var cs = 0;
+        var ci = 0;
+        for(var i =0;i &lt; this.checks.length;i++){
+       // console.log(this.checks[i].tipo + ' ' + this.checks[i].iden);
+            
+            if(this.checks[i].tipo == 'SR'){
+            cs++;
+            }
+            if(this.checks[i].tipo == 'IN'){
+            ci++;
+            }
+            if(this.checks[i].tipo == 'PA'){
+            cp++;
+            
+            }
+            if(this.checks[i].tipo == 'ES'){
+            ce++;
+            
+            }
+            
+            
+        }
+            if(cs != 0){
+              $('.cPrintTrans').attr('disabled',false);
+              $('.cPrintPacking').attr('disabled',false);
+              $('.cPrintTrans').removeClass('disabled');
+              $('.cPrintPacking').removeClass('disabled');  
+            }
+        
+            if(ci != 0){
+              $('.cPrintTrans').attr('disabled',false);
+              $('.cPrintPacking').attr('disabled',false);
+              $('.cPrintTrans').removeClass('disabled');
+              $('.cPrintPacking').removeClass('disabled'); 
+            }
+            
+            if(cp != 0){
+              $('.cPrintTrans').attr('disabled',true);
+              $('.cPrintPacking').attr('disabled',true);
+              $('.cPrintTrans').addClass('disabled');
+              $('.cPrintPacking').addClass('disabled');  
+            }
+            
+            if(ce != 0){
+                $('.cPrintPacking').attr('disabled',true);
+                $('.cPrintPacking').addClass('disabled');  
+            }
+        }
+        };
+        
 
     </h:outputScript>
 

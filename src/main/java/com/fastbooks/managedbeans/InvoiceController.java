@@ -176,8 +176,10 @@ public class InvoiceController implements Serializable {
     private @Getter
     @Setter
     boolean hasPanelFilter = false;
-    
-    private @Getter @Setter String stmtPdf = "0";
+
+    private @Getter
+    @Setter
+    String stmtPdf = "0";
 
     /*panel stuff end */
     public void setPanelData() {
@@ -649,7 +651,7 @@ public class InvoiceController implements Serializable {
         System.out.println("com.fastbooks.managedbeans.InvoiceController.addToInvoiceList()");
     }
 
-    public void printTransactions(HttpServletRequest req) {
+    public void printTransactionsUseless(HttpServletRequest req) {
         String res = "";
         try {
             for (int i = 0; i < idInvoices.size(); i++) {
@@ -667,6 +669,52 @@ public class InvoiceController implements Serializable {
             this.idInvoices = new ArrayList<>();
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.print()");
+            e.printStackTrace();
+        }
+    }
+
+    public void printTransactions() {
+        try {
+            String res = "";
+            System.out.println("com.fastbooks.managedbeans.InvoiceController.printTransactions()");
+            for (FbInvoice fbInvoice : iList) {
+                if (fbInvoice.isCheckbox()) {
+                    if (res.isEmpty()) {
+                        res += fbInvoice.getIdInvoice().toString();
+                    }else{
+                        res += ","+fbInvoice.getIdInvoice().toString();
+                    }
+                    
+                    System.out.println("Transaction: " + fbInvoice.getType() + ", id:" + fbInvoice.getIdInvoice().toString() + " IS CHECKED");
+                }
+            }
+            this.invoiceModal = this.iFacade.printTransactions(res, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile("multipleInvoice", this.validationBean.getRequestContext()), this.userData.getCurrentCia().getIdCia().toString());
+            this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.InvoiceController.printTransactions()");
+            e.printStackTrace();
+        }
+    }
+    
+    public void packingSlip() {
+        try {
+            String res = "";
+            System.out.println("com.fastbooks.managedbeans.InvoiceController.printTransactions()");
+            for (FbInvoice fbInvoice : iList) {
+                if (fbInvoice.isCheckbox()) {
+                    if (res.isEmpty()) {
+                        res += fbInvoice.getIdInvoice().toString();
+                    }else{
+                        res += ","+fbInvoice.getIdInvoice().toString();
+                    }
+                    
+                    System.out.println("Transaction: " + fbInvoice.getType() + ", id:" + fbInvoice.getIdInvoice().toString() + " IS CHECKED");
+                }
+            }
+            this.invoiceModal = this.iFacade.printTransactions(res, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile("packingSlip", this.validationBean.getRequestContext()), this.userData.getCurrentCia().getIdCia().toString());
+            this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.InvoiceController.printTransactions()");
             e.printStackTrace();
         }
     }
@@ -782,13 +830,12 @@ public class InvoiceController implements Serializable {
         }
         return res;
     }
-    
-    
-    public void viewStmt(String idCust, String idStmt){
-        this.validationBean.redirecionar("/view/sales/customer/statements.xhtml?id="+idCust+"&stmt="+idStmt+"&dir=1");
+
+    public void viewStmt(String idCust, String idStmt) {
+        this.validationBean.redirecionar("/view/sales/customer/statements.xhtml?id=" + idCust + "&stmt=" + idStmt + "&dir=1");
     }
-    
-    public void generateStmt(FbStatement statement){
+
+    public void generateStmt(FbStatement statement) {
         try {
             String res = this.iFacade.generateStmt(statement, statement.getIdCia().getLogo(), this.iFacade.getCompiledFile("statement", this.validationBean.getRequestContext()), this.userData.formatMaster(statement.getIdCust().getBalance().toString()));
             this.stmtPdf = res;
@@ -796,8 +843,7 @@ public class InvoiceController implements Serializable {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.generateStmt()");
             e.printStackTrace();
         }
-    
-    
+
     }
 
 }
