@@ -92,6 +92,9 @@ public class ProductController implements Serializable {
     private @Getter
     @Setter
     String price;
+    private @Getter
+    @Setter
+    String cost = "0.00";
 
     private @Getter
     @Setter
@@ -116,6 +119,15 @@ public class ProductController implements Serializable {
     private @Getter
     @Setter
     FbProduct product;
+
+    private @Getter
+    @Setter
+    FbProduct productQ;
+
+    private @Getter
+    @Setter
+    Integer cQuant = 0;
+
     private @Getter
     @Setter
     String operation = "A";
@@ -141,7 +153,9 @@ public class ProductController implements Serializable {
     @Inject
     UserData userData;
     @EJB
-    private @Getter @Setter ValidationBean vb;
+    private @Getter
+    @Setter
+    ValidationBean vb;
     @EJB
     FbProductFacade pFacade;
     @EJB
@@ -152,10 +166,44 @@ public class ProductController implements Serializable {
     private @Getter
     @Setter
     List<FbCatProd> catList = new ArrayList<>();
-    
+
+    private @Getter
+    @Setter
+    String idCia;
+
     /*cat vars*/
-    private @Getter @Setter String catName = "";
-    private @Getter @Setter FbCatProd cat = new FbCatProd();
+    private @Getter
+    @Setter
+    String catName = "";
+    private @Getter
+    @Setter
+    FbCatProd cat = new FbCatProd();
+
+    private @Getter
+    @Setter
+    String outOfStock = "0";
+    private @Getter
+    @Setter
+    String lowOnStock = "0";
+    private @Getter
+    @Setter
+    String filterStock = "";
+    
+    
+    
+    //filter
+    private @Getter
+    @Setter
+    String fStatus = "A";
+    private @Getter
+    @Setter
+    String fType = "0";
+    private @Getter
+    @Setter
+    String fCat = "0";
+    private @Getter
+    @Setter
+    String fStock = "0";
     
 
     /**
@@ -167,15 +215,20 @@ public class ProductController implements Serializable {
     @PostConstruct
     public void init() {
         System.out.println("INIT PRODUCTS!!!!");
-        
+
         try {
-           /* HttpServletRequest req = (HttpServletRequest) this.vb.getRequestContext();
+            /* HttpServletRequest req = (HttpServletRequest) this.vb.getRequestContext();
             this.userData.changeTab(req.getParameter("index"));*/
             //this.userData.setCurrentCia(new FbCompania(BigDecimal.ONE));
-            pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
-            tList = tFacade.getTaxByIdCia(this.userData.getCurrentCia().getIdCia().toString());
-            catList = catFacade.getCatsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
-            itemBundleList = pFacade.getProductsByIdCiaWithoutBundle(this.userData.getCurrentCia().getIdCia().toString());
+            this.idCia = this.userData.getCurrentCia().getIdCia().toString();
+            pList = pFacade.getProductsByIdCia(this.idCia);
+            tList = tFacade.getTaxByIdCia(this.idCia);
+            catList = catFacade.getCatsByIdCia(this.idCia);
+            this.outOfStock = String.valueOf(this.pFacade.getPanelInfo(idCia, "OS"));
+            this.lowOnStock = String.valueOf(this.pFacade.getPanelInfo(idCia, "LS"));
+            itemBundleList = pFacade.getProductsByIdCiaWithoutBundle(this.idCia);
+            this.productQ =  new FbProduct();
+            this.productQ.setInitQuant(BigInteger.ZERO);
             if (!this.userData.getUses().equals("0")) {
                 this.vb.lanzarMensaje("info", this.userData.getUses(), "blank");
                 this.userData.setUses("0");
@@ -233,6 +286,33 @@ public class ProductController implements Serializable {
         System.out.println("com.fastbooks.managedbeans.ProductController.limpiar()");
     }
 
+    public void limpiarReg() {
+        //this.vb.ejecutarJavascript("$('.modalType').modal('hide')");
+        this.modalTitle = "Select a type:";
+        this.showForm = false;
+        photoUrl = "/resources/img/placeholder.png";
+        this.archivo = null;
+        this.desc = "";
+        this.idCat = "";
+        this.idTax = "";
+        this.incTax = false;
+        this.initQuant = "";
+        this.name = "";
+        this.nameFileFinal = "";
+        this.price = "";
+        this.product = null;
+        this.sku = "";
+        this.type = "";
+        this.operation = "A";
+        this.idProd = "0";
+        this.bundleTotal = "0.00";
+        this.isBundle = false;
+        this.bundleItems = new ArrayList<>();
+        //this.vb.updateComponent("prodForm:modalContent");
+        this.vb.redirecionar("/view/sales/sales.xhtml");
+        System.out.println("com.fastbooks.managedbeans.ProductController.limpiarReg()");
+    }
+
     public void handleFileUpload(FileUploadEvent event) {
         String nameF;
         String ciaFolder = "cia" + userData.getCurrentCia().getIdCia().toString();
@@ -287,6 +367,7 @@ public class ProductController implements Serializable {
     public void addNew(boolean isFormProd) {
 
         if (valNew()) {
+            HttpServletRequest req = (HttpServletRequest) this.vb.getRequestContext();
             this.product = new FbProduct();
             this.product.setIdCia(this.userData.getCurrentCia());
             this.product.setIdProd(new BigDecimal(idProd));
@@ -296,7 +377,8 @@ public class ProductController implements Serializable {
             this.product.setDescrip(desc);
             this.product.setIdCat(new FbCatProd(new BigDecimal(idCat)));
             this.product.setIdTax(new FbTax(new BigDecimal(idTax)));
-
+            String costProd = req.getParameter("cost") == null? "0.00" : req.getParameter("cost");
+            this.product.setProdCost(new BigDecimal(costProd));
             if (type.equals("IN")) {
                 this.product.setInitQuant(new BigInteger(initQuant));
             } else {
@@ -405,6 +487,7 @@ public class ProductController implements Serializable {
             this.idCat = prod.getIdCat() != null ? prod.getIdCat().getIdCat().toString() : "0";
             this.idTax = prod.getIdTax() != null ? prod.getIdTax().getIdTax().toString() : "0";
             this.initQuant = prod.getInitQuant() != null ? prod.getInitQuant().toString() : "0";
+            this.cost = prod.getProdCost() != null? prod.getProdCost().toString() : "0.00";
             if (prod.getIncTax().toString().equals("0")) {
                 this.incTax = false;
             } else {
@@ -485,6 +568,7 @@ public class ProductController implements Serializable {
                 break;
         }
         this.vb.lanzarMensaje("info", message, "blank");
+        this.vb.ejecutarJavascript("$('.modalAddProd').modal('hide');");
         this.refrescar();
         this.limpiar();
     }
@@ -650,40 +734,35 @@ public class ProductController implements Serializable {
         itemBundleList = pFacade.getProductsByIdCiaWithoutBundle(this.userData.getCurrentCia().getIdCia().toString());
         this.vb.updateComponent("tableForm");
     }
-    
-    
-    
-    
+
     /*add cat methods*/
-        public void addCat() {
+    public void addCat() {
         if (valAddCat()) {
             String res = "";
             try {
                 cat = new FbCatProd();
-                cat.setName(name);
+                cat.setName(catName);
                 cat.setIdCat(BigDecimal.ZERO);
                 cat.setIdCia(new FbCompania(userData.getCurrentCia().getIdCia()));
                 cat.setUserCreacion(new BigInteger(userData.getLoggedUser().getIdUsuario().toString()));
                 res = catFacade.actCat(cat, "A");
                 if (res.equals("0")) {
                     vb.lanzarMensaje("info", "catAddSuccess", "blank");
-                    
+                    catList = catFacade.getCatsByIdCia(this.idCia);
+                    for (FbCatProd fbCatProd : catList) {
+                        if (fbCatProd.getName().equals(this.catName)) {
+                            idCat = fbCatProd.getIdCat().toString();
+                        }
+                    }
+                    this.catName = "";
+                    this.cat = new FbCatProd();
                 } else if (res.equals("-1")) {
                     vb.lanzarMensaje("error", "catRepeatFail", "blank");
                 } else if (res.equals("-2")) {
                     vb.lanzarMensaje("error", "unexpectedError", "blank");
                 }
-                
-                
+
                 //refrescar
-                catList = catFacade.getCatsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
-                for (FbCatProd fbCatProd : catList) {
-                    if (fbCatProd.getName().equals(this.catName)) {
-                        idCat = fbCatProd.getIdCat().toString();
-                    }
-                }
-                this.catName = "";
-                this.cat = new FbCatProd();
             } catch (Exception e) {
                 System.out.println("com.fastbooks.managedbeans.CategoryController.add()");
                 e.printStackTrace();
@@ -692,17 +771,65 @@ public class ProductController implements Serializable {
 
         }
     }
+
+    public void applyStockFilter(String option) {
+        this.filterStock = option;
+        if (option.isEmpty()) {
+            this.pList = this.pFacade.getProductsByIdCia(this.idCia);
+            this.vb.redirecionar("/view/sales/sales.xhtml");
+        } else {
+            this.pList = this.pFacade.getProductsByIdCia(this.idCia, option);
+        }
+
+    }
     
+    public void applyGeneralFilter(){
+        this.pList = this.pFacade.getProductsByFilter(this.idCia,this.fStatus,this.fType,this.fCat,this.fStock);
+        this.filterStock = "";
+    }
     
+    public void resetGeneralFilter(){
+        this.filterStock = "";
+    fStatus = "A";
+    fType = "0";
+    fCat = "0";
+    fStock = "0";
+    this.vb.redirecionar("/view/sales/sales.xhtml");
+    }
     
-        public boolean valAddCat() {
+
+    public boolean valAddCat() {
 
         boolean flag = false;
-        if (vb.validarCampoVacio(this.name, "warn", "valErr", "reqCatName")
-                && vb.validarSoloLetras(this.name, "warn", "valErr", "reqCatName")) {
+        if (vb.validarCampoVacio(this.catName, "warn", "valErr", "reqCatName")
+                && vb.validarSoloLetras(this.catName, "warn", "valErr", "reqCatName")) {
             flag = true;
         }
 
         return flag;
+    }
+
+    public void assignIncreaseQ(FbProduct p) {
+        this.cQuant = 0;
+        this.productQ = p;
+    }
+    
+    
+    public void increaseQuant(){
+        try {
+            HttpServletRequest req = (HttpServletRequest) this.vb.getRequestContext();
+            if (req.getParameter("nQuant") != null) {
+                this.productQ.setInitQuant(new BigInteger(req.getParameter("nQuant") ));
+            }
+            this.pFacade.edit(this.productQ);
+            System.out.println("success");
+            this.userData.setUses("lblQtyIncreaseSuccess");
+            
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.ProductController.increaseQuant()");
+            this.userData.setUses("lblQtyIncreaseError");
+            e.printStackTrace();
+        }
+        this.vb.redirecionar("/view/sales/sales.xhtml");
     }
 }

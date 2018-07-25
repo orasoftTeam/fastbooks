@@ -52,6 +52,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "FbProduct.findByTotalBundle", query = "SELECT f FROM FbProduct f WHERE f.totalBundle = :totalBundle")})
 public class FbProduct implements Serializable {
 
+    @Column(name = "PROD_COST")
+    private BigDecimal prodCost;
+
     @OneToMany(mappedBy = "idProd")
     private List<FbInvoiceDetail> fbInvoiceDetailList;
 
@@ -292,6 +295,14 @@ public class FbProduct implements Serializable {
 
     public void setFbInvoiceDetailList(List<FbInvoiceDetail> fbInvoiceDetailList) {
         this.fbInvoiceDetailList = fbInvoiceDetailList;
+    }
+
+    public BigDecimal getProdCost() {
+        return prodCost;
+    }
+
+    public void setProdCost(BigDecimal prodCost) {
+        this.prodCost = prodCost;
     }
     
 }

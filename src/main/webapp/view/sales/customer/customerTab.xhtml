@@ -155,18 +155,18 @@
         </bnu:row>
         <br></br>
 
-        <bnu:dropButton value="#{messages.batchA}" style="float: left">
+       <!-- <bnu:dropButton value="#{messages.batchA}" style="float: left">
             <bnu:navLink value="#{messages.createS}" href="#{request.contextPath}/view/sales/createStatements.xhtml"></bnu:navLink>
             <bnu:navLink value="#{messages.emailC}"></bnu:navLink>
-        </bnu:dropButton>
+        </bnu:dropButton>-->
         <bnu:row>
         <bnu:column span="3" rendered="#{customerController.hasPanelFilter}" >
                 <a href="#{request.contextPath}/view/sales/sales.xhtml" >Reset filters</a>
             </bnu:column>
             </bnu:row>
-        <bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />
+       <!-- <bnu:commandButton value="" iconAwesome="fa-cogs"  style="float: right" />
         <bnu:commandButton value="" iconAwesome="fa-clipboard" style="float: right" />
-        <bnu:commandButton value="" iconAwesome="fa-print" style="float: right" />
+        <bnu:commandButton value="" iconAwesome="fa-print" style="float: right" />-->
 
 
         <bnu:dataTable  styleClass="table table-striped"
@@ -197,7 +197,8 @@
                     <bnu:commandButton value="#{messages.lblCreateInvoice}" action="#{customerController.createInvoice('IN', cust.idCust.toString())}" style="width:100%;border: none;" />
                     <bnu:commandButton value="#{messages.lblCreateEstimate}" action="#{customerController.createInvoice('ES', cust.idCust.toString())}" style="width:100%;border: none;" />
                     <bnu:commandButton value="#{messages.lblCreateSalesReceipt}" action="#{customerController.createInvoice('SR', cust.idCust.toString())}" style="width:100%;border: none;" />
-                    <bnu:commandButton value="#{messages.lblStatement}"  action="#{customerController.statement(cust.idCust.toString())}" style="width: 100%; border: none"   />
+                    <bnu:commandButton value="#{messages.lblCreateStatement}"  action="#{customerController.statement(cust.idCust.toString())}" style="width: 100%; border: none"   />
+                    <bnu:commandButton value="#{messages.lblCreateCreditNote}"  action="#{customerController.createInvoice('CN', cust.idCust.toString())}" style="width: 100%; border: none"   />
                     <bnu:commandButton value="#{messages.lblMakeInactive}"  style="width:100%;border: none;"  rendered="#{customerController.renderOptionMaster('INAC',cust)}" />
 
                 </bnu:dropButton>
@@ -280,17 +281,17 @@
                                         <bnu:row>
                                             <bnu:column span="12">
                                                 <label>#{messages.billingA}</label>
-                                                <bnu:inputTextarea  placeholder="#{messages.streetC}" class="form-control"  value="#{customerController.customer.street}" maxlength="100" />
+                                                <bnu:inputTextarea  placeholder="#{messages.streetC}" class="form-control"  value="#{customerController.customer.street}" maxlength="150" />
                                             </bnu:column>
                                         </bnu:row>
 
                                         <bnu:row>
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.cityT}"  value="#{customerController.customer.city}" maxlength="15" />
+                                                <bnu:inputText placeholder="#{messages.cityT}"  value="#{customerController.customer.city}" maxlength="20" />
                                             </bnu:column>
 
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.stateP}"  value="#{customerController.customer.estate}" maxlength="15" />
+                                                <bnu:inputText placeholder="#{messages.stateP}"  value="#{customerController.customer.estate}" maxlength="20" />
                                             </bnu:column>
 
                                         </bnu:row>
@@ -301,7 +302,7 @@
                                             </bnu:column>
 
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.countryC}" value="#{customerController.customer.country}" maxlength="15" />
+                                                <bnu:inputText placeholder="#{messages.countryC}" value="#{customerController.customer.country}" maxlength="20" />
                                             </bnu:column>
 
                                         </bnu:row>
@@ -312,17 +313,17 @@
                                         <bnu:row>
                                             <bnu:column span="12">
                                                 <label>#{messages.shippingA}</label> <input checked="true" type="checkbox" onclick="customerFormHelper.enableShipAdress()" value="1"  name="sameSha" id="sameSha" />#{messages.sameSHA}
-                                                <bnu:inputTextarea placeholder="#{messages.streetC}"  class="form-control shippingEnable"  value="#{customerController.customer.streetS}" maxlength="100"   />
+                                                <bnu:inputTextarea placeholder="#{messages.streetC}"  class="form-control shippingEnable"  value="#{customerController.customer.streetS}" maxlength="150"   />
                                             </bnu:column>
                                         </bnu:row>
                                         <bnu:row>
 
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.cityT}"  class="shippingEnable" value="#{customerController.customer.cityS}" maxlength="15" />
+                                                <bnu:inputText placeholder="#{messages.cityT}"  class="shippingEnable" value="#{customerController.customer.cityS}" maxlength="20" />
                                             </bnu:column>
 
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.stateP}"  class="shippingEnable" value="#{customerController.customer.estateS}" maxlength="15" />
+                                                <bnu:inputText placeholder="#{messages.stateP}"  class="shippingEnable" value="#{customerController.customer.estateS}" maxlength="20" />
                                             </bnu:column>
                                         </bnu:row>
                                         <bnu:row>
@@ -332,7 +333,7 @@
                                     </bnu:column>
 
                                     <bnu:column span="6">
-                                        <bnu:inputText placeholder="#{messages.countryC}"  class="shippingEnable" value="#{customerController.customer.countryS}" maxlength="15" />
+                                        <bnu:inputText placeholder="#{messages.countryC}"  class="shippingEnable" value="#{customerController.customer.countryS}" maxlength="20" />
                                     </bnu:column>
                                 </bnu:row>
                                     </bnu:column>

@@ -84,26 +84,43 @@ public class UserData implements Serializable {
     String sInvoice = "0";
     private @Getter
     @Setter
+    String idEs = "0";
+    private @Getter
+    @Setter
     FbInvoice fbInvoice = null;
     private @Getter
     @Setter
     int salesIndex = 0;
-    
-    
-    private @Getter @Setter String invoiceFilterType = "0";
-    private @Getter @Setter String invoiceFilterStatus = "0";
-    private @Getter @Setter String invoiceFilterSh = "0";
-    private @Getter @Setter String invoiceFilterFrom = "0";
-    private @Getter @Setter String invoiceFilterTo = "0";
-    private @Getter @Setter String invoiceFilterIdCust = "0";
-    
-    
-    private @Getter @Setter String customerDetailFilterType = "0";
-    private @Getter @Setter String customerDetailFilterFrom = "0";
-    private @Getter @Setter String customerDetailFilterTo = "0";
-    
-    
-    
+
+    private @Getter
+    @Setter
+    String invoiceFilterType = "0";
+    private @Getter
+    @Setter
+    String invoiceFilterStatus = "0";
+    private @Getter
+    @Setter
+    String invoiceFilterSh = "0";
+    private @Getter
+    @Setter
+    String invoiceFilterFrom = "0";
+    private @Getter
+    @Setter
+    String invoiceFilterTo = "0";
+    private @Getter
+    @Setter
+    String invoiceFilterIdCust = "0";
+
+    private @Getter
+    @Setter
+    String customerDetailFilterType = "0";
+    private @Getter
+    @Setter
+    String customerDetailFilterFrom = "0";
+    private @Getter
+    @Setter
+    String customerDetailFilterTo = "0";
+
     private @Getter
     @Setter
     String formInProdId = "0";
@@ -119,7 +136,7 @@ public class UserData implements Serializable {
     private @Getter
     @Setter
     Locale country;
-    
+
     private @Getter
     @Setter
     String dirCust = "0";
@@ -187,10 +204,10 @@ public class UserData implements Serializable {
 
     }
 
-     @PostConstruct
-    public void init(){
-       System.out.println("INITIALIZATING SESSION BEAN!!!!");
-       /* Locale requestLocale = new Locale("en", "us");//FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
+    @PostConstruct
+    public void init() {
+        System.out.println("INITIALIZATING SESSION BEAN!!!!");
+        /* Locale requestLocale = new Locale("en", "us");//FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
         System.out.println(requestLocale.toString());
         System.out.println(requestLocale.getDisplayName());
         System.out.println(requestLocale.getCountry());
@@ -204,6 +221,7 @@ public class UserData implements Serializable {
         System.out.println(format.format(doble));
         System.out.println("-------------------------------------------------------");*/
     }
+
     public List<Country> getList() {
         return list;
     }
@@ -292,10 +310,10 @@ public class UserData implements Serializable {
                         System.out.println("show com list");
                         validationBean.redirecionar("/view/chooseCompany.xhtml?faces-redirect=true");
                     }
-                }else{
-                System.out.println("Fallo de login");
-                validationBean.lanzarMensaje("error", "loginfail", "loginfaildesc");
-                
+                } else {
+                    System.out.println("Fallo de login");
+                    validationBean.lanzarMensaje("error", "loginfail", "loginfaildesc");
+
                 }
 
             } else {
@@ -388,10 +406,10 @@ public class UserData implements Serializable {
         String res = "";
         if (!obj.isEmpty()) {
             Double dobbs = Double.parseDouble(obj);
-            res =  format.format(dobbs);
+            res = format.format(dobbs);
             if (dobbs < 0) {
                 //formatear para negativo
-                res =  res.substring(1, 2) + " -" + res.substring(2, res.length() - 1);
+                res = res.substring(1, 2) + " -" + res.substring(2, res.length() - 1);
 
             }
 
@@ -399,7 +417,7 @@ public class UserData implements Serializable {
         if (!obj.isEmpty()) {
             res = currency.getCurrencyCode() + res;
         }
-        return  res;
+        return res;
     }
 
     public void changeTab(String index) {
@@ -408,12 +426,10 @@ public class UserData implements Serializable {
             indexInt = Integer.parseInt(index);
         } catch (Exception e) {
         }
-        if (indexInt >= 0 && indexInt <=2) {
-           this.salesIndex = indexInt; 
+        if (indexInt >= 0 && indexInt <= 2) {
+            this.salesIndex = indexInt;
             System.out.println("index: " + this.salesIndex);
         }
-        
-        
 
     }
 
@@ -498,6 +514,9 @@ public class UserData implements Serializable {
             case "PA":
                 res = this.validationBean.getMsgBundle("payment");
                 break;
+            case "CN":
+                res = this.validationBean.getMsgBundle("creditN");
+                break;
             default:
                 break;
         }
@@ -526,7 +545,7 @@ public class UserData implements Serializable {
                 }
                 break;
             case "COPY":
-                if (!type.equals("PA")) {
+                if (!type.equals("PA") && !type.equals("CN")) {
                     flag = true;
                 }
                 break;

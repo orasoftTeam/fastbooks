@@ -13,10 +13,12 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -107,6 +109,7 @@ public class TaxController implements Serializable {
     }
 
     //getting tax list 
+    @PostConstruct
     public void init() {
         System.out.println("Obteniendo lista taxes" + taxList);
         try {
@@ -115,6 +118,12 @@ public class TaxController implements Serializable {
             if (!this.userData.getUses().equals("0")) {
                 this.validationBean.lanzarMensaje("info", this.userData.getUses(), "blank");
                 this.userData.setUses("0");
+            }
+            HttpServletRequest req = (HttpServletRequest ) this.validationBean.getRequestContext();
+            String index = req.getParameter("f");
+            if (index != null) {
+                this.validationBean.lanzarMensaje("info", "lblMustAddTax", "blank");
+                this.validationBean.updateComponent("tableForm:msg");
             }
 
         } catch (Exception e) {

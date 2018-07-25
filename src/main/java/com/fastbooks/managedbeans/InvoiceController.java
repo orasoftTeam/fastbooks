@@ -370,6 +370,9 @@ public class InvoiceController implements Serializable {
             case "PA":
                 res = this.validationBean.getMsgBundle("payment");
                 break;
+            case "CN":
+                res = this.validationBean.getMsgBundle("creditN");
+                break;    
             default:
                 break;
         }
@@ -516,7 +519,7 @@ public class InvoiceController implements Serializable {
                 }
                 break;
             case "COPY":
-                if (!type.equals("PA")) {
+                if (!type.equals("PA") && !type.equals("CN")) {
                     flag = true;
                 }
                 break;
@@ -528,7 +531,14 @@ public class InvoiceController implements Serializable {
 
                 }
                 break;
+             case "CREATEES":
+                if (type.equals("ES")) {
+                    if (status.equals("AC") || status.equals("PE")) {
+                        flag = true;
+                    }
 
+                }
+                break;
             default:
                 System.out.println("You do nutin");
                 break;
@@ -681,21 +691,21 @@ public class InvoiceController implements Serializable {
                 if (fbInvoice.isCheckbox()) {
                     if (res.isEmpty()) {
                         res += fbInvoice.getIdInvoice().toString();
-                    }else{
-                        res += ","+fbInvoice.getIdInvoice().toString();
+                    } else {
+                        res += "," + fbInvoice.getIdInvoice().toString();
                     }
-                    
+
                     System.out.println("Transaction: " + fbInvoice.getType() + ", id:" + fbInvoice.getIdInvoice().toString() + " IS CHECKED");
                 }
             }
-            this.invoiceModal = this.iFacade.printTransactions(res, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile("multipleInvoice", this.validationBean.getRequestContext()), this.userData.getCurrentCia().getIdCia().toString());
+            this.invoiceModal = this.iFacade.printTransactions(res, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile("transactions", this.validationBean.getRequestContext()), this.userData.getCurrentCia().getIdCia().toString());
             this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
         } catch (Exception e) {
             System.out.println("com.fastbooks.managedbeans.InvoiceController.printTransactions()");
             e.printStackTrace();
         }
     }
-    
+
     public void packingSlip() {
         try {
             String res = "";
@@ -704,10 +714,10 @@ public class InvoiceController implements Serializable {
                 if (fbInvoice.isCheckbox()) {
                     if (res.isEmpty()) {
                         res += fbInvoice.getIdInvoice().toString();
-                    }else{
-                        res += ","+fbInvoice.getIdInvoice().toString();
+                    } else {
+                        res += "," + fbInvoice.getIdInvoice().toString();
                     }
-                    
+
                     System.out.println("Transaction: " + fbInvoice.getType() + ", id:" + fbInvoice.getIdInvoice().toString() + " IS CHECKED");
                 }
             }
@@ -775,9 +785,14 @@ public class InvoiceController implements Serializable {
         this.estimateStatus = in.getStatus();
         this.AccBy = in.getEsAccby();
         this.AccDate = in.getEsAccdate();
-        String exp = "$('.updateStatusModal').modal();";
-        exp += !in.getStatus().equals("PE") ? "$('.updateEstimateStatus').show();" : "";
-        this.validationBean.ejecutarJavascript(exp);
+        this.validationBean.ejecutarJavascript("$('.estimateStatus').val('" + in.getStatus() + "');");
+        this.validationBean.ejecutarJavascript("$('.estimateAccBy').val('" + in.getEsAccby() + "');");
+        this.validationBean.ejecutarJavascript("$('.estimateAccDate').val('"+in.getEsAccdate()+"');");
+        this.validationBean.ejecutarJavascript("show('" + in.getStatus() + "');");
+
+        //String exp = "$('.updateStatusModal').modal();";
+        //exp += !in.getStatus().equals("PE") ? "$('.updateEstimateStatus').show();" : "";
+        //this.validationBean.ejecutarJavascript(exp);
     }
 
     public void updateEstimateStatus() {
@@ -806,7 +821,7 @@ public class InvoiceController implements Serializable {
 
         }
 
-        // this.validationBean.redirecionar("/view/sales/sales.xhtml");
+         this.validationBean.redirecionar("/view/sales/sales.xhtml");
     }
 
     public void recievePayment(String idCust, String idInvoice) {
@@ -844,6 +859,15 @@ public class InvoiceController implements Serializable {
             e.printStackTrace();
         }
 
+    }
+    
+    public void estimateCreateInvoice(FbInvoice in){
+        this.userData.setInvoiceTypeForm("IN");
+        in.setMessageStmnt("createFromEs");
+        this.userData.setFbInvoice(in);
+        this.userData.setIdEs(in.getIdInvoice().toString());
+        this.validationBean.redirecionar("/view/sales/invoiceForm.xhtml");
+    
     }
 
 }

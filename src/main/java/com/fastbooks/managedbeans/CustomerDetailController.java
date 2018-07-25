@@ -266,9 +266,10 @@ public class CustomerDetailController implements Serializable {
         this.estimateStatus = in.getStatus();
         this.AccBy = in.getEsAccby();
         this.AccDate = in.getEsAccdate();
-        String exp = "$('.updateStatusModal').modal();";
-        exp += !in.getStatus().equals("PE") ? "$('.updateEstimateStatus').show();" : "";
-        this.vb.ejecutarJavascript(exp);
+        //this.vb.ejecutarJavascript("$('.estimateStatus').val('" + in.getStatus() + "');");
+        //this.vb.ejecutarJavascript("$('.estimateAccBy').val('" + in.getEsAccby() + "');");
+        //this.vb.ejecutarJavascript("$('.estimateAccDate').val('"+in.getEsAccdate()+"');");
+        this.vb.ejecutarJavascript("show('" + in.getStatus() + "');");
     }
 
     public void copy(FbInvoice in) {
@@ -503,7 +504,56 @@ public class CustomerDetailController implements Serializable {
     
     
     }
-      
+    
+    
+    
+    
+    /*Batch options*/
+          public void printTransactions() {
+        try {
+            String res = "";
+            System.out.println("com.fastbooks.managedbeans.InvoiceController.printTransactions()");
+            for (FbInvoice fbInvoice : transactionList) {
+                if (fbInvoice.isCheckbox()) {
+                    if (res.isEmpty()) {
+                        res += fbInvoice.getIdInvoice().toString();
+                    } else {
+                        res += "," + fbInvoice.getIdInvoice().toString();
+                    }
+
+                    System.out.println("Transaction: " + fbInvoice.getType() + ", id:" + fbInvoice.getIdInvoice().toString() + " IS CHECKED");
+                }
+            }
+            this.invoiceModal = this.iFacade.printTransactions(res, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile("transactions", this.vb.getRequestContext()), this.userData.getCurrentCia().getIdCia().toString());
+            this.vb.ejecutarJavascript("$('.invoiceModal').modal();");
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.InvoiceController.printTransactions()");
+            e.printStackTrace();
+        }
+    }
+          
+              public void packingSlip() {
+        try {
+            String res = "";
+            System.out.println("com.fastbooks.managedbeans.InvoiceController.printTransactions()");
+            for (FbInvoice fbInvoice : transactionList) {
+                if (fbInvoice.isCheckbox()) {
+                    if (res.isEmpty()) {
+                        res += fbInvoice.getIdInvoice().toString();
+                    } else {
+                        res += "," + fbInvoice.getIdInvoice().toString();
+                    }
+
+                    System.out.println("Transaction: " + fbInvoice.getType() + ", id:" + fbInvoice.getIdInvoice().toString() + " IS CHECKED");
+                }
+            }
+            this.invoiceModal = this.iFacade.printTransactions(res, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile("packingSlip", this.vb.getRequestContext()), this.userData.getCurrentCia().getIdCia().toString());
+            this.vb.ejecutarJavascript("$('.invoiceModal').modal();");
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.InvoiceController.printTransactions()");
+            e.printStackTrace();
+        }
+    }
      
 
 }

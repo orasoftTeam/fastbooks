@@ -27,6 +27,7 @@
                     <bnu:commandButton value="#{messages.lblPayment}"   style="width: 100%; border: none" action="#{invoiceController.pagar()}" />
                     <bnu:commandButton value="#{messages.lblEstimate}"  action="#{invoiceTableController.setType('ES','/view/sales/invoiceForm.xhtml' )}" style="width: 100%; border: none" />
                     <bnu:commandButton value="#{messages.salesR}"  action="#{invoiceTableController.setType('SR','/view/sales/invoiceForm.xhtml' )}" style="width: 100%; border: none" />
+                    <bnu:commandButton value="#{messages.creditN}"  action="#{invoiceTableController.setType('CN','/view/sales/invoiceForm.xhtml' )}" style="width: 100%; border: none" />
                     <!-- 
      <bnu:navLink value="#{messages.lblPayment}" href="#{request.contextPath}/view/sales/payments/receivePayment.xhtml" ></bnu:navLink>
   
@@ -234,7 +235,7 @@
                     value="#{invoiceTableController.IList}"
                     id="tblInvoice"
                     var="in"
-                    
+                    responsive="true"
 
 
                     >
@@ -263,9 +264,11 @@
 
                             <bnu:commandButton value="#{messages.lblInvoicePrint}"  style="width:100%; border: none"  update="pdf" action="#{invoiceTableController.print(in,request)}"
                                                rendered="#{invoiceTableController.showOptions(in.status,in.type,'PRINT')}"  />
+                            <bnu:commandButton value="Create Invoice"  style="width:100%; border: none"   action="#{invoiceTableController.estimateCreateInvoice(in)}"
+                                               rendered="#{invoiceTableController.showOptions(in.status,in.type,'CREATEES')}"  />
 
                             <bnu:commandButton value="Update status"  style="width:100%; border: none"  
-                                               rendered="#{invoiceTableController.showOptions(in.status,in.type,'ESTATUS')}" action="#{invoiceTableController.assignEstimate(in)}"  update="@(.updateEstimate)" />
+                                               rendered="#{invoiceTableController.showOptions(in.status,in.type,'ESTATUS')}" action="#{invoiceTableController.assignEstimate(in)}"  update="@(.updateEstimate)" oncomplete="$('.updateStatusModal').modal();" />
 
                             <bnu:commandButton value="Copy"  style="width:100%; border: none"  
                                                rendered="#{invoiceTableController.showOptions(in.status,in.type,'COPY')}" action="#{invoiceTableController.copy(in)}"   />
@@ -296,7 +299,8 @@
                 <bnu:dataTable 
                     rendered="#{invoiceTableController.stmtList.size() > 0}"
                     value="#{invoiceTableController.stmtList}"
-                    var="stmt">
+                    var="stmt"
+                    responsive="true">
                     <bnu:dataTableColumn  >
                                     <f:facet name="header">
                                         <bnu:selectBooleanCheckbox  />
@@ -371,9 +375,9 @@
 
     <bnu:modal  id="updateStatusModal" title="#{messages.lblEstimate}" styleClass="updateStatusModal"   >
 
-        <h:form  >
-            <h:panelGroup class="updateEstimate" >
-                <bnu:selectOneMenu label="#{messages.lblInvoiceStatus}" value="#{invoiceTableController.estimateStatus}" onchange="show(this.value);" >
+        <h:form  class="updateEstimate" >
+          
+                <bnu:selectOneMenu label="#{messages.lblInvoiceStatus}" class="estimateStatus" value="#{invoiceTableController.estimateStatus}" onchange="show(this.value);" >
 
                     <f:selectItem itemValue="PE" itemLabel="#{messages.lblESPending}" />
                     <f:selectItem itemValue="AC" itemLabel="#{messages.lblAccepted}" />
@@ -381,14 +385,14 @@
                     <f:selectItem itemValue="RJ" itemLabel="#{messages.lblRejected}" />
                 </bnu:selectOneMenu>
                 <div class="updateEstimateStatus" style="display: none;" >
-                    <bnu:inputText label="By" maxlength="30"  value="#{invoiceTableController.accBy}" />
+                    <bnu:inputText label="By" maxlength="30"  value="#{invoiceTableController.accBy}" class="estimateAccBy" />
                     <strong>
                         <h:outputText value="Date"  />
 
                     </strong>
-                    <bnu:datepicker value="#{invoiceTableController.accDate}"    />
+                    <bnu:datepicker value="#{invoiceTableController.accDate}" class="estimateAccDate"    />
                 </div>
-            </h:panelGroup>
+          
             <p:separator/>
 
             <bnu:commandButton value="Cancel" style="margin-right: 10px;" />
@@ -1031,6 +1035,7 @@
         var cp = 0;
         var cs = 0;
         var ci = 0;
+        var cc = 0;
         for(var i =0;i &lt; this.checks.length;i++){
        // console.log(this.checks[i].tipo + ' ' + this.checks[i].iden);
             
@@ -1048,7 +1053,10 @@
             ce++;
             
             }
+            if(this.checks[i].tipo == 'CN'){
+            cc++;
             
+            }
             
         }
             if(cs != 0){
@@ -1065,6 +1073,7 @@
               $('.cPrintPacking').removeClass('disabled'); 
             }
             
+            
             if(cp != 0){
               $('.cPrintTrans').attr('disabled',true);
               $('.cPrintPacking').attr('disabled',true);
@@ -1073,8 +1082,17 @@
             }
             
             if(ce != 0){
+                $('.cPrintTrans').attr('disabled',false);
+                $('.cPrintTrans').removeClass('disabled');
                 $('.cPrintPacking').attr('disabled',true);
                 $('.cPrintPacking').addClass('disabled');  
+            }
+            
+            if(cc != 0){
+              $('.cPrintTrans').attr('disabled',false);
+              $('.cPrintTrans').removeClass('disabled');
+              $('.cPrintPacking').attr('disabled',true);
+              $('.cPrintPacking').addClass('disabled');   
             }
         }
         };

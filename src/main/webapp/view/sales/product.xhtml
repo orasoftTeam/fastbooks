@@ -27,18 +27,90 @@
                 <bnu:button value="#{messages.lblNewProd}" look="success" style="margin-top:20px;"  onclick="$('.modalType').modal()" />
             </bnu:column>
         </bnu:row> 
+          <div class="row quick-filter">
+                    <div class="col-lg-12  col-md-12 ">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 low-stock text-center" onclick="console.log('low stock');" >
+                               
+                                <bnu:commandButton class="filter-img" value="" action="#{productController.applyStockFilter('LS')}" update="@(.filtroStock)"  ></bnu:commandButton>
+                                <div class="filter-section">
+                                    <div class="stock-count">#{productController.lowOnStock}</div>
+                                    <div class="filter-text">#{messages.lblLowStock}</div>
+
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6 col-md-6 out-stock text-center" onclick="console.log('out of stock');" >
+                                
+                                <bnu:commandButton class="filter-img" value=""  action="#{productController.applyStockFilter('OS')}" update="@(.filtroStock)"  ></bnu:commandButton>
+                                <div class="filter-section">
+                                    <div class="stock-count"  >#{productController.outOfStock}</div>
+                                    <div class="filter-text">#{messages.lblOutOfStock}</div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+        
         <bnu:row>
             <bnu:column span="12">
                 <bnu:messages  />
             </bnu:column>
         </bnu:row>
         <p:separator/>
-        <bnu:row>
+        <div class="dropdown">
+                    <bnu:button onclick="myFunction()" value="#{messages.lblFilter}" style="margin-bottom: 15px"  class="dropLi" iconAwesome="fa-angle-down" icon-align="right" />
+                    <div id="myDropdown" class="dropdown-content dropLi">
+
+                        <bnu:selectOneMenu label="Status"  value="#{productController.FStatus}" >
+                            <f:selectItem itemLabel="All" itemValue="0"/>
+                            <f:selectItem itemLabel="Active" itemValue="A"/>
+                            <f:selectItem itemLabel="Inactive" itemValue="I"/>
+                        </bnu:selectOneMenu>
+                        <br></br>
+                        <bnu:selectOneMenu label="#{messages.lblType}" value="#{productController.FType}" >
+                            <f:selectItem itemLabel="All" itemValue="0"/>
+                            <f:selectItem itemLabel="Inventory" itemValue="IN"/>
+                            <f:selectItem itemLabel="Non-inventory" itemValue="NI"/>
+                            <f:selectItem itemLabel="Bundle" itemValue="BU"/>
+                            <f:selectItem itemLabel="Service" itemValue="SE"/>
+                        </bnu:selectOneMenu>
+                        <br></br>
+                        <bnu:selectOneMenu label="Category" value="#{productController.FCat}" >
+                            <f:selectItem itemLabel="All" itemValue="0"/>
+                            <f:selectItem itemLabel="Uncategorised" itemValue="UN"/>
+                            <f:selectItems value="#{productController.catList}" var="category"
+                                           itemValue="#{category.idCat}" itemLabel="#{category.name}" />
+                            
+                        </bnu:selectOneMenu>
+                        <br></br>
+                        <bnu:selectOneMenu label="Stock status"  value="#{productController.FStock}" >
+                            <f:selectItem itemLabel="All" itemValue="0"/>
+                            <f:selectItem itemLabel="Out of stock" itemValue="OS"/>
+                            <f:selectItem itemLabel="Low stock" itemValue="LS"/>
+                            
+                        </bnu:selectOneMenu>
+                        <bnu:commandButton value="#{messages.lblApply}"  style="margin: 10px" look="success" update="@(.filtroStock)" action="#{productController.applyGeneralFilter()}"  /> 
+                        <bnu:commandButton style="margin: 10px" value="#{messages.lblReset}" look="danger"  action="#{productController.resetGeneralFilter()}"   /> 
+
+                    </div>
+                </div>
+        <bnu:row class="filtroStock" >
+            
+            <h:commandLink   rendered="#{productController.filterStock.length() != 0}" action="#{productController.applyStockFilter('')}"    >
+                
+                Reset filter</h:commandLink>
             <bnu:column span="12">
                 <bnu:dataTable
                     value="#{productController.PList}"
                     id="tblProd"
                     var="prod"
+                    responsive="true"
                     >
                     <bnu:dataTableColumn label="#{messages.firstName}" value="#{prod.name}" ></bnu:dataTableColumn>
                     <bnu:dataTableColumn label="#{messages.lblSKU}" value="#{prod.sku}" ></bnu:dataTableColumn>
@@ -47,14 +119,20 @@
                     <bnu:dataTableColumn label="#{messages.lblDesc}" value="#{prod.descrip}" ></bnu:dataTableColumn>
                     <bnu:dataTableColumn label="#{messages.lblQuant}" value="#{prod.initQuant}" ></bnu:dataTableColumn>
                     <bnu:dataTableColumn label="#{messages.lblCate}" value="#{prod.idCat.name}" ></bnu:dataTableColumn>
+                    <bnu:dataTableColumn label="Cost" value="#{prod.prodCost}" ></bnu:dataTableColumn>
                     <bnu:dataTableColumn label="#{messages.lblAction}">
                         <bnu:dropButton value="#{messages.edit}" look="primary" styleClass="hidden-xs hidden-sm" >
                             <bnu:commandButton value="#{messages.edit}"  style="width:100%;border:none;" update="prodForm" action="#{productController.assign(prod, 'U')}" />
-                            <bnu:commandButton value="#{messages.delete}"  style="width:100%;border:none;" action="#{productController.assign(prod, 'D')}" />
-
+                            <bnu:commandButton value="#{messages.delete}"  style="width:100%;border:none;"  update="@none" action="#{productController.assign(prod, 'D')}" />
+                            <bnu:commandButton value="#{messages.lblIncreaseQuant}"  style="width:100%;border:none;" update="@(.increaseQ)" rendered="#{prod.type eq 'IN'}"
+                                               action="#{productController.assignIncreaseQ(prod)}"
+                                               oncomplete="$('.increaseQuant').modal();" />
                         </bnu:dropButton>
                         <bnu:commandButton value="#{messages.edit}"  look="warning" styleClass="hidden-lg hidden-md"  action="#{productController.assign(prod, 'U')}"  />
                         <bnu:commandButton value="#{messages.delete}"  look="danger" styleClass="hidden-lg hidden-md" action="#{productController.assign(prod, 'D')}" />
+                        <bnu:commandButton value="#{messages.lblIncreaseQuant}" look="success"  styleClass="hidden-lg hidden-md" update="@(.increaseQ)" rendered="#{prod.type eq 'IN'}" 
+                                           action="#{productController.assignIncreaseQ(prod)}"
+                                           oncomplete="$('.increaseQuant').modal();" />
                     </bnu:dataTableColumn>
                     <bnu:dataTableColumn label="#{messages.lblProdPhoto}"  ><p:graphicImage value="#{prod.photo}" width="64" height="64" /></bnu:dataTableColumn>
                 </bnu:dataTable>
@@ -175,7 +253,7 @@
                         </bnu:column>
 
                     </bnu:row>
-                    <div id="addCat" style="display: none" >
+                    <div id="addCat" style="display: none"  >
                         <bnu:row class="catAdd" >
                         <bnu:column span="12">
                             
@@ -210,6 +288,10 @@
                                                itemLabel="#{tax.name} (#{tax.rate}%)"
                                                itemValue="#{tax.idTax}" />
                             </bnu:selectOneMenu>
+                        </bnu:column>
+                        <bnu:column span="6">
+                            <label>Cost</label>
+                            <input type="number" step="0.01" min="0.00" max="99999.99" class="form-control" name="cost" value="#{productController.cost}"  />
                         </bnu:column>
                     </bnu:row>
                     <bnu:row  rendered="#{productController.bundle}">
@@ -262,8 +344,8 @@
                     </h:panelGroup>
                     <p:separator/>
                     <bnu:row>
-                        <bnu:column span="12">
-                            <bnu:messages id="msg" class="catAdd" />
+                        <bnu:column span="12"  class="catAdd" >
+                            <bnu:messages id="msg"  />
                         </bnu:column>
                     </bnu:row>
                     <bnu:row>
@@ -278,7 +360,7 @@
                                                />
                         </bnu:column>
                         <bnu:column span="6">
-                            <bnu:commandButton value="#{messages.lblClose}" look="danger" action="#{productController.limpiar()}" style="width: 100%"/>
+                            <bnu:commandButton value="#{messages.lblClose}" look="danger" action="#{productController.limpiarReg()}" style="width: 100%"/>
                         </bnu:column>
 
                     </bnu:row>
@@ -287,6 +369,7 @@
 
                 </ui:fragment>
             </h:panelGroup>
+            
         </h:form>
     </bnu:modal>
 
@@ -303,12 +386,61 @@
             </bnu:row>
             <bnu:row>
                 <bnu:column span="6">
-                    <bnu:commandButton value="#{messages.yes}" look="success" action="#{productController.del()}" style="width: 100%"/>
+                    <bnu:commandButton value="#{messages.yes}" look="success" action="#{productController.del()}" update="@none" style="width: 100%"/>
                 </bnu:column>
                 <bnu:column span="6">
-                    <bnu:commandButton value="#{messages.No}" look="danger" action="#{productController.limpiar()}" style="width: 100%"/>
+                    <bnu:button value="#{messages.No}" look="danger" onclick="$('.modalAddProd').modal('hide');" style="width: 100%"/>
                 </bnu:column>
             </bnu:row>
+        </h:form>
+    </bnu:modal>
+    
+    <!-- increase quant -->
+    <bnu:modal id="increaseQuant" title="#{messages.lblIncreaseQuant}" styleClass="increaseQuant" >
+        <h:form class="increaseQ" >
+            <table class="table table-responsive table-primary table-striped text-center">
+                <thead>
+                    <tr>
+                        <td>
+                           #{messages.lblQuantityOnHand}
+                        </td>
+                        <td>
+                            #{messages.lblQuantityNew}
+                        </td>
+                        <td>
+                            #{messages.lblQuantityAdd}
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td >
+                           <input type="number" readonly="true" value="#{productController.productQ.initQuant}" id="iQuant" />
+                        </td>
+                        <td  >
+                            <input type="number" readonly="true" value="#{productController.productQ.initQuant}" id="nQuant" name="nQuant" />
+                        </td>
+                        <td>
+                            <input type="number" value="#{productController.CQuant}" id="cQuant" step="1" min="1" max="9999" onchange="changeNewQuant();"  />
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+            
+           
+            <bnu:row>
+                <bnu:column span="6">
+                    <bnu:commandButton value="#{messages.yes}" look="success"  update="@none" style="width: 100%" action="#{productController.increaseQuant()}" />
+              </bnu:column>
+             <bnu:column span="6">
+                    <bnu:button value="#{messages.lblClose}" look="danger" onclick="$('.increaseQuant').modal('hide');" style="width: 100%;"/>
+               </bnu:column>
+            </bnu:row>
+                
+            
+            
+            
         </h:form>
     </bnu:modal>
 
@@ -324,7 +456,7 @@
             border-radius: 100px;
         }
     </style>
-    <h:outputScript>
+    <script>
         var addCatDir = 1;
         
         function showAddCat(){
@@ -345,7 +477,186 @@
         function mensaje(e){
         alert(e);
         } 
-    </h:outputScript>
+        
+        function changeNewQuant(){
+            var i = $('#iQuant').val();
+            var c = $('#cQuant').val();
+            
+            $('#nQuant').val(parseInt(i)+parseInt(c));
+            
+        }
+    </script>
+    
+                    <style>
+                    
+
+
+
+
+                    .quick-filter .low-stock .filter-img {
+                        background: #e77700 url(#{resource['img/49787a9e7121fa54d9d9b93ec1689e46.png']}) no-repeat 14px 22px;
+                        width: 120px;
+                        height: 120px;
+                        border-radius: 50%;
+                        display: inline-block;
+                        vertical-align: middle;
+                        background-size: 85px;
+                       // margin-right: 30px;
+                    }
+
+                    .quick-filter .out-stock .filter-img {
+                        background: #d93b42 url(#{resource['img/descarga.png']}) no-repeat 14px 22px;
+                        width: 120px;
+                        height: 120px;
+                        border-radius: 50%;
+                        display: inline-block;
+                        vertical-align: middle;
+                        background-size: 85px;
+                        //margin-right: 30px;
+                    }
+                    .low-stock {
+                        color: #e77700;
+                    }
+                    .text-center {
+                        text-align: center;
+                    }
+                    .quick-filter .low-stock {
+                        color: #e77700;
+                        cursor: pointer;
+                        border-right: 1px solid #d4d7dc;
+                    }
+                    .row {
+                        margin-left: 0;
+                        margin-right: 0;
+                    }
+                    .quick-filter {
+                        background-color: #fff;
+                        padding: 15px 0;
+                        border-radius: 3px;
+                    }
+                    .quick-filter .stock-count {
+                        font-family: Geogrotesque,Arial,-apple-system,Helvetica Neue Bold,sans-serif;
+                        font-size: 50px;
+                        line-height: .9;
+                    }
+
+                    .quick-filter .filter-text {
+                        font-family: Avenir Next forINTUIT,Arial,-apple-system,Helvetica Neue,sans-serif;
+                        font-size: 16px;
+                        color: #404040;
+                        text-transform: uppercase;
+                    }
+                    .quick-filter .stock-count {
+                        font-family: Geogrotesque,Arial,-apple-system,Helvetica Neue Bold,sans-serif;
+                        font-size: 50px;
+                        line-height: .9;
+                    }
+                    button {
+                        overflow: visible;
+                    }
+                    .row {
+                        display: -webkit-box;
+                        display: flex;
+                        -webkit-flex-wrap: wrap;
+                        -ms-flex-wrap: wrap;
+                        flex-wrap: wrap;
+                    }
+                    .quick-filter .out-stock {
+                        color: #d93b42;
+                        cursor: pointer;
+                    }
+                    
+                    
+
+                </style>
+                
+                <style>
+                    /* Dropdown Button */
+                    .dropbtn {
+                    background-color: #3498DB;
+                    color: white;
+                    padding: 16px;
+                    font-size: 16px;
+                    border: none;
+                    cursor: pointer;
+                    }
+
+                    .dropbtn:hover, .dropbtn:focus {
+                    background-color: #2980B9;
+                    }
+
+
+                    .dropdown {
+                    position: relative;
+                    display: inline-block;
+                    }
+
+                    .dropdown-content {
+                    display: none;
+                    position: absolute;
+                    background-color: #f1f1f1;
+                    min-width: 200px;
+                    overflow: auto;
+                    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                    z-index: 1;
+                    padding: 10px;
+                    border: 1px solid #ddd;
+                    }
+
+
+                    .dropdown-content span {
+                    color: black;
+                    padding: 12px 16px;
+                    text-decoration: none;
+                    display: block;
+                    }
+
+                    .dropdown-content span:hover {background-color: #ddd}
+
+                    .show {display:block;}
+
+                </style>
+                
+                <script>
+                     $( document ).ready(function() {
+                    var w = $( document ).width();
+
+                    if(w &lt;= 768){
+
+                    $('.dropdown-content').css('min-width','200px');
+                    }
+
+
+
+
+
+
+                    });
+
+
+
+
+
+                    function myFunction() {
+                    $(".dropdown-content").show();
+                    };
+
+                    $(document).on("click",function(event) {
+
+                    var str = $(event.target).parent().parent().parent().attr('class')+' '+$(event.target).parent().parent().attr('class')+' '+$(event.target).parent().attr('class') + ' ' + $(event.target).attr('class');
+                    //alert(str.indexOf("dropLi")>=0);
+                    if(str.indexOf("dropLi")>=0){
+
+
+                    }else{
+                    //alert(str);
+                    $(".dropdown-content").hide();
+                    }
+
+
+
+                    });
+                </script>
 
 </ui:fragment>
 

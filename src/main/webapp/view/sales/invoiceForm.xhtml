@@ -234,7 +234,7 @@
                 </bnu:row>
 
                 <p:separator/>
-                <bnu:row>
+               <!-- <bnu:row>
                     <bnu:column span="4">
                         <bnu:selectOneMenu  update="@(.lowSection)" value="#{invoiceController.hasTax}" onchange="ajax:invoiceController.updateTotal();" >
                             <f:selectItem itemLabel="#{messages.lblInvoiceWTax}" itemValue="true" />
@@ -242,7 +242,7 @@
                         </bnu:selectOneMenu>
 
                     </bnu:column>
-                </bnu:row>
+                </bnu:row>-->
                 <bnu:row>
                     <bnu:column span="12" class="lowSection" >
                         <bnu:dataTable
@@ -684,28 +684,28 @@
                                         <bnu:row>
                                             <bnu:column span="12">
                                                 <label>#{messages.billingA}</label>
-                                                <bnu:inputTextarea  placeholder="#{messages.streetC}" class="form-control"  value="#{invoiceController.customer.street}" maxlength="100" />
+                                                <bnu:inputTextarea  placeholder="#{messages.streetC}" class="form-control"  value="#{invoiceController.customer.street}" maxlength="150" />
                                             </bnu:column>
                                         </bnu:row>
 
                                         <bnu:row>
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.cityT}"  value="#{invoiceController.customer.city}" maxlength="10"  />
+                                                <bnu:inputText placeholder="#{messages.cityT}"  value="#{invoiceController.customer.city}" maxlength="20"  />
                                             </bnu:column>
 
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.stateP}"  value="#{invoiceController.customer.estate}" maxlength="10"  />
+                                                <bnu:inputText placeholder="#{messages.stateP}"  value="#{invoiceController.customer.estate}" maxlength="20"  />
                                             </bnu:column>
 
                                         </bnu:row>
 
                                         <bnu:row>
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.postalCC}"  value="#{invoiceController.customer.postalCode}" maxlength="10"  />
+                                                <bnu:inputText placeholder="#{messages.postalCC}"  value="#{invoiceController.customer.postalCode}" maxlength="15"  />
                                             </bnu:column>
 
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.countryC}" value="#{invoiceController.customer.country}" maxlength="10"  />
+                                                <bnu:inputText placeholder="#{messages.countryC}" value="#{invoiceController.customer.country}" maxlength="20"  />
                                             </bnu:column>
 
                                         </bnu:row>
@@ -716,27 +716,27 @@
                                         <bnu:row>
                                             <bnu:column span="12">
                                                 <label>#{messages.shippingA}</label> <input checked="true" type="checkbox" onclick="customerFormHelper.enableShipAdress()" value="1"  name="sameSha" id="sameSha" />#{messages.sameSHA}
-                                                <h:panelGroup class="addCustSuccess"> <bnu:inputTextarea placeholder="#{messages.streetC}"  class="form-control shippingEnable"  value="#{invoiceController.customer.streetS}" maxlength="100"   /></h:panelGroup>
+                                                <h:panelGroup class="addCustSuccess"> <bnu:inputTextarea placeholder="#{messages.streetC}"  class="form-control shippingEnable"  value="#{invoiceController.customer.streetS}" maxlength="150"   /></h:panelGroup>
                                             </bnu:column>
                                         </bnu:row>
                                         <bnu:row class="addCustSuccess" >
 
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.cityT}"  class="shippingEnable" value="#{invoiceController.customer.cityS}" maxlength="10" />
+                                                <bnu:inputText placeholder="#{messages.cityT}"  class="shippingEnable" value="#{invoiceController.customer.cityS}" maxlength="20" />
                                             </bnu:column>
 
                                             <bnu:column span="6">
-                                                <bnu:inputText placeholder="#{messages.stateP}"  class="shippingEnable" value="#{invoiceController.customer.estateS}" maxlength="10" />
+                                                <bnu:inputText placeholder="#{messages.stateP}"  class="shippingEnable" value="#{invoiceController.customer.estateS}" maxlength="20" />
                                             </bnu:column>
                                         </bnu:row>
                                         <bnu:row class="addCustSuccess" >
 
                                     <bnu:column span="6">
-                                        <bnu:inputText placeholder="#{messages.postalCC}"  class="shippingEnable" value="#{invoiceController.customer.postalCodeS}" maxlength="10" />
+                                        <bnu:inputText placeholder="#{messages.postalCC}"  class="shippingEnable" value="#{invoiceController.customer.postalCodeS}" maxlength="15" />
                                     </bnu:column>
 
                                     <bnu:column span="6">
-                                        <bnu:inputText placeholder="#{messages.countryC}"  class="shippingEnable" value="#{invoiceController.customer.countryS}" maxlength="10" />
+                                        <bnu:inputText placeholder="#{messages.countryC}"  class="shippingEnable" value="#{invoiceController.customer.countryS}" maxlength="20" />
                                     </bnu:column>
                                 </bnu:row>
                                     </bnu:column>
@@ -1018,6 +1018,16 @@
                 border: 1px solid #ddd;
             }
         </style>
+           <style type="text/css">
+        .typeOp{
+
+            cursor: pointer;
+        }
+        .typeOp:hover{
+            background-color: #dedeee;
+            border-radius: 100px;
+        }
+    </style>
 
         <!-- <h:outputStylesheet>
               body{

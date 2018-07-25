@@ -259,7 +259,7 @@ public class CompanyController implements Serializable {
             com.setNomLeg(companyComName);
             com.setGiro("");
             com.setTelefono("");
-            com.setLogo("");
+            com.setLogo("/resources/img/placeholder.png");
             com.setPerNat(1);
             com.setWebsite("");
             FbUsuario user = new FbUsuario();

@@ -256,6 +256,10 @@ public class InvoiceFormController implements Serializable {
     private @Getter
     @Setter
     FbInvoice editInvoice;
+    
+    private @Getter
+    @Setter
+    FbInvoice estimate;
 
     private @Getter
     @Setter
@@ -303,6 +307,9 @@ public class InvoiceFormController implements Serializable {
             pList = pFacade.getProductsByIdCia(this.userData.getCurrentCia().getIdCia().toString());
             taxList = taxFacade.getTaxByIdCia(this.userData.getCurrentCia().getIdCia().toString());
             if (taxList.isEmpty()) {
+                /*String uses = "lblMustAddTax";
+                this.userData.setUses(uses);*/
+                this.validationBean.redirecionar("/view/taxes/tax.xhtml?f=1");
                 hasTax = false;
             }
             if (this.tList.isEmpty()) {
@@ -952,6 +959,9 @@ public class InvoiceFormController implements Serializable {
                             }
                         }
                         String res = "def";
+                        if (in.getType().equals("CN")) {
+                            in.setStatus("CL");
+                        }
                         res = iFacade.actInvoice(in, op);
                         System.out.println("result: " + res);
                         if (res.equals("0")) {
@@ -959,10 +969,16 @@ public class InvoiceFormController implements Serializable {
                             if (op.equals("A")) {
                                 if (type.equals("IN")) {
                                     message = "lblInvoiceAddSuccess";
+                                    if (this.estimate != null) {
+                                        this.estimate.setStatus("CL");
+                                        this.iFacade.actInvoice(this.estimate, "U");
+                                    }
                                 } else if (type.equals("ES")) {
                                     message = "lblEstimateAddSuccess";
                                 } else if (type.equals("SR")) {
                                     message = "lblSalesRAddSuccess";
+                                }else if (type.equals("CN")) {
+                                    message = "lblCreditNoteSuccess";
                                 }
 
                             } else if (op.equals("U")) {
@@ -972,6 +988,8 @@ public class InvoiceFormController implements Serializable {
                                     message = "lblEsUpdateSuccess";
                                 } else if (type.equals("SR")) {
                                     message = "lblSalesRUpdateSuccess";
+                                }else if (type.equals("CN")) {
+                                    message = "lblCreditNoteUpdate";
                                 }
                             } else if (op.equals("D")) {
                                 if (type.equals("IN")) {
@@ -980,6 +998,8 @@ public class InvoiceFormController implements Serializable {
                                     message = "lblEstimateDeleted";
                                 } else if (type.equals("SR")) {
                                     message = "lblSalesReceiptDeleted";
+                                }else if (type.equals("CN")) {
+                                    message = "lblCreditNoteDelete";
                                 }
                             }
 
@@ -1168,10 +1188,29 @@ public class InvoiceFormController implements Serializable {
                     System.out.println("status: " + this.invoiceStatus);
                 }
                 mod = true;
-                if (!in.getNoDot().equals("copy")) {
+                if (!in.getNoDot().equals("copy") && in.getMessageStmnt() == null || in.getType().equals("CN")) {
 
                     modStay = true;
 
+                } else if (in.getMessageStmnt() != null && in.getMessageStmnt().equals("createFromEs")) {
+                    this.InNo = "";
+                    this.invoiceStatus = "OP";
+                    this.type = "IN";
+                    in.setIdInvoice(BigDecimal.ZERO);
+                    DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                    Calendar cal = Calendar.getInstance();
+                    invoiceDate = dateFormat.format(cal.getTime());
+                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+
+                    Calendar c = Calendar.getInstance();
+                    c.setTime(sdf.parse(this.invoiceDate));
+                    c.add(Calendar.DATE, Integer.parseInt(this.termDays));
+                    //dt.plusDays(Integer.parseInt(this.termDays));
+                    this.dueDate = sdf.format(c.getTime());
+                    this.estimate = this.userData.getFbInvoice();
+                    String idEs = this.userData.getIdEs();
+                    this.estimate.setIdInvoice(new BigDecimal(idEs));
+                    System.out.println("com.fastbooks.managedbeans.InvoiceFormController.assign()");
                 } else {
                     copy = true;
                     in.setIdInvoice(BigDecimal.ZERO);
@@ -1475,6 +1514,9 @@ public class InvoiceFormController implements Serializable {
                             }
                         }
                         String res = "def";
+                        if (in.getType().equals("CN")) {
+                            in.setStatus("CL");
+                        }
                         res = iFacade.actInvoiceWithReturnId(in, op);
                         System.out.println("result: " + res);
                         if (!res.equals("def")) {
@@ -1482,10 +1524,16 @@ public class InvoiceFormController implements Serializable {
                             if (op.equals("A")) {
                                 if (type.equals("IN")) {
                                     message = "lblInvoiceAddSuccess";
+                                    if (this.estimate != null) {
+                                        this.estimate.setStatus("CL");
+                                        this.iFacade.actInvoice(this.estimate, "U");
+                                    }
                                 } else if (type.equals("ES")) {
                                     message = "lblEstimateAddSuccess";
                                 } else if (type.equals("SR")) {
                                     message = "lblSalesRAddSuccess";
+                                }else if (type.equals("CN")) {
+                                    message = "lblCreditNoteSuccess";
                                 }
 
                             } else if (op.equals("U")) {
@@ -1495,6 +1543,8 @@ public class InvoiceFormController implements Serializable {
                                     message = "lblEsUpdateSuccess";
                                 } else if (type.equals("SR")) {
                                     message = "lblSalesRUpdateSuccess";
+                                }else if (type.equals("CN")) {
+                                    message = "lblCreditNoteUpdate";
                                 }
                             } else if (op.equals("D")) {
                                 if (type.equals("IN")) {
@@ -1503,6 +1553,8 @@ public class InvoiceFormController implements Serializable {
                                     message = "lblEstimateDeleted";
                                 } else if (type.equals("SR")) {
                                     message = "lblSalesReceiptDeleted";
+                                }else if (type.equals("CN")) {
+                                    message = "lblCreditNoteDelete";
                                 }
                             }
 
@@ -1656,12 +1708,11 @@ public class InvoiceFormController implements Serializable {
 
         return flag;
     }
-    
-    
-        public void registerC() {
+
+    public void registerC() {
         if (valCamposAdd()) {
             if (sameShipping) {
-                
+
                 customer.setStreetS(customer.getStreet());
                 customer.setCityS(customer.getCity());
                 customer.setEstateS(customer.getEstate());
@@ -1684,7 +1735,7 @@ public class InvoiceFormController implements Serializable {
                         this.idCust = fbCustomer.getIdCust().toString();
                     }
                 }
-                this.customer =  new FbCustomer();
+                this.customer = new FbCustomer();
                 this.changeCust();
                 this.validationBean.lanzarMensaje("info", "custAdded", "blank");
             } else if (res.equals("-1")) {
@@ -1692,8 +1743,7 @@ public class InvoiceFormController implements Serializable {
             } else if (res.equals("-2")) {
                 validationBean.lanzarMensaje("error", "unexpectedError", "blank");
             }
-            
-            
+
         }
 
     }
