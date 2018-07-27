@@ -234,15 +234,16 @@
                 </bnu:row>
 
                 <p:separator/>
-               <!-- <bnu:row>
+                <bnu:row>
                     <bnu:column span="4">
                         <bnu:selectOneMenu  update="@(.lowSection)" value="#{invoiceController.hasTax}" onchange="ajax:invoiceController.updateTotal();" >
-                            <f:selectItem itemLabel="#{messages.lblInvoiceWTax}" itemValue="true" />
-                            <f:selectItem itemLabel="#{messages.lblInvoiceWTTax}" itemValue="false" />
+                            <f:selectItems value="#{invoiceController.invoiceTaxOptions}" var="option" itemLabel="#{option.label}" itemValue="#{option.bool}"/>
+                           <!-- <f:selectItem itemLabel="#{messages.lblInvoiceWTax}" itemValue="true" />
+                            <f:selectItem itemLabel="#{messages.lblInvoiceWTTax}" itemValue="false" />-->
                         </bnu:selectOneMenu>
 
                     </bnu:column>
-                </bnu:row>-->
+                </bnu:row>
                 <bnu:row>
                     <bnu:column span="12" class="lowSection" >
                         <bnu:dataTable

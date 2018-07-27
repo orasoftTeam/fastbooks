@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1219768f-560c-4f0b-8d55-c2f70666bba4">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="118"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -413,7 +413,9 @@ LEFT JOIN fb_customer q on q.id_cust = i.id_cust  where i.id_invoice in ($P!{idI
 							</jr:columnHeader>
 							<jr:detailCell style="table 4_TD" height="20">
 								<textField isBlankWhenNull="true">
-									<reportElement x="0" y="0" width="90" height="20" uuid="d35ecf7a-ed56-4580-99e4-2fcd464d8089"/>
+									<reportElement x="0" y="0" width="90" height="20" uuid="d35ecf7a-ed56-4580-99e4-2fcd464d8089">
+										<printWhenExpression><![CDATA[$F{ITEM_TAX}!= null]]></printWhenExpression>
+									</reportElement>
 									<textElement textAlignment="Center" verticalAlignment="Top"/>
 									<textFieldExpression><![CDATA[$F{ITEM_TAX}]]></textFieldExpression>
 								</textField>

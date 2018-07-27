@@ -21,6 +21,7 @@ import com.fastbooks.modelo.FbPaymentDetail;
 import com.fastbooks.modelo.FbProduct;
 import com.fastbooks.modelo.FbTax;
 import com.fastbooks.modelo.PaymentMethod;
+import com.fastbooks.modelo.SelectItem;
 import com.fastbooks.modelo.Terms;
 import com.fastbooks.service.InvoiceService;
 import com.fastbooks.util.ValidationBean;
@@ -264,6 +265,8 @@ public class InvoiceFormController implements Serializable {
     private @Getter
     @Setter
     String dir = "0";
+    
+    private @Getter @Setter List<SelectItem> invoiceTaxOptions = new ArrayList<>();
 
     public InvoiceFormController() {
     }
@@ -309,8 +312,12 @@ public class InvoiceFormController implements Serializable {
             if (taxList.isEmpty()) {
                 /*String uses = "lblMustAddTax";
                 this.userData.setUses(uses);*/
-                this.validationBean.redirecionar("/view/taxes/tax.xhtml?f=1");
+                //this.validationBean.redirecionar("/view/taxes/tax.xhtml?f=1");
+                this.invoiceTaxOptions.add(new SelectItem(this.validationBean.getMsgBundle("lblInvoiceWTTax"), false));
                 hasTax = false;
+            }else{
+                this.invoiceTaxOptions.add(new SelectItem(this.validationBean.getMsgBundle("lblInvoiceWTax"), true));
+                this.invoiceTaxOptions.add(new SelectItem(this.validationBean.getMsgBundle("lblInvoiceWTTax"), false));
             }
             if (this.tList.isEmpty()) {
                 this.tList.add(new Terms("1", "30", "Credits at 30 days"));
@@ -827,6 +834,8 @@ public class InvoiceFormController implements Serializable {
             System.out.println(taxesAmountList.size());
         } else {
             taxesAmountList = new ArrayList<>();
+            this.rTaxTotal = new BigDecimal("0.00");
+            this.dTaxTotal = "0.00";
         }
 
     }

@@ -11,6 +11,7 @@ import com.fastbooks.modelo.FbInvoiceTaxes;
 import com.fastbooks.modelo.FbPaymentDetail;
 import com.fastbooks.modelo.FbStatement;
 import com.fastbooks.modelo.FbStmtDetail;
+import com.fastbooks.modelo.LineChartItem;
 import com.fastbooks.util.GlobalParameters;
 import com.fastbooks.util.PanelesVentas;
 import java.io.File;
@@ -28,6 +29,8 @@ import java.sql.Types;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -1163,6 +1166,35 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         return list;
     }
 
+    public List<FbInvoice> applyFilterAllInvoices(String idCia, String from, String to, String idCust) {
+        List<FbInvoice> list = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM FB_INVOICE WHERE ID_CIA = " + idCia + "   AND STATUS = 'IN' AND STATUS = 'PA' ";
+
+            if (!from.equals("0") && !to.equals("0")) {
+                query += " AND to_date(IN_DATE,'MM/dd/yyyy') BETWEEN to_date('" + from + "','MM/dd/yyyy') AND to_date('" + to + "','MM/dd/yyyy') ";
+            }
+
+            if (!idCust.equals("0")) {
+                query += " AND ID_CUST =  " + idCust;
+            }
+            query += " and status != 'DEL' order by fecha_creacion desc";
+
+            //System.out.println("com.fastbooks.managedbeans.InvoiceController.applyFilter()");
+            Query q = em.createNativeQuery(query, FbInvoice.class);
+            q.setParameter(1, idCia);
+            list = q.getResultList();
+            for (FbInvoice fbInvoice : list) {
+                em.refresh(fbInvoice);
+            }
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbProductFacade.getProductsByIdCia()");
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
     public List<FbStatement> getStmtFilter(String idCia, String from, String to, String idCust) {
         List<FbStatement> list = new ArrayList<>();
         try {
@@ -1232,6 +1264,123 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
             builder.append(ALPHA_NUMERIC_STRING.charAt(character));
         }
         return builder.toString();
+    }
+
+    public List<LineChartItem> getLineChartDataMonth(String from, String to, String title, String idCia, Locale locale) {
+        List<LineChartItem> list = new ArrayList<>();
+        try {
+
+            /*  
+            Fechas stuff
+             */
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+            Date dFrom = sdf.parse(from);
+            Date dTo = sdf.parse(to);
+            Calendar cFrom = Calendar.getInstance();
+            cFrom.setTime(dFrom);
+            Calendar cTo = Calendar.getInstance();
+            cTo.setTime(dTo);
+            long daysBetween = (((cFrom.getTimeInMillis() - cTo.getTimeInMillis()) / (24 * 60 * 60 * 1000)) * -1) + 1;
+            String month = new SimpleDateFormat("MMMMM", locale).format(dFrom.getTime());
+
+            if (daysBetween > 7) {
+                int sum = Math.round(daysBetween / 4);
+                boolean flag = true;
+                Integer i = 1;
+                while (flag) {
+                LineChartItem lineItem = new LineChartItem();
+                
+                   
+                    //cFrom.add(Calendar.DATE, i); 
+                    if (i != 1) {
+                    cFrom.add(Calendar.DATE, 1);
+                    i++;
+                    }
+                    String actMonth = new SimpleDateFormat("MMM", locale).format(dFrom.getTime());
+                    lineItem.setLabel(actMonth + " "+i+" - ");
+                    
+                    if (i != 1 &&  sum != (Math.round(daysBetween / 4) - 1)) {
+                        sum--;
+                    }
+                    
+                    
+                    i += sum;
+                    
+                    if (i > daysBetween) {
+                    //i = (int) daysBetween;
+                    i -= sum;
+                    sum = (int) (daysBetween - i);
+                    i = (int) daysBetween;
+                    }
+                    
+                    
+                    
+                    
+                    cFrom.add(Calendar.DATE, sum); 
+                    actMonth = new SimpleDateFormat("MMM", locale).format(dFrom.getTime());
+                    lineItem.setLabel(lineItem.getLabel()+actMonth + " "+i);
+                        //series1.set(month + " " +i, Double.parseDouble(i + "000.00"));
+                    
+                    
+                    
+                if (i == daysBetween) {
+                    flag = false;
+                }
+                list.add(lineItem);
+            }
+                
+                for (LineChartItem lineChartItem : list) {
+                    System.out.println(lineChartItem.getLabel());
+                }
+                
+            }
+
+            /*  boolean flag = true;
+            int i = 1;
+            while (flag) {
+
+                if (i < daysBetween) {
+                    if (i == 1) {
+                        series1.set(month + " " +i, Double.parseDouble(i + "000.00"));
+                    }else{
+                        series1.set(i, Double.parseDouble(i + "000.00"));
+                    }
+                    
+                    i += 8;
+                } else if (i > daysBetween) {
+                    i = (int) daysBetween;
+                    series1.set(month + " " +i, Double.parseDouble( i + "000.00"));
+                } else if (i == daysBetween) {
+                    flag = false;
+                }
+            }*/
+ /*
+            Ends fechas stuff
+             */
+            list = new ArrayList<>();
+            String sql = "select (SELECT nvl(SUM(TOTAL),0.00) FROM FB_INVOICE WHERE ID_CIA  = 1 AND TYPE IN ('IN','SR') AND TO_DATE(IN_DATE,'MM/dd/yyyy') between TO_DATE('07/01/2018','MM/dd/yyyy') AND TO_DATE('07/31/2018','MM/dd/yyyy')) TOTAL,\n"
+                    + "(SELECT nvl(SUM(TOTAL),0.00) FROM FB_INVOICE WHERE ID_CIA  = 1 AND TYPE IN ('IN','SR') AND TO_DATE(IN_DATE,'MM/dd/yyyy') between TO_DATE('07/01/2018','MM/dd/yyyy') AND TO_DATE('07/09/2018','MM/dd/yyyy')) \"JULY 1 - 9\",\n"
+                    + "(SELECT nvl(SUM(TOTAL),0.00) FROM FB_INVOICE WHERE ID_CIA  = 1 AND TYPE IN ('IN','SR') AND TO_DATE(IN_DATE,'MM/dd/yyyy') between TO_DATE('07/10/2018','MM/dd/yyyy') AND TO_DATE('07/17/2018','MM/dd/yyyy')) \"JULY 10 - 17\",\n"
+                    + "(SELECT nvl(SUM(TOTAL),0.00) FROM FB_INVOICE WHERE ID_CIA  = 1 AND TYPE IN ('IN','SR') AND TO_DATE(IN_DATE,'MM/dd/yyyy') between TO_DATE('07/18/2018','MM/dd/yyyy') AND TO_DATE('07/25/2018','MM/dd/yyyy')) \"JULY 18 - 25\",\n"
+                    + "(SELECT nvl(SUM(TOTAL),0.00) FROM FB_INVOICE WHERE ID_CIA  = 1 AND TYPE IN ('IN','SR') AND TO_DATE(IN_DATE,'MM/dd/yyyy') between TO_DATE('07/26/2018','MM/dd/yyyy') AND TO_DATE('07/31/2018','MM/dd/yyyy')) \"JULY 26 - 31\"\n"
+                    + "from dual ";
+            Connection cn = em.unwrap(java.sql.Connection.class);
+            PreparedStatement ps = cn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new LineChartItem(title, rs.getDouble("TOTAL")));
+                list.add(new LineChartItem("JULY 1 - 9", rs.getDouble("JULY 1 - 9")));
+                list.add(new LineChartItem("JULY 10 - 17", rs.getDouble("JULY 10 - 17")));
+                list.add(new LineChartItem("JULY 18 - 25", rs.getDouble("JULY 18 - 25")));
+                list.add(new LineChartItem("JULY 26 - 31", rs.getDouble("JULY 26 - 31")));
+            }
+
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbInvoiceFacade.getLineChartDataMonth()");
+            e.printStackTrace();
+        }
+
+        return list;
     }
 
 }

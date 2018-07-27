@@ -92,7 +92,7 @@
                                             <h:panelGroup  id="estados" >
                                                 <ui:fragment rendered="#{companyController.listaEstados.size() > 0}">
                                             <div class="form-group">
-                                                <label class="mont">Estate</label>
+                                                <label class="mont">State</label>
                                                 
                                                 <strong><bnu:selectOneMenu class="form-control mont mont-light btn btn-bordered" value="#{companyController.idEstado}" onchange="ajax:companyController.chargeCities();" 
                                                                            update="registerForm:ciudades">

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="157275f5-ab7d-4194-81d9-1872606697fa">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="102"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
@@ -333,8 +333,7 @@ WHERE ID_INVOICE = $P{ID_INVOICE}]]>
 			</staticText>
 			<staticText>
 				<reportElement x="389" y="63" width="63" height="20" uuid="f6995b39-cad1-487a-b139-42fa0c28433a">
-					<printWhenExpression><![CDATA[$F{TYPE}.equals("IN")
-]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$F{TYPE}.equals("IN")]]></printWhenExpression>
 				</reportElement>
 				<textElement>
 					<font size="12" isBold="true"/>
@@ -490,7 +489,9 @@ WHERE ID_INVOICE = $P{ID_INVOICE}]]>
 						</jr:columnHeader>
 						<jr:detailCell style="table 1_TD" height="20">
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="90" height="20" uuid="f475a6ed-b5f7-4dd4-9a6d-0918b4d219cb"/>
+								<reportElement x="0" y="0" width="90" height="20" uuid="f475a6ed-b5f7-4dd4-9a6d-0918b4d219cb">
+									<printWhenExpression><![CDATA[$F{ITEM_TAX} != null]]></printWhenExpression>
+								</reportElement>
 								<textElement textAlignment="Center" verticalAlignment="Top"/>
 								<textFieldExpression><![CDATA[$F{ITEM_TAX}]]></textFieldExpression>
 							</textField>
@@ -616,7 +617,9 @@ WHERE ID_INVOICE = $P{ID_INVOICE}]]>
 						</jr:columnHeader>
 						<jr:detailCell style="table 3_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="0" width="117" height="20" uuid="5760503d-9a8d-4b23-b537-04150d42dd32"/>
+								<reportElement x="0" y="0" width="117" height="20" uuid="5760503d-9a8d-4b23-b537-04150d42dd32">
+									<printWhenExpression><![CDATA[$F{TAX_AMOUNT} != null]]></printWhenExpression>
+								</reportElement>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[String.format("%.2f",(double)(Double.valueOf($F{TAX_AMOUNT})))]]></textFieldExpression>
 							</textField>

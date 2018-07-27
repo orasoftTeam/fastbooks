@@ -123,13 +123,14 @@
                     <bnu:dataTableColumn label="#{messages.lblAction}">
                         <bnu:dropButton value="#{messages.edit}" look="primary" styleClass="hidden-xs hidden-sm" >
                             <bnu:commandButton value="#{messages.edit}"  style="width:100%;border:none;" update="prodForm" action="#{productController.assign(prod, 'U')}" />
-                            <bnu:commandButton value="#{messages.delete}"  style="width:100%;border:none;"  update="@none" action="#{productController.assign(prod, 'D')}" />
+                            <bnu:commandButton value="Make Inactive"  style="width:100%;border:none;"  update="@none" action="#{productController.assign(prod, 'D')}" rendered="#{prod.status eq 'A'}" />
+                            <bnu:commandButton value="Make Active"  style="width:100%;border:none;"  update="@none" action="#{productController.activate(prod)}"  rendered="#{prod.status eq 'I'}" />
                             <bnu:commandButton value="#{messages.lblIncreaseQuant}"  style="width:100%;border:none;" update="@(.increaseQ)" rendered="#{prod.type eq 'IN'}"
                                                action="#{productController.assignIncreaseQ(prod)}"
                                                oncomplete="$('.increaseQuant').modal();" />
                         </bnu:dropButton>
                         <bnu:commandButton value="#{messages.edit}"  look="warning" styleClass="hidden-lg hidden-md"  action="#{productController.assign(prod, 'U')}"  />
-                        <bnu:commandButton value="#{messages.delete}"  look="danger" styleClass="hidden-lg hidden-md" action="#{productController.assign(prod, 'D')}" />
+                        <bnu:commandButton value="Make Inactive"  look="danger" styleClass="hidden-lg hidden-md" action="#{productController.assign(prod, 'D')}" />
                         <bnu:commandButton value="#{messages.lblIncreaseQuant}" look="success"  styleClass="hidden-lg hidden-md" update="@(.increaseQ)" rendered="#{prod.type eq 'IN'}" 
                                            action="#{productController.assignIncreaseQ(prod)}"
                                            oncomplete="$('.increaseQuant').modal();" />

@@ -13,6 +13,29 @@
 
             <ui:define name="content">
                 
+                
+                 <p:panel style="background-color: #f5f5f5; border-color:#f5f5f5">
+                <h:panelGrid columns="2" columnClasses="left,right" style="width:100%">
+                    <p:chart type="line" model="#{dashboardController.animatedModel1}" style="width:400px;"  />
+                    <p:chart type="bar" model="#{dashboardController.animatedModel2}" style="width:400px;" />
+                </h:panelGrid>
+                <br></br><br></br>
+                <h:panelGrid columns="2" columnClasses="left,right" style="width:100%">
+                    <p:chart type="pie" model="#{dashboardController.pieModel2}" style="width:400px;height:300px" />
+                    <p:chart type="bar" model="#{dashboardController.combinedModel}" style="height:300px"   />
+                </h:panelGrid>
+                </p:panel>
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 <bnu:button value="#{messages.lblNewProd}" look="warning" style="margin-top: 25px;width: 100%"  onclick="productHelper.openModal();" />
                 
                 

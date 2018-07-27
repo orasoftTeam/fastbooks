@@ -23,6 +23,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -687,16 +688,25 @@ public class InvoiceController implements Serializable {
         try {
             String res = "";
             System.out.println("com.fastbooks.managedbeans.InvoiceController.printTransactions()");
-            for (FbInvoice fbInvoice : iList) {
-                if (fbInvoice.isCheckbox()) {
-                    if (res.isEmpty()) {
-                        res += fbInvoice.getIdInvoice().toString();
-                    } else {
-                        res += "," + fbInvoice.getIdInvoice().toString();
-                    }
-
-                    System.out.println("Transaction: " + fbInvoice.getType() + ", id:" + fbInvoice.getIdInvoice().toString() + " IS CHECKED");
-                }
+            HttpServletRequest req = (HttpServletRequest) this.validationBean.getRequestContext();
+            String[] parameterValues = req.getParameterValues("cajas");
+            //System.out.println(Arrays.toString(parameterValues));
+            for (String parameterValue : parameterValues) {
+                 for (FbInvoice fbInvoice : iList) {
+                     if (parameterValue.equals(fbInvoice.getIdInvoice().toString())) {
+                         fbInvoice.setCheckbox(true);
+                     }
+                 }
+            }
+             for (FbInvoice fbInvoice : iList) {
+            if (fbInvoice.isCheckbox()) {
+            if (res.isEmpty()) {
+            res += fbInvoice.getIdInvoice().toString();
+            } else {
+            res += "," + fbInvoice.getIdInvoice().toString();
+            }
+            System.out.println("Transaction: " + fbInvoice.getType() + ", id:" + fbInvoice.getIdInvoice().toString() + " IS CHECKED");
+            }
             }
             this.invoiceModal = this.iFacade.printTransactions(res, this.userData.getCurrentCia().getLogo(), this.iFacade.getCompiledFile("transactions", this.validationBean.getRequestContext()), this.userData.getCurrentCia().getIdCia().toString());
             this.validationBean.ejecutarJavascript("$('.invoiceModal').modal();");
@@ -710,6 +720,16 @@ public class InvoiceController implements Serializable {
         try {
             String res = "";
             System.out.println("com.fastbooks.managedbeans.InvoiceController.printTransactions()");
+            HttpServletRequest req = (HttpServletRequest) this.validationBean.getRequestContext();
+            String[] parameterValues = req.getParameterValues("cajas");
+            //System.out.println(Arrays.toString(parameterValues));
+            for (String parameterValue : parameterValues) {
+                 for (FbInvoice fbInvoice : iList) {
+                     if (parameterValue.equals(fbInvoice.getIdInvoice().toString())) {
+                         fbInvoice.setCheckbox(true);
+                     }
+                 }
+            }
             for (FbInvoice fbInvoice : iList) {
                 if (fbInvoice.isCheckbox()) {
                     if (res.isEmpty()) {

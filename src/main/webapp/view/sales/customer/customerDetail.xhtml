@@ -149,9 +149,11 @@
                                 >
                                 <bnu:dataTableColumn  >
                                     <f:facet name="header">
-                                        <bnu:selectBooleanCheckbox  />
+                                        <bnu:selectBooleanCheckbox  onclick="batchHelper.actAll();"   />
                                     </f:facet>
-                                    <bnu:selectBooleanCheckbox  value="#{in.checkbox}" onclick="batchHelper.activateOption('#{in.type}', '#{in.idInvoice}');"  />
+                                    <input type="hidden" value="#{in.type}" class="inType" />
+                                    <input type="hidden" value="#{in.idInvoice}" class="inId" />
+                                    <bnu:selectBooleanCheckbox class="cajas" value="#{in.checkbox}" onclick="batchHelper.activateOption('#{in.type}', '#{in.idInvoice}');"  />
                                 </bnu:dataTableColumn>
                                 <bnu:dataTableColumn label="#{messages.lblInvoiceDate}" value="#{in.inDate}"   />
                                 <bnu:dataTableColumn  label="#{messages.lblType}" value="#{userData.formatType(in.type)}" ></bnu:dataTableColumn>
@@ -1103,7 +1105,41 @@
                     $('.cPrintPacking').attr('disabled',true);
                     $('.cPrintPacking').addClass('disabled');   
                     }
-                    }
+                    },
+        allFlag: 1,
+        actAll: function(){
+        var types = $('.inType');
+        var ids = $('.inId');
+        var cajas = $('.cajas');
+        if(this.allFlag == 1){
+        this.checks = [];
+        for(var i = 0; i &lt; types.length;i++){
+        //console.log($(types[i]).val() + ' ' + $(ids[i]).val() );
+        
+        $(cajas[i]).attr('checked',true);
+        this.activateOption($(types[i]).val(),$(ids[i]).val());
+        
+        }
+        this.allFlag = 2;
+        }else{
+        for(var i = 0; i &lt; types.length;i++){
+        //console.log($(types[i]).val() + ' ' + $(ids[i]).val() );
+        
+        $(cajas[i]).removeAttr('checked');
+        
+        
+        }
+        this.checks = [];
+        this.allFlag = 1;
+        
+        
+        }
+        for(var i =0;i &lt; this.checks.length;i++){
+        console.log(this.checks[i].tipo + ' ' + this.checks[i].iden);
+        
+        }
+        console.log('================================================');
+        }
                     };
 
 

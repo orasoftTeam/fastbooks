@@ -832,4 +832,18 @@ public class ProductController implements Serializable {
         }
         this.vb.redirecionar("/view/sales/sales.xhtml");
     }
+    
+    
+    public void activate(FbProduct prod){
+        try {
+            
+            this.pFacade.edit(prod);
+            this.vb.lanzarMensaje("info", "lblProdActivated", "blank");
+            this.refrescar();
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.managedbeans.ProductController.activate()");
+            this.vb.lanzarMensaje("info", "unexpectedError", "blank");
+            e.printStackTrace();
+        }
+    }
 }
