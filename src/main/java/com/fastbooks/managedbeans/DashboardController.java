@@ -19,8 +19,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
 import javax.inject.Inject;
+import lombok.Getter;
+import lombok.Setter;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.BarChartModel;
@@ -48,7 +49,10 @@ public class DashboardController implements Serializable {
     UserData userData;
     @EJB
     FbInvoiceFacade iFacade;
-
+    
+    private @Getter @Setter String from;
+    private @Getter @Setter String to;
+    private @Getter @Setter String op = "TM";
     /**
      * Creates a new instance of DashboardController
      */
@@ -82,10 +86,74 @@ public class DashboardController implements Serializable {
 
     @PostConstruct
     public void init() {
+        Calendar c = Calendar.getInstance();   // this takes current date
+        c.set(Calendar.DAY_OF_MONTH, 1);
+        Date firstDayMonth = c.getTime();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date lastDayMonth = calendar.getTime();
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        
+        
+        
+        
+        
         createAnimatedModels();
         createPieModel2();
-        this.combinedModel = initLinearWithDates("01/07/2018", "31/07/2018", "This Month");
+        this.combinedModel = initLinearWithDates(sdf.format(firstDayMonth), sdf.format(lastDayMonth), "This Month");
         //createCombinedModel();
+    }
+    
+    public void changeFilterLinearSales(){
+        switch(this.op){
+            case "LW":
+            this.combinedModel = initLinearWithDates(this.from, this.to, "Last week");    
+                break;
+            case "TW":
+            this.combinedModel = initLinearWithDates(this.from, this.to, "This week");    
+                break;
+            case "L7":
+            this.combinedModel = initLinearWithDates(this.from, this.to, "Last 7 days");    
+                break;    
+            case "LM":
+            this.combinedModel = initLinearWithDates(this.from, this.to, "Last Month");    
+                break;
+                
+            case "TM":
+             this.combinedModel = initLinearWithDates(this.from, this.to, "This Month");   
+                break;
+                
+            case "L3D":
+             this.combinedModel = initLinearWithDates(this.from, this.to, "Last 30 Days");   
+                break;
+            case "TQ":
+             this.combinedModel = initLinearWithDates(this.from, this.to, "This quarter");   
+                break; 
+                
+            case "LQ":
+             this.combinedModel = initLinearWithDates(this.from, this.to, "Last quarter");   
+                break;
+            case "L12":
+             this.combinedModel = initLinearWithDates(this.from, this.to, "Last 12 months");   
+                break;
+            case "LY":
+             this.combinedModel = initLinearWithDates(this.from, this.to, "Last year");   
+                break;
+                
+            case "TY":
+             this.combinedModel = initLinearWithDates(this.from, this.to, "This year");   
+                break;    
+                
+                
+            default:
+                
+                break;
+        
+        }
+        
+    
     }
 
     private void createAnimatedModels() {
@@ -163,7 +231,7 @@ public class DashboardController implements Serializable {
     private BarChartModel initLinearWithDates(String from, String to, String title) {
         BarChartModel model = new BarChartModel();
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
             Date dFrom = sdf.parse(from);
             Date dTo = sdf.parse(to);
             Calendar cFrom = Calendar.getInstance();
@@ -175,7 +243,7 @@ public class DashboardController implements Serializable {
             String month = new SimpleDateFormat("MMMMM", locale).format(dFrom.getTime());
 
             LineChartSeries series1 = new LineChartSeries();
-            series1.setLabel(month);
+            series1.setLabel("Sales");
           /*  boolean flag = true;
             int i = 1;
             while (flag) {
@@ -197,7 +265,7 @@ public class DashboardController implements Serializable {
             }*/
           
             List<LineChartItem> list = new ArrayList<>();
-            list = this.iFacade.getLineChartDataMonth("07/01/2018","07/31/2018", title,this.userData.getCurrentCia().getIdCia().toString(), locale );
+            list = this.iFacade.getLineChartDataMonth(from,to, title,this.userData.getCurrentCia().getIdCia().toString(), locale );
             for (int i = 1; i < list.size(); i++) {
                 series1.set(list.get(i).getLabel(), list.get(i).getValue());
                 series1.setMarkerStyle("filledCircle', size:'10.0");

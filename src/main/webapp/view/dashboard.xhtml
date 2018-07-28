@@ -6,13 +6,13 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
       xmlns:bnu="http://bootsfaces.net/ui">
-    
+
     <h:head>
         <title>#{userData.GParameters.title}</title>
     </h:head>
-    
+
     <h:body>
-        
+
         <ui:composition template="../template/template.xhtml">
 
             <ui:define name="content">
@@ -37,21 +37,321 @@
                 <bnu:row>
                     <bnu:column  span="6" >
                         <bnu:panel>
-                            <bnu:selectOneMenu  style="width: 30%" >
-                                <f:selectItem itemLabel="This month" itemValue="TS" />
-                                <f:selectItem itemLabel="Last month" itemValue="TS" />
-                                <f:selectItem itemLabel="Last 30 days" itemValue="TS" />
+                            <h:form>
+                                <bnu:row>
+                                    <bnu:column span="4" >
+                                        <bnu:selectOneMenu  style="width: 100%" onchange="filterHelper.changeDate(this.value)"  value="#{dashboardController.op}" >
+                                            <f:selectItem itemLabel="This week" itemValue="TW"   />
+                                            <f:selectItem itemLabel="Last week" itemValue="LW"   />
+                                            <f:selectItem itemLabel="Last 7 days" itemValue="L7"   />
+                                <f:selectItem itemLabel="This month" itemValue="TM"   />
+                                <f:selectItem itemLabel="Last month" itemValue="LM" />
+                                <f:selectItem itemLabel="Last 30 days" itemValue="L3D" />
+                                <f:selectItem itemLabel="This quarter" itemValue="TQ" />
+                                <f:selectItem itemLabel="Last quarter" itemValue="LQ" />
+                                <f:selectItem itemLabel="Last 12 months" itemValue="L12" />
+                                <f:selectItem itemLabel="This year by month" itemValue="TY" />
+                                <f:selectItem itemLabel="Last year by month" itemValue="LY" />
+                                
                             </bnu:selectOneMenu>
-                            <input type="hidden" name="from"  id="from" />
-                            <input type="hidden" name="to"  id="to" />
-                            <p:chart type="bar" model="#{dashboardController.combinedModel}" style="width: 100%"   />
+                                    </bnu:column>
+                                    <bnu:column span="8" >
+                                        <bnu:commandButton value="Apply" action="#{dashboardController.changeFilterLinearSales()}"   update="@(.linear)"  look="success" style="width:100%" />
+                                    </bnu:column>
+                                    
+                                </bnu:row>
                             
+                                
+                            
+                                <bnu:inputText type="hidden" name="from"  id="from" value="#{dashboardController.from}" class="ffrom" />
+                            <bnu:inputText type="hidden" name="to"  id="to" value="#{dashboardController.to}"  class="fto" />
+                            </h:form>
+                            <p:separator/>
+                            <p:chart type="bar" model="#{dashboardController.combinedModel}" style="width: 100%"  class="linear"   />
+
                         </bnu:panel>
                     </bnu:column>
-                    
+
                 </bnu:row>
-                
-               
+
+
+                <script>
+                    
+                    $(document).ready(function(){
+                        
+                        filterHelper.changeDate('TM');
+                    });
+                    
+                    
+                    
+
+                     var filterHelper = {
+        fecha: new Date(),
+        changeDate: function(e){
+
+        switch(e){
+        case "L3":
+        var newdate = new Date(this.fecha);
+        newdate.setDate(newdate.getDate() - 365); // minus the date
+        var nd = new Date(newdate);
+        $('.ffrom').val(this.formatDate(nd));
+        $('.fto').val(this.formatDate(this.fecha));
+        break;
+        case "L7":
+        var newdate = new Date(this.fecha);
+        newdate.setDate(newdate.getDate() - 7); // minus the date
+        var nd = new Date(newdate);
+        $('.ffrom').val(this.formatDate(nd));
+        var newdate2 = new Date();
+        newdate2.setDate(newdate2.getDate() - 1); // minus the date
+        var nd2 = new Date(newdate2);
+        $('.fto').val(this.formatDate(nd2));
+        break;
+        case "L3D":
+        var newdate = new Date(this.fecha);
+        newdate.setDate(newdate.getDate() - 30); // minus the date
+        var nd = new Date(newdate);
+        $('.ffrom').val(this.formatDate(nd));
+        $('.fto').val(this.formatDate(this.fecha));
+        break;
+        case "CU":
+
+        break;
+        case "TO":
+        $('.ffrom').val(this.formatDate(this.fecha));
+        $('.fto').val(this.formatDate(this.fecha));
+        break;
+        case "YE":
+        var newdate = new Date(this.fecha);
+        newdate.setDate(newdate.getDate() - 1); // minus the date
+        var nd = new Date(newdate);
+        $('.ffrom').val(this.formatDate(nd));
+        $('.fto').val(this.formatDate(this.fecha));
+        break;
+        case "TW":
+        var first = this.fecha.getDate() - this.fecha.getDay();
+        var last = first + 6;
+        var curr =  new Date();
+        var firstday = new Date(curr.setDate(first));
+        var lastday = new Date(curr.setDate(last));
+        $('.ffrom').val(this.formatDate(firstday));
+        $('.fto').val(this.formatDate(lastday));
+        break;
+        case "TM":
+        var date = new Date(), y = date.getFullYear(), m = date.getMonth();
+        var firstDay = new Date(y, m, 1);
+        var lastDay = new Date(y, m + 1, 0);
+        $('.ffrom').val(this.formatDate(firstDay));
+        $('.fto').val(this.formatDate(lastDay));
+        break;
+        case "TQ":
+        var now = new Date();
+        var quarter = Math.floor((now.getMonth() / 3));
+        var firstDate = new Date(now.getFullYear(), quarter * 3, 1);
+        var endDate = new Date(firstDate.getFullYear(), firstDate.getMonth() + 3, 0);
+        $('.ffrom').val(this.formatDate(firstDate));
+        $('.fto').val(this.formatDate(endDate));
+        break;
+        case "TY":
+
+        $('.ffrom').val(this.formatDate(new Date(new Date().getFullYear(), 0, 1)));
+        $('.fto').val(this.formatDate(new Date(new Date().getFullYear(), 11, 31)));
+        break;
+        case "LW":
+        var first = this.fecha.getDate() - this.fecha.getDay() - 7;
+        var last = first + 6;
+        var curr =  new Date();
+        var firstday = new Date(curr.setDate(first));
+        var lastday = new Date(curr.setDate(last));
+        $('.ffrom').val(this.formatDate(firstday));
+        $('.fto').val(this.formatDate(lastday));
+
+        break;
+        case "LM":
+        var date = new Date(), y = date.getFullYear(), m = date.getMonth() -1;
+        var firstDay = new Date(y, m, 1);
+        var lastDay = new Date(y, m + 1, 0);
+        $('.ffrom').val(this.formatDate(firstDay));
+        $('.fto').val(this.formatDate(lastDay));
+
+        break;
+        case "LQ":
+        var now = new Date();
+        var quarter = Math.floor((now.getMonth() / 3));
+        var firstDate = new Date(now.getFullYear(), quarter * 3 - 3, 1);
+        var endDate = new Date(firstDate.getFullYear(), firstDate.getMonth() + 3, 0);
+        $('.ffrom').val(this.formatDate(firstDate));
+        $('.fto').val(this.formatDate(endDate));
+
+        break;
+        case "LY":
+        $('.ffrom').val(this.formatDate(new Date(new Date().getFullYear()-1, 0, 1)));
+        $('.fto').val(this.formatDate(new Date(new Date().getFullYear()-1, 11, 31)));
+        break;
+        case "L12":
+        var d =  new Date();
+        d.setMonth(d.getMonth() - 12);
+        $('.ffrom').val(this.formatDate(d));
+        $('.fto').val(this.formatDate(new Date(this.fecha)));
+        break;
+        case "AD":
+        $('.ffrom').val('');
+        $('.fto').val('');
+        break;
+        default:
+        $('.ffrom').val('');
+        $('.fto').val('');
+        break;
+
+        }
+
+        },
+        formatDate: function(e){
+        var month = e.getMonth()+1;
+        var day = e.getDate();
+        if(month &lt; 10){
+        month = '0' + month;
+        }
+        if(day &lt; 10){
+        day = '0' + day;
+        }
+        return month + '/'+day+'/'+e.getFullYear();
+
+        },
+        changeType: function(e){
+        switch(e){
+        case "0":
+        $('.hideStZone').show();
+        $(".statuses option").remove();
+        $('.statuses').append('<option data-label="#{messages.lblAllStatuses}" value="0">#{messages.lblAllStatuses}</option>');
+        $('.statuses').append('<option data-label="#{messages.lblInvoiceStatusOpen}" value="OP">#{messages.lblInvoiceStatusOpen}</option>');
+        $('.statuses').append('<option data-label="#{messages.lblInvoiceStatusOverdue}" value="OV">#{messages.lblInvoiceStatusOverdue}</option>');
+        $('.statuses').append('<option data-label="#{messages.lblPaid}" value="PD">#{messages.lblPaid}</option>');
+        $('.statuses').append('<option data-label="#{messages.lblInvoiceStatusPartial}" value="PA">#{messages.lblInvoiceStatusPartial}</option>');
+        $('.statuses').append('<option data-label="#{messages.lblESPending}" value="PE">#{messages.lblESPending}</option>');
+        $('.statuses').append('<option data-label="#{messages.lblAccepted }" value="AC">#{messages.lblAccepted }</option>');
+        $('.statuses').append('<option data-label="#{messages.lblRejected}" value="RJ">#{messages.lblRejected}</option>');
+        $('.statuses').append('<option data-label="#{messages.lblInvoiceStatusClosed}" value="CL">#{messages.lblInvoiceStatusClosed}</option>');
+        $('.statuses').append('<option data-label="#{messages.lblUnapplied}" value="UN">#{messages.lblUnapplied}</option>');
+        break;
+        case "ES":
+        $('.hideStZone').show();
+        $(".statuses option").remove();
+        $('.statuses').append('<option data-label="#{messages.lblAllStatuses}" value="0">#{messages.lblAllStatuses}</option>');
+        $('.statuses').append('<option data-label="#{messages.lblESPending}" value="PE">#{messages.lblESPending}</option>');
+        $('.statuses').append('<option data-label="#{messages.lblAccepted }" value="AC">#{messages.lblAccepted }</option>');
+        $('.statuses').append('<option data-label="#{messages.lblRejected}" value="RJ">#{messages.lblRejected}</option>');
+        $('.statuses').append('<option data-label="#{messages.lblInvoiceStatusClosed}" value="CL">#{messages.lblInvoiceStatusClosed}</option>');
+        break;
+        case "IN":
+        $('.hideStZone').show();
+        $(".statuses option").remove();
+        $('.statuses').append('<option data-label="#{messages.lblAllStatuses}" value="0">#{messages.lblAllStatuses}</option>');
+        $('.statuses').append('<option data-label="#{messages.lblInvoiceStatusOpen}" value="OP">#{messages.lblInvoiceStatusOpen}</option>');
+        $('.statuses').append('<option data-label="#{messages.lblInvoiceStatusOverdue}" value="OV">#{messages.lblInvoiceStatusOverdue}</option>');
+        $('.statuses').append('<option data-label="#{messages.lblInvoiceStatusPartial}" value="PA">#{messages.lblInvoiceStatusPartial}</option>');
+        $('.statuses').append('<option data-label="#{messages.lblPaid}" value="PD">#{messages.lblPaid}</option>');
+        break;
+        case "SR":
+        $('.hideStZone').show();
+        $(".statuses option").remove();
+        $('.statuses').append('<option data-label="#{messages.lblAllStatuses}" value="0">#{messages.lblAllStatuses}</option>');
+        break;
+        case "PA":
+        $('.hideStZone').show();
+        $(".statuses option").remove();
+        $('.statuses').append('<option data-label="#{messages.lblAllStatuses}" value="0">#{messages.lblAllStatuses}</option>');
+        $('.statuses').append('<option data-label="#{messages.lblInvoiceStatusClosed}" value="CL">#{messages.lblInvoiceStatusClosed}</option>');
+        $('.statuses').append('<option data-label="#{messages.lblInvoiceStatusPartial}" value="PA">#{messages.lblInvoiceStatusPartial}</option>');
+        $('.statuses').append('<option data-label="#{messages.lblUnapplied}" value="UN">#{messages.lblUnapplied}</option>');
+        break;
+        case "ST":
+        $(".statuses option").remove();
+        $('.statuses').append('<option data-label="#{messages.lblAllStatuses}" value="0">#{messages.lblAllStatuses}</option>');
+        $('.hideStZone').hide();
+        break;
+        default:
+        console.log('Opcion sin soporte');
+        break;
+        }
+
+
+        },
+        changeStatus: function(e){
+        if($('.comboType').val() == '0'){
+        switch(e){
+        case "0":
+        console.log(e);
+        break;
+        case "OP":
+        console.log(e);
+        $('.comboType').val('IN');
+        this.changeType('IN');
+        $('.statuses').val(e);
+        break;
+        case "OV":
+        console.log(e);
+        $('.comboType').val('IN');
+        this.changeType('IN');
+        $('.statuses').val(e);
+        break;
+        case "PD":
+        console.log(e);
+        $('.comboType').val('IN');
+        this.changeType('IN');
+        $('.statuses').val(e);
+        break;
+        case "PA":
+        console.log(e);
+        $('.comboType').val('IN');
+        this.changeType('IN');
+        $('.statuses').val(e);
+        break;
+        case "PE":
+        console.log(e);
+        $('.comboType').val('ES');
+        this.changeType('ES');
+        $('.statuses').val(e);
+        break;
+        case "AC":
+        console.log(e);
+        $('.comboType').val('ES');
+        this.changeType('ES');
+        $('.statuses').val(e);
+        break;
+        case "RJ":
+        console.log(e);
+        $('.comboType').val('ES');
+        this.changeType('ES');
+        $('.statuses').val(e);
+        break;
+        case "CL":
+        console.log(e);
+        $('.comboType').val('PA');
+        this.changeType('PA');
+        $('.statuses').val(e);
+        break;
+        case "UN":
+        console.log(e);
+        $('.comboType').val('PA');
+        this.changeType('PA');
+        $('.statuses').val(e);
+        break;
+        default:
+        console.log('Not Supported');
+        break;
+        }
+        }
+
+
+
+        }
+
+        };
+
+                </script>
+
+
             </ui:define>
 
         </ui:composition>
