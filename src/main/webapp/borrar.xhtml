@@ -13,6 +13,62 @@
 
             <ui:define name="content">
                 
+                 <bnu:row>
+                    <bnu:column  span="6" >
+                        <bnu:panel>
+                            <h:form>
+                                <bnu:row>
+                                    <bnu:column span="4" >
+                                        <bnu:selectOneMenu  style="width: 100%" onchange="filterHelper.changeDate(this.value)"  value="#{dashboardController.op}" >
+                                            <f:selectItem itemLabel="This week" itemValue="TW"   />
+                                            <f:selectItem itemLabel="Last week" itemValue="LW"   />
+                                            <f:selectItem itemLabel="Last 7 days" itemValue="L7"   />
+                                <f:selectItem itemLabel="This month" itemValue="TM"   />
+                                <f:selectItem itemLabel="Last month" itemValue="LM" />
+                                <f:selectItem itemLabel="Last 30 days" itemValue="L3D" />
+                                <f:selectItem itemLabel="This quarter" itemValue="TQ" />
+                                <f:selectItem itemLabel="Last quarter" itemValue="LQ" />
+                                <f:selectItem itemLabel="Last 12 months" itemValue="L12" />
+                                <f:selectItem itemLabel="This year by month" itemValue="TY" />
+                                <f:selectItem itemLabel="Last year by month" itemValue="LY" />
+                                <f:selectItem itemLabel="This year by quarter" itemValue="TYQ" />
+                                <f:selectItem itemLabel="Last year by quarter" itemValue="LYQ" />
+                            </bnu:selectOneMenu>
+                                    </bnu:column>
+                                    <bnu:column span="8" >
+                                        <bnu:commandButton value="Apply" action="#{dashboardController.changeFilterLinearSales()}"   update="@(.linear)"  look="success" style="width:100%" />
+                                    </bnu:column>
+                                    
+                                </bnu:row>
+                            
+                                
+                            
+                                <bnu:inputText type="hidden" name="from"  id="from" value="#{dashboardController.from}" class="ffrom" />
+                            <bnu:inputText type="hidden" name="to"  id="to" value="#{dashboardController.to}"  class="fto" />
+                            </h:form>
+                            <p:separator/>
+                            <p:chart type="bar" model="#{dashboardController.combinedModel}" style="width: 100%"  class="linear"   />
+
+                        </bnu:panel>
+                    </bnu:column>
+                    <bnu:column  span="6" >
+                        <bnu:panel>
+                            <h:form>
+                                <p:chart type="bar" model="#{dashboardController.animatedModel2}" style="width:100%;" />
+                            </h:form>
+                            
+                        </bnu:panel>
+                    </bnu:column>
+                </bnu:row>
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 
                  <p:panel style="background-color: #f5f5f5; border-color:#f5f5f5">
                 <h:panelGrid columns="2" columnClasses="left,right" style="width:100%">

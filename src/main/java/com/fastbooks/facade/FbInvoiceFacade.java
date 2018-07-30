@@ -1266,7 +1266,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
         return builder.toString();
     }
 
-    public List<LineChartItem> getLineChartDataMonth(String from, String to, String title, String idCia, Locale locale) {
+    public List<LineChartItem> getLineChartDataMonth(String from, String to, String title, String idCia, Locale locale, String op) {
         List<LineChartItem> list = new ArrayList<>();
         List<LineChartItem> listTemp = new ArrayList<>();
         try {
@@ -1301,7 +1301,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
                     }
                     String actMonth = new SimpleDateFormat("MMM", locale).format(cFrom.getTime());
                     lineItem.setLabel(actMonth + " " + String.valueOf(cFrom.get(Calendar.DAY_OF_MONTH)) + " - ");
-                    query += "(SELECT nvl(SUM(TOTAL),0.00) FROM FB_INVOICE WHERE ID_CIA  = 1 AND TYPE IN ('IN','SR') AND TO_DATE(IN_DATE,'MM/dd/yyyy') between TO_DATE('" + sdf.format(cFrom.getTime()) + "','MM/dd/yyyy') ";
+                    query += "(SELECT nvl(SUM(TOTAL),0.00) FROM FB_INVOICE WHERE ID_CIA  = " + idCia + " AND TYPE IN ('IN','SR') AND TO_DATE(IN_DATE,'MM/dd/yyyy') between TO_DATE('" + sdf.format(cFrom.getTime()) + "','MM/dd/yyyy') ";
                     if (i != 1 && sum != (ogSum - 1)) {
                         sum--;
                     }
@@ -1342,7 +1342,7 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
                     LineChartItem lineItem = new LineChartItem();
                     String actDay = new SimpleDateFormat("E", locale).format(cFrom.getTime());
                     lineItem.setLabel(actDay);
-                    query += "(SELECT nvl(SUM(TOTAL),0.00) FROM FB_INVOICE WHERE ID_CIA  = 1 AND TYPE IN ('IN','SR') AND TO_DATE(IN_DATE,'MM/dd/yyyy') = TO_DATE('" + sdf.format(cFrom.getTime()) + "','MM/dd/yyyy')) \"" + lineItem.getLabel() + "\"";
+                    query += "(SELECT nvl(SUM(TOTAL),0.00) FROM FB_INVOICE WHERE ID_CIA  = " + idCia + " AND TYPE IN ('IN','SR') AND TO_DATE(IN_DATE,'MM/dd/yyyy') = TO_DATE('" + sdf.format(cFrom.getTime()) + "','MM/dd/yyyy')) \"" + lineItem.getLabel() + "\"";
                     cFrom.add(Calendar.DATE, 1);
 
                     if (i != daysBetween) {
@@ -1355,27 +1355,57 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
                 }
 
             } else if (daysBetween > 300) {
-                for (int i = 1; i <= 12; i++) {
-                    LineChartItem lineItem = new LineChartItem();
-                    String actMonth = new SimpleDateFormat("MMM", locale).format(cFrom.getTime());
-                    lineItem.setLabel(actMonth);
-                    Calendar tmp = Calendar.getInstance();
-                    tmp.setTime(cFrom.getTime());
-                    
-                    if (i != 1) {
-                        tmp.add(Calendar.DATE, 1);
-                    }
-                    query += "(SELECT nvl(SUM(TOTAL),0.00) FROM FB_INVOICE WHERE ID_CIA  = 1 AND TYPE IN ('IN','SR') AND TO_DATE(IN_DATE,'MM/dd/yyyy') between TO_DATE('" + sdf.format(tmp.getTime()) + "','MM/dd/yyyy') ";
-                    cFrom.add(Calendar.MONTH, 1);
-                    
-                    query += "AND TO_DATE('" + sdf.format(cFrom.getTime()) + "','MM/dd/yyyy')) \"" + lineItem.getLabel() + "\" ";
-                    if (i != 12) {
-                        query += ", ";
-                    } else {
-                        query += " from dual";
+                if (op.equals("LYQ") || op.equals("TYQ")) {
+
+                    cFrom.set(Calendar.DAY_OF_YEAR, 1);
+                    /* if (op.equals("LYQ")) {
+                        cFrom.add(Calendar.YEAR, -1);
+                    }*/
+
+                    for (int i = 0; i <= 3; i++) {
+                        LineChartItem lineItem = new LineChartItem();
+                        if (i != 0) {
+                            cFrom.add(Calendar.DATE, 1);
+
+                        }
+                        lineItem.setLabel("Q" + (i + 1));
+                        query += "(SELECT nvl(SUM(TOTAL),0.00) FROM FB_INVOICE WHERE ID_CIA  = " + idCia + " AND TYPE IN ('IN','SR') AND TO_DATE(IN_DATE,'MM/dd/yyyy') between TO_DATE('" + sdf.format(cFrom.getTime()) + "','MM/dd/yyyy') ";
+                        cFrom.add(Calendar.MONTH, 3);
+                        cFrom.add(Calendar.DATE, -1);
+                        query += "AND TO_DATE('" + sdf.format(cFrom.getTime()) + "','MM/dd/yyyy')) \"" + lineItem.getLabel() + "\" ";
+
+                        if (i != 3) {
+                            query += ", ";
+                        } else {
+                            query += " from dual";
+                        }
+
+                        listTemp.add(lineItem);
                     }
 
-                    listTemp.add(lineItem);
+                } else {
+                    for (int i = 1; i <= 12; i++) {
+                        LineChartItem lineItem = new LineChartItem();
+                        String actMonth = new SimpleDateFormat("MMM", locale).format(cFrom.getTime());
+                        lineItem.setLabel(actMonth);
+                        Calendar tmp = Calendar.getInstance();
+                        tmp.setTime(cFrom.getTime());
+
+                        if (i != 1) {
+                            tmp.add(Calendar.DATE, 1);
+                        }
+                        query += "(SELECT nvl(SUM(TOTAL),0.00) FROM FB_INVOICE WHERE ID_CIA  = " + idCia + " AND TYPE IN ('IN','SR') AND TO_DATE(IN_DATE,'MM/dd/yyyy') between TO_DATE('" + sdf.format(tmp.getTime()) + "','MM/dd/yyyy') ";
+                        cFrom.add(Calendar.MONTH, 1);
+
+                        query += "AND TO_DATE('" + sdf.format(cFrom.getTime()) + "','MM/dd/yyyy')) \"" + lineItem.getLabel() + "\" ";
+                        if (i != 12) {
+                            query += ", ";
+                        } else {
+                            query += " from dual";
+                        }
+
+                        listTemp.add(lineItem);
+                    }
                 }
             }
 
@@ -1428,6 +1458,34 @@ public class FbInvoiceFacade extends AbstractFacade<FbInvoice> {
 
         } catch (Exception e) {
             System.out.println("com.fastbooks.facade.FbInvoiceFacade.getLineChartDataMonth()");
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public List<LineChartItem> getBarChartDataMonth(String idCia, String minusDays) {
+        List<LineChartItem> list = new ArrayList<>();
+        try {
+            String sql = "select (select nvl(sum(actual_balance),0) OPEN from fb_invoice where id_cia = " + idCia + " and to_date(in_date,'MM/dd/yyyy') >= sysdate -" + minusDays + " and type = 'IN' and status in ('OP','PA')) OPEN,\n"
+                    + "    (select nvl(sum(actual_balance),0) OVERDUE from fb_invoice where id_cia = " + idCia + " and to_date(in_date,'MM/dd/yyyy') >= sysdate -" + minusDays + " and type = 'IN' and status in ('OV')) OVERDUE,\n"
+                    + "    (select nvl(sum(TOTAL),0) PAID from fb_invoice where id_cia = " + idCia + " and to_date(in_date,'MM/dd/yyyy') >= sysdate -" + minusDays + " and type = 'PA' and status in ('CL')) PAID \n"
+                    + "    FROM dual";
+            System.out.println(sql);
+            Connection cn = em.unwrap(java.sql.Connection.class);
+            PreparedStatement ps = cn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new LineChartItem("Open", rs.getDouble("OPEN")));
+                list.add(new LineChartItem("Overdue", rs.getDouble("OVERDUE")));
+                list.add(new LineChartItem("Paid", rs.getDouble("PAID")));
+            }
+            for (LineChartItem lineChartItem : list) {
+                System.out.println("Label: " + lineChartItem.getLabel() + ", value " + lineChartItem.getValue() );
+            }
+
+        } catch (Exception e) {
+            System.out.println("com.fastbooks.facade.FbInvoiceFacade.getBarChartDataMonth()");
             e.printStackTrace();
         }
 

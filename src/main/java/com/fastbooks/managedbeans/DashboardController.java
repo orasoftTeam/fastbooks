@@ -49,10 +49,19 @@ public class DashboardController implements Serializable {
     UserData userData;
     @EJB
     FbInvoiceFacade iFacade;
+
+    private @Getter
+    @Setter
+    String from;
+    private @Getter
+    @Setter
+    String to;
+    private @Getter
+    @Setter
+    String op = "TM";
     
-    private @Getter @Setter String from;
-    private @Getter @Setter String to;
-    private @Getter @Setter String op = "TM";
+    private @Getter @Setter List<LineChartItem> listGlob;
+
     /**
      * Creates a new instance of DashboardController
      */
@@ -93,67 +102,69 @@ public class DashboardController implements Serializable {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         Date lastDayMonth = calendar.getTime();
-        
+
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-        
-        
-        
-        
-        
-        createAnimatedModels();
+
+        //createAnimatedModels();
         createPieModel2();
-        this.combinedModel = initLinearWithDates(sdf.format(firstDayMonth), sdf.format(lastDayMonth), "This Month");
+        this.combinedModel = initLinearWithDates(sdf.format(firstDayMonth), sdf.format(lastDayMonth), "This Month", op);
+        //this.animatedModel2 = initBarModel();
+        //this.listGlob = this.iFacade.getLineChartDataMonth(from, to, "This month", this.userData.getCurrentCia().getIdCia().toString(), Locale.US, op);
         //createCombinedModel();
     }
-    
-    public void changeFilterLinearSales(){
-        switch(this.op){
+
+    public void changeFilterLinearSales() {
+        switch (this.op) {
             case "LW":
-            this.combinedModel = initLinearWithDates(this.from, this.to, "Last week");    
+                this.combinedModel = initLinearWithDates(this.from, this.to, "Last week", op);
                 break;
             case "TW":
-            this.combinedModel = initLinearWithDates(this.from, this.to, "This week");    
+                this.combinedModel = initLinearWithDates(this.from, this.to, "This week", op);
                 break;
             case "L7":
-            this.combinedModel = initLinearWithDates(this.from, this.to, "Last 7 days");    
-                break;    
+                this.combinedModel = initLinearWithDates(this.from, this.to, "Last 7 days", op);
+                break;
             case "LM":
-            this.combinedModel = initLinearWithDates(this.from, this.to, "Last Month");    
+                this.combinedModel = initLinearWithDates(this.from, this.to, "Last Month", op);
                 break;
-                
+
             case "TM":
-             this.combinedModel = initLinearWithDates(this.from, this.to, "This Month");   
+                this.combinedModel = initLinearWithDates(this.from, this.to, "This Month", op);
                 break;
-                
+
             case "L3D":
-             this.combinedModel = initLinearWithDates(this.from, this.to, "Last 30 Days");   
+                this.combinedModel = initLinearWithDates(this.from, this.to, "Last 30 Days", op);
                 break;
             case "TQ":
-             this.combinedModel = initLinearWithDates(this.from, this.to, "This quarter");   
-                break; 
-                
+                this.combinedModel = initLinearWithDates(this.from, this.to, "This quarter", op);
+                break;
+
             case "LQ":
-             this.combinedModel = initLinearWithDates(this.from, this.to, "Last quarter");   
+                this.combinedModel = initLinearWithDates(this.from, this.to, "Last quarter", op);
                 break;
             case "L12":
-             this.combinedModel = initLinearWithDates(this.from, this.to, "Last 12 months");   
+                this.combinedModel = initLinearWithDates(this.from, this.to, "Last 12 months", op);
                 break;
             case "LY":
-             this.combinedModel = initLinearWithDates(this.from, this.to, "Last year");   
+                this.combinedModel = initLinearWithDates(this.from, this.to, "Last year", op);
                 break;
-                
+
             case "TY":
-             this.combinedModel = initLinearWithDates(this.from, this.to, "This year");   
-                break;    
-                
-                
-            default:
-                
+                this.combinedModel = initLinearWithDates(this.from, this.to, "This year", op);
                 break;
-        
+            case "TYQ":
+                this.combinedModel = initLinearWithDates(this.from, this.to, "This year by quarter", op);
+                break;
+            case "LYQ":
+                this.combinedModel = initLinearWithDates(this.from, this.to, "Last year by quarter", op);
+                break;
+
+            default:
+
+                break;
+
         }
-        
-    
+
     }
 
     private void createAnimatedModels() {
@@ -180,25 +191,34 @@ public class DashboardController implements Serializable {
 
     private BarChartModel initBarModel() {
         BarChartModel model = new BarChartModel();
+        List<LineChartItem> list = this.iFacade.getBarChartDataMonth(this.userData.getCurrentCia().getIdCia().toString(), "30");
 
-        ChartSeries boys = new ChartSeries();
-        boys.setLabel("Open Invoices");
-        boys.set("2004", 120);
+        /*for (LineChartItem lineChartItem : list) {
+            ChartSeries open = new ChartSeries();
+            open.setLabel(lineChartItem.getLabel());
+            open.set("Invoices", 1000);
+            model.addSeries(open);
+
+        }*/
+         ChartSeries open = new ChartSeries();
+        open.setLabel("Open");
+        open.set("Open", 120);
      
 
-        ChartSeries girls = new ChartSeries();
-        girls.setLabel("Overdue Invoice");
-        girls.set("2004", 52);
+        ChartSeries overdue = new ChartSeries();
+        overdue.setLabel("Overdue");
+        overdue.set("Overdue", 52);
       
         
-        ChartSeries third = new ChartSeries();
-        third.setLabel("third");
-        third.set("2004", 52);
+        ChartSeries paid = new ChartSeries();
+        paid.setLabel("Paid");
+        paid.set("Paid", 52);
        
 
-        model.addSeries(boys);
-        model.addSeries(girls);
-        model.addSeries(third);
+        model.addSeries(open);
+        model.addSeries(overdue);
+        model.addSeries(paid); 
+        model.setTitle("Income invoices");
         return model;
     }
 
@@ -228,7 +248,7 @@ public class DashboardController implements Serializable {
         return model;
     }
 
-    private BarChartModel initLinearWithDates(String from, String to, String title) {
+    private BarChartModel initLinearWithDates(String from, String to, String title, String option) {
         BarChartModel model = new BarChartModel();
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
@@ -244,7 +264,7 @@ public class DashboardController implements Serializable {
 
             LineChartSeries series1 = new LineChartSeries();
             series1.setLabel("Sales");
-          /*  boolean flag = true;
+            /*  boolean flag = true;
             int i = 1;
             while (flag) {
 
@@ -263,20 +283,21 @@ public class DashboardController implements Serializable {
                     flag = false;
                 }
             }*/
-          
+
             List<LineChartItem> list = new ArrayList<>();
-            list = this.iFacade.getLineChartDataMonth(from,to, title,this.userData.getCurrentCia().getIdCia().toString(), locale );
+            list = this.iFacade.getLineChartDataMonth(from, to, title, this.userData.getCurrentCia().getIdCia().toString(), locale, option);
             for (int i = 1; i < list.size(); i++) {
                 series1.set(list.get(i).getLabel(), list.get(i).getValue());
                 series1.setMarkerStyle("filledCircle', size:'10.0");
             }
-            
+
             model.addSeries(series1);
             model.setTitle(list.get(0).getLabel() + " " + this.userData.formatMaster(list.get(0).getValue().toString()));
             model.setLegendPosition("se");
             Axis xAxis = model.getAxis(AxisType.X);
             xAxis.setMin(0);
             xAxis.setMax(daysBetween + 1);
+            model.setAnimate(true);
 
         } catch (ParseException e) {
             System.out.println("com.fastbooks.managedbeans.DashboardController.initLinearWithDates(DateParse)");
@@ -289,16 +310,20 @@ public class DashboardController implements Serializable {
     private void createPieModel2() {
         pieModel2 = new PieChartModel();
 
-        pieModel2.set("Expenses", 325);
-        //  pieModel2.set("Shoes", 325);
-        //  pieModel2.set("Tv's", 702);
-        //  pieModel2.set("Others", 421);
+        List<LineChartItem> list = this.iFacade.getBarChartDataMonth(this.userData.getCurrentCia().getIdCia().toString(), "365");
+        for (LineChartItem li : list) {
+            pieModel2.set(li.getLabel(), li.getValue());
+        }
+        /*pieModel2.set("Expenses", 325);
+          pieModel2.set("Shoes", 325);
+          pieModel2.set("Tv's", 702);
+         pieModel2.set("Others", 421);*/
 
-        pieModel2.setTitle("Expenses");
+        pieModel2.setTitle("Income");
         pieModel2.setLegendPosition("e");
-        pieModel2.setFill(false);
+        pieModel2.setFill(true);
         pieModel2.setShowDataLabels(true);
-        pieModel2.setDiameter(150);
+        pieModel2.setDiameter(250);
     }
 
     private void createCombinedModel() {

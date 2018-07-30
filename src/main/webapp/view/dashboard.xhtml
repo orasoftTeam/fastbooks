@@ -9,6 +9,7 @@
 
     <h:head>
         <title>#{userData.GParameters.title}</title>
+     
     </h:head>
 
     <h:body>
@@ -34,7 +35,7 @@
                 <p:separator/>
                 <br></br>
                 <!--Charts-->
-                <bnu:row>
+                 <bnu:row>
                     <bnu:column  span="6" >
                         <bnu:panel>
                             <h:form>
@@ -52,7 +53,8 @@
                                 <f:selectItem itemLabel="Last 12 months" itemValue="L12" />
                                 <f:selectItem itemLabel="This year by month" itemValue="TY" />
                                 <f:selectItem itemLabel="Last year by month" itemValue="LY" />
-                                
+                                <f:selectItem itemLabel="This year by quarter" itemValue="TYQ" />
+                                <f:selectItem itemLabel="Last year by quarter" itemValue="LYQ" />
                             </bnu:selectOneMenu>
                                     </bnu:column>
                                     <bnu:column span="8" >
@@ -71,18 +73,28 @@
 
                         </bnu:panel>
                     </bnu:column>
-
+                    <bnu:column  span="6" >
+                        <bnu:panel>
+                            <h:form>
+                                <h2>Invoices</h2>
+                                <p:separator />
+                                <p:chart type="pie" model="#{dashboardController.pieModel2}" style="width:100%;" />
+                            </h:form>
+                            
+                        </bnu:panel>
+                    </bnu:column>
                 </bnu:row>
+                
 
-
+              
                 <script>
                     
                     $(document).ready(function(){
                         
                         filterHelper.changeDate('TM');
-                    });
+                
                     
-                    
+    });
                     
 
                      var filterHelper = {
@@ -156,6 +168,15 @@
 
         $('.ffrom').val(this.formatDate(new Date(new Date().getFullYear(), 0, 1)));
         $('.fto').val(this.formatDate(new Date(new Date().getFullYear(), 11, 31)));
+        break;
+        case "TYQ":
+
+        $('.ffrom').val(this.formatDate(new Date(new Date().getFullYear(), 0, 1)));
+        $('.fto').val(this.formatDate(new Date(new Date().getFullYear(), 11, 31)));
+        break;
+        case "LYQ":
+        $('.ffrom').val(this.formatDate(new Date(new Date().getFullYear()-1, 0, 1)));
+        $('.fto').val(this.formatDate(new Date(new Date().getFullYear()-1, 11, 31)));
         break;
         case "LW":
         var first = this.fecha.getDate() - this.fecha.getDay() - 7;
